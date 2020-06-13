@@ -8,7 +8,7 @@
     <version>0.0.1-SNAPSHOT</version>
     
     <name>ActivePersistence</name>
-    <url>https://github.com/lazaronixon/activepersistence</url>                  
+    <url>https://github.com/lazaronixon/active-persistence</url>                  
     
     <description>
         <![CDATA[Active Persistence is a implementation of Active Record Query Interface for JPA]]>
@@ -23,9 +23,9 @@
     </licenses>
     
     <scm>
-        <connection>scm:git:https://github.com/lazaronixon/activepersistence.git</connection>
-        <developerConnection>scm:git:https://github.com/lazaronixon/activepersistence.git</developerConnection>
-        <url>https://github.com/lazaronixon/activepersistence</url>
+        <connection>scm:git:https://github.com/lazaronixon/active-persistence.git</connection>
+        <developerConnection>scm:git:https://github.com/lazaronixon/active-persistence.git</developerConnection>
+        <url>https://github.com/lazaronixon/active-persistence</url>
     </scm>    
     
     <properties>
