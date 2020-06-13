@@ -176,3 +176,6 @@ int    maximum = studentsService.maximum("this.id", Integer.class);
 
 ## Requirements
 * JakartaEE 8
+
+## More info
+* https://guides.rubyonrails.org/active_record_querying.html
