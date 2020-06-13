@@ -1,6 +1,6 @@
-# CRUD: Reading and Writing Data
+## CRUD: Reading and Writing Data
 
-## Create
+### Create
 ```java
 Student student = new Student();
 student.name = "Nixon";
@@ -9,7 +9,7 @@ student.address = "Avenue 45, number 4";
 usersService.create(student);
 ```
 
-## Read
+### Read
 ```java
 List<Student> students = studentsService.all().fetch();
 Student student = studentsService.first();
@@ -17,7 +17,7 @@ Student student = studentsService.find_by("this.name = 'Nixon'");
 List<Student> students = studentsService.where("this.name = 'Nixon' AND this.occupation = 'Code Artist'").order("this.createdAt DESC").fetch();
 ```
 
-## Update
+### Update
 ```java
 User user = usersService.find_by("this.name = 'David'");
 user.name = 'Dave';
@@ -26,15 +26,15 @@ usersService.save(user);
 usersService.update(user);
 ```
 
-## Delete
+### Delete
 ```java
 User user = usersService.find_by("this.name = 'David'")
 usersService.destroy(user);
 ```
 
-# Retrieving Objects from the Database
+## Retrieving Objects from the Database
 
-## Retrieving a Single Object
+### Retrieving a Single Object
 ```java
 Student student = studentsService.find(10);
 Student student = studentsService.take();
@@ -48,84 +48,84 @@ List<Student> students = studentsService.last(3);
 Student student = studentsService.find_by("this.name = 'Lifo'");
 ```
 
-## Conditions
+### Conditions
 ```java
 List<Client> clients = studentsService.where("this.ordersCount = ?", 10).fetch();
 List<Client> clients = studentsService.where("this.ordersCount = ? AND this.locked = ?", 10, false).fetch();
 ```
 
-## Ordering
+### Ordering
 ```java
 List<Client> clients = studentsService.order("this.createdAt").fetch();
 List<Client> clients = studentsService.order("this.createdAt DESC").fetch();
 List<Client> clients = studentsService.order("this.createdAt ASC").fetch();
 ```
 
-## Selecting Specific Fields
+### Selecting Specific Fields
 ```java
 List<Client> clients = studentsService.select("this.viewableBy", "this.locked").fetch();
 List<Client> clients = studentsService.select("this.name").distinct().fetch();
 ```
 
-## Limit and Offset
+### Limit and Offset
 ```java
 List<Client> clients = studentsService.limit(5).fetch();
 List<Client> clients = studentsService.limit(5).offset(30).fetch();
 ```
 
-## Group
+### Group
 ```java
 List<Client> clients = studentsService.select("date(this.createdAt), sum(price)").group("date(this.createdAt)").fetch();
 ```
 
-## Having
+### Having
 ```java
 List<Client> clients = studentsService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").having("sum(this.price) > ?", 100).fetch();
 ```
 
-## Reselect
+### Reselect
 ```java
 List<Client> clients = studentsService.select("this.title", "this.body").reselect("this.createdAt").fetch();
 ```
 
-## Reorder
+### Reorder
 ```java
 List<Client> clients = studentsService.order("this.title", "this.body").reorder("this.createdAt").fetch();
 ```
 
-## Rewhere
+### Rewhere
 ```java
 List<Client> clients = studentsService.where("this.trashed = true").rewhere("this.trashed = false").fetch();
 ```
 
-## Null Relation
+### Null Relation
 ```java
 List<Client> clients = studentsService.none();
 ```
 
-## Locking Records for Update
+### Locking Records for Update
 ```java
 Client client = studentsService.lock().first();
 ```
 
-## Joining Tables
+### Joining Tables
 ```java
 List<Author> authors = studentsService.joins("INNER JOIN posts").fetch();
 ```
 
-## Eager Loading Associations
+### Eager Loading Associations
 ```java
 List<Client> clients = studentsService.includes("this.address").limit(10).fetch();
 List<Client> clients = studentsService.eagerLoads("this.address").limit(10).fetch();
 ```
 
-## Existence of Objects
+### Existence of Objects
 ```java
 boolean exists = studentsService.exists("this.name = 'Lifo'");
 boolean exists = studentsService.where("this.name = 'Lifo'").exists();
 ```
 
-## Calculations
+### Calculations
 ```java
 long   count   = studentsService.count();
 long   count1  = studentsService.count("this.id");
@@ -135,7 +135,7 @@ int    minimum = studentsService.minimum("this.id", Integer.class);
 int    maximum = studentsService.maximum("this.id", Integer.class);
 ```
 
-# Getting Started
+## Getting Started
 
 models/Student.java
 ```java
