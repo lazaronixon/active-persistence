@@ -8,13 +8,31 @@
     <version>0.0.1-SNAPSHOT</version>
     
     <name>ActivePersistence</name>
-    <url>https://github.com/lazaronixon/activepersistence</url>        
+    <url>https://github.com/lazaronixon/activepersistence</url>                  
+    
+    <description>
+        <![CDATA[Active Persistence is a implementation of Active Record Query Interface for JPA]]>
+    </description>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    
+    <scm>
+        <connection>scm:git:https://github.com/lazaronixon/activepersistence.git</connection>
+        <developerConnection>scm:git:https://github.com/lazaronixon/activepersistence.git</developerConnection>
+        <url>https://github.com/lazaronixon/activepersistence</url>
+    </scm>    
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>        
-    </properties>             
+    </properties>            
     
     <dependencies>
         <dependency>
