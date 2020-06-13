@@ -30,8 +30,6 @@ services/ApplicationService.java
 ```java
 public abstract class ApplicationService<T> extends Base<T> {
 
-    public abstract T find(String id);
-
     private final Class<T> entityClass;
 
     public ApplicationService(Class<T> entityClass) {
@@ -63,11 +61,6 @@ public class StudentsService extends ApplicationService<Student> implements Seri
     @Override
     public EntityManager getEntityManager() {
         return em;
-    }
-
-    @Override
-    public Student find(String id) {
-        return getEntityManager().find(Student.class, Integer.parseInt(id));
     }
 
 }
