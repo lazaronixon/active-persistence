@@ -1,3 +1,78 @@
+## Getting Started
+
+pom.xml
+```xml
+<dependency>
+  <groupId>com.github.lazaronixon</groupId>
+  <artifactId>active-persistence</artifactId>
+  <version>0.0.1</version>
+</dependency>
+```
+
+models/Student.java
+```java
+@Entity
+public class Student extends Base<Integer> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    private String name;
+
+    private String address;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    public Student() {
+    }
+
+    // Get/Set omitted by brevity
+}
+```
+
+services/ApplicationService.java
+```java
+public abstract class ApplicationService<T> extends Base<T> {
+
+    private final Class<T> entityClass;
+
+    public ApplicationService(Class<T> entityClass) {
+        this.entityClass = entityClass;
+    }
+
+    @Override
+    public Class<T> getEntityClass() {
+        return entityClass;
+    }
+
+}
+```
+
+services/StudentService.java
+```java
+@ApplicationScoped
+public class StudentsService extends ApplicationService<Student> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @PersistenceContext(unitName = "jsfcrud")
+    private EntityManager em;
+
+    public StudentsService() {
+        super(Student.class);
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
+    }
+```
+
 ## CRUD: Reading and Writing Data
 
 ### Create
@@ -133,81 +208,6 @@ long   sum     = studentsService.sum("this.id", Long.class);
 double average = studentsService.average("this.id", Double.class);
 int    minimum = studentsService.minimum("this.id", Integer.class);
 int    maximum = studentsService.maximum("this.id", Integer.class);
-```
-
-## Getting Started
-
-pom.xml
-```xml
-<dependency>
-  <groupId>com.github.lazaronixon</groupId>
-  <artifactId>active-persistence</artifactId>
-  <version>0.0.1</version>
-</dependency>
-```
-
-models/Student.java
-```java
-@Entity
-public class Student extends Base<Integer> implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    private String name;
-
-    private String address;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
-    public Student() {
-    }
-
-    // Get/Set omitted by brevity
-}
-```
-
-services/ApplicationService.java
-```java
-public abstract class ApplicationService<T> extends Base<T> {
-
-    private final Class<T> entityClass;
-
-    public ApplicationService(Class<T> entityClass) {
-        this.entityClass = entityClass;
-    }
-
-    @Override
-    public Class<T> getEntityClass() {
-        return entityClass;
-    }
-
-}
-```
-
-services/StudentService.java
-```java
-@ApplicationScoped
-public class StudentsService extends ApplicationService<Student> implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    @PersistenceContext(unitName = "jsfcrud")
-    private EntityManager em;
-
-    public StudentsService() {
-        super(Student.class);
-    }
-
-    @Override
-    public EntityManager getEntityManager() {
-        return em;
-    }
 ```
 
 ## Requirements
