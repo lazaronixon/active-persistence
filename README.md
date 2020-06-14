@@ -12,9 +12,7 @@ pom.xml
 models/Student.java
 ```java
 @Entity
-public class Student extends Base<Integer> implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Student extends Base<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,9 +54,7 @@ public abstract class ApplicationService<T> extends Base<T> {
 services/StudentService.java
 ```java
 @ApplicationScoped
-public class StudentsService extends ApplicationService<Student> implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class StudentsService extends ApplicationService<Student> {
 
     @PersistenceContext(unitName = "jsfcrud")
     private EntityManager em;
