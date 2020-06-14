@@ -137,6 +137,15 @@ int    maximum = studentsService.maximum("this.id", Integer.class);
 
 ## Getting Started
 
+pom.xml
+```xml
+<dependency>
+  <groupId>com.github.lazaronixon</groupId>
+  <artifactId>active-persistence</artifactId>
+  <version>0.0.1</version>
+</dependency>
+```
+
 models/Student.java
 ```java
 @Entity
@@ -199,8 +208,6 @@ public class StudentsService extends ApplicationService<Student> implements Seri
     public EntityManager getEntityManager() {
         return em;
     }
-
-}
 ```
 
 ## Requirements
