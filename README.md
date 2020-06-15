@@ -37,15 +37,8 @@ services/ApplicationService.java
 ```java
 public abstract class ApplicationService<T> extends Base<T> {
 
-    private final Class<T> entityClass;
-
     public ApplicationService(Class<T> entityClass) {
-        this.entityClass = entityClass;
-    }
-
-    @Override
-    public Class<T> getEntityClass() {
-        return entityClass;
+        super(entityClass);
     }
 
 }
@@ -67,6 +60,7 @@ public class StudentsService extends ApplicationService<Student> {
     public EntityManager getEntityManager() {
         return em;
     }
+
 ```
 
 ## CRUD: Reading and Writing Data
