@@ -65,11 +65,7 @@
             <id>lazaronixon</id>
             <name>Lazaro Nixon</name>
         </developer>
-    </developers>  
-    
-    <build>
-        <defaultGoal>install</defaultGoal>
-    </build>        
+    </developers>     
     
     <profiles>
         <profile>
