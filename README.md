@@ -33,21 +33,10 @@ public class Student extends Base<Integer> {
 }
 ```
 
-services/ApplicationService.java
-```java
-public abstract class ApplicationService<T> extends Base<T> {
-
-    public ApplicationService(Class<T> entityClass) {
-        super(entityClass);
-    }
-
-}
-```
-
 services/StudentService.java
 ```java
 @ApplicationScoped
-public class StudentsService extends ApplicationService<Student> {
+public class StudentsService extends Base<Student> {
 
     @PersistenceContext
     private EntityManager em;
