@@ -67,13 +67,13 @@ usersService.create(student);
 ```java
 List<Student> students = studentsService.all().fetch();
 Student student = studentsService.first();
-Student student = studentsService.find_by("this.name = 'Nixon'");
+Student student = studentsService.findBy("this.name = 'Nixon'");
 List<Student> students = studentsService.where("this.name = 'Nixon' AND this.occupation = 'Code Artist'").order("this.createdAt DESC").fetch();
 ```
 
 ### Update
 ```java
-User user = usersService.find_by("this.name = 'David'");
+User user = usersService.findBy("this.name = 'David'");
 user.name = 'Dave';
 usersService.save(user);
 // OR
@@ -82,7 +82,7 @@ usersService.update(user);
 
 ### Delete
 ```java
-User user = usersService.find_by("this.name = 'David'")
+User user = usersService.findBy("this.name = 'David'")
 usersService.destroy(user);
 ```
 
@@ -99,7 +99,7 @@ List<Student> students = studentsService.first(3);
 Student student = studentsService.last()
 List<Student> students = studentsService.last(3);
 
-Student student = studentsService.find_by("this.name = 'Lifo'");
+Student student = studentsService.findBy("this.name = 'Lifo'");
 ```
 
 ### Conditions
