@@ -284,8 +284,7 @@ public class Relation<T> implements Querying<T> {
     }
 
     public void setSelect(String select) {
-        this.selectValues.clear();
-        this.addSelect(select);
+        this.selectValues.clear(); this.addSelect(select);
     }
 
     public void addJoins(String joins) {
@@ -345,8 +344,7 @@ public class Relation<T> implements Querying<T> {
     }
 
     public void clearWhere() {
-        this.whereValues.clear();
-        this.params.clear();
+        this.whereValues.clear(); this.params.clear();
     }
 
     public void clearOrder() {
@@ -405,8 +403,8 @@ public class Relation<T> implements Querying<T> {
 
     private void applyHints(Query query) {
         query.setHint("eclipselink.batch.type", "IN");
-        includesValues.forEach(i -> query.setHint("eclipselink.batch", i));
-        eagerLoadsValues.forEach(i -> query.setHint("eclipselink.left-join-fetch", i));
+        includesValues.forEach(value -> query.setHint("eclipselink.batch", value));
+        eagerLoadsValues.forEach(value -> query.setHint("eclipselink.left-join-fetch", value));
     }
 
     private String separatedBySpace(List<String> values) {
