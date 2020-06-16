@@ -62,9 +62,9 @@ public class Relation<T> implements Querying<T> {
 
     private boolean lock = false;
 
-    public Relation(Base service) {
-        this.entityManager = service.getEntityManager();
-        this.entityClass   = service.getEntityClass();
+    public Relation(EntityManager entityManager, Class entityClass) {
+        this.entityManager = entityManager;
+        this.entityClass   = entityClass;
         this.finderMethods = new FinderMethods(this);
         this.queryMethods  = new QueryMethods(this);
         this.calculation   = new Calculation(this);
