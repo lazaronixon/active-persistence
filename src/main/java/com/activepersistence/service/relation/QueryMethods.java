@@ -1,7 +1,6 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
-import static java.lang.String.join;
 
 public class QueryMethods<T> {
 
@@ -16,11 +15,15 @@ public class QueryMethods<T> {
     }
 
     public Relation<T> select(String... fields) {
-        relation.addSelect(separatedByComma(fields)); return relation;
+        relation.addSelect(fields); return relation;
     }
 
     public Relation<T> joins(String... values) {
-        relation.addJoins(separatedBySpace(values)); return relation;
+        relation.addJoins(values); return relation;
+    }
+
+    public Relation<T> leftJoins(String... values) {
+        relation.addLeftJoins(values); return relation;
     }
 
     public Relation<T> where(String conditions, Object... params) {
@@ -28,7 +31,7 @@ public class QueryMethods<T> {
     }
 
     public Relation<T> group(String... fields) {
-        relation.addGroup(separatedByComma(fields)); return relation;
+        relation.addGroup(fields); return relation;
     }
 
     public Relation<T> having(String conditions, Object... params) {
@@ -36,7 +39,7 @@ public class QueryMethods<T> {
     }
 
     public Relation<T> order(String... fields) {
-        relation.addOrder(separatedByComma(fields)); return relation;
+        relation.addOrder(fields); return relation;
     }
 
     public Relation<T> limit(int limit) {
@@ -82,13 +85,4 @@ public class QueryMethods<T> {
     public Relation<T> from(String value) {
         relation.setFromClause(value); return relation;
     }
-
-    private String separatedByComma(String[] values) {
-        return join(", ", values);
-    }
-
-    private String separatedBySpace(String[] values) {
-        return join(" ", values);
-    }
-
 }

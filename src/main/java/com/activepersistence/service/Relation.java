@@ -19,11 +19,13 @@ import javax.persistence.TypedQuery;
 
 public class Relation<T> implements Querying<T> {
 
-    private final static String SELECT_FRAGMENT = "SELECT %s FROM %s this";
-    private final static String WHERE_FRAGMENT  = "WHERE %s";
-    private final static String GROUP_FRAGMENT  = "GROUP BY %s";
-    private final static String HAVING_FRAGMENT = "HAVING %s";
-    private final static String ORDER_FRAGMENT  = "ORDER BY %s";
+    private final static String SELECT_FRAGMENT      = "SELECT %s FROM %s this";
+    private final static String WHERE_FRAGMENT       = "WHERE %s";
+    private final static String INNER_JOINS_FRAGMENT = "INNER JOIN %s";
+    private final static String LEFT_JOINS_FRAGMENT  = "LEFT JOIN %s";
+    private final static String GROUP_FRAGMENT       = "GROUP BY %s";
+    private final static String HAVING_FRAGMENT      = "HAVING %s";
+    private final static String ORDER_FRAGMENT       = "ORDER BY %s";
 
     private final EntityManager entityManager;
 
@@ -35,17 +37,19 @@ public class Relation<T> implements Querying<T> {
 
     private final Class entityClass;
 
-    private final List<String> selectValues = new ArrayList();
+    private final List<String> selectValues    = new ArrayList();
 
-    private final List<String> whereValues  = new ArrayList();
+    private final List<String> whereValues     = new ArrayList();
 
-    private final List<String> groupValues  = new ArrayList();
+    private final List<String> groupValues     = new ArrayList();
 
-    private final List<String> havingValues = new ArrayList();
+    private final List<String> havingValues    = new ArrayList();
 
-    private final List<String> orderValues  = new ArrayList();
+    private final List<String> orderValues     = new ArrayList();
 
-    private final List<String> joinsValues  = new ArrayList();
+    private final List<String> joinsValues     = new ArrayList();
+
+    private final List<String> leftJoinsValues = new ArrayList();
 
     private final List<Object> params = new ArrayList();
 
@@ -85,11 +89,12 @@ public class Relation<T> implements Querying<T> {
 
     public String toJpql() {
         StringBuilder qlString = new StringBuilder(buildSelect());
-        if (!joinsValues.isEmpty())  qlString.append(" ").append(separatedBySpace(joinsValues));
-        if (!whereValues.isEmpty())  qlString.append(" ").append(buildWhere());
-        if (!groupValues.isEmpty())  qlString.append(" ").append(buildGroup());
-        if (!havingValues.isEmpty()) qlString.append(" ").append(buildHaving());
-        if (!orderValues.isEmpty())  qlString.append(" ").append(buildOrder());
+        if (!joinsValues.isEmpty())     qlString.append(" ").append(buildJoins());
+        if (!leftJoinsValues.isEmpty()) qlString.append(" ").append(buildLeftJoins());
+        if (!whereValues.isEmpty())     qlString.append(" ").append(buildWhere());
+        if (!groupValues.isEmpty())     qlString.append(" ").append(buildGroup());
+        if (!havingValues.isEmpty())    qlString.append(" ").append(buildHaving());
+        if (!orderValues.isEmpty())     qlString.append(" ").append(buildOrder());
         return qlString.toString();
     }
 
@@ -190,6 +195,10 @@ public class Relation<T> implements Querying<T> {
         return queryMethods.joins(values);
     }
 
+    public Relation<T> leftJoins(String... values) {
+        return queryMethods.leftJoins(values);
+    }
+
     public Relation<T> where(String conditions, Object... params) {
         return queryMethods.where(conditions, params);
     }
@@ -286,16 +295,21 @@ public class Relation<T> implements Querying<T> {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="relation methods">
-    public void addSelect(String select) {
-       this.selectValues.add(select); this.constructor = true;
+    public void addSelect(String[] select) {
+       range(0, select.length).forEach(i -> this.selectValues.add(select[i]));
+       this.constructor = true;
     }
 
     public void setSelect(String select) {
        clearSelect(); this.distinct = false; this.constructor = false; this.selectValues.add(select);
     }
 
-    public void addJoins(String joins) {
-        this.joinsValues.add(joins);
+    public void addJoins(String[] joins) {
+        range(0, joins.length).forEach(i -> this.joinsValues.add(joins[i]));
+    }
+
+    public void addLeftJoins(String[] joins) {
+        range(0, joins.length).forEach(i -> this.leftJoinsValues.add(joins[i]));
     }
 
     public void addWhere(String where) {
@@ -303,11 +317,11 @@ public class Relation<T> implements Querying<T> {
     }
 
     public void addParams(Object[] params) {
-        this.params.add(params);
+        range(0, params.length).forEach(i -> this.params.add(params[i]));
     }
 
-    public void addGroup(String group) {
-        this.groupValues.add(group);
+    public void addGroup(String[] group) {
+        range(0, group.length).forEach(i -> this.groupValues.add(group[i]));
     }
 
     public void addHaving(String having) {
@@ -318,8 +332,8 @@ public class Relation<T> implements Querying<T> {
         return orderValues;
     }
 
-    public void addOrder(String order) {
-        this.orderValues.add(order);
+    public void addOrder(String[] order) {
+        range(0, order.length).forEach(i -> this.orderValues.add(order[i]));
     }
 
     public void addIncludes(String[] includes) {
@@ -372,6 +386,14 @@ public class Relation<T> implements Querying<T> {
         return format(SELECT_FRAGMENT, distinctExp() + constructor(separatedByComma(selectOrThis())), fromClauseOrThis());
     }
 
+    private String buildJoins() {
+        return format(INNER_JOINS_FRAGMENT, separatedByJoin(joinsValues));
+    }
+
+    private String buildLeftJoins() {
+        return format(LEFT_JOINS_FRAGMENT, separatedByLeftJoin(leftJoinsValues));
+    }
+
     private String buildWhere() {
         return format(WHERE_FRAGMENT, separatedByAnd(whereValues));
     }
@@ -418,12 +440,16 @@ public class Relation<T> implements Querying<T> {
         eagerLoadsValues.forEach(value -> query.setHint("eclipselink.left-join-fetch", value));
     }
 
-    private String separatedBySpace(List<String> values) {
-        return join(" ", values);
+    private String separatedByAnd(List<String> values) {
+        return join(" AND ", values);
     }
 
-    private String separatedByAnd(List<String> values) {
-        return join("AND ", values);
+    private String separatedByJoin(List<String> values) {
+        return join(" INNER JOIN ", values);
+    }
+
+    private String separatedByLeftJoin(List<String> values) {
+        return join(" LEFT JOIN ", values);
     }
 
     private String separatedByComma(List<String> values) {
