@@ -8,6 +8,7 @@ import static java.lang.String.format;
 import static java.lang.String.join;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.IntStream.range;
@@ -43,7 +44,7 @@ public class Relation<T> implements Querying<T> {
 
     private final List<String> leftJoinsValues = new ArrayList();
 
-    private final List<Object> params = new ArrayList();
+    private final HashMap<String, Object> params = new HashMap();
 
     private final List<String> includesValues = new ArrayList();
 
@@ -308,7 +309,7 @@ public class Relation<T> implements Querying<T> {
     }
 
     public void addParams(Object[] params) {
-        this.params.addAll(List.of(params));
+        range(0, params.length -1).forEach(i -> this.params.put((String) params[i], params[i + 1]));
     }
 
     public void addGroup(String[] group) {
@@ -424,7 +425,7 @@ public class Relation<T> implements Querying<T> {
     }
 
     private void applyParams(Query query) {
-        range(0, params.size()).forEach(i -> query.setParameter(i + 1, params.get(i)));
+        params.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
     }
 
     private void applyHints(Query query) {
