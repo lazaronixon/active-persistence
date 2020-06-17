@@ -17,27 +17,27 @@ public class Calculation<T> {
     }
 
     public long count(String field) {
-        relation.reselect("COUNT(" + field + ")"); relation.setCalculating(true); return relation.fetchOneAs(Long.class);
+        relation.setSelect("COUNT(" + field + ")"); relation.setCalculating(true); return relation.fetchOneAs(Long.class);
     }
 
     public <R> R minimum(String field, Class<R> resultClass) {
-        relation.reselect("MIN(" + field + ")"); relation.setCalculating(true); return relation.fetchOneAs(resultClass);
+        relation.setSelect("MIN(" + field + ")"); relation.setCalculating(true); return relation.fetchOneAs(resultClass);
     }
 
     public <R> R maximum(String field, Class<R> resultClass) {
-        relation.reselect("MAX(" + field + ")"); relation.setCalculating(true); return relation.fetchOneAs(resultClass);
+        relation.setSelect("MAX(" + field + ")"); relation.setCalculating(true); return relation.fetchOneAs(resultClass);
     }
 
     public <R> R average(String field, Class<R> resultClass) {
-        relation.reselect("AVG(" + field + ")"); relation.setCalculating(true); return relation.fetchOneAs(resultClass);
+        relation.setSelect("AVG(" + field + ")"); relation.setCalculating(true); return relation.fetchOneAs(resultClass);
     }
 
     public <R> R sum(String field, Class<R> resultClass) {
-        relation.reselect("SUM(" + field + ")"); relation.setCalculating(true); return relation.fetchOneAs(resultClass);
+        relation.setSelect("SUM(" + field + ")"); relation.setCalculating(true); return relation.fetchOneAs(resultClass);
     }
 
     public List pluck(String... fields) {
-        relation.reselect(separatedByComma(fields)); return relation.fetchAlt();
+        relation.setSelect(separatedByComma(fields)); return relation.fetchAlt();
     }
 
     public List ids() {

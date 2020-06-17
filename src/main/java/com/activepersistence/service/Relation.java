@@ -285,6 +285,10 @@ public class Relation<T> implements Querying<T> {
        this.selectValues.add(select); this.constructor = true;
     }
 
+    public void setSelect(String select) {
+       clearSelect(); this.constructor = false; this.selectValues.add(select);
+    }
+
     public void addJoins(String joins) {
         this.joinsValues.add(joins);
     }
