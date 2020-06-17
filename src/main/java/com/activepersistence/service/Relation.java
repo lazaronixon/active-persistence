@@ -19,7 +19,8 @@ import javax.persistence.TypedQuery;
 
 public class Relation<T> implements Querying<T> {
 
-    private final static String SELECT_FRAGMENT      = "SELECT %s FROM %s this";
+    private final static String SELECT_FRAGMENT      = "SELECT %s";
+    private final static String FROM_FRAGMENT        = "FROM %s this";
     private final static String WHERE_FRAGMENT       = "WHERE %s";
     private final static String INNER_JOINS_FRAGMENT = "INNER JOIN %s";
     private final static String LEFT_JOINS_FRAGMENT  = "LEFT JOIN %s";
@@ -383,7 +384,9 @@ public class Relation<T> implements Querying<T> {
 
     //<editor-fold defaultstate="collapsed" desc="private methods">
     private String buildSelect() {
-        return format(SELECT_FRAGMENT, distinctExp() + constructor(separatedByComma(selectOrThis())), fromClauseOrThis());
+        String select = format(SELECT_FRAGMENT, distinctExp() + constructor(separatedByComma(selectOrThis())));
+        String from   = format(FROM_FRAGMENT, fromClauseOrThis());
+        return join(" ", select, from);
     }
 
     private String buildJoins() {
