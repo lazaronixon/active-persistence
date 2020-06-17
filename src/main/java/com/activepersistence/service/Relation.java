@@ -9,6 +9,7 @@ import static java.lang.String.join;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.IntStream.range;
 import javax.persistence.EntityManager;
 import static javax.persistence.LockModeType.NONE;
@@ -52,6 +53,8 @@ public class Relation<T> implements Querying<T> {
 
     private final List<String> eagerLoadsValues = new ArrayList();
 
+    private String fromClause = null;
+
     private int limit  = 0;
 
     private int offset = 0;
@@ -83,12 +86,12 @@ public class Relation<T> implements Querying<T> {
     }
 
     public String toJpql() {
-        StringBuilder qlString = new StringBuilder(formattedSelect());
+        StringBuilder qlString = new StringBuilder(buildSelect());
         if (!joinsValues.isEmpty())  qlString.append(" ").append(separatedBySpace(joinsValues));
-        if (!whereValues.isEmpty())  qlString.append(" ").append(formattedWhere());
-        if (!groupValues.isEmpty())  qlString.append(" ").append(formattedGroup());
-        if (!havingValues.isEmpty()) qlString.append(" ").append(formattedHaving());
-        if (!orderValues.isEmpty())  qlString.append(" ").append(formattedOrder());
+        if (!whereValues.isEmpty())  qlString.append(" ").append(buildWhere());
+        if (!groupValues.isEmpty())  qlString.append(" ").append(buildGroup());
+        if (!havingValues.isEmpty()) qlString.append(" ").append(buildHaving());
+        if (!orderValues.isEmpty())  qlString.append(" ").append(buildOrder());
         return qlString.toString();
     }
 
@@ -244,6 +247,10 @@ public class Relation<T> implements Querying<T> {
     public Relation<T> lock() {
         return queryMethods.lock();
     }
+
+    public Relation<T> from(String value) {
+        return queryMethods.from(value);
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="calculation">
@@ -356,26 +363,30 @@ public class Relation<T> implements Querying<T> {
     public void setLock(boolean lock) {
         this.lock = lock;
     }
+
+    public void setFromClause(String fromClause) {
+        this.fromClause = fromClause;
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="private methods">
-    private String formattedSelect() {
-        return format(SELECT_FRAGMENT, distinctExp() + constructor(separatedByComma(selectValuesOrThis())), entityClass.getSimpleName());
+    private String buildSelect() {
+        return format(SELECT_FRAGMENT, distinctExp() + constructor(separatedByComma(selectOrThis())), fromClauseOrThis());
     }
 
-    private String formattedWhere() {
+    private String buildWhere() {
         return format(WHERE_FRAGMENT, separatedByAnd(whereValues));
     }
 
-    private String formattedGroup() {
+    private String buildGroup() {
         return format(GROUP_FRAGMENT, separatedByComma(groupValues));
     }
 
-    private String formattedHaving() {
+    private String buildHaving() {
         return format(HAVING_FRAGMENT, separatedByAnd(havingValues));
     }
 
-    private String formattedOrder() {
+    private String buildOrder() {
         return format(ORDER_FRAGMENT, separatedByComma(orderValues));
     }
 
@@ -425,12 +436,16 @@ public class Relation<T> implements Querying<T> {
         return distinct && !calculating ? "DISTINCT " : "";
     }
 
-    private List<String> selectValuesOrThis() {
+    private List<String> selectOrThis() {
         return selectValues.isEmpty() ? Arrays.asList("this") : selectValues;
     }
 
     private String constructor(String fields) {
         return constructor ? format("new %s(%s)", entityClass.getName(), fields) : fields;
+    }
+
+    private String fromClauseOrThis() {
+        return ofNullable(fromClause).orElse(entityClass.getSimpleName());
     }
     //</editor-fold>
 

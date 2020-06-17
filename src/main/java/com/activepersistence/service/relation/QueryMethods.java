@@ -79,6 +79,10 @@ public class QueryMethods<T> {
         relation.setLock(true); return relation;
     }
 
+    public Relation<T> from(String value) {
+        relation.setFromClause(value); return relation;
+    }
+
     private String separatedByComma(String[] values) {
         return join(", ", values);
     }

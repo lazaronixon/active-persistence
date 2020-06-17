@@ -129,6 +129,10 @@ public interface Delegation<T> {
     public default Relation<T> lock() {
         return buildRelation().lock();
     }
+
+    public default Relation<T> from(String value) {
+        return buildRelation().from(value);
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="calculation">
