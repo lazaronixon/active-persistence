@@ -34,7 +34,7 @@ public class Relation<T> implements Querying<T> {
 
     private final Class entityClass;
 
-    private final List<String> selectValues = Arrays.asList("this");
+    private final List<String> selectValues = new ArrayList();
 
     private final List<String> whereValues  = new ArrayList();
 
@@ -59,6 +59,8 @@ public class Relation<T> implements Querying<T> {
     private boolean distinct = false;
 
     private boolean calculating = false;
+
+    private boolean constructor = false;
 
     private boolean lock = false;
 
@@ -280,11 +282,7 @@ public class Relation<T> implements Querying<T> {
 
     //<editor-fold defaultstate="collapsed" desc="relation methods">
     public void addSelect(String select) {
-        this.selectValues.add(select);
-    }
-
-    public void setSelect(String select) {
-        this.selectValues.clear(); this.addSelect(select);
+       this.selectValues.add(select); this.constructor = true;
     }
 
     public void addJoins(String joins) {
@@ -358,7 +356,7 @@ public class Relation<T> implements Querying<T> {
 
     //<editor-fold defaultstate="collapsed" desc="private methods">
     private String formattedSelect() {
-        return format(SELECT_FRAGMENT, distinctExp() + separatedByComma(selectValues), entityClass.getSimpleName());
+        return format(SELECT_FRAGMENT, distinctExp() + constructor(separatedByComma(selectValuesOrThis())), entityClass.getSimpleName());
     }
 
     private String formattedWhere() {
@@ -421,6 +419,14 @@ public class Relation<T> implements Querying<T> {
 
     private String distinctExp() {
         return distinct && !calculating ? "DISTINCT " : "";
+    }
+
+    private List<String> selectValuesOrThis() {
+        return selectValues.isEmpty() ? Arrays.asList("this") : selectValues;
+    }
+
+    private String constructor(String fields) {
+        return constructor ? format("new %s(%s)", entityClass.getName(), fields) : fields;
     }
     //</editor-fold>
 
