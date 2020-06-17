@@ -134,7 +134,7 @@ List<Client> clients = studentsService.select("date(this.createdAt), sum(price)"
 
 ### Having
 ```java
-List<Client> clients = studentsService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").having("sum(this.price) > ?", 100).fetch();
+List<Client> clients = studentsService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").having("sum(this.price) > :price", "price", 100).fetch();
 ```
 
 ### Reselect
