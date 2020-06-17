@@ -19,14 +19,14 @@ import javax.persistence.TypedQuery;
 
 public class Relation<T> implements Querying<T> {
 
-    private final static String SELECT_FRAGMENT      = "SELECT %s";
-    private final static String FROM_FRAGMENT        = "FROM %s this";
-    private final static String WHERE_FRAGMENT       = "WHERE %s";
-    private final static String INNER_JOINS_FRAGMENT = "INNER JOIN %s";
-    private final static String LEFT_JOINS_FRAGMENT  = "LEFT JOIN %s";
-    private final static String GROUP_FRAGMENT       = "GROUP BY %s";
-    private final static String HAVING_FRAGMENT      = "HAVING %s";
-    private final static String ORDER_FRAGMENT       = "ORDER BY %s";
+    private final static String SELECT     = "SELECT %s";
+    private final static String FROM       = "FROM %s";
+    private final static String WHERE      = "WHERE %s";
+    private final static String JOIN       = "JOIN %s";
+    private final static String LEFT_JOIN  = "LEFT JOIN %s";
+    private final static String GROUP      = "GROUP BY %s";
+    private final static String HAVING     = "HAVING %s";
+    private final static String ORDER      = "ORDER BY %s";
 
     private final EntityManager entityManager;
 
@@ -384,33 +384,33 @@ public class Relation<T> implements Querying<T> {
 
     //<editor-fold defaultstate="collapsed" desc="private methods">
     private String buildSelect() {
-        String select = format(SELECT_FRAGMENT, distinctExp() + constructor(separatedByComma(selectOrThis())));
-        String from   = format(FROM_FRAGMENT, fromClauseOrThis());
-        return join(" ", select, from);
+        String select = format(SELECT, distinctExp() + constructor(separatedByComma(selectOrThis())));
+        String from   = format(FROM, fromClauseOrThis());
+        return join(" ", select, from, "this");
     }
 
     private String buildJoins() {
-        return format(INNER_JOINS_FRAGMENT, separatedByJoin(joinsValues));
+        return format(JOIN, separatedByJoin(joinsValues));
     }
 
     private String buildLeftJoins() {
-        return format(LEFT_JOINS_FRAGMENT, separatedByLeftJoin(leftJoinsValues));
+        return format(LEFT_JOIN, separatedByLeftJoin(leftJoinsValues));
     }
 
     private String buildWhere() {
-        return format(WHERE_FRAGMENT, separatedByAnd(whereValues));
+        return format(WHERE, separatedByAnd(whereValues));
     }
 
     private String buildGroup() {
-        return format(GROUP_FRAGMENT, separatedByComma(groupValues));
+        return format(GROUP, separatedByComma(groupValues));
     }
 
     private String buildHaving() {
-        return format(HAVING_FRAGMENT, separatedByAnd(havingValues));
+        return format(HAVING, separatedByAnd(havingValues));
     }
 
     private String buildOrder() {
-        return format(ORDER_FRAGMENT, separatedByComma(orderValues));
+        return format(ORDER, separatedByComma(orderValues));
     }
 
     private TypedQuery<T> buildParameterizedQuery(String qlString) {
@@ -448,7 +448,7 @@ public class Relation<T> implements Querying<T> {
     }
 
     private String separatedByJoin(List<String> values) {
-        return join(" INNER JOIN ", values);
+        return join(" JOIN ", values);
     }
 
     private String separatedByLeftJoin(List<String> values) {
