@@ -104,8 +104,8 @@ Student student = studentsService.findBy("this.name = 'Lifo'");
 
 ### Conditions
 ```java
-List<Client> clients = studentsService.where("this.ordersCount = ?", 10).fetch();
-List<Client> clients = studentsService.where("this.ordersCount = ? AND this.locked = ?", 10, false).fetch();
+List<Client> clients = studentsService.where("this.ordersCount = :count", "count", 10).fetch();
+List<Client> clients = studentsService.where("this.ordersCount = :count AND this.locked = :locked", "count", 10, "locked", false).fetch();
 ```
 
 ### Ordering
