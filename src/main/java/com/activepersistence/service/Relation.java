@@ -61,8 +61,6 @@ public class Relation<T> implements Querying<T> {
 
     private boolean distinct = false;
 
-    private boolean calculating = false;
-
     private boolean constructor = false;
 
     private boolean lock = false;
@@ -293,7 +291,7 @@ public class Relation<T> implements Querying<T> {
     }
 
     public void setSelect(String select) {
-       clearSelect(); this.constructor = false; this.selectValues.add(select);
+       clearSelect(); this.distinct = false; this.constructor = false; this.selectValues.add(select);
     }
 
     public void addJoins(String joins) {
@@ -344,8 +342,8 @@ public class Relation<T> implements Querying<T> {
         this.distinct = distinct;
     }
 
-    public void setCalculating(boolean calculating) {
-        this.calculating = calculating;
+    public boolean isDistinct() {
+        return distinct;
     }
 
     public void clearSelect() {
@@ -433,7 +431,7 @@ public class Relation<T> implements Querying<T> {
     }
 
     private String distinctExp() {
-        return distinct && !calculating ? "DISTINCT " : "";
+        return distinct ? "DISTINCT " : "";
     }
 
     private List<String> selectOrThis() {
