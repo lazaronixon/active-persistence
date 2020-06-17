@@ -19,15 +19,6 @@ import javax.persistence.TypedQuery;
 
 public class Relation<T> implements Querying<T> {
 
-    private final static String SELECT     = "SELECT %s";
-    private final static String FROM       = "FROM %s";
-    private final static String WHERE      = "WHERE %s";
-    private final static String JOIN       = "JOIN %s";
-    private final static String LEFT_JOIN  = "LEFT JOIN %s";
-    private final static String GROUP      = "GROUP BY %s";
-    private final static String HAVING     = "HAVING %s";
-    private final static String ORDER      = "ORDER BY %s";
-
     private final EntityManager entityManager;
 
     private final FinderMethods<T> finderMethods;
@@ -297,8 +288,7 @@ public class Relation<T> implements Querying<T> {
 
     //<editor-fold defaultstate="collapsed" desc="relation methods">
     public void addSelect(String[] select) {
-       range(0, select.length).forEach(i -> this.selectValues.add(select[i]));
-       this.constructor = true;
+        this.selectValues.addAll(List.of(select)); this.constructor = true;
     }
 
     public void setSelect(String select) {
@@ -306,11 +296,11 @@ public class Relation<T> implements Querying<T> {
     }
 
     public void addJoins(String[] joins) {
-        range(0, joins.length).forEach(i -> this.joinsValues.add(joins[i]));
+        this.joinsValues.addAll(List.of(joins));
     }
 
     public void addLeftJoins(String[] joins) {
-        range(0, joins.length).forEach(i -> this.leftJoinsValues.add(joins[i]));
+        this.leftJoinsValues.addAll(List.of(joins));
     }
 
     public void addWhere(String where) {
@@ -318,11 +308,11 @@ public class Relation<T> implements Querying<T> {
     }
 
     public void addParams(Object[] params) {
-        range(0, params.length).forEach(i -> this.params.add(params[i]));
+        this.params.addAll(List.of(params));
     }
 
     public void addGroup(String[] group) {
-        range(0, group.length).forEach(i -> this.groupValues.add(group[i]));
+        this.groupValues.addAll(List.of(group));
     }
 
     public void addHaving(String having) {
@@ -334,7 +324,7 @@ public class Relation<T> implements Querying<T> {
     }
 
     public void addOrder(String[] order) {
-        range(0, order.length).forEach(i -> this.orderValues.add(order[i]));
+        this.orderValues.addAll(List.of(order));
     }
 
     public void addIncludes(String[] includes) {
@@ -384,33 +374,33 @@ public class Relation<T> implements Querying<T> {
 
     //<editor-fold defaultstate="collapsed" desc="private methods">
     private String buildSelect() {
-        String select = format(SELECT, distinctExp() + constructor(separatedByComma(selectOrThis())));
-        String from   = format(FROM, fromClauseOrThis());
+        String select = format("SELECT %s", distinctExp() + constructor(separatedByComma(selectOrThis())));
+        String from   = format("FROM %s", fromClauseOrThis());
         return join(" ", select, from, "this");
     }
 
     private String buildJoins() {
-        return format(JOIN, separatedByJoin(joinsValues));
+        return format("JOIN %s", separatedByJoin(joinsValues));
     }
 
     private String buildLeftJoins() {
-        return format(LEFT_JOIN, separatedByLeftJoin(leftJoinsValues));
+        return format("LEFT JOIN %s", separatedByLeftJoin(leftJoinsValues));
     }
 
     private String buildWhere() {
-        return format(WHERE, separatedByAnd(whereValues));
+        return format("WHERE %s", separatedByAnd(whereValues));
     }
 
     private String buildGroup() {
-        return format(GROUP, separatedByComma(groupValues));
+        return format("GROUP BY %s", separatedByComma(groupValues));
     }
 
     private String buildHaving() {
-        return format(HAVING, separatedByAnd(havingValues));
+        return format("HAVING %s", separatedByAnd(havingValues));
     }
 
     private String buildOrder() {
-        return format(ORDER, separatedByComma(orderValues));
+        return format("ORDER BY %s", separatedByComma(orderValues));
     }
 
     private TypedQuery<T> buildParameterizedQuery(String qlString) {
@@ -467,12 +457,12 @@ public class Relation<T> implements Querying<T> {
         return selectValues.isEmpty() ? Arrays.asList("this") : selectValues;
     }
 
-    private String constructor(String fields) {
-        return constructor ? format("new %s(%s)", entityClass.getName(), fields) : fields;
-    }
-
     private String fromClauseOrThis() {
         return ofNullable(fromClause).orElse(entityClass.getSimpleName());
+    }
+
+    private String constructor(String fields) {
+        return constructor ? format("new %s(%s)", entityClass.getName(), fields) : fields;
     }
     //</editor-fold>
 
