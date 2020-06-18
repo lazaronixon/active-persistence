@@ -22,29 +22,29 @@ public class Relation<T> implements Querying<T> {
 
     private final EntityManager entityManager;
 
+    private final Class entityClass;
+
     private final FinderMethods<T> finderMethods;
 
     private final QueryMethods<T> queryMethods;
 
     private final Calculation<T> calculation;
 
-    private final Class entityClass;
+    private final List<String> selectValues       = new ArrayList();
 
-    private final List<String> selectValues    = new ArrayList();
+    private final List<String> whereValues        = new ArrayList();
 
-    private final List<String> whereValues     = new ArrayList();
+    private final List<String> groupValues        = new ArrayList();
 
-    private final List<String> groupValues     = new ArrayList();
+    private final List<String> havingValues       = new ArrayList();
 
-    private final List<String> havingValues    = new ArrayList();
+    private final List<String> orderValues        = new ArrayList();
 
-    private final List<String> orderValues     = new ArrayList();
+    private final List<String> joinsValues        = new ArrayList();
 
-    private final List<String> joinsValues     = new ArrayList();
+    private final List<String> leftJoinsValues    = new ArrayList();
 
-    private final List<String> leftJoinsValues = new ArrayList();
-
-    private final HashMap<String, Object> params = new HashMap();
+    private final HashMap<Integer, Object> params = new HashMap();
 
     private final List<String> includesValues = new ArrayList();
 
@@ -309,7 +309,7 @@ public class Relation<T> implements Querying<T> {
     }
 
     public void addParams(Object[] params) {
-        range(0, params.length -1).forEach(i -> this.params.put((String) params[i], params[i + 1]));
+        range(0, params.length -1).forEach(i -> this.params.put((int) params[i], params[i + 1]));
     }
 
     public void addGroup(String[] group) {
