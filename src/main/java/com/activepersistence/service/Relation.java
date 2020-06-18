@@ -42,8 +42,6 @@ public class Relation<T> implements Querying<T> {
 
     private final List<String> joinsValues        = new ArrayList();
 
-    private final List<String> leftJoinsValues    = new ArrayList();
-
     private final HashMap<Integer, Object> params = new HashMap();
 
     private final List<String> includesValues = new ArrayList();
@@ -82,12 +80,11 @@ public class Relation<T> implements Querying<T> {
 
     public String toJpql() {
         StringBuilder qlString = new StringBuilder(buildSelect());
-        if (!joinsValues.isEmpty())     qlString.append(" ").append(buildJoins());
-        if (!leftJoinsValues.isEmpty()) qlString.append(" ").append(buildLeftJoins());
-        if (!whereValues.isEmpty())     qlString.append(" ").append(buildWhere());
-        if (!groupValues.isEmpty())     qlString.append(" ").append(buildGroup());
-        if (!havingValues.isEmpty())    qlString.append(" ").append(buildHaving());
-        if (!orderValues.isEmpty())     qlString.append(" ").append(buildOrder());
+        if (!joinsValues.isEmpty())  qlString.append(" ").append(buildJoins());
+        if (!whereValues.isEmpty())  qlString.append(" ").append(buildWhere());
+        if (!groupValues.isEmpty())  qlString.append(" ").append(buildGroup());
+        if (!havingValues.isEmpty()) qlString.append(" ").append(buildHaving());
+        if (!orderValues.isEmpty())  qlString.append(" ").append(buildOrder());
         return qlString.toString();
     }
 
@@ -186,10 +183,6 @@ public class Relation<T> implements Querying<T> {
 
     public Relation<T> joins(String... values) {
         return queryMethods.joins(values);
-    }
-
-    public Relation<T> leftJoins(String... values) {
-        return queryMethods.leftJoins(values);
     }
 
     public Relation<T> where(String conditions, Object... params) {
@@ -300,10 +293,6 @@ public class Relation<T> implements Querying<T> {
         this.joinsValues.addAll(List.of(joins));
     }
 
-    public void addLeftJoins(String[] joins) {
-        this.leftJoinsValues.addAll(List.of(joins));
-    }
-
     public void addWhere(String where) {
         this.whereValues.add(where);
     }
@@ -381,11 +370,7 @@ public class Relation<T> implements Querying<T> {
     }
 
     private String buildJoins() {
-        return format("JOIN %s", separatedByJoin(joinsValues));
-    }
-
-    private String buildLeftJoins() {
-        return format("LEFT JOIN %s", separatedByLeftJoin(leftJoinsValues));
+        return separatedBySpace(joinsValues);
     }
 
     private String buildWhere() {
@@ -438,12 +423,8 @@ public class Relation<T> implements Querying<T> {
         return join(" AND ", values);
     }
 
-    private String separatedByJoin(List<String> values) {
-        return join(" JOIN ", values);
-    }
-
-    private String separatedByLeftJoin(List<String> values) {
-        return join(" LEFT JOIN ", values);
+    private String separatedBySpace(List<String> values) {
+        return join(" ", values);
     }
 
     private String separatedByComma(List<String> values) {

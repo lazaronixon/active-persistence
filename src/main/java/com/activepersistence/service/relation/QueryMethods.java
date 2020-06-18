@@ -22,10 +22,6 @@ public class QueryMethods<T> {
         relation.addJoins(values); return relation;
     }
 
-    public Relation<T> leftJoins(String... values) {
-        relation.addLeftJoins(values); return relation;
-    }
-
     public Relation<T> where(String conditions, Object... params) {
         relation.addWhere(conditions); relation.addParams(params); return relation;
     }
