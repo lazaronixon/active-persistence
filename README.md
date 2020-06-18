@@ -49,7 +49,7 @@ public class StudentsService extends Base<Student> {
     public EntityManager getEntityManager() {
         return em;
     }
-
+}
 ```
 
 ## CRUD: Reading and Writing Data
