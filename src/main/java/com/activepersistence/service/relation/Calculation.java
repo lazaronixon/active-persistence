@@ -4,43 +4,39 @@ import com.activepersistence.service.Relation;
 import static java.lang.String.join;
 import java.util.List;
 
-public class Calculation<T> {
+public interface Calculation<T> {
 
-    private final Relation<T> relation;
+    public Relation<T> getRelation();
 
-    public Calculation(Relation relation) {
-        this.relation = relation;
-    }
-
-    public long count() {
+    public default long count() {
         return count("this");
     }
 
-    public long count(String field) {
-        relation.setSelect("COUNT(" + distinct() + field + ")"); return relation.fetchOneAs(Long.class);
+    public default long count(String field) {
+        getRelation().setSelect("COUNT(" + distinct() + field + ")"); return getRelation().fetchOneAs(Long.class);
     }
 
-    public <R> R minimum(String field, Class<R> resultClass) {
-        relation.setSelect("MIN(" + field + ")"); return relation.fetchOneAs(resultClass);
+    public default <R> R minimum(String field, Class<R> resultClass) {
+        getRelation().setSelect("MIN(" + field + ")"); return getRelation().fetchOneAs(resultClass);
     }
 
-    public <R> R maximum(String field, Class<R> resultClass) {
-        relation.setSelect("MAX(" + field + ")"); return relation.fetchOneAs(resultClass);
+    public default <R> R maximum(String field, Class<R> resultClass) {
+        getRelation().setSelect("MAX(" + field + ")"); return getRelation().fetchOneAs(resultClass);
     }
 
-    public <R> R average(String field, Class<R> resultClass) {
-        relation.setSelect("AVG(" + field + ")"); return relation.fetchOneAs(resultClass);
+    public default <R> R average(String field, Class<R> resultClass) {
+        getRelation().setSelect("AVG(" + field + ")"); return getRelation().fetchOneAs(resultClass);
     }
 
-    public <R> R sum(String field, Class<R> resultClass) {
-        relation.setSelect("SUM(" + field + ")"); return relation.fetchOneAs(resultClass);
+    public default <R> R sum(String field, Class<R> resultClass) {
+        getRelation().setSelect("SUM(" + field + ")"); return getRelation().fetchOneAs(resultClass);
     }
 
-    public List pluck(String... fields) {
-        relation.setSelect(distinct() + separatedByComma(fields)); return relation.fetchAlt();
+    public default List pluck(String... fields) {
+        getRelation().setSelect(distinct() + separatedByComma(fields)); return getRelation().fetchAlt();
     }
 
-    public List ids() {
+    public default List ids() {
         return pluck("this.id");
     }
 
@@ -49,7 +45,7 @@ public class Calculation<T> {
     }
 
     private String distinct() {
-        return relation.isDistinct() ? "DISTINCT " : "";
+        return getRelation().isDistinct() ? "DISTINCT " : "";
     }
 
 }

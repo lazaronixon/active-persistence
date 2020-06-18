@@ -3,88 +3,84 @@ package com.activepersistence.service.relation;
 import com.activepersistence.service.Relation;
 import java.util.List;
 
-public class FinderMethods<T> {
+public interface FinderMethods<T> {
 
-    private final Relation<T> relation;
+    public Relation<T> getRelation();
 
-    public FinderMethods(Relation relation) {
-        this.relation = relation;
+    public default T take() {
+        return getRelation().limit(1).fetchOne();
     }
 
-    public T take() {
-        return relation.limit(1).fetchOne();
+    public default T takeOrFail() {
+        return getRelation().limit(1).fetchOneOrFail();
     }
 
-    public T takeOrFail() {
-        return relation.limit(1).fetchOneOrFail();
-    }
-
-    public T first() {
-        if (relation.getOrderValues().isEmpty()) {
-            return relation.order("this.id").take();
+    public default T first() {
+        if (getRelation().getOrderValues().isEmpty()) {
+            return getRelation().order("this.id").take();
         } else {
-            return relation.take();
+            return getRelation().take();
         }
     }
 
-    public T firstOrFail() {
-        if (relation.getOrderValues().isEmpty()) {
-            return relation.order("this.id").takeOrFail();
+    public default T firstOrFail() {
+        if (getRelation().getOrderValues().isEmpty()) {
+            return getRelation().order("this.id").takeOrFail();
         } else {
-            return relation.takeOrFail();
+            return getRelation().takeOrFail();
         }
     }
 
-    public List<T> first(int limit) {
-        if (relation.getOrderValues().isEmpty()) {
-            return relation.order("this.id").take(limit);
+    public default List<T> first(int limit) {
+        if (getRelation().getOrderValues().isEmpty()) {
+            return getRelation().order("this.id").take(limit);
         } else {
-            return relation.take(limit);
+            return getRelation().take(limit);
         }
     }
 
-    public T last() {
-        if (relation.getOrderValues().isEmpty()) {
-            return relation.order("this.id DESC").take();
+    public default T last() {
+        if (getRelation().getOrderValues().isEmpty()) {
+            return getRelation().order("this.id DESC").take();
         } else {
-            return relation.take();
+            return getRelation().take();
         }
     }
 
-    public T lastOrFail() {
-        if (relation.getOrderValues().isEmpty()) {
-            return relation.order("this.id DESC").takeOrFail();
+    public default T lastOrFail() {
+        if (getRelation().getOrderValues().isEmpty()) {
+            return getRelation().order("this.id DESC").takeOrFail();
         } else {
-            return relation.takeOrFail();
+            return getRelation().takeOrFail();
         }
     }
 
-    public List<T> last(int limit) {
-        if (relation.getOrderValues().isEmpty()) {
-            return relation.order("this.id DESC").take(limit);
+    public default List<T> last(int limit) {
+        if (getRelation().getOrderValues().isEmpty()) {
+            return getRelation().order("this.id DESC").take(limit);
         } else {
-            return relation.take(limit);
+            return getRelation().take(limit);
         }
     }
 
-    public T findBy(String conditions, Object... params) {
-        return relation.where(conditions, params).take();
+    public default T findBy(String conditions, Object... params) {
+        return getRelation().where(conditions, params).take();
     }
 
-    public T findByOrFail(String conditions, Object... params) {
-        return relation.where(conditions, params).takeOrFail();
+    public default T findByOrFail(String conditions, Object... params) {
+        return getRelation().where(conditions, params).takeOrFail();
     }
 
-    public boolean exists(String conditions, Object... params) {
-        return relation.where(conditions, params).exists();
+    public default boolean exists(String conditions, Object... params) {
+        return getRelation().where(conditions, params).exists();
     }
 
-    public boolean exists() {
-        return relation.limit(1).fetchExists();
+    public default boolean exists() {
+        return getRelation().limit(1).fetchExists();
     }
 
-    public List<T> take(int limit) {
-        return relation.limit(limit).fetch();
+    public default List<T> take(int limit) {
+        return getRelation().limit(limit).fetch();
     }
 
 }

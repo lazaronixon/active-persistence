@@ -2,83 +2,79 @@ package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
 
-public class QueryMethods<T> {
+public interface QueryMethods<T> {
 
-    private final Relation<T> relation;
+    public Relation<T> getRelation();
 
-    public QueryMethods(Relation relation) {
-        this.relation = relation;
+    public default Relation<T> all() {
+        return getRelation();
     }
 
-    public Relation<T> all() {
-        return relation;
+    public default Relation<T> select(String... fields) {
+        getRelation().addSelect(fields); return getRelation();
     }
 
-    public Relation<T> select(String... fields) {
-        relation.addSelect(fields); return relation;
+    public default Relation<T> joins(String... values) {
+        getRelation().addJoins(values); return getRelation();
     }
 
-    public Relation<T> joins(String... values) {
-        relation.addJoins(values); return relation;
+    public default Relation<T> where(String conditions, Object... params) {
+        getRelation().addWhere(conditions); getRelation().addParams(params); return getRelation();
     }
 
-    public Relation<T> where(String conditions, Object... params) {
-        relation.addWhere(conditions); relation.addParams(params); return relation;
+    public default Relation<T> group(String... fields) {
+        getRelation().addGroup(fields); return getRelation();
     }
 
-    public Relation<T> group(String... fields) {
-        relation.addGroup(fields); return relation;
+    public default Relation<T> having(String conditions, Object... params) {
+        getRelation().addHaving(conditions); getRelation().addParams(params); return getRelation();
     }
 
-    public Relation<T> having(String conditions, Object... params) {
-        relation.addHaving(conditions); relation.addParams(params); return relation;
+    public default Relation<T> order(String... fields) {
+        getRelation().addOrder(fields); return getRelation();
     }
 
-    public Relation<T> order(String... fields) {
-        relation.addOrder(fields); return relation;
+    public default Relation<T> limit(int limit) {
+        getRelation().setLimit(limit); return getRelation();
     }
 
-    public Relation<T> limit(int limit) {
-        relation.setLimit(limit); return relation;
+    public default Relation<T> offset(int offset) {
+        getRelation().setOffset(offset); return getRelation();
     }
 
-    public Relation<T> offset(int offset) {
-        relation.setOffset(offset); return relation;
+    public default Relation<T> distinct() {
+        getRelation().setDistinct(true); return getRelation();
     }
 
-    public Relation<T> distinct() {
-        relation.setDistinct(true); return relation;
+    public default Relation<T> none() {
+        getRelation().addWhere("1 = 0"); return getRelation();
     }
 
-    public Relation<T> none() {
-        relation.addWhere("1 = 0"); return relation;
+    public default Relation<T> includes(String... includes) {
+        getRelation().addIncludes(includes); return getRelation();
     }
 
-    public Relation<T> includes(String... includes) {
-        relation.addIncludes(includes); return relation;
+    public default Relation<T> eagerLoads(String... eagerLoads) {
+        getRelation().addEagerLoads(eagerLoads); return getRelation();
     }
 
-    public Relation<T> eagerLoads(String... eagerLoads) {
-        relation.addEagerLoads(eagerLoads); return relation;
+    public default Relation<T> reselect(String... fields) {
+        getRelation().clearSelect(); return select(fields);
     }
 
-    public Relation<T> reselect(String... fields) {
-        relation.clearSelect(); return select(fields);
+    public default Relation<T> rewhere(String conditions, Object... params) {
+        getRelation().clearWhere(); return where(conditions, params);
     }
 
-    public Relation<T> rewhere(String conditions, Object... params) {
-        relation.clearWhere(); return where(conditions, params);
+    public default Relation<T> reorder(String... fields) {
+        getRelation().clearOrder(); return order(fields);
     }
 
-    public Relation<T> reorder(String... fields) {
-        relation.clearOrder(); return order(fields);
+    public default Relation<T> lock() {
+        getRelation().setLock(true); return getRelation();
     }
 
-    public Relation<T> lock() {
-        relation.setLock(true); return relation;
-    }
-
-    public Relation<T> from(String value) {
-        relation.setFromClause(value); return relation;
+    public default Relation<T> from(String value) {
+        getRelation().setFromClause(value); return getRelation();
     }
 }

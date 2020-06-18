@@ -18,29 +18,23 @@ import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-public class Relation<T> implements Querying<T> {
+public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, Querying<T> {
 
     private final EntityManager entityManager;
 
     private final Class entityClass;
 
-    private final FinderMethods<T> finderMethods;
+    private final List<String> selectValues = new ArrayList();
 
-    private final QueryMethods<T> queryMethods;
+    private final List<String> whereValues  = new ArrayList();
 
-    private final Calculation<T> calculation;
+    private final List<String> groupValues  = new ArrayList();
 
-    private final List<String> selectValues       = new ArrayList();
+    private final List<String> havingValues = new ArrayList();
 
-    private final List<String> whereValues        = new ArrayList();
+    private final List<String> orderValues  = new ArrayList();
 
-    private final List<String> groupValues        = new ArrayList();
-
-    private final List<String> havingValues       = new ArrayList();
-
-    private final List<String> orderValues        = new ArrayList();
-
-    private final List<String> joinsValues        = new ArrayList();
+    private final List<String> joinsValues  = new ArrayList();
 
     private final HashMap<Integer, Object> params = new HashMap();
 
@@ -63,19 +57,6 @@ public class Relation<T> implements Querying<T> {
     public Relation(EntityManager entityManager, Class entityClass) {
         this.entityManager = entityManager;
         this.entityClass   = entityClass;
-        this.finderMethods = new FinderMethods(this);
-        this.queryMethods  = new QueryMethods(this);
-        this.calculation   = new Calculation(this);
-    }
-
-    @Override
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
-
-    @Override
-    public Class<T> getEntityClass() {
-        return entityClass;
     }
 
     public String toJpql() {
@@ -118,169 +99,7 @@ public class Relation<T> implements Querying<T> {
     }
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="finder methods">
-    public T take() {
-        return finderMethods.take();
-    }
 
-    public T takeOrFail() {
-        return finderMethods.takeOrFail();
-    }
-
-    public T first() {
-        return finderMethods.first();
-    }
-
-    public T firstOrFail() {
-        return finderMethods.firstOrFail();
-    }
-
-    public T last() {
-        return finderMethods.last();
-    }
-
-    public T lastOrFail() {
-        return finderMethods.lastOrFail();
-    }
-
-    public T findBy(String conditions, Object... params) {
-        return finderMethods.findBy(conditions, params);
-    }
-
-    public T findByOrFail(String conditions, Object... params) {
-        return finderMethods.findByOrFail(conditions, params);
-    }
-
-    public boolean exists(String conditions, Object... params) {
-        return finderMethods.exists(conditions, params);
-    }
-
-    public boolean exists() {
-        return finderMethods.exists();
-    }
-
-    public List<T> take(int limit) {
-        return finderMethods.take(limit);
-    }
-
-    public List<T> first(int limit) {
-        return finderMethods.first(limit);
-    }
-
-    public List<T> last(int limit) {
-        return finderMethods.last(limit);
-    }
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="query methods">
-    public Relation<T> all() {
-        return queryMethods.all();
-    }
-
-    public Relation<T> select(String... fields) {
-        return queryMethods.select(fields);
-    }
-
-    public Relation<T> joins(String... values) {
-        return queryMethods.joins(values);
-    }
-
-    public Relation<T> where(String conditions, Object... params) {
-        return queryMethods.where(conditions, params);
-    }
-
-    public Relation<T> group(String... fields) {
-        return queryMethods.group(fields);
-    }
-
-    public Relation<T> having(String conditions, Object... params) {
-        return queryMethods.having(conditions, params);
-    }
-
-    public Relation<T> order(String... order) {
-        return queryMethods.order(order);
-    }
-
-    public Relation<T> limit(int limit) {
-        return queryMethods.limit(limit);
-    }
-
-    public Relation<T> offset(int offset) {
-        return queryMethods.offset(offset);
-    }
-
-    public Relation<T> distinct() {
-        return queryMethods.distinct();
-    }
-
-    public Relation<T> none() {
-        return queryMethods.none();
-    }
-
-    public Relation<T> includes(String... includes) {
-        return queryMethods.includes(includes);
-    }
-
-    public Relation<T> eagerLoads(String... eagerLoads) {
-        return queryMethods.eagerLoads(eagerLoads);
-    }
-
-    public Relation<T> reselect(String... fields) {
-        return queryMethods.reselect(fields);
-    }
-
-    public Relation<T> rewhere(String conditions, Object... params) {
-        return queryMethods.rewhere(conditions, params);
-    }
-
-    public Relation<T> reorder(String... fields) {
-        return queryMethods.reorder(fields);
-    }
-
-    public Relation<T> lock() {
-        return queryMethods.lock();
-    }
-
-    public Relation<T> from(String value) {
-        return queryMethods.from(value);
-    }
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="calculation">
-    public long count() {
-        return calculation.count();
-    }
-
-    public long count(String field) {
-        return calculation.count(field);
-    }
-
-    public <R> R minimum(String field, Class<R> resultClass) {
-        return (R) calculation.minimum(field, entityClass);
-    }
-
-    public <R> R maximum(String field, Class<R> resultClass) {
-        return (R) calculation.maximum(field, entityClass);
-    }
-
-    public <R> R average(String field, Class<R> resultClass) {
-        return (R) calculation.average(field, entityClass);
-    }
-
-    public <R> R sum(String field, Class<R> resultClass) {
-        return (R) calculation.sum(field, entityClass);
-    }
-
-    public List pluck(String... fields) {
-        return calculation.pluck(fields);
-    }
-
-    public List ids() {
-        return calculation.ids();
-    }
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="relation methods">
     public void addSelect(String[] select) {
         this.selectValues.addAll(List.of(select)); this.constructor = true;
     }
@@ -360,9 +179,22 @@ public class Relation<T> implements Querying<T> {
     public void setFromClause(String fromClause) {
         this.fromClause = fromClause;
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="private methods">
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Override
+    public Class<T> getEntityClass() {
+        return entityClass;
+    }
+
+    @Override
+    public Relation<T> getRelation() {
+        return this;
+    }
+
     private String buildSelect() {
         String select = format("SELECT %s", distinctExp() + constructor(separatedByComma(selectOrThis())));
         String from   = format("FROM %s", fromClauseOrThis());
@@ -446,6 +278,5 @@ public class Relation<T> implements Querying<T> {
     private String constructor(String fields) {
         return constructor ? format("new %s(%s)", entityClass.getName(), fields) : fields;
     }
-    //</editor-fold>
 
 }
