@@ -42,7 +42,9 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private final List<String> eagerLoadsValues = new ArrayList();
 
-    private final HashMap<String, Object> params = new HashMap();
+    private final HashMap<String, Object> whereParams = new HashMap();
+
+    private final HashMap<String, Object> havingParams = new HashMap();
 
     private String fromClause = null;
 
@@ -98,7 +100,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public void addWhere(String where, Map<String, Object> params) {
         this.whereValues.add(where);
-        this.params.putAll(params);
+        this.whereParams.putAll(params);
     }
 
     public void addGroup(String[] group) {
@@ -107,7 +109,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public void addHaving(String having, Map<String, Object> params) {
         this.havingValues.add(having);
-        this.params.putAll(params);
+        this.havingParams.putAll(params);
     }
 
     public void addOrder(String[] order) {
@@ -163,11 +165,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public void clearHaving() {
-        this.havingValues.clear(); this.params.clear();
+        this.havingValues.clear(); this.havingParams.clear();
     }
 
     public void clearWhere() {
-        this.whereValues.clear(); this.params.clear();
+        this.whereValues.clear(); this.whereParams.clear();
     }
 
     public void clearOrder() {
@@ -279,7 +281,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void applyParams(Query query) {
-        params.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
+        whereParams.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
+        havingParams.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
     }
 
     private void applyHints(Query query) {
