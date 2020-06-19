@@ -21,8 +21,6 @@ import javax.persistence.TypedQuery;
 
 public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, Querying<T> {
 
-    private final Base base;
-
     private final EntityManager entityManager;
 
     private final Class entityClass;
@@ -59,10 +57,9 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private boolean lock = false;
 
-    public Relation(Base base, EntityManager entityManager, Class entityClass) {
+    public Relation(EntityManager entityManager, Class entityClass) {
         this.entityManager = entityManager;
         this.entityClass   = entityClass;
-        this.base          = base;
     }
 
     public T find(Object id) {
@@ -183,10 +180,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public List<String> getOrderValues() {
         return orderValues;
-    }
-
-    public Base getBase() {
-        return base;
     }
 
     @Override
