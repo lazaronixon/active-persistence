@@ -20,6 +20,8 @@ import javax.persistence.TypedQuery;
 
 public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, Querying<T> {
 
+    private final Base base;
+
     private final EntityManager entityManager;
 
     private final Class entityClass;
@@ -54,9 +56,14 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private boolean lock = false;
 
-    public Relation(EntityManager entityManager, Class entityClass) {
+    public Relation(Base base, EntityManager entityManager, Class entityClass) {
         this.entityManager = entityManager;
         this.entityClass   = entityClass;
+        this.base          = base;
+    }
+
+    public T find(Object id) {
+        return getEntityManager().find(getEntityClass(), id, (lock ? PESSIMISTIC_READ : NONE));
     }
 
     public String toJpql() {
@@ -69,43 +76,12 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return qlString.toString();
     }
 
-    public T find(Object id) {
-        return getEntityManager().find(getEntityClass(), id, (lock ? PESSIMISTIC_READ : NONE));
+    public void setSelect(String select) {
+       clearSelect(); this.distinct = false; this.constructor = false; this.selectValues.add(select);
     }
-
-    //<editor-fold defaultstate="collapsed" desc="fetch methods">
-    public T fetchOne() {
-        return buildParameterizedQuery(toJpql()).getResultStream().findFirst().orElse(null);
-    }
-
-    public T fetchOneOrFail() {
-        return buildParameterizedQuery(toJpql()).getSingleResult();
-    }
-
-    public List<T> fetch() {
-        return buildParameterizedQuery(toJpql()).getResultList();
-    }
-
-    public <R> R fetchOneAs(Class<R> resultClass) {
-        return buildParameterizedQuery(toJpql(), resultClass).getSingleResult();
-    }
-
-    public List fetchAlt() {
-        return buildParameterizedQueryAlt(toJpql()).getResultList();
-    }
-
-    public boolean fetchExists() {
-        return buildParameterizedQuery(toJpql()).getResultStream().findAny().isPresent();
-    }
-    //</editor-fold>
-
 
     public void addSelect(String[] select) {
         this.selectValues.addAll(List.of(select)); this.constructor = true;
-    }
-
-    public void setSelect(String select) {
-       clearSelect(); this.distinct = false; this.constructor = false; this.selectValues.add(select);
     }
 
     public void addJoins(String[] joins) {
@@ -126,10 +102,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public void addHaving(String having) {
         this.havingValues.add(having);
-    }
-
-    public List<String> getOrderValues() {
-        return orderValues;
     }
 
     public void addOrder(String[] order) {
@@ -180,6 +152,14 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.fromClause = fromClause;
     }
 
+    public List<String> getOrderValues() {
+        return orderValues;
+    }
+
+    public Base getBase() {
+        return base;
+    }
+
     @Override
     public EntityManager getEntityManager() {
         return entityManager;
@@ -195,6 +175,33 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return this;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="fetch methods">
+    public T fetchOne() {
+        return buildParameterizedQuery(toJpql()).getResultStream().findFirst().orElse(null);
+    }
+
+    public T fetchOneOrFail() {
+        return buildParameterizedQuery(toJpql()).getSingleResult();
+    }
+
+    public List<T> fetch() {
+        return buildParameterizedQuery(toJpql()).getResultList();
+    }
+
+    public <R> R fetchOneAs(Class<R> resultClass) {
+        return buildParameterizedQuery(toJpql(), resultClass).getSingleResult();
+    }
+
+    public List fetchAlt() {
+        return buildParameterizedQueryAlt(toJpql()).getResultList();
+    }
+
+    public boolean fetchExists() {
+        return buildParameterizedQuery(toJpql()).getResultStream().findAny().isPresent();
+    }
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="private methods">
     private String buildSelect() {
         String select = format("SELECT %s", distinctExp() + constructor(separatedByComma(selectOrThis())));
         String from   = format("FROM %s", fromClauseOrThis());
@@ -278,5 +285,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private String constructor(String fields) {
         return constructor ? format("new %s(%s)", entityClass.getName(), fields) : fields;
     }
+    //</editor-fold>
 
 }
