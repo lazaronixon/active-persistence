@@ -2,7 +2,6 @@ package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
 import java.util.List;
-import java.util.Map;
 
 public interface FinderMethods<T> {
 
@@ -64,15 +63,15 @@ public interface FinderMethods<T> {
         }
     }
 
-    public default T findBy(String conditions, Map<String, Object> params) {
+    public default T findBy(String conditions, Object... params) {
         return getRelation().where(conditions, params).take();
     }
 
-    public default T findByOrFail(String conditions, Map<String, Object> params) {
+    public default T findByOrFail(String conditions, Object... params) {
         return getRelation().where(conditions, params).takeOrFail();
     }
 
-    public default boolean exists(String conditions, Map<String, Object> params) {
+    public default boolean exists(String conditions, Object... params) {
         return getRelation().where(conditions, params).exists();
     }
 

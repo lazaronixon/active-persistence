@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import static java.util.Optional.ofNullable;
+import static java.util.regex.Pattern.compile;
+import static java.util.stream.IntStream.range;
 import javax.persistence.EntityManager;
 import static javax.persistence.LockModeType.NONE;
 import static javax.persistence.LockModeType.PESSIMISTIC_READ;
@@ -42,9 +43,9 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private final List<String> eagerLoadsValues = new ArrayList();
 
-    private final HashMap<String, Object> whereParams = new HashMap();
+    private final HashMap<Integer, Object> whereParams = new HashMap();
 
-    private final HashMap<String, Object> havingParams = new HashMap();
+    private final HashMap<Integer, Object> havingParams = new HashMap();
 
     private String fromClause = null;
 
@@ -98,18 +99,18 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.whereValues.add(where);
     }
 
-    public void addWhere(String where, Map<String, Object> params) {
+    public void addWhere(String where, Object[] params) {
         this.whereValues.add(where);
-        this.whereParams.putAll(params);
+        this.whereParams.putAll(parseParams(where, params));
     }
 
     public void addGroup(String[] group) {
         this.groupValues.addAll(List.of(group));
     }
 
-    public void addHaving(String having, Map<String, Object> params) {
+    public void addHaving(String having, Object[] params) {
         this.havingValues.add(having);
-        this.havingParams.putAll(params);
+        this.havingParams.putAll(parseParams(having, params));
     }
 
     public void addOrder(String[] order) {
@@ -317,6 +318,16 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private String constructor(String fields) {
         return constructor ? format("new %s(%s)", entityClass.getName(), fields) : fields;
+    }
+
+    private HashMap<Integer, Object> parseParams(String coditions, Object[] params) {
+        HashMap result = new HashMap(); Integer[] indexes = indexParamsFor(coditions);
+        range(0, indexes.length).forEach(i -> result.put(indexes[i], params[i]));
+        return result;
+    }
+
+    private Integer[] indexParamsFor(String coditions) {
+        return compile("\\?(\\d+)").matcher(coditions).results().map(r -> r.group(1)).map(Integer::parseInt).toArray(Integer[]::new);
     }
 
     //</editor-fold>

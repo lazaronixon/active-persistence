@@ -45,11 +45,11 @@ public interface Delegation<T> {
         return buildRelation().last(limit);
     }
 
-    public default T findBy(String conditions, Map<String, Object> params) {
+    public default T findBy(String conditions, Object... params) {
         return buildRelation().findBy(conditions, params);
     }
 
-    public default T findByOrFail(String conditions, Map<String, Object> params) {
+    public default T findByOrFail(String conditions, Object... params) {
         return buildRelation().findByOrFail(conditions, params);
     }
 
@@ -67,7 +67,7 @@ public interface Delegation<T> {
         return buildRelation().all();
     }
 
-    public default Relation<T> where(String conditions, Map<String, Object> params) {
+    public default Relation<T> where(String conditions, Object... params) {
         return buildRelation().where(conditions, params);
     }
 
@@ -95,7 +95,7 @@ public interface Delegation<T> {
         return buildRelation().group(values);
     }
 
-    public default Relation<T> having(String conditions, Map<String, Object> params) {
+    public default Relation<T> having(String conditions, Object... params) {
         return buildRelation().having(conditions, params);
     }
 
@@ -123,7 +123,7 @@ public interface Delegation<T> {
         return buildRelation().reselect(values);
     }
 
-    public default Relation<T> rewhere(String condition, Map<String, Object> params) {
+    public default Relation<T> rewhere(String condition, Object... params) {
         return buildRelation().rewhere(condition, params);
     }
 
