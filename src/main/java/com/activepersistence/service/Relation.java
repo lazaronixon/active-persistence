@@ -318,8 +318,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void addParams(String query, Object[] params) {
-        Integer[] indexes = parametersFor(query);
-        range(0, indexes.length).forEach(i -> this.params.put(indexes[i], params[i]));
+        range(0, parametersFor(query).length).forEach(i -> this.params.put(parametersFor(query)[i], params[i]));
     }
 
     private Integer[] parametersFor(String query) {
