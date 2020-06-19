@@ -1,6 +1,7 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
+import java.util.Map;
 
 public interface QueryMethods<T> {
 
@@ -18,7 +19,7 @@ public interface QueryMethods<T> {
         getRelation().addJoins(values); return getRelation();
     }
 
-    public default Relation<T> where(String conditions, Object... params) {
+    public default Relation<T> where(String conditions, Map<String, Object> params) {
         getRelation().addWhere(conditions, params); return getRelation();
     }
 
@@ -26,7 +27,7 @@ public interface QueryMethods<T> {
         getRelation().addGroup(fields); return getRelation();
     }
 
-    public default Relation<T> having(String conditions, Object... params) {
+    public default Relation<T> having(String conditions, Map<String, Object> params) {
         getRelation().addHaving(conditions, params); return getRelation();
     }
 
@@ -94,7 +95,7 @@ public interface QueryMethods<T> {
         return getRelation().unscope(ValidUnscopingValues.SELECT).select(fields);
     }
 
-    public default Relation<T> rewhere(String conditions, Object... params) {
+    public default Relation<T> rewhere(String conditions, Map<String, Object> params) {
         return getRelation().unscope(ValidUnscopingValues.WHERE).where(conditions, params);
     }
 
