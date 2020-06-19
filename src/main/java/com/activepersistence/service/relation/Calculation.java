@@ -45,7 +45,7 @@ public interface Calculation<T> {
     }
 
     private String distinct() {
-        return getRelation().isDistinct() ? "DISTINCT " : "";
+        return getRelation().hasDistinct() ? "DISTINCT " : "";
     }
 
 }

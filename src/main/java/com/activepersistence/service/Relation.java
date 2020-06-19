@@ -84,16 +84,16 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.selectValues.addAll(List.of(select)); this.constructor = true;
     }
 
+    public void setFromClause(String fromClause) {
+        this.fromClause = fromClause;
+    }
+
     public void addJoins(String[] joins) {
         this.joinsValues.addAll(List.of(joins));
     }
 
     public void addWhere(String where) {
         this.whereValues.add(where);
-    }
-
-    public void addParams(Object[] params) {
-        range(0, params.length -1).forEach(i -> this.params.put((int) params[i], params[i + 1]));
     }
 
     public void addGroup(String[] group) {
@@ -116,6 +116,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         eagerLoadsValues.addAll(List.of(eagerLoads));
     }
 
+    public void addParams(Object[] params) {
+        range(0, params.length -1).forEach(i -> this.params.put((int) params[i], params[i + 1]));
+    }
+
     public void setOffset(int offset) {
         this.offset = offset;
     }
@@ -128,7 +132,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.distinct = distinct;
     }
 
-    public boolean isDistinct() {
+    public boolean hasDistinct() {
         return distinct;
     }
 
@@ -146,10 +150,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public void setLock(boolean lock) {
         this.lock = lock;
-    }
-
-    public void setFromClause(String fromClause) {
-        this.fromClause = fromClause;
     }
 
     public List<String> getOrderValues() {
@@ -203,9 +203,13 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     //<editor-fold defaultstate="collapsed" desc="private methods">
     private String buildSelect() {
-        String select = format("SELECT %s", distinctExp() + constructor(separatedByComma(selectOrThis())));
+        String select = format("SELECT %s", distinctExp() + constructor(selectExp()));
         String from   = format("FROM %s", fromClauseOrThis());
         return join(" ", select, from, "this");
+    }
+
+    private String selectExp() {
+        return separatedByComma(selectOrThis());
     }
 
     private String buildJoins() {
