@@ -114,11 +114,15 @@ public interface Delegation<T> {
         return buildRelation().eagerLoads(values);
     }
 
+    public default Relation<T> unscope(ValidUnscopingValues... values) {
+        return buildRelation().unscope(values);
+    }
+
     public default Relation<T> reselect(String... values) {
         return buildRelation().reselect(values);
     }
 
-    public default Relation<T> rewhere(String condition, Object[] params) {
+    public default Relation<T> rewhere(String condition, Object... params) {
         return buildRelation().rewhere(condition, params);
     }
 

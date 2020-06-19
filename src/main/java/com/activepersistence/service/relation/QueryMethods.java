@@ -58,16 +58,48 @@ public interface QueryMethods<T> {
         getRelation().addEagerLoads(eagerLoads); return getRelation();
     }
 
+    public default Relation<T> unscope(ValidUnscopingValues... values) {
+        for (ValidUnscopingValues value : values) {
+            switch (value) {
+                case SELECT:
+                    getRelation().clearSelect();
+                case FROM:
+                    getRelation().clearFrom();
+                case JOINS:
+                    getRelation().clearJoins();
+                case WHERE:
+                    getRelation().clearWhere();
+                case GROUP:
+                    getRelation().clearGroup();
+                case HAVING:
+                    getRelation().clearHaving();
+                case ORDER:
+                    getRelation().clearOrder();
+                case LIMIT:
+                    getRelation().limit(0);
+                case OFFSET:
+                    getRelation().offset(0);
+                case INCLUDES:
+                    getRelation().clearIncludes();
+                case EAGER_LOADS:
+                    getRelation().clearEagerLoads();
+                case LOCK:
+                    getRelation().setLock(false);
+            }
+        }
+        return getRelation();
+    }
+
     public default Relation<T> reselect(String... fields) {
-        getRelation().clearSelect(); return select(fields);
+        return getRelation().unscope(ValidUnscopingValues.SELECT).select(fields);
     }
 
     public default Relation<T> rewhere(String conditions, Object... params) {
-        getRelation().clearWhere(); return where(conditions, params);
+        return getRelation().unscope(ValidUnscopingValues.WHERE).where(conditions, params);
     }
 
     public default Relation<T> reorder(String... fields) {
-        getRelation().clearOrder(); return order(fields);
+        return getRelation().unscope(ValidUnscopingValues.ORDER).order(fields);
     }
 
     public default Relation<T> lock() {

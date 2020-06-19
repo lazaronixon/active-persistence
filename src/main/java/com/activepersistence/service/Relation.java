@@ -38,11 +38,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private final List<String> joinsValues  = new ArrayList();
 
-    private final HashMap<Integer, Object> params = new HashMap();
-
     private final List<String> includesValues = new ArrayList();
 
     private final List<String> eagerLoadsValues = new ArrayList();
+
+    private final HashMap<Integer, Object> params = new HashMap();
 
     private String fromClause = null;
 
@@ -77,7 +77,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public void setSelect(String select) {
-       clearSelect(); this.distinct = false; this.constructor = false; this.selectValues.add(select);
+       clearSelect(); this.distinct = false; this.selectValues.add(select);
     }
 
     public void addSelect(String[] select) {
@@ -137,7 +137,31 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public void clearSelect() {
-        this.selectValues.clear();
+        this.selectValues.clear(); this.constructor = false;
+    }
+
+    public void clearFrom() {
+        this.fromClause = null;
+    }
+
+    public void clearJoins() {
+        this.joinsValues.clear();
+    }
+
+    public void clearGroup() {
+        this.groupValues.clear();
+    }
+
+    public void clearIncludes() {
+        this.includesValues.clear();
+    }
+
+    public void clearEagerLoads() {
+        this.eagerLoadsValues.clear();
+    }
+
+    public void clearHaving() {
+        this.havingValues.clear(); this.params.clear();
     }
 
     public void clearWhere() {
