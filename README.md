@@ -104,8 +104,8 @@ Student student = studentsService.findBy("this.name = 'Lifo'");
 
 ### Conditions
 ```java
-List<Client> clients = studentsService.where("this.ordersCount = ?1", 1, 10).fetch();
-List<Client> clients = studentsService.where("this.ordersCount = ?1 AND this.locked = ?2", 1, 10, 2, false).fetch();
+List<Client> clients = studentsService.where("this.ordersCount = ?1", 10).fetch();
+List<Client> clients = studentsService.where("this.ordersCount = ?1 AND this.locked = ?2", 10, false).fetch();
 ```
 
 ### Ordering
@@ -134,7 +134,7 @@ List<Client> clients = studentsService.select("date(this.createdAt), sum(price)"
 
 ### Having
 ```java
-List<Client> clients = studentsService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").having("sum(this.price) > ?1", 1, 100).fetch();
+List<Client> clients = studentsService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").having("sum(this.price) > ?1", 100).fetch();
 ```
 
 ### Reselect

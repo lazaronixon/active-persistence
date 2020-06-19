@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import static java.util.Optional.ofNullable;
+import java.util.regex.Pattern;
 import static java.util.stream.IntStream.range;
 import javax.persistence.EntityManager;
 import static javax.persistence.LockModeType.NONE;
@@ -96,12 +97,18 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.whereValues.add(where);
     }
 
+    public void addWhere(String where, Object[] params) {
+        this.whereValues.add(where);
+        this.addParams(where, params);
+    }
+
     public void addGroup(String[] group) {
         this.groupValues.addAll(List.of(group));
     }
 
-    public void addHaving(String having) {
+    public void addHaving(String having, Object[] params) {
         this.havingValues.add(having);
+        //if (params != null) this.params.add();
     }
 
     public void addOrder(String[] order) {
@@ -114,10 +121,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public void addEagerLoads(String[] eagerLoads) {
         eagerLoadsValues.addAll(List.of(eagerLoads));
-    }
-
-    public void addParams(Object[] params) {
-        range(0, params.length -1).forEach(i -> this.params.put((int) params[i], params[i + 1]));
     }
 
     public void setOffset(int offset) {
@@ -313,6 +316,16 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private String constructor(String fields) {
         return constructor ? format("new %s(%s)", entityClass.getName(), fields) : fields;
     }
+
+    private void addParams(String query, Object[] params) {
+        Integer[] indexes = parametersFor(query);
+        range(0, indexes.length).forEach(i -> this.params.put(indexes[i], params[i]));
+    }
+
+    private Integer[] parametersFor(String query) {
+        return Pattern.compile("\\?(\\d+)").matcher(query).results().map(r -> r.group(1)).map(Integer::parseInt).toArray(Integer[]::new);
+    }
+
     //</editor-fold>
 
 }

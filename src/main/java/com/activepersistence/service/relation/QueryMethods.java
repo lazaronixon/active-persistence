@@ -19,7 +19,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> where(String conditions, Object... params) {
-        getRelation().addWhere(conditions); getRelation().addParams(params); return getRelation();
+        getRelation().addWhere(conditions, params); return getRelation();
     }
 
     public default Relation<T> group(String... fields) {
@@ -27,7 +27,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> having(String conditions, Object... params) {
-        getRelation().addHaving(conditions); getRelation().addParams(params); return getRelation();
+        getRelation().addHaving(conditions, params); return getRelation();
     }
 
     public default Relation<T> order(String... fields) {
