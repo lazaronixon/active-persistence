@@ -183,10 +183,10 @@ boolean exists = studentsService.where("this.name = 'Lifo'").exists();
 ```java
 long   count   = studentsService.count();
 long   count1  = studentsService.count("this.id");
-long   sum     = studentsService.sum("this.id", Long.class);
-double average = studentsService.average("this.id", Double.class);
-int    minimum = studentsService.minimum("this.id", Integer.class);
-int    maximum = studentsService.maximum("this.id", Integer.class);
+long   sum     = (long) studentsService.sum("this.id");
+double average = (double) studentsService.average("this.id");
+int    minimum = (int) studentsService.minimum("this.id");
+int    maximum = (int) studentsService.maximum("this.id");
 ```
 
 ## Requirements

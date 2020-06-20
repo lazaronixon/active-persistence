@@ -210,10 +210,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return buildParameterizedQuery(toJpql()).getResultList();
     }
 
-    public <R> R fetchOneAs(Class<R> resultClass) {
-        return buildParameterizedQuery(toJpql(), resultClass).getSingleResult();
-    }
-
     public List fetchAlt() {
         return buildParameterizedQueryAlt(toJpql()).getResultList();
     }
@@ -256,10 +252,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private TypedQuery<T> buildParameterizedQuery(String qlString) {
         return parametize(buildQuery(qlString)).setMaxResults(limit).setFirstResult(offset);
-    }
-
-    private <R> TypedQuery<R> buildParameterizedQuery(String qlString, Class<R> resultClass) {
-        return parametize(buildQuery(qlString, resultClass)).setMaxResults(limit).setFirstResult(offset);
     }
 
     private Query buildParameterizedQueryAlt(String qlString) {

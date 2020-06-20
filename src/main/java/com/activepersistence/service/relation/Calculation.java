@@ -13,23 +13,23 @@ public interface Calculation<T> {
     }
 
     public default long count(String field) {
-        getRelation().setSelect("COUNT(" + distinct() + field + ")"); return getRelation().fetchOneAs(Long.class);
+        getRelation().setSelect("COUNT(" + distinct() + field + ")"); return (long) getRelation().fetchOne();
     }
 
-    public default <R> R minimum(String field, Class<R> resultClass) {
-        getRelation().setSelect("MIN(" + field + ")"); return getRelation().fetchOneAs(resultClass);
+    public default Object minimum(String field) {
+        getRelation().setSelect("MIN(" + field + ")"); return getRelation().fetchOne();
     }
 
-    public default <R> R maximum(String field, Class<R> resultClass) {
-        getRelation().setSelect("MAX(" + field + ")"); return getRelation().fetchOneAs(resultClass);
+    public default Object maximum(String field) {
+        getRelation().setSelect("MAX(" + field + ")"); return getRelation().fetchOne();
     }
 
-    public default <R> R average(String field, Class<R> resultClass) {
-        getRelation().setSelect("AVG(" + field + ")"); return getRelation().fetchOneAs(resultClass);
+    public default Object average(String field) {
+        getRelation().setSelect("AVG(" + field + ")"); return getRelation().fetchOne();
     }
 
-    public default <R> R sum(String field, Class<R> resultClass) {
-        getRelation().setSelect("SUM(" + field + ")"); return getRelation().fetchOneAs(resultClass);
+    public default Object sum(String field) {
+        getRelation().setSelect("SUM(" + field + ")"); return getRelation().fetchOne();
     }
 
     public default List pluck(String... fields) {
