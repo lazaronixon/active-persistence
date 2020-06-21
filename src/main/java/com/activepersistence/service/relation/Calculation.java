@@ -6,46 +6,62 @@ import java.util.List;
 
 public interface Calculation<T> {
 
-    public Relation<T> getRelation();
+    public Relation<T> spawn();
 
     public default long count() {
         return count("this");
     }
 
     public default long count(String field) {
-        getRelation().setSelect("COUNT(" + distinct() + field + ")"); return (long) getRelation().fetchOne();
+        return (long) calculate("COUNT", field);
     }
 
     public default Object minimum(String field) {
-        getRelation().setSelect("MIN(" + field + ")"); return getRelation().fetchOne();
+        return calculate("MIN", field);
     }
 
     public default Object maximum(String field) {
-        getRelation().setSelect("MAX(" + field + ")"); return getRelation().fetchOne();
+        return calculate("MAX", field);
     }
 
     public default Object average(String field) {
-        getRelation().setSelect("AVG(" + field + ")"); return getRelation().fetchOne();
+        return calculate("AVG", field);
     }
 
     public default Object sum(String field) {
-        getRelation().setSelect("SUM(" + field + ")"); return getRelation().fetchOne();
-    }
-
-    public default List pluck(String... fields) {
-        getRelation().setSelect(distinct() + separatedByComma(fields)); return getRelation().fetchAlt();
+        return calculate("SUM", field);
     }
 
     public default List ids() {
         return pluck("this.id");
     }
 
-    private String separatedByComma(String[] values) {
-        return join(", ", values);
+    public default List pluck(String... fields) {
+        Relation<T> relation = spawn();
+        relation.setCalculation(selectValuePluck(fields, relation));
+        return relation.fetch_();
     }
 
-    private String distinct() {
-        return getRelation().hasDistinct() ? "DISTINCT " : "";
+    private Object calculate(String operation, String field) {
+        Relation<T> relation = spawn();
+        relation.setCalculation(selectValueCalculate(operation, field, relation));
+        return relation.fetchOne();
+    }
+
+    private String selectValueCalculate(String operation, String field, Relation relation) {
+        return operation + "(" + distinct(relation) + field + ")";
+    }
+
+    private String selectValuePluck(String[] fields, Relation relation) {
+        return distinct(relation) + separatedByComma(fields);
+    }
+
+    private String distinct(Relation relation) {
+        return relation.hasDistinct() ? "DISTINCT " : "";
+    }
+
+    private String separatedByComma(String[] values) {
+        return join(", ", values);
     }
 
 }

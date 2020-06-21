@@ -1,13 +1,11 @@
 package com.activepersistence.service;
 
-
 import com.activepersistence.service.relation.Calculation;
 import com.activepersistence.service.relation.FinderMethods;
 import com.activepersistence.service.relation.QueryMethods;
 import static java.lang.String.format;
 import static java.lang.String.join;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import static java.util.Optional.ofNullable;
@@ -25,25 +23,25 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private final Class entityClass;
 
-    private final List<String> selectValues = new ArrayList();
+    private List<String> selectValues = new ArrayList();
 
-    private final List<String> whereValues  = new ArrayList();
+    private List<String> whereValues  = new ArrayList();
 
-    private final List<String> groupValues  = new ArrayList();
+    private List<String> groupValues  = new ArrayList();
 
-    private final List<String> havingValues = new ArrayList();
+    private List<String> havingValues = new ArrayList();
 
-    private final List<String> orderValues  = new ArrayList();
+    private List<String> orderValues  = new ArrayList();
 
-    private final List<String> joinsValues  = new ArrayList();
+    private List<String> joinsValues  = new ArrayList();
 
-    private final List<String> includesValues = new ArrayList();
+    private List<String> includesValues = new ArrayList();
 
-    private final List<String> eagerLoadsValues = new ArrayList();
+    private List<String> eagerLoadsValues = new ArrayList();
 
-    private final HashMap<Integer, Object> whereParams = new HashMap();
+    private HashMap<Integer, Object> whereParams = new HashMap();
 
-    private final HashMap<Integer, Object> havingParams = new HashMap();
+    private HashMap<Integer, Object> havingParams = new HashMap();
 
     private String fromClause = null;
 
@@ -51,15 +49,59 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private int offset = 0;
 
+    private boolean lock = false;
+
     private boolean distinct = false;
 
     private boolean constructor = false;
 
-    private boolean lock = false;
+    private boolean calculating = false;
 
     public Relation(EntityManager entityManager, Class entityClass) {
-        this.entityManager = entityManager;
-        this.entityClass   = entityClass;
+        this.entityManager   = entityManager;
+        this.entityClass     = entityClass;
+    }
+
+    public Relation(Relation other) {
+        this.entityManager    = other.entityManager;
+        this.entityClass      = other.entityClass;
+        this.selectValues     = new ArrayList(other.selectValues);
+        this.whereValues      = new ArrayList(other.whereValues);
+        this.groupValues      = new ArrayList(other.groupValues);
+        this.havingValues     = new ArrayList(other.havingValues);
+        this.orderValues      = new ArrayList(other.orderValues);
+        this.joinsValues      = new ArrayList(other.joinsValues);
+        this.includesValues   = new ArrayList(other.includesValues);
+        this.eagerLoadsValues = new ArrayList(other.eagerLoadsValues);
+        this.whereParams      = new HashMap(other.whereParams);
+        this.havingParams     = new HashMap(other.havingParams);
+        this.fromClause       = other.fromClause;
+        this.limit            = other.limit;
+        this.offset           = other.offset;
+        this.lock             = other.lock;
+        this.distinct         = other.distinct;
+        this.constructor      = other.constructor;
+        this.calculating      = other.calculating;
+    }
+
+    public T fetchOne() {
+        return buildParameterizedQuery(toJpql()).getResultStream().findFirst().orElse(null);
+    }
+
+    public T fetchOneOrFail() {
+        return buildParameterizedQuery(toJpql()).getSingleResult();
+    }
+
+    public List<T> fetch() {
+        return buildParameterizedQuery(toJpql()).getResultList();
+    }
+
+    public List fetch_() {
+        return buildParameterizedQuery_(toJpql()).getResultList();
+    }
+
+    public boolean fetchExists() {
+        return buildParameterizedQuery(toJpql()).getResultStream().findAny().isPresent();
     }
 
     public T find(Object id) {
@@ -76,16 +118,16 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return qlString.toString();
     }
 
-    public void setSelect(String select) {
-       clearSelect(); this.distinct = false; this.selectValues.add(select);
+    public void setCalculation(String calulation) {
+        this.constructor  = false;
+        this.calculating  = true;
+        this.selectValues = List.of(calulation);
     }
 
     public void addSelect(String[] select) {
-        this.selectValues.addAll(List.of(select)); this.constructor = true;
-    }
-
-    public void setFromClause(String fromClause) {
-        this.fromClause = fromClause;
+        this.constructor = true;
+        this.calculating = false;
+        this.selectValues.addAll(List.of(select));
     }
 
     public void addJoins(String[] joins) {
@@ -122,6 +164,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         eagerLoadsValues.addAll(List.of(eagerLoads));
     }
 
+    public void setFromClause(String fromClause) {
+        this.fromClause = fromClause;
+    }
+
     public void setOffset(int offset) {
         this.offset = offset;
     }
@@ -138,12 +184,22 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return distinct;
     }
 
-    public void clearSelect() {
-        this.selectValues.clear(); this.constructor = false;
+    public void setConstructor(boolean constructor) {
+        this.constructor = constructor;
+    }
+
+    public void setCalculating(boolean calculating) {
+        this.calculating = calculating;
     }
 
     public void clearFrom() {
         this.fromClause = null;
+    }
+
+    public void clearSelect() {
+        this.constructor = false;
+        this.calculating = false;
+        this.selectValues.clear();
     }
 
     public void clearJoins() {
@@ -163,11 +219,13 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public void clearHaving() {
-        this.havingValues.clear(); this.havingParams.clear();
+        this.havingValues.clear();
+        this.havingParams.clear();
     }
 
     public void clearWhere() {
-        this.whereValues.clear(); this.whereParams.clear();
+        this.whereValues.clear();
+        this.whereParams.clear();
     }
 
     public void clearOrder() {
@@ -193,31 +251,9 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     @Override
-    public Relation<T> getRelation() {
-        return this;
+    public Relation<T> spawn() {
+        return new Relation(this);
     }
-
-    //<editor-fold defaultstate="collapsed" desc="fetch methods">
-    public T fetchOne() {
-        return buildParameterizedQuery(toJpql()).getResultStream().findFirst().orElse(null);
-    }
-
-    public T fetchOneOrFail() {
-        return buildParameterizedQuery(toJpql()).getSingleResult();
-    }
-
-    public List<T> fetch() {
-        return buildParameterizedQuery(toJpql()).getResultList();
-    }
-
-    public List fetchAlt() {
-        return buildParameterizedQueryAlt(toJpql()).getResultList();
-    }
-
-    public boolean fetchExists() {
-        return buildParameterizedQuery(toJpql()).getResultStream().findAny().isPresent();
-    }
-    //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="private methods">
     private String buildSelect() {
@@ -254,8 +290,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return parametize(buildQuery(qlString)).setMaxResults(limit).setFirstResult(offset);
     }
 
-    private Query buildParameterizedQueryAlt(String qlString) {
-        return parametize(buildQueryAlt(qlString)).setMaxResults(limit).setFirstResult(offset);
+    private Query buildParameterizedQuery_(String qlString) {
+        return parametize(buildQuery_(qlString)).setMaxResults(limit).setFirstResult(offset);
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {
@@ -290,11 +326,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private String distinctExp() {
-        return distinct ? "DISTINCT " : "";
+        return distinct && !calculating ? "DISTINCT " : "";
     }
 
     private List<String> selectOrThis() {
-        return selectValues.isEmpty() ? Arrays.asList("this") : selectValues;
+        return selectValues.isEmpty() ? List.of("this") : selectValues;
     }
 
     private String fromClauseOrThis() {
@@ -314,7 +350,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private Integer[] indexParamsFor(String coditions) {
         return compile("\\?(\\d+)").matcher(coditions).results().map(r -> r.group(1)).map(Integer::parseInt).toArray(Integer[]::new);
     }
-
     //</editor-fold>
 
 }

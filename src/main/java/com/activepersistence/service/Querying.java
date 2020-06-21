@@ -5,7 +5,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 public interface Querying<T> {
-    
+
     public EntityManager getEntityManager();
 
     public Class<T> getEntityClass();
@@ -18,7 +18,7 @@ public interface Querying<T> {
         return getEntityManager().createNativeQuery(qlString, resultClass);
     }
 
-    public default Query buildNativeQueryAlt(String sqlQuery) {
+    public default Query buildNativeQuery_(String sqlQuery) {
         return getEntityManager().createNativeQuery(sqlQuery);
     }
 
@@ -29,8 +29,8 @@ public interface Querying<T> {
     public default <R> TypedQuery<R> buildQuery(String qlString, Class<R> resultClass) {
         return getEntityManager().createQuery(qlString, resultClass);
     }
-    
-    public default Query buildQueryAlt(String qlString) {
+
+    public default Query buildQuery_(String qlString) {
         return getEntityManager().createQuery(qlString);
     }
 

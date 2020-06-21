@@ -4,109 +4,173 @@ import com.activepersistence.service.Relation;
 
 public interface QueryMethods<T> {
 
-    public Relation<T> getRelation();
+    public Relation<T> spawn();
 
     public default Relation<T> all() {
-        return getRelation();
+        return spawn();
     }
 
     public default Relation<T> select(String... fields) {
-        getRelation().addSelect(fields); return getRelation();
+        return spawn().select_(fields);
+    }
+
+    public default Relation<T> select_(String... fields) {
+        thiz().addSelect(fields); return thiz();
     }
 
     public default Relation<T> joins(String... values) {
-        getRelation().addJoins(values); return getRelation();
+        return spawn().joins_(values);
+    }
+
+    public default Relation<T> joins_(String... values) {
+        thiz().addJoins(values); return thiz();
     }
 
     public default Relation<T> where(String conditions, Object... params) {
-        getRelation().addWhere(conditions, params); return getRelation();
+        return where_(conditions, params);
+    }
+
+    public default Relation<T> where_(String conditions, Object... params) {
+        thiz().addWhere(conditions, params); return thiz();
     }
 
     public default Relation<T> group(String... fields) {
-        getRelation().addGroup(fields); return getRelation();
+        return spawn().group_(fields);
+    }
+
+    public default Relation<T> group_(String... fields) {
+        thiz().addGroup(fields); return thiz();
     }
 
     public default Relation<T> having(String conditions, Object... params) {
-        getRelation().addHaving(conditions, params); return getRelation();
+        return spawn().having_(conditions, params);
+    }
+
+    public default Relation<T> having_(String conditions, Object... params) {
+        thiz().addHaving(conditions, params); return thiz();
     }
 
     public default Relation<T> order(String... fields) {
-        getRelation().addOrder(fields); return getRelation();
+        return spawn().order_(fields);
+    }
+
+    public default Relation<T> order_(String... fields) {
+        thiz().addOrder(fields); return thiz();
     }
 
     public default Relation<T> limit(int limit) {
-        getRelation().setLimit(limit); return getRelation();
+        return spawn().limit_(limit);
+    }
+
+    public default Relation<T> limit_(int limit) {
+        thiz().setLimit(limit); return thiz();
     }
 
     public default Relation<T> offset(int offset) {
-        getRelation().setOffset(offset); return getRelation();
+        return spawn().offset_(offset);
+    }
+
+    public default Relation<T> offset_(int offset) {
+        thiz().setOffset(offset); return thiz();
     }
 
     public default Relation<T> distinct() {
-        getRelation().setDistinct(true); return getRelation();
+        return spawn().distinct_();
+    }
+
+    public default Relation<T> distinct_() {
+        thiz().setDistinct(true); return thiz();
     }
 
     public default Relation<T> none() {
-        getRelation().addWhere("1 = 0"); return getRelation();
+        return spawn().none_();
+    }
+
+    public default Relation<T> none_() {
+        thiz().addWhere("1 = 0"); return thiz();
     }
 
     public default Relation<T> includes(String... includes) {
-        getRelation().addIncludes(includes); return getRelation();
+        return spawn().includes_(includes);
+    }
+
+    public default Relation<T> includes_(String... includes) {
+        thiz().addIncludes(includes); return thiz();
     }
 
     public default Relation<T> eagerLoads(String... eagerLoads) {
-        getRelation().addEagerLoads(eagerLoads); return getRelation();
+        return spawn().eagerLoads_(eagerLoads);
     }
 
-    public default Relation<T> unscope(ValidUnscopingValues... values) {
-        for (ValidUnscopingValues value : values) {
-            switch (value) {
-                case SELECT:
-                    getRelation().clearSelect();
-                case FROM:
-                    getRelation().clearFrom();
-                case JOINS:
-                    getRelation().clearJoins();
-                case WHERE:
-                    getRelation().clearWhere();
-                case GROUP:
-                    getRelation().clearGroup();
-                case HAVING:
-                    getRelation().clearHaving();
-                case ORDER:
-                    getRelation().clearOrder();
-                case LIMIT:
-                    getRelation().limit(0);
-                case OFFSET:
-                    getRelation().offset(0);
-                case INCLUDES:
-                    getRelation().clearIncludes();
-                case EAGER_LOADS:
-                    getRelation().clearEagerLoads();
-                case LOCK:
-                    getRelation().setLock(false);
-            }
-        }
-        return getRelation();
-    }
-
-    public default Relation<T> reselect(String... fields) {
-        return getRelation().unscope(ValidUnscopingValues.SELECT).select(fields);
-    }
-
-    public default Relation<T> rewhere(String conditions, Object... params) {
-        return getRelation().unscope(ValidUnscopingValues.WHERE).where(conditions, params);
-    }
-
-    public default Relation<T> reorder(String... fields) {
-        return getRelation().unscope(ValidUnscopingValues.ORDER).order(fields);
+    public default Relation<T> eagerLoads_(String... eagerLoads) {
+        thiz().addEagerLoads(eagerLoads); return thiz();
     }
 
     public default Relation<T> lock() {
-        getRelation().setLock(true); return getRelation();
+        return this.lock_();
+    }
+
+    public default Relation<T> lock_() {
+        thiz().setLock(true); return thiz();
     }
 
     public default Relation<T> from(String value) {
-        getRelation().setFromClause(value); return getRelation();
+        return this.from_(value);
+    }
+
+    public default Relation<T> from_(String value) {
+        thiz().setFromClause(value); return thiz();
+    }
+
+    public default Relation<T> unscope(ValidUnscopingValues... values) {
+        this.unscope_(values); return (Relation<T>) this;
+    }
+
+    public default Relation<T> unscope_(ValidUnscopingValues... values) {
+        for (ValidUnscopingValues value : values) {
+            switch (value) {
+                case SELECT:
+                    thiz().clearSelect();
+                case FROM:
+                    thiz().clearFrom();
+                case JOINS:
+                    thiz().clearJoins();
+                case WHERE:
+                    thiz().clearWhere();
+                case GROUP:
+                    thiz().clearGroup();
+                case HAVING:
+                    thiz().clearHaving();
+                case ORDER:
+                    thiz().clearOrder();
+                case LIMIT:
+                    thiz().limit(0);
+                case OFFSET:
+                    thiz().offset(0);
+                case INCLUDES:
+                    thiz().clearIncludes();
+                case EAGER_LOADS:
+                    thiz().clearEagerLoads();
+                case LOCK:
+                    thiz().setLock(false);
+            }
+        }
+        return (Relation<T>) this;
+    }
+
+    public default Relation<T> reselect(String... fields) {
+        return spawn().unscope(ValidUnscopingValues.SELECT).select(fields);
+    }
+
+    public default Relation<T> rewhere(String conditions, Object... params) {
+        return spawn().unscope(ValidUnscopingValues.WHERE).where(conditions, params);
+    }
+
+    public default Relation<T> reorder(String... fields) {
+        return spawn().unscope(ValidUnscopingValues.ORDER).order(fields);
+    }
+
+    private Relation<T> thiz() {
+        return (Relation<T>) this;
     }
 }
