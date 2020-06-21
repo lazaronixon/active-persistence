@@ -138,6 +138,14 @@ public interface Delegation<T> {
     public default Relation<T> from(String value) {
         return buildRelation().from(value);
     }
+
+    public default Relation<T> scoping(Relation<T> relation) {
+        return buildRelation().scoping(relation);
+    }
+
+    public default Relation<T> unscoped() {
+        return buildRelation().unscoped();
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="calculation">

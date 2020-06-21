@@ -48,15 +48,15 @@ public interface Calculation<T> {
         return relation.fetchOne();
     }
 
-    private String selectValueCalculate(String operation, String field, Relation relation) {
+    private String selectValueCalculate(String operation, String field, Relation<T> relation) {
         return operation + "(" + distinct(relation) + field + ")";
     }
 
-    private String selectValuePluck(String[] fields, Relation relation) {
+    private String selectValuePluck(String[] fields, Relation<T> relation) {
         return distinct(relation) + separatedByComma(fields);
     }
 
-    private String distinct(Relation relation) {
+    private String distinct(Relation<T> relation) {
         return relation.hasDistinct() ? "DISTINCT " : "";
     }
 

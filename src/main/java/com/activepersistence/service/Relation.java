@@ -62,7 +62,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.entityClass     = entityClass;
     }
 
-    public Relation(Relation other) {
+    public Relation(Relation<T> other) {
         this.entityManager    = other.entityManager;
         this.entityClass      = other.entityClass;
         this.selectValues     = new ArrayList(other.selectValues);
@@ -102,6 +102,14 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public boolean fetchExists() {
         return buildParameterizedQuery(toJpql()).getResultStream().findAny().isPresent();
+    }
+
+    public Relation<T> scoping(Relation relation) {
+        return new Relation(relation);
+    }
+
+    public Relation<T> unscoped() {
+        return new Relation(entityManager, entityClass);
     }
 
     public T find(Object id) {
