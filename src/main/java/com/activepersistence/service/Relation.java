@@ -8,8 +8,10 @@ import static java.lang.String.join;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import static java.util.Optional.ofNullable;
 import static java.util.regex.Pattern.compile;
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.IntStream.range;
 import javax.persistence.EntityManager;
 import static javax.persistence.LockModeType.NONE;
@@ -244,8 +246,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.lock = lock;
     }
 
-    public List<String> getOrderValues() {
-        return orderValues;
+    public boolean hasOrderValues() {
+        return !orderValues.isEmpty();
     }
 
     @Override
@@ -349,10 +351,9 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return constructor ? format("new %s(%s)", entityClass.getName(), fields) : fields;
     }
 
-    private HashMap<Integer, Object> parseParams(String coditions, Object[] params) {
-        HashMap result = new HashMap(); Integer[] indexes = indexParamsFor(coditions);
-        range(0, indexes.length).forEach(i -> result.put(indexes[i], params[i]));
-        return result;
+    private Map<Integer, Object> parseParams(String coditions, Object[] params) {
+        Integer[] indexes = indexParamsFor(coditions);
+        return range(0, indexes.length).boxed().collect(toMap(i -> indexes[i], i -> params[i]));
     }
 
     private Integer[] indexParamsFor(String coditions) {
