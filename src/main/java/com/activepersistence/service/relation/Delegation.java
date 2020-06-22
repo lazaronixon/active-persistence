@@ -10,55 +10,55 @@ public interface Delegation<T> {
 
     //<editor-fold defaultstate="collapsed" desc="finder methods">
     public default T take() {
-        return buildRelation().take();
+        return buildRelation().all().take();
     }
 
     public default T takeOrFail() {
-        return buildRelation().takeOrFail();
+        return buildRelation().all().takeOrFail();
     }
 
     public default T first() {
-        return buildRelation().first();
+        return buildRelation().all().first();
     }
 
     public default T firstOrFail() {
-        return buildRelation().firstOrFail();
+        return buildRelation().all().firstOrFail();
     }
 
     public default T last() {
-        return buildRelation().last();
+        return buildRelation().all().last();
     }
 
     public default T lastOrFail() {
-        return buildRelation().lastOrFail();
+        return buildRelation().all().lastOrFail();
     }
 
     public default List<T> take(int limit) {
-        return buildRelation().take(limit);
+        return buildRelation().all().take(limit);
     }
 
     public default List<T> first(int limit) {
-        return buildRelation().first(limit);
+        return buildRelation().all().first(limit);
     }
 
     public default List<T> last(int limit) {
-        return buildRelation().last(limit);
+        return buildRelation().all().last(limit);
     }
 
     public default T findBy(String conditions, Object... params) {
-        return buildRelation().findBy(conditions, params);
+        return buildRelation().all().findBy(conditions, params);
     }
 
     public default T findByOrFail(String conditions, Object... params) {
-        return buildRelation().findByOrFail(conditions, params);
+        return buildRelation().all().findByOrFail(conditions, params);
     }
 
     public default boolean exists() {
-        return buildRelation().exists();
+        return buildRelation().all().exists();
     }
 
     public default boolean exists(String conditions, Map<String, Object> params) {
-        return buildRelation().exists(conditions, params);
+        return buildRelation().all().exists(conditions, params);
     }
     //</editor-fold>
 
@@ -68,79 +68,79 @@ public interface Delegation<T> {
     }
 
     public default Relation<T> where(String conditions, Object... params) {
-        return buildRelation().where(conditions, params);
+        return buildRelation().all().where(conditions, params);
     }
 
     public default Relation<T> order(String... values) {
-        return buildRelation().order(values);
+        return buildRelation().all().order(values);
     }
 
     public default Relation<T> limit(int value) {
-        return buildRelation().limit(value);
+        return buildRelation().all().limit(value);
     }
 
     public default Relation<T> offset(int value) {
-        return buildRelation().offset(value);
+        return buildRelation().all().offset(value);
     }
 
     public default Relation<T> select(String... values) {
-        return buildRelation().select(values);
+        return buildRelation().all().select(values);
     }
 
     public default Relation<T> joins(String... values) {
-        return buildRelation().joins(values);
+        return buildRelation().all().joins(values);
     }
 
     public default Relation<T> group(String... values) {
-        return buildRelation().group(values);
+        return buildRelation().all().group(values);
     }
 
     public default Relation<T> having(String conditions, Object... params) {
-        return buildRelation().having(conditions, params);
+        return buildRelation().all().having(conditions, params);
     }
 
     public default Relation<T> distinct() {
-        return buildRelation().distinct(true);
+        return buildRelation().all().distinct(true);
     }
 
     public default Relation<T> distinct(boolean value) {
-        return buildRelation().distinct(value);
+        return buildRelation().all().distinct(value);
     }
 
     public default Relation<T> none() {
-        return buildRelation().none();
+        return buildRelation().all().none();
     }
 
     public default Relation<T> includes(String... values) {
-        return buildRelation().includes(values);
+        return buildRelation().all().includes(values);
     }
 
     public default Relation<T> eagerLoads(String... values) {
-        return buildRelation().eagerLoads(values);
+        return buildRelation().all().eagerLoads(values);
     }
 
     public default Relation<T> unscope(ValidUnscopingValues... values) {
-        return buildRelation().unscope(values);
+        return buildRelation().all().unscope(values);
     }
 
     public default Relation<T> reselect(String... values) {
-        return buildRelation().reselect(values);
+        return buildRelation().all().reselect(values);
     }
 
     public default Relation<T> rewhere(String condition, Object... params) {
-        return buildRelation().rewhere(condition, params);
+        return buildRelation().all().rewhere(condition, params);
     }
 
     public default Relation<T> reorder(String... fields) {
-        return buildRelation().reorder(fields);
+        return buildRelation().all().reorder(fields);
     }
 
     public default Relation<T> lock() {
-        return buildRelation().lock();
+        return buildRelation().all().lock();
     }
 
     public default Relation<T> from(String value) {
-        return buildRelation().from(value);
+        return buildRelation().all().from(value);
     }
 
     public default Relation<T> scoping(Relation<T> relation) {
@@ -154,35 +154,35 @@ public interface Delegation<T> {
 
     //<editor-fold defaultstate="collapsed" desc="calculation">
     public default long count() {
-        return buildRelation().count();
+        return buildRelation().all().count();
     }
 
     public default long count(String field) {
-        return buildRelation().count(field);
+        return buildRelation().all().count(field);
     }
 
     public default Object minimum(String field) {
-        return buildRelation().minimum(field);
+        return buildRelation().all().minimum(field);
     }
 
     public default Object maximum(String field) {
-        return buildRelation().maximum(field);
+        return buildRelation().all().maximum(field);
     }
 
     public default Object average(String field) {
-        return buildRelation().average(field);
+        return buildRelation().all().average(field);
     }
 
     public default Object sum(String field) {
-        return buildRelation().sum(field);
+        return buildRelation().all().sum(field);
     }
 
     public default List pluck(String... field) {
-        return buildRelation().pluck(field);
+        return buildRelation().all().pluck(field);
     }
 
     public default List ids() {
-        return buildRelation().ids();
+        return buildRelation().all().ids();
     }
     //</editor-fold>
 

@@ -1,9 +1,13 @@
 package com.activepersistence.service.relation;
 
+import com.activepersistence.service.Base;
 import com.activepersistence.service.Relation;
+import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
 
 public interface QueryMethods<T> {
+
+    public Relation<T> thiz();
 
     public Relation<T> spawn();
 
@@ -11,7 +15,7 @@ public interface QueryMethods<T> {
 
     public Relation<T> getCurrentScope();
 
-    public boolean isIgnoreDefaultScope();
+    public Base<T> getService();
 
     public default Relation<T> all() {
         if (getCurrentScope() != null) {
@@ -186,14 +190,14 @@ public interface QueryMethods<T> {
     }
 
     private Relation<T> defaultScoped() {
-        return new Relation(buildDefaultScope());
+        return new Relation(ofNullable(buildDefaultScope()).orElse(thiz()));
     }
 
     private Relation<T> buildDefaultScope() {
-        if (getDefaultScope() != null) {
+        if (getService().useDefaultScope()) {
             return evaluateDefaultScope(() -> getDefaultScope());
         } else {
-            return thiz();
+            return null;
         }
     }
 
@@ -201,16 +205,13 @@ public interface QueryMethods<T> {
     // situation where a default scope references a scope which has a default
     // scope which references a scope...
     private Relation<T> evaluateDefaultScope(Supplier<Relation> supplier) {
-        if (isIgnoreDefaultScope()) return thiz();
+        if (getService().shouldIgnoreDefaultScope()) return null;
+
         try {
-            thiz().setIgnoreDefaultScope(true);
+            getService().setIgnoreDefaultScope(true);
             return supplier.get();
         } finally {
-            thiz().setIgnoreDefaultScope(false);
+            getService().setIgnoreDefaultScope(false);
         }
-    }
-
-    private Relation<T> thiz() {
-        return (Relation<T>) this;
     }
 }

@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface FinderMethods<T> {
 
+    public Relation<T> thiz();
+
     public String getEntityAlias();
 
     public default T take() {
@@ -81,10 +83,6 @@ public interface FinderMethods<T> {
 
     public default List<T> take(int limit) {
         return thiz().limit(limit).fetch();
-    }
-
-    private Relation<T> thiz() {
-        return (Relation<T>) this;
     }
 
     private String id() {

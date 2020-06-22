@@ -7,6 +7,8 @@ public abstract class Base<T> implements Persistence<T>, Querying<T>, Delegation
 
     private final Class<T> entityClass;
 
+    private boolean ignoreDefaultScope;
+
     public Base(Class<T> entityClass) {
         this.entityClass = entityClass;
     }
@@ -20,6 +22,20 @@ public abstract class Base<T> implements Persistence<T>, Querying<T>, Delegation
     @Override
     public Relation<T> buildRelation() { return new Relation(this); }
 
-    public Relation<T> defaultScope() { return null; }
+    public boolean useDefaultScope() {
+        return false;
+    }
+
+    public Relation<T> defaultScope() {
+        throw new UnsupportedOperationException("defaultScope() must be implemented when useDefaultScope() is true.");
+    }
+
+    public boolean shouldIgnoreDefaultScope() {
+        return ignoreDefaultScope;
+    }
+
+    public void setIgnoreDefaultScope(boolean ignoreDefaultScope) {
+        this.ignoreDefaultScope = ignoreDefaultScope;
+    }
 
 }

@@ -63,8 +63,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private Relation<T> currentScope = null;
 
-    private boolean ignoreDefaultScope = false;
-
     public Relation(Base service) {
         this.entityManager = service.getEntityManager();
         this.entityClass   = service.getEntityClass();
@@ -93,7 +91,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.distinct           = other.distinct;
         this.constructor        = other.constructor;
         this.calculating        = other.calculating;
-        this.ignoreDefaultScope = other.ignoreDefaultScope;
     }
 
     public T fetchOne() {
@@ -260,17 +257,9 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return !orderValues.isEmpty();
     }
 
+    @Override
     public Base getService() {
         return service;
-    }
-
-    public void setIgnoreDefaultScope(boolean ignoreDefaultScope) {
-        this.ignoreDefaultScope = ignoreDefaultScope;
-    }
-
-    @Override
-    public boolean isIgnoreDefaultScope() {
-        return ignoreDefaultScope;
     }
 
     @Override
@@ -300,7 +289,12 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     @Override
     public Relation<T> spawn() {
-        return currentScope != null ? this.all() : new Relation(this);
+        return new Relation(this);
+    }
+
+    @Override
+    public Relation<T> thiz() {
+        return this;
     }
 
     //<editor-fold defaultstate="collapsed" desc="private methods">
