@@ -121,7 +121,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public Relation<T> unscoped() {
-        return new Relation(service);
+        return scoping(new Relation(service));
     }
 
     public T find(Object id) {

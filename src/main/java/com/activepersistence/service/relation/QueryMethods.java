@@ -197,6 +197,9 @@ public interface QueryMethods<T> {
         }
     }
 
+    // The ignoreDefaultScope flag is used to prevent an infinite recursion
+    // situation where a default scope references a scope which has a default
+    // scope which references a scope...
     private Relation<T> evaluateDefaultScope(Supplier<Relation> supplier) {
         if (isIgnoreDefaultScope()) return thiz();
         try {
