@@ -61,9 +61,9 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private boolean calculating = false;
 
-    public Relation(EntityManager entityManager, Class entityClass, Base service) {
-        this.entityManager = entityManager;
-        this.entityClass   = entityClass;
+    public Relation(Base service) {
+        this.entityManager = service.getEntityManager();
+        this.entityClass   = service.getEntityClass();
         this.service       = service;
     }
 
@@ -115,7 +115,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public Relation<T> unscoped() {
-        return new Relation(entityManager, entityClass, service);
+        return new Relation(service);
     }
 
     public T find(Object id) {

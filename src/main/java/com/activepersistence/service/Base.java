@@ -18,6 +18,6 @@ public abstract class Base<T> implements Persistence<T>, Querying<T>, Delegation
     public Class<T> getEntityClass() { return entityClass; }
 
     @Override
-    public Relation<T> buildRelation() { return new Relation(getEntityManager(), getEntityClass(), this); }
+    public Relation<T> buildRelation() { return new Relation(this); }
 
 }
