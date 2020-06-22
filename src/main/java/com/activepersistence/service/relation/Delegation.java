@@ -100,7 +100,11 @@ public interface Delegation<T> {
     }
 
     public default Relation<T> distinct() {
-        return buildRelation().distinct();
+        return buildRelation().distinct(true);
+    }
+
+    public default Relation<T> distinct(boolean value) {
+        return buildRelation().distinct(value);
     }
 
     public default Relation<T> none() {

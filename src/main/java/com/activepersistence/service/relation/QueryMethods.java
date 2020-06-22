@@ -75,11 +75,15 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> distinct() {
-        return spawn().distinct_();
+        return spawn().distinct_(true);
     }
 
-    public default Relation<T> distinct_() {
-        thiz().setDistinct(true); return thiz();
+    public default Relation<T> distinct(boolean value) {
+        return spawn().distinct_(value);
+    }
+
+    public default Relation<T> distinct_(boolean value) {
+        thiz().setDistinct(value); return thiz();
     }
 
     public default Relation<T> none() {
