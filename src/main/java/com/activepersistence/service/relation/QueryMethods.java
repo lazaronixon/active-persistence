@@ -1,13 +1,24 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
+import java.util.function.Supplier;
 
 public interface QueryMethods<T> {
 
     public Relation<T> spawn();
 
+    public Relation<T> getDefaultScope();
+
+    public Relation<T> getCurrentScope();
+
+    public boolean isIgnoreDefaultScope();
+
     public default Relation<T> all() {
-        return spawn();
+        if (getCurrentScope() != null) {
+            return new Relation(getCurrentScope());
+        } else {
+            return defaultScoped();
+        }
     }
 
     public default Relation<T> select(String... fields) {
@@ -172,6 +183,28 @@ public interface QueryMethods<T> {
 
     public default Relation<T> reorder(String... fields) {
         return spawn().unscope(ValidUnscopingValues.ORDER).order(fields);
+    }
+
+    private Relation<T> defaultScoped() {
+        return new Relation(buildDefaultScope());
+    }
+
+    private Relation<T> buildDefaultScope() {
+        if (getDefaultScope() != null) {
+            return evaluateDefaultScope(() -> getDefaultScope());
+        } else {
+            return thiz();
+        }
+    }
+
+    private Relation<T> evaluateDefaultScope(Supplier<Relation> supplier) {
+        if (isIgnoreDefaultScope()) return thiz();
+        try {
+            thiz().setIgnoreDefaultScope(true);
+            return supplier.get();
+        } finally {
+            thiz().setIgnoreDefaultScope(false);
+        }
     }
 
     private Relation<T> thiz() {

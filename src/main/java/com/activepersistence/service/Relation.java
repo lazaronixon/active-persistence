@@ -61,6 +61,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private boolean calculating = false;
 
+    private Relation<T> currentScope = null;
+
+    private boolean ignoreDefaultScope = false;
+
     public Relation(Base service) {
         this.entityManager = service.getEntityManager();
         this.entityClass   = service.getEntityClass();
@@ -68,26 +72,28 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public Relation(Relation<T> other) {
-        this.entityManager    = other.entityManager;
-        this.entityClass      = other.entityClass;
-        this.service          = other.service;
-        this.selectValues     = new ArrayList(other.selectValues);
-        this.whereValues      = new ArrayList(other.whereValues);
-        this.groupValues      = new ArrayList(other.groupValues);
-        this.havingValues     = new ArrayList(other.havingValues);
-        this.orderValues      = new ArrayList(other.orderValues);
-        this.joinsValues      = new ArrayList(other.joinsValues);
-        this.includesValues   = new ArrayList(other.includesValues);
-        this.eagerLoadsValues = new ArrayList(other.eagerLoadsValues);
-        this.whereParams      = new HashMap(other.whereParams);
-        this.havingParams     = new HashMap(other.havingParams);
-        this.fromClause       = other.fromClause;
-        this.limit            = other.limit;
-        this.offset           = other.offset;
-        this.lock             = other.lock;
-        this.distinct         = other.distinct;
-        this.constructor      = other.constructor;
-        this.calculating      = other.calculating;
+        this.currentScope       = other;
+        this.entityManager      = other.entityManager;
+        this.entityClass        = other.entityClass;
+        this.service            = other.service;
+        this.selectValues       = new ArrayList(other.selectValues);
+        this.whereValues        = new ArrayList(other.whereValues);
+        this.groupValues        = new ArrayList(other.groupValues);
+        this.havingValues       = new ArrayList(other.havingValues);
+        this.orderValues        = new ArrayList(other.orderValues);
+        this.joinsValues        = new ArrayList(other.joinsValues);
+        this.includesValues     = new ArrayList(other.includesValues);
+        this.eagerLoadsValues   = new ArrayList(other.eagerLoadsValues);
+        this.whereParams        = new HashMap(other.whereParams);
+        this.havingParams       = new HashMap(other.havingParams);
+        this.fromClause         = other.fromClause;
+        this.limit              = other.limit;
+        this.offset             = other.offset;
+        this.lock               = other.lock;
+        this.distinct           = other.distinct;
+        this.constructor        = other.constructor;
+        this.calculating        = other.calculating;
+        this.ignoreDefaultScope = other.ignoreDefaultScope;
     }
 
     public T fetchOne() {
@@ -258,6 +264,25 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return service;
     }
 
+    public void setIgnoreDefaultScope(boolean ignoreDefaultScope) {
+        this.ignoreDefaultScope = ignoreDefaultScope;
+    }
+
+    @Override
+    public boolean isIgnoreDefaultScope() {
+        return ignoreDefaultScope;
+    }
+
+    @Override
+    public Relation<T> getCurrentScope() {
+        return currentScope;
+    }
+
+    @Override
+    public Relation<T> getDefaultScope() {
+        return service.defaultScope();
+    }
+
     @Override
     public EntityManager getEntityManager() {
         return entityManager;
@@ -275,7 +300,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     @Override
     public Relation<T> spawn() {
-        return new Relation(this);
+        return currentScope != null ? this.all() : new Relation(this);
     }
 
     //<editor-fold defaultstate="collapsed" desc="private methods">

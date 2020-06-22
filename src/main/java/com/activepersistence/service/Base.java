@@ -20,4 +20,6 @@ public abstract class Base<T> implements Persistence<T>, Querying<T>, Delegation
     @Override
     public Relation<T> buildRelation() { return new Relation(this); }
 
+    public Relation<T> defaultScope() { return null; }
+
 }
