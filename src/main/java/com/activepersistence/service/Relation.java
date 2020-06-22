@@ -25,6 +25,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private final Class entityClass;
 
+    private final Base service;
+
     private List<String> selectValues = new ArrayList();
 
     private List<String> whereValues  = new ArrayList();
@@ -59,14 +61,16 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private boolean calculating = false;
 
-    public Relation(EntityManager entityManager, Class entityClass) {
-        this.entityManager   = entityManager;
-        this.entityClass     = entityClass;
+    public Relation(EntityManager entityManager, Class entityClass, Base service) {
+        this.entityManager = entityManager;
+        this.entityClass   = entityClass;
+        this.service       = service;
     }
 
     public Relation(Relation<T> other) {
         this.entityManager    = other.entityManager;
         this.entityClass      = other.entityClass;
+        this.service          = other.service;
         this.selectValues     = new ArrayList(other.selectValues);
         this.whereValues      = new ArrayList(other.whereValues);
         this.groupValues      = new ArrayList(other.groupValues);
@@ -111,7 +115,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public Relation<T> unscoped() {
-        return new Relation(entityManager, entityClass);
+        return new Relation(entityManager, entityClass, service);
     }
 
     public T find(Object id) {
@@ -258,6 +262,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     @Override
     public Class<T> getEntityClass() {
         return entityClass;
+    }
+
+    public Base getService() {
+        return service;
     }
 
     @Override

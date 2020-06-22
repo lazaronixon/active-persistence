@@ -27,7 +27,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> where(String conditions, Object... params) {
-        return where_(conditions, params);
+        return spawn().where_(conditions, params);
     }
 
     public default Relation<T> where_(String conditions, Object... params) {
@@ -107,7 +107,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> lock() {
-        return this.lock_();
+        return spawn().lock_();
     }
 
     public default Relation<T> lock_() {
@@ -115,7 +115,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> from(String value) {
-        return this.from_(value);
+        return spawn().from_(value);
     }
 
     public default Relation<T> from_(String value) {
@@ -123,7 +123,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> unscope(ValidUnscopingValues... values) {
-        this.unscope_(values); return (Relation<T>) this;
+        return spawn().unscope_(values);
     }
 
     public default Relation<T> unscope_(ValidUnscopingValues... values) {
@@ -155,7 +155,7 @@ public interface QueryMethods<T> {
                     thiz().setLock(false);
             }
         }
-        return (Relation<T>) this;
+        return thiz();
     }
 
     public default Relation<T> reselect(String... fields) {
