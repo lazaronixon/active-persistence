@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface FinderMethods<T> {
 
+    public String getEntityAlias();
+
     public default T take() {
         return thiz().limit(1).fetchOne();
     }
@@ -17,7 +19,7 @@ public interface FinderMethods<T> {
         if (thiz().hasOrderValues()) {
             return thiz().take();
         } else {
-            return thiz().order("this.id").take();
+            return thiz().order().take();
         }
     }
 
@@ -25,7 +27,7 @@ public interface FinderMethods<T> {
         if (thiz().hasOrderValues()) {
             return thiz().takeOrFail();
         } else {
-            return thiz().order("this.id").takeOrFail();
+            return thiz().order(id()).takeOrFail();
         }
     }
 
@@ -33,7 +35,7 @@ public interface FinderMethods<T> {
         if (thiz().hasOrderValues()) {
             return thiz().take(limit);
         } else {
-            return thiz().order("this.id").take(limit);
+            return thiz().order(id()).take(limit);
         }
     }
 
@@ -41,7 +43,7 @@ public interface FinderMethods<T> {
         if (thiz().hasOrderValues()) {
             return thiz().take();
         } else {
-            return thiz().order("this.id DESC").take();
+            return thiz().order(id() + " DESC").take();
         }
     }
 
@@ -49,7 +51,7 @@ public interface FinderMethods<T> {
         if (thiz().hasOrderValues()) {
             return thiz().takeOrFail();
         } else {
-            return thiz().order("this.id DESC").takeOrFail();
+            return thiz().order(id() + " DESC").takeOrFail();
         }
     }
 
@@ -57,7 +59,7 @@ public interface FinderMethods<T> {
         if (thiz().hasOrderValues()) {
             return thiz().take(limit);
         } else {
-            return thiz().order("this.id DESC").take(limit);
+            return thiz().order(id() + " DESC").take(limit);
         }
     }
 
@@ -83,6 +85,10 @@ public interface FinderMethods<T> {
 
     private Relation<T> thiz() {
         return (Relation<T>) this;
+    }
+
+    private String id() {
+        return getEntityAlias() + ".id";
     }
 
 }

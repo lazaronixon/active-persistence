@@ -67,13 +67,13 @@ usersService.create(student);
 ```java
 List<Student> students = studentsService.all().fetch();
 Student student = studentsService.first();
-Student student = studentsService.findBy("this.name = 'Nixon'");
-List<Student> students = studentsService.where("this.name = 'Nixon' AND this.occupation = 'Code Artist'").order("this.createdAt DESC").fetch();
+Student student = studentsService.findBy("student.name = 'Nixon'");
+List<Student> students = studentsService.where("student.name = 'Nixon' AND student.occupation = 'Code Artist'").order("student.createdAt DESC").fetch();
 ```
 
 ### Update
 ```java
-User user = usersService.findBy("this.name = 'David'");
+User user = usersService.findBy("student.name = 'David'");
 user.name = 'Dave';
 usersService.save(user);
 // OR
@@ -82,7 +82,7 @@ usersService.update(user);
 
 ### Delete
 ```java
-User user = usersService.findBy("this.name = 'David'")
+User user = usersService.findBy("student.name = 'David'")
 usersService.destroy(user);
 ```
 
@@ -99,26 +99,26 @@ List<Student> students = studentsService.first(3);
 Student student = studentsService.last()
 List<Student> students = studentsService.last(3);
 
-Student student = studentsService.findBy("this.name = 'Lifo'");
+Student student = studentsService.findBy("student.name = 'Lifo'");
 ```
 
 ### Conditions
 ```java
-List<Client> clients = studentsService.where("this.ordersCount = ?1", 10).fetch();
-List<Client> clients = studentsService.where("this.ordersCount = ?1 AND this.locked = ?2", 10, false).fetch();
+List<Client> clients = studentsService.where("student.ordersCount = ?1", 10).fetch();
+List<Client> clients = studentsService.where("student.ordersCount = ?1 AND student.locked = ?2", 10, false).fetch();
 ```
 
 ### Ordering
 ```java
-List<Client> clients = studentsService.order("this.createdAt").fetch();
-List<Client> clients = studentsService.order("this.createdAt DESC").fetch();
-List<Client> clients = studentsService.order("this.createdAt ASC").fetch();
+List<Client> clients = studentsService.order("student.createdAt").fetch();
+List<Client> clients = studentsService.order("student.createdAt DESC").fetch();
+List<Client> clients = studentsService.order("student.createdAt ASC").fetch();
 ```
 
 ### Selecting Specific Fields
 ```java
-List<Client> clients = studentsService.select("this.viewableBy", "this.locked").fetch();
-List<Client> clients = studentsService.select("this.name").distinct().fetch();
+List<Client> clients = studentsService.select("student.viewableBy", "student.locked").fetch();
+List<Client> clients = studentsService.select("student.name").distinct().fetch();
 ```
 
 ### Limit and Offset
@@ -129,27 +129,27 @@ List<Client> clients = studentsService.limit(5).offset(30).fetch();
 
 ### Group
 ```java
-List<Client> clients = studentsService.select("date(this.createdAt), sum(price)").group("date(this.createdAt)").fetch();
+List<Client> clients = studentsService.select("date(student.createdAt), sum(price)").group("date(student.createdAt)").fetch();
 ```
 
 ### Having
 ```java
-List<Client> clients = studentsService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").having("sum(this.price) > 100").fetch();
+List<Client> clients = studentsService.select("date(student.createdAt), sum(student.price)").group("date(student.createdAt)").having("sum(student.price) > 100").fetch();
 ```
 
 ### Reselect
 ```java
-List<Client> clients = studentsService.select("this.title", "this.body").reselect("this.createdAt").fetch();
+List<Client> clients = studentsService.select("student.title", "student.body").reselect("student.createdAt").fetch();
 ```
 
 ### Reorder
 ```java
-List<Client> clients = studentsService.order("this.title", "this.body").reorder("this.createdAt").fetch();
+List<Client> clients = studentsService.order("student.title", "student.body").reorder("student.createdAt").fetch();
 ```
 
 ### Rewhere
 ```java
-List<Client> clients = studentsService.where("this.trashed = true").rewhere("this.trashed = false").fetch();
+List<Client> clients = studentsService.where("student.trashed = true").rewhere("student.trashed = false").fetch();
 ```
 
 ### Null Relation
@@ -169,24 +169,24 @@ List<Author> authors = studentsService.joins("INNER JOIN posts").fetch();
 
 ### Eager Loading Associations
 ```java
-List<Client> clients = studentsService.includes("this.address").limit(10).fetch();
-List<Client> clients = studentsService.eagerLoads("this.address").limit(10).fetch();
+List<Client> clients = studentsService.includes("student.address").limit(10).fetch();
+List<Client> clients = studentsService.eagerLoads("student.address").limit(10).fetch();
 ```
 
 ### Existence of Objects
 ```java
-boolean exists = studentsService.exists("this.name = 'Lifo'");
-boolean exists = studentsService.where("this.name = 'Lifo'").exists();
+boolean exists = studentsService.exists("student.name = 'Lifo'");
+boolean exists = studentsService.where("student.name = 'Lifo'").exists();
 ```
 
 ### Calculations
 ```java
 long   count   = studentsService.count();
-long   count1  = studentsService.count("this.id");
-long   sum     = (long) studentsService.sum("this.id");
-double average = (double) studentsService.average("this.id");
-int    minimum = (int) studentsService.minimum("this.id");
-int    maximum = (int) studentsService.maximum("this.id");
+long   count1  = studentsService.count("student.id");
+long   sum     = (long) studentsService.sum("student.id");
+double average = (double) studentsService.average("student.id");
+int    minimum = (int) studentsService.minimum("student.id");
+int    maximum = (int) studentsService.maximum("student.id");
 ```
 
 ## Requirements

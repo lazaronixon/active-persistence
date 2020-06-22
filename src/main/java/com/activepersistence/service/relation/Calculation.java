@@ -8,8 +8,10 @@ public interface Calculation<T> {
 
     public Relation<T> spawn();
 
+    public String getEntityAlias();
+
     public default long count() {
-        return count("this");
+        return count(getEntityAlias());
     }
 
     public default long count(String field) {
@@ -33,7 +35,7 @@ public interface Calculation<T> {
     }
 
     public default List ids() {
-        return pluck("this.id");
+        return pluck(getEntityAlias() + ".id");
     }
 
     public default List pluck(String... fields) {

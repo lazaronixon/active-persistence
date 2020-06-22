@@ -254,6 +254,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return !orderValues.isEmpty();
     }
 
+    public Base getService() {
+        return service;
+    }
+
     @Override
     public EntityManager getEntityManager() {
         return entityManager;
@@ -264,8 +268,9 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return entityClass;
     }
 
-    public Base getService() {
-        return service;
+    @Override
+    public String getEntityAlias() {
+        return uncapitalize(entityClass.getSimpleName());
     }
 
     @Override
@@ -277,7 +282,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private String buildSelect() {
         String select = format("SELECT %s", distinctExp() + constructor(selectExp()));
         String from   = format("FROM %s", fromClauseOrThis());
-        return join(" ", select, from, "this");
+        return join(" ", select, from, getEntityAlias());
     }
 
     private String selectExp() {
@@ -348,7 +353,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private List<String> selectOrThis() {
-        return selectValues.isEmpty() ? List.of("this") : selectValues;
+        return selectValues.isEmpty() ? List.of(getEntityAlias()) : selectValues;
     }
 
     private String fromClauseOrThis() {
@@ -360,12 +365,15 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private Map<Integer, Object> parseParams(String coditions, Object[] params) {
-        Integer[] indexes = indexParamsFor(coditions);
-        return range(0, indexes.length).boxed().collect(toMap(i -> indexes[i], i -> params[i]));
+        Integer[] indexes = indexParamsFor(coditions); return range(0, indexes.length).boxed().collect(toMap(i -> indexes[i], i -> params[i]));
     }
 
     private Integer[] indexParamsFor(String coditions) {
         return compile("\\?(\\d+)").matcher(coditions).results().map(r -> r.group(1)).map(Integer::parseInt).toArray(Integer[]::new);
+    }
+
+    private String uncapitalize(String value) {
+        return value.substring(0, 1).toLowerCase()+ value.substring(1);
     }
     //</editor-fold>
 
