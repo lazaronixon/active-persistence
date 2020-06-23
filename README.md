@@ -77,7 +77,7 @@ User user = usersService.first();
 // return the first user named David
 User david = usersService.findBy("user.name = ?1", "David");
 
-// find all users named David who are Code Artists and sort by created_at in reverse chronological order
+// find all users named David who are Code Artists and sort by createdAt in reverse chronological order
 List<User> users = usersService.where("user.name = ?1 AND user.occupation = ?2", "David", "Code Artist").order("user.createdAt DESC").fetch();
 ```
 
@@ -115,8 +115,8 @@ Client client = clientsService.last();
 Client client = clientsService.order("client.firstName").last();
 List<Client> clients = clientsService.last(3);
 
-// The find_by method finds the first record matching some conditions
-Client client = clientsService.findBy("client.firstName = ?1", "Lifo"); // #<Client id: 1, first_name: "Lifo">
+// The findBy method finds the first record matching some conditions
+Client client = clientsService.findBy("client.firstName = ?1", "Lifo"); // #<Client id: 1, firstName: "Lifo">
 Client client = clientsService.findBy("client.firstName = ?1", "Jon"); // null
 
 Client client = clientsService.findByOrFail("client.firstName = ?1", "does not exist"); // NoResultException
@@ -124,8 +124,8 @@ Client client = clientsService.findByOrFail("client.firstName = ?1", "does not e
 
 ### Conditions
 ```java
-clientsService.where("client.orders_count = ?1", 10).fetch();
-clientsService.where("client.orders_count = ?1 AND clients.locked = ?2", 10, false).fetch();
+clientsService.where("client.ordersCount = ?1", 10).fetch();
+clientsService.where("client.ordersCount = ?1 AND clients.locked = ?2", 10, false).fetch();
 ```
 
 ### Ordering
@@ -240,8 +240,8 @@ long   count   = clientsService.count();
 long   count   = clientsService.count("client.age");
 int    minimum = (int)    clientsService.minimum("client.age");
 int    maximum = (int)    clientsService.maximum("client.age");
-long   total   = (long)   clientsService.sum("client.orders_count");
-double average = (double) clientsService.average("client.orders_count");
+long   total   = (long)   clientsService.sum("client.ordersCount");
+double average = (double) clientsService.average("client.ordersCount");
 ```
 
 ## Requirements
