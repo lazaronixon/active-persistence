@@ -75,22 +75,22 @@ List<User> users = usersService.all().fetch();
 User user = usersService.first();
 
 // return the first user named David
-User david = usersService.bind(1, "David").findBy("user.name = ?1");
+User david = usersService.bind(1, "David").findBy("this.name = ?1");
 
 // find all users named David who are Code Artists and sort by createdAt in reverse chronological order
-List<User> users = usersService.where("user.name = ?1 AND user.occupation = ?2").order("user.createdAt DESC").bind(1, "David").bind(2, "Code Artist").fetch();
+List<User> users = usersService.where("this.name = ?1 AND this.occupation = ?2").order("this.createdAt DESC").bind(1, "David").bind(2, "Code Artist").fetch();
 ```
 
 ### Update
 ```java
-User user = userService.bind(1, "David").findBy("user.name = ?1");
+User user = userService.bind(1, "David").findBy("this.name = ?1");
 user.name = 'Dave'
 usersService.save(user);
 ```
 
 ### Delete
 ```java
-User user = usersService.bind(1, "David").findBy("user.name = ?1");
+User user = usersService.bind(1, "David").findBy("this.name = ?1");
 usersService.destroy(user);
 ```
 
@@ -107,44 +107,44 @@ List<Client> clients = clientsService.take(2);
 
 // The first method finds the first record ordered by primary key (default)
 Client client = clientsService.first();
-Client client = clientsService.order("client.firstName").first();
+Client client = clientsService.order("this.firstName").first();
 List<Client> clients = clientsService.first(3);
 
 // The last method finds the last record ordered by primary key (default)
 Client client = clientsService.last();
-Client client = clientsService.order("client.firstName").last();
+Client client = clientsService.order("this.firstName").last();
 List<Client> clients = clientsService.last(3);
 
 // The findBy method finds the first record matching some conditions
-Client client = clientsService.bind(1, "Lifo").findBy("client.firstName = ?1"); // #<Client id: 1, firstName: "Lifo">
-Client client = clientsService.bind(1, "Jon").findBy("client.firstName = ?1"); // null
+Client client = clientsService.bind(1, "Lifo").findBy("this.firstName = ?1"); // #<Client id: 1, firstName: "Lifo">
+Client client = clientsService.bind(1, "Jon").findBy("this.firstName = ?1"); // null
 
-Client client = clientsService.bind(1, "does not exist").findByOrFail("client.firstName = ?1"); // NoResultException
+Client client = clientsService.bind(1, "does not exist").findByOrFail("this.firstName = ?1"); // NoResultException
 ```
 
 ### Conditions
 ```java
 //Ordinal Conditions
-clientsService.where("client.ordersCount = ?1").bind(1, 10).fetch();
-clientsService.where("client.ordersCount = ?1 AND clients.locked = ?2").bind(1, 10).bind(2, false).fetch();
+clientsService.where("this.ordersCount = ?1").bind(1, 10).fetch();
+clientsService.where("this.ordersCount = ?1 AND this.locked = ?2").bind(1, 10).bind(2, false).fetch();
 
 //Placeholder Conditions
-clientsService.where("client.ordersCount = :count").bind("count", 10).fetch();
-clientsService.where("client.ordersCount = :count AND clients.locked = :locked").bind("count", 10).bind("locked", false).fetch();
+clientsService.where("this.ordersCount = :count").bind("count", 10).fetch();
+clientsService.where("this.ordersCount = :count AND this.locked = :locked").bind("count", 10).bind("locked", false).fetch();
 
 ```
 
 ### Ordering
 ```java
-clientsService.order("client.createdAt").fetch();
-clientsService.order("client.createdAt DESC").fetch();
-clientsService.order("client.createdAt ASC").fetch();
+clientsService.order("this.createdAt").fetch();
+clientsService.order("this.createdAt DESC").fetch();
+clientsService.order("this.createdAt ASC").fetch();
 ```
 
 ### Selecting Specific Fields
 ```java
-clientsService.select("student.viewableBy", "student.locked").fetch();
-clientsService.select("student.name").distinct().fetch();
+clientsService.select("this.viewableBy", "this.locked").fetch();
+clientsService.select("this.name").distinct().fetch();
 ```
 
 ### Limit and Offset
@@ -155,32 +155,32 @@ clientsService.limit(5).offset(30).fetch();
 
 ### Group
 ```java
-ordersService.select("date(order.createdAt), sum(order.price)").group("date(order.createdAt)").fetch();
+ordersService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").fetch();
 ```
 
 ### Having
 ```java
-ordersService.select("date(order.createdAt), sum(order.price)").group("date(order.createdAt)").having("sum(order.price) > 100").fetch();
+ordersService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").having("sum(this.price) > 100").fetch();
 ```
 
 ### Unscope
 ```java
-ordersService.where('order.id > 10').limit(20).order('order.id asc').unscope(ORDER).fetch();
+ordersService.where('this.id > 10').limit(20).order('this.id asc').unscope(ORDER).fetch();
 ```
 
 ### Reselect
 ```java
-postsService.select("post.title", "post.body").reselect("post.createdAt").fetch();
+postsService.select("this.title", "this.body").reselect("this.createdAt").fetch();
 ```
 
 ### Reorder
 ```java
-postsService.order("post.title").reorder("post.createdAt").fetch();
+postsService.order("this.title").reorder("this.createdAt").fetch();
 ```
 
 ### Rewhere
 ```java
-articlesService.where("article.trashed = true").rewhere("article.trashed = false").fetch();
+articlesService.where("this.trashed = true").rewhere("this.trashed = false").fetch();
 ```
 
 ### Null Relation
@@ -218,8 +218,8 @@ public class StudentsService extends ApplicationService<Student> {
     }
 }
 
-clientsService.all(); // SELECT student FROM Student student WHERE student.name = 'nixon'
-clientsService.unscoped().all(); // SELECT student FROM Student student
+clientsService.all(); // SELECT this FROM Student this WHERE this.name = 'nixon'
+clientsService.unscoped().all(); // SELECT this FROM Student this
 ```
 
 ### Merging of scopes
@@ -229,25 +229,25 @@ usersService.scoping(usersService.active()).fetch();
 
 ### Existence of Objects
 ```java
-boolean exists = studentsService.exists("student.name = 'Lifo'");
-boolean exists = studentsService.where("student.name = 'Lifo'").exists();
+boolean exists = studentsService.exists("this.name = 'Lifo'");
+boolean exists = studentsService.where("this.name = 'Lifo'").exists();
 ```
 
 ### Pluck
 ```java
-clientsService.where("client.active = true").pluck("client.id"); //[1, 2, 3]
-clientsService.where("client.active = true").ids; //[1, 2, 3]
+clientsService.where("this.active = true").pluck("this.id"); //[1, 2, 3]
+clientsService.where("this.active = true").ids; //[1, 2, 3]
 
 ```
 
 ### Calculations
 ```java
 long   count   = clientsService.count();
-long   count   = clientsService.count("client.age");
-int    minimum = (int)    clientsService.minimum("client.age");
-int    maximum = (int)    clientsService.maximum("client.age");
-long   total   = (long)   clientsService.sum("client.ordersCount");
-double average = (double) clientsService.average("client.ordersCount");
+long   count   = clientsService.count("this.age");
+int    minimum = (int)    clientsService.minimum("this.age");
+int    maximum = (int)    clientsService.maximum("this.age");
+long   total   = (long)   clientsService.sum("this.ordersCount");
+double average = (double) clientsService.average("this.ordersCount");
 ```
 
 ## Requirements

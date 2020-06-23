@@ -11,7 +11,7 @@ public interface Calculation<T> {
     public Relation<T> spawn();
 
     public default long count() {
-        return count(thiz().getEntityAlias());
+        return count("this");
     }
 
     public default long count(String field) {
@@ -35,7 +35,7 @@ public interface Calculation<T> {
     }
 
     public default List ids() {
-        return pluck(thiz().getEntityAlias() + ".id");
+        return pluck("this.id");
     }
 
     public default List pluck(String... fields) {

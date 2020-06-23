@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import static java.util.Optional.ofNullable;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import static javax.persistence.LockModeType.NONE;
 import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 import javax.persistence.Query;
@@ -119,10 +120,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public Relation<T> unscoped() {
         return new Relation(service);
-    }
-
-    public T find(Object id) {
-        return entityManager.find(entityClass, id, (lock ? PESSIMISTIC_READ : NONE));
     }
 
     public String toJpql() {
@@ -265,10 +262,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return service.defaultScope();
     }
 
-    public String getEntityAlias() {
-        return uncapitalize(entityClass.getSimpleName());
-    }
-
     @Override
     public Base<T> getService() {
         return service;
@@ -288,7 +281,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private String buildSelect() {
         String select = format("SELECT %s", distinctExp() + constructor(selectExp()));
         String from   = format("FROM %s", fromClauseOrThis());
-        return join(" ", select, from, getEntityAlias());
+        return join(" ", select, from, "this");
     }
 
     private String selectExp() {
@@ -316,11 +309,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private TypedQuery<T> buildQuery() {
-        return parametize(entityManager.createQuery(toJpql(), entityClass)).setHint(BATCH_TYPE, "IN").setMaxResults(limit).setFirstResult(offset);
+        return parametize(service.buildQuery(toJpql())).setLockMode(buildLockMode()).setHint(BATCH_TYPE, "IN").setMaxResults(limit).setFirstResult(offset);
     }
 
     private Query buildQuery_() {
-        return parametize(entityManager.createQuery(toJpql())).setHint(BATCH_TYPE, "IN").setMaxResults(limit).setFirstResult(offset);
+        return parametize(service.buildQuery_(toJpql())).setLockMode(buildLockMode()).setHint(BATCH_TYPE, "IN").setMaxResults(limit).setFirstResult(offset);
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {
@@ -358,7 +351,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private List<String> selectOrThis() {
-        return selectValues.isEmpty() ? List.of(getEntityAlias()) : selectValues;
+        return selectValues.isEmpty() ? List.of("this") : selectValues;
     }
 
     private String fromClauseOrThis() {
@@ -369,8 +362,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return constructor ? format("new %s(%s)", entityClass.getName(), fields) : fields;
     }
 
-    private String uncapitalize(String value) {
-        return value.substring(0, 1).toLowerCase()+ value.substring(1);
+    private LockModeType buildLockMode() {
+        return lock ? PESSIMISTIC_READ : NONE;
     }
     //</editor-fold>
 

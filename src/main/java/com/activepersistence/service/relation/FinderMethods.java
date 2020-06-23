@@ -27,7 +27,7 @@ public interface FinderMethods<T> {
         if (thiz().hasOrderValues()) {
             return thiz().takeOrFail();
         } else {
-            return thiz().order(id()).takeOrFail();
+            return thiz().order("this.id").takeOrFail();
         }
     }
 
@@ -35,7 +35,7 @@ public interface FinderMethods<T> {
         if (thiz().hasOrderValues()) {
             return thiz().take(limit);
         } else {
-            return thiz().order(id()).take(limit);
+            return thiz().order("this.id").take(limit);
         }
     }
 
@@ -43,7 +43,7 @@ public interface FinderMethods<T> {
         if (thiz().hasOrderValues()) {
             return thiz().take();
         } else {
-            return thiz().order(id() + " DESC").take();
+            return thiz().order("this.id DESC").take();
         }
     }
 
@@ -51,7 +51,7 @@ public interface FinderMethods<T> {
         if (thiz().hasOrderValues()) {
             return thiz().takeOrFail();
         } else {
-            return thiz().order(id() + " DESC").takeOrFail();
+            return thiz().order("this.id DESC").takeOrFail();
         }
     }
 
@@ -59,8 +59,12 @@ public interface FinderMethods<T> {
         if (thiz().hasOrderValues()) {
             return thiz().take(limit);
         } else {
-            return thiz().order(id() + " DESC").take(limit);
+            return thiz().order("this.id DESC").take(limit);
         }
+    }
+
+    public default T find(Object id) {
+        return thiz().where("this.id = :pk").bind("pk", id).takeOrFail();
     }
 
     public default T findBy(String conditions) {
@@ -82,9 +86,4 @@ public interface FinderMethods<T> {
     public default List<T> take(int limit) {
         return thiz().limit(limit).fetch();
     }
-
-    private String id() {
-        return thiz().getEntityAlias() + ".id";
-    }
-
 }
