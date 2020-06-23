@@ -145,7 +145,7 @@ public interface Querying<T> {
     }
 
     public default Relation<T> none() {
-        return buildRelation().none();
+        return all().none();
     }
 
     public default Relation<T> scoping(Relation<T> relation) {

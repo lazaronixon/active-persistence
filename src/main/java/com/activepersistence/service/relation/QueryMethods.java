@@ -1,7 +1,6 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Base;
-import com.activepersistence.service.NullRelation;
 import com.activepersistence.service.Relation;
 import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
@@ -99,7 +98,11 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> none() {
-        return new NullRelation(thiz());
+        return spawn().none_();
+    }
+
+    public default Relation<T> none_() {
+        thiz().where("1=0"); return thiz();
     }
 
     public default Relation<T> includes(String... includes) {
