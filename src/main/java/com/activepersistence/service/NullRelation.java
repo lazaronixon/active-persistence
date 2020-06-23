@@ -6,8 +6,8 @@ import javax.persistence.NoResultException;
 
 public class NullRelation<T> extends Relation<T> {
 
-    public NullRelation(Base service) {
-        super(service);
+    public NullRelation(Relation<T> other) {
+        super(other);
     }
 
     @Override

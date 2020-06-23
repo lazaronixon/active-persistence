@@ -103,7 +103,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> none() {
-        return new NullRelation(getService());
+        return new NullRelation(thiz());
     }
 
     public default Relation<T> includes(String... includes) {
