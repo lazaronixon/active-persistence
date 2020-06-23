@@ -238,10 +238,10 @@ clientsService.where("client.active = true").ids; //[1, 2, 3]
 ```java
 long   count   = clientsService.count();
 long   count   = clientsService.count("client.age");
+int    minimum = (int)    clientsService.minimum("client.age");
+int    maximum = (int)    clientsService.maximum("client.age");
+long   total   = (long)   clientsService.sum("client.orders_count");
 double average = (double) clientsService.average("client.orders_count");
-int    minimum = (int) clientsService.minimum("client.age");
-int    maximum = (int) clientsService.maximum("client.age");
-long   total   = (long) clientsService.sum("client.orders_count");
 ```
 
 ## Requirements
