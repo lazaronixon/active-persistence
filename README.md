@@ -229,8 +229,8 @@ boolean exists = studentsService.where("student.name = 'Lifo'").exists();
 
 ### Pluck
 ```java
-clientsService.where("clients.active = true").pluck("clients.id"); //[1, 2, 3]
-clientsService.where("clients.active = true").ids; //[1, 2, 3]
+clientsService.where("client.active = true").pluck("client.id"); //[1, 2, 3]
+clientsService.where("client.active = true").ids; //[1, 2, 3]
 
 ```
 
