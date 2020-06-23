@@ -23,9 +23,9 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private final EntityManager entityManager;
 
-    private final Class entityClass;
+    private final Class<T> entityClass;
 
-    private final Base service;
+    private final Base<T> service;
 
     private List<String> selectValues = new ArrayList();
 
@@ -122,7 +122,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public T find(Object id) {
-        return getEntityManager().find(getEntityClass(), id, (lock ? PESSIMISTIC_READ : NONE));
+        return entityManager.find(entityClass, id, (lock ? PESSIMISTIC_READ : NONE));
     }
 
     public String toJpql() {
@@ -270,14 +270,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     @Override
     public Relation<T> getDefaultScope() {
         return service.defaultScope();
-    }
-
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
-
-    public Class<T> getEntityClass() {
-        return entityClass;
     }
 
     @Override
