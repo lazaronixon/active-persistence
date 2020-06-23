@@ -67,6 +67,10 @@ public interface FinderMethods<T> {
         return thiz().where("this.id = :pk").bind("pk", id).takeOrFail();
     }
 
+    public default List<T> find(List<Object> ids) {
+        return thiz().where("this.id IN :pks").bind("pks", ids).fetch();
+    }
+
     public default T findBy(String conditions) {
         return thiz().where(conditions).take();
     }

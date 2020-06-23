@@ -59,6 +59,10 @@ public interface Querying<T> {
         return all().find(id);
     }
 
+    public default List<T> find(List<Object> ids) {
+        return all().find(ids);
+    }
+
     public default T findBy(String conditions) {
         return all().findBy(conditions);
     }
