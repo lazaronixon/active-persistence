@@ -8,11 +8,7 @@ import static java.lang.String.join;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import static java.util.Optional.ofNullable;
-import static java.util.regex.Pattern.compile;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.IntStream.range;
 import javax.persistence.EntityManager;
 import static javax.persistence.LockModeType.NONE;
 import static javax.persistence.LockModeType.PESSIMISTIC_READ;
@@ -20,6 +16,10 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T> {
+
+    private static final String BATCH_TYPE = "eclipselink.batch.type";
+    private static final String BATCH = "eclipselink.batch";
+    private static final String LEFT_JOIN_FETCH = "eclipselink.left-join-fetch";
 
     private final EntityManager entityManager;
 
@@ -43,9 +43,9 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private List<String> eagerLoadsValues = new ArrayList();
 
-    private HashMap<Integer, Object> ordinalWhereParams = new HashMap();
+    private HashMap<Integer, Object> ordinalParameters = new HashMap();
 
-    private HashMap<Integer, Object> ordinalHavingParams = new HashMap();
+    private HashMap<String, Object> namedParameters = new HashMap();
 
     private String fromClause = null;
 
@@ -82,8 +82,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.joinsValues         = new ArrayList(other.joinsValues);
         this.includesValues      = new ArrayList(other.includesValues);
         this.eagerLoadsValues    = new ArrayList(other.eagerLoadsValues);
-        this.ordinalWhereParams  = new HashMap(other.ordinalWhereParams);
-        this.ordinalHavingParams = new HashMap(other.ordinalHavingParams);
+        this.ordinalParameters   = new HashMap(other.ordinalParameters);
+        this.namedParameters     = new HashMap(other.namedParameters);
         this.fromClause          = other.fromClause;
         this.limit               = other.limit;
         this.offset              = other.offset;
@@ -94,23 +94,23 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public T fetchOne() {
-        return buildParameterizedQuery(toJpql()).getResultStream().findFirst().orElse(null);
+        return buildQuery().getResultStream().findFirst().orElse(null);
     }
 
     public T fetchOneOrFail() {
-        return buildParameterizedQuery(toJpql()).getSingleResult();
+        return buildQuery().getSingleResult();
     }
 
     public List<T> fetch() {
-        return buildParameterizedQuery(toJpql()).getResultList();
+        return buildQuery().getResultList();
     }
 
     public List fetch_() {
-        return buildParameterizedQuery_(toJpql()).getResultList();
+        return buildQuery_().getResultList();
     }
 
     public boolean fetchExists() {
-        return buildParameterizedQuery(toJpql()).getResultStream().findAny().isPresent();
+        return buildQuery().getResultStream().findAny().isPresent();
     }
 
     public Relation<T> scoping(Relation relation) {
@@ -155,14 +155,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.whereValues.add(where);
     }
 
-    public void addWhere(String where, Object[] params) {
-        this.whereValues.add(where);
-        this.ordinalWhereParams.putAll(parseParams(where, params));
-    }
-
-    public void addHaving(String having, Object[] params) {
+    public void addHaving(String having) {
         this.havingValues.add(having);
-        this.ordinalHavingParams.putAll(parseParams(having, params));
     }
 
     public void addGroup(String[] group) {
@@ -179,6 +173,14 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public void addEagerLoads(String[] eagerLoads) {
         eagerLoadsValues.addAll(List.of(eagerLoads));
+    }
+
+    public void addOrdinalParameter(int position, Object value) {
+        ordinalParameters.put(position, value);
+    }
+
+    public void addNamedParameter(String name, Object value) {
+        namedParameters.put(name, value);
     }
 
     public void setFromClause(String fromClause) {
@@ -237,12 +239,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public void clearWhere() {
         this.whereValues.clear();
-        this.ordinalWhereParams.clear();
     }
 
     public void clearHaving() {
         this.havingValues.clear();
-        this.ordinalHavingParams.clear();
     }
 
     public void clearOrder() {
@@ -315,31 +315,30 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return format("ORDER BY %s", separatedByComma(orderValues));
     }
 
-    private TypedQuery<T> buildParameterizedQuery(String qlString) {
-        return parametize(service.buildQuery(qlString)).setMaxResults(limit).setFirstResult(offset);
+    private TypedQuery<T> buildQuery() {
+        return parametize(entityManager.createQuery(toJpql(), entityClass)).setHint(BATCH_TYPE, "IN").setMaxResults(limit).setFirstResult(offset);
     }
 
-    private Query buildParameterizedQuery_(String qlString) {
-        return parametize(service.buildQuery_(qlString)).setMaxResults(limit).setFirstResult(offset);
+    private Query buildQuery_() {
+        return parametize(entityManager.createQuery(toJpql())).setHint(BATCH_TYPE, "IN").setMaxResults(limit).setFirstResult(offset);
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {
-        applyOrdinalParams(query); applyHints(query); return query;
+        applyParams(query); applyHints(query); return query;
     }
 
     private Query parametize(Query query) {
-        applyOrdinalParams(query); applyHints(query); return query;
+        applyParams(query); applyHints(query); return query;
     }
 
-    private void applyOrdinalParams(Query query) {
-        ordinalWhereParams.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
-        ordinalHavingParams.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
+    private void applyParams(Query query) {
+        ordinalParameters.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
+        namedParameters.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
     }
 
     private void applyHints(Query query) {
-        query.setHint("eclipselink.batch.type", "IN");
-        includesValues.forEach(value -> query.setHint("eclipselink.batch", value));
-        eagerLoadsValues.forEach(value -> query.setHint("eclipselink.left-join-fetch", value));
+        includesValues.forEach(value -> query.setHint(BATCH, value));
+        eagerLoadsValues.forEach(value -> query.setHint(LEFT_JOIN_FETCH, value));
     }
 
     private String separatedByAnd(List<String> values) {
@@ -368,14 +367,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private String constructor(String fields) {
         return constructor ? format("new %s(%s)", entityClass.getName(), fields) : fields;
-    }
-
-    private Map<Integer, Object> parseParams(String coditions, Object[] params) {
-        Integer[] indexes = ordinalParamsFor(coditions); return range(0, indexes.length).boxed().collect(toMap(i -> indexes[i], i -> params[i]));
-    }
-
-    private Integer[] ordinalParamsFor(String coditions) {
-        return compile("\\?(\\d+)").matcher(coditions).results().map(r -> r.group(1)).map(Integer::parseInt).toArray(Integer[]::new);
     }
 
     private String uncapitalize(String value) {

@@ -75,22 +75,22 @@ List<User> users = usersService.all().fetch();
 User user = usersService.first();
 
 // return the first user named David
-User david = usersService.findBy("user.name = ?1", "David");
+User david = usersService.bind(1, "David").findBy("user.name = ?1");
 
 // find all users named David who are Code Artists and sort by createdAt in reverse chronological order
-List<User> users = usersService.where("user.name = ?1 AND user.occupation = ?2", "David", "Code Artist").order("user.createdAt DESC").fetch();
+List<User> users = usersService.where("user.name = ?1 AND user.occupation = ?2").order("user.createdAt DESC").bind(1, "David").bind(2, "Code Artist").fetch();
 ```
 
 ### Update
 ```java
-User user = userService.findBy("user.name = ?1", "David");
+User user = userService.bind(1, "David").findBy("user.name = ?1");
 user.name = 'Dave'
 usersService.save(user);
 ```
 
 ### Delete
 ```java
-User user = usersService.findBy("user.name = ?1", "David");
+User user = usersService.bind(1, "David").findBy("user.name = ?1");
 usersService.destroy(user);
 ```
 
@@ -116,16 +116,22 @@ Client client = clientsService.order("client.firstName").last();
 List<Client> clients = clientsService.last(3);
 
 // The findBy method finds the first record matching some conditions
-Client client = clientsService.findBy("client.firstName = ?1", "Lifo"); // #<Client id: 1, firstName: "Lifo">
-Client client = clientsService.findBy("client.firstName = ?1", "Jon"); // null
+Client client = clientsService.bind(1, "Lifo").findBy("client.firstName = ?1"); // #<Client id: 1, firstName: "Lifo">
+Client client = clientsService.bind(1, "Jon").findBy("client.firstName = ?1"); // null
 
-Client client = clientsService.findByOrFail("client.firstName = ?1", "does not exist"); // NoResultException
+Client client = clientsService.bind(1, "does not exist").findByOrFail("client.firstName = ?1"); // NoResultException
 ```
 
 ### Conditions
 ```java
-clientsService.where("client.ordersCount = ?1", 10).fetch();
-clientsService.where("client.ordersCount = ?1 AND clients.locked = ?2", 10, false).fetch();
+//Ordinal Conditions
+clientsService.where("client.ordersCount = ?1").bind(1, 10).fetch();
+clientsService.where("client.ordersCount = ?1 AND clients.locked = ?2").bind(1, 10).bind(2, false).fetch();
+
+//Placeholder Conditions
+clientsService.where("client.ordersCount = :count").bind("count", 10).fetch();
+clientsService.where("client.ordersCount = :count AND clients.locked = :locked").bind("count", 10).bind("locked", false).fetch();
+
 ```
 
 ### Ordering

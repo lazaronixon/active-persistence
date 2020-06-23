@@ -2,7 +2,6 @@ package com.activepersistence.service;
 
 import com.activepersistence.service.relation.ValidUnscopingValues;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -15,7 +14,9 @@ public interface Querying<T> {
 
     public Relation<T> buildRelation();
 
-    public default Relation<T> all() { return buildRelation().all(); }
+    public default Relation<T> all() {
+        return buildRelation().all();
+    }
 
     //<editor-fold defaultstate="collapsed" desc="finder methods">
     public default T take() {
@@ -54,26 +55,26 @@ public interface Querying<T> {
         return all().last(limit);
     }
 
-    public default T findBy(String conditions, Object... params) {
-        return all().findBy(conditions, params);
+    public default T findBy(String conditions) {
+        return all().findBy(conditions);
     }
 
-    public default T findByOrFail(String conditions, Object... params) {
-        return all().findByOrFail(conditions, params);
+    public default T findByOrFail(String conditions) {
+        return all().findByOrFail(conditions);
     }
 
     public default boolean exists() {
         return all().exists();
     }
 
-    public default boolean exists(String conditions, Map<String, Object> params) {
-        return all().exists(conditions, params);
+    public default boolean exists(String conditions) {
+        return all().exists(conditions);
     }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="query methods">
-    public default Relation<T> where(String conditions, Object... params) {
-        return all().where(conditions, params);
+    public default Relation<T> where(String conditions) {
+        return all().where(conditions);
     }
 
     public default Relation<T> order(String... values) {
@@ -100,8 +101,8 @@ public interface Querying<T> {
         return all().group(values);
     }
 
-    public default Relation<T> having(String conditions, Object... params) {
-        return all().having(conditions, params);
+    public default Relation<T> having(String conditions) {
+        return all().having(conditions);
     }
 
     public default Relation<T> distinct() {
@@ -128,8 +129,8 @@ public interface Querying<T> {
         return all().reselect(values);
     }
 
-    public default Relation<T> rewhere(String condition, Object... params) {
-        return all().rewhere(condition, params);
+    public default Relation<T> rewhere(String condition) {
+        return all().rewhere(condition);
     }
 
     public default Relation<T> reorder(String... fields) {
@@ -154,6 +155,14 @@ public interface Querying<T> {
 
     public default Relation<T> unscoped() {
         return buildRelation().unscoped();
+    }
+
+    public default Relation<T> bind(int position, Object value) {
+        return all().bind(position, value);
+    }
+
+    public default Relation<T> bind(String name, Object value) {
+        return all().bind(name, value);
     }
     //</editor-fold>
 

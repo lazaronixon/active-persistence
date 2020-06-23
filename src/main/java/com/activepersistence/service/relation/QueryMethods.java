@@ -37,12 +37,12 @@ public interface QueryMethods<T> {
         thiz().addJoins(values); return thiz();
     }
 
-    public default Relation<T> where(String conditions, Object... params) {
-        return spawn().where_(conditions, params);
+    public default Relation<T> where(String conditions) {
+        return spawn().where_(conditions);
     }
 
-    public default Relation<T> where_(String conditions, Object... params) {
-        thiz().addWhere(conditions, params); return thiz();
+    public default Relation<T> where_(String conditions) {
+        thiz().addWhere(conditions); return thiz();
     }
 
     public default Relation<T> group(String... fields) {
@@ -53,12 +53,12 @@ public interface QueryMethods<T> {
         thiz().addGroup(fields); return thiz();
     }
 
-    public default Relation<T> having(String conditions, Object... params) {
-        return spawn().having_(conditions, params);
+    public default Relation<T> having(String conditions) {
+        return spawn().having_(conditions);
     }
 
-    public default Relation<T> having_(String conditions, Object... params) {
-        thiz().addHaving(conditions, params); return thiz();
+    public default Relation<T> having_(String conditions) {
+        thiz().addHaving(conditions); return thiz();
     }
 
     public default Relation<T> order(String... fields) {
@@ -177,12 +177,28 @@ public interface QueryMethods<T> {
         return spawn().unscope(ValidUnscopingValues.SELECT).select(fields);
     }
 
-    public default Relation<T> rewhere(String conditions, Object... params) {
-        return spawn().unscope(ValidUnscopingValues.WHERE).where(conditions, params);
+    public default Relation<T> rewhere(String conditions) {
+        return spawn().unscope(ValidUnscopingValues.WHERE).where(conditions);
     }
 
     public default Relation<T> reorder(String... fields) {
         return spawn().unscope(ValidUnscopingValues.ORDER).order(fields);
+    }
+
+    public default Relation<T> bind(int position, Object value) {
+        return spawn().bind_(position, value);
+    }
+
+    public default Relation<T> bind_(int position, Object value) {
+        thiz().addOrdinalParameter(position, value); return thiz();
+    }
+
+    public default Relation<T> bind(String name, Object value) {
+        return spawn().bind_(name, value);
+    }
+
+    public default Relation<T> bind_(String name, Object value) {
+        thiz().addNamedParameter(name, value); return thiz();
     }
 
     private Relation<T> defaultScoped() {
