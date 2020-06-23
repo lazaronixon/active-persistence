@@ -112,10 +112,6 @@ public interface Querying<T> {
         return all().distinct(value);
     }
 
-    public default Relation<T> none() {
-        return all().none();
-    }
-
     public default Relation<T> includes(String... values) {
         return all().includes(values);
     }
@@ -148,12 +144,16 @@ public interface Querying<T> {
         return all().from(value);
     }
 
+    public default Relation<T> none() {
+        return buildRelation().none();
+    }
+
     public default Relation<T> scoping(Relation<T> relation) {
-        return all().scoping(relation);
+        return buildRelation().scoping(relation);
     }
 
     public default Relation<T> unscoped() {
-        return all().unscoped();
+        return buildRelation().unscoped();
     }
     //</editor-fold>
 

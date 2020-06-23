@@ -156,9 +156,9 @@ public interface QueryMethods<T> {
                 case ORDER:
                     thiz().clearOrder();
                 case LIMIT:
-                    thiz().limit(0);
+                    thiz().setLimit(0);
                 case OFFSET:
-                    thiz().offset(0);
+                    thiz().setOffset(0);
                 case INCLUDES:
                     thiz().clearIncludes();
                 case EAGER_LOADS:
