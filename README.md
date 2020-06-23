@@ -78,7 +78,7 @@ User user = usersService.first();
 User david = usersService.findBy("user.name = ?1", "David");
 
 // find all users named David who are Code Artists and sort by created_at in reverse chronological order
-List<User> users = usersService.where("user.name = ?1 AND user.occupation = ?2", "David", "Code Artist").order("user.createdAt DESC");
+List<User> users = usersService.where("user.name = ?1 AND user.occupation = ?2", "David", "Code Artist").order("user.createdAt DESC").fetch();
 ```
 
 ### Update
@@ -218,7 +218,7 @@ clientsService.unscoped().all(); // SELECT student FROM Student student
 
 ### Merging of scopes
 ```java
-usersService.scoping(active()).fetch();
+usersService.scoping(usersService.active()).fetch();
 ```
 
 ### Existence of Objects
