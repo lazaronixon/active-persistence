@@ -19,7 +19,7 @@ import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, Querying<T> {
+public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T> {
 
     private final EntityManager entityManager;
 
@@ -272,12 +272,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return service.defaultScope();
     }
 
-    @Override
     public EntityManager getEntityManager() {
         return entityManager;
     }
 
-    @Override
     public Class<T> getEntityClass() {
         return entityClass;
     }
@@ -329,11 +327,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private TypedQuery<T> buildParameterizedQuery(String qlString) {
-        return parametize(buildQuery(qlString)).setMaxResults(limit).setFirstResult(offset);
+        return parametize(service.buildQuery(qlString)).setMaxResults(limit).setFirstResult(offset);
     }
 
     private Query buildParameterizedQuery_(String qlString) {
-        return parametize(buildQuery_(qlString)).setMaxResults(limit).setFirstResult(offset);
+        return parametize(service.buildQuery_(qlString)).setMaxResults(limit).setFirstResult(offset);
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {

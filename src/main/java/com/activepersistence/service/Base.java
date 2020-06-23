@@ -1,9 +1,8 @@
 package com.activepersistence.service;
 
-import com.activepersistence.service.relation.Delegation;
 import javax.persistence.EntityManager;
 
-public abstract class Base<T> implements Persistence<T>, Querying<T>, Delegation<T>  {
+public abstract class Base<T> implements Persistence<T>, Querying<T>  {
 
     private final Class<T> entityClass;
 
