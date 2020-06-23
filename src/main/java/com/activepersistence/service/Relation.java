@@ -43,9 +43,9 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private List<String> eagerLoadsValues = new ArrayList();
 
-    private HashMap<Integer, Object> whereParams = new HashMap();
+    private HashMap<Integer, Object> ordinalWhereParams = new HashMap();
 
-    private HashMap<Integer, Object> havingParams = new HashMap();
+    private HashMap<Integer, Object> ordinalHavingParams = new HashMap();
 
     private String fromClause = null;
 
@@ -70,27 +70,27 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public Relation(Relation<T> other) {
-        this.currentScope       = this;
-        this.entityManager      = other.entityManager;
-        this.entityClass        = other.entityClass;
-        this.service            = other.service;
-        this.selectValues       = new ArrayList(other.selectValues);
-        this.whereValues        = new ArrayList(other.whereValues);
-        this.groupValues        = new ArrayList(other.groupValues);
-        this.havingValues       = new ArrayList(other.havingValues);
-        this.orderValues        = new ArrayList(other.orderValues);
-        this.joinsValues        = new ArrayList(other.joinsValues);
-        this.includesValues     = new ArrayList(other.includesValues);
-        this.eagerLoadsValues   = new ArrayList(other.eagerLoadsValues);
-        this.whereParams        = new HashMap(other.whereParams);
-        this.havingParams       = new HashMap(other.havingParams);
-        this.fromClause         = other.fromClause;
-        this.limit              = other.limit;
-        this.offset             = other.offset;
-        this.lock               = other.lock;
-        this.distinct           = other.distinct;
-        this.constructor        = other.constructor;
-        this.calculating        = other.calculating;
+        this.currentScope        = this;
+        this.entityManager       = other.entityManager;
+        this.entityClass         = other.entityClass;
+        this.service             = other.service;
+        this.selectValues        = new ArrayList(other.selectValues);
+        this.whereValues         = new ArrayList(other.whereValues);
+        this.groupValues         = new ArrayList(other.groupValues);
+        this.havingValues        = new ArrayList(other.havingValues);
+        this.orderValues         = new ArrayList(other.orderValues);
+        this.joinsValues         = new ArrayList(other.joinsValues);
+        this.includesValues      = new ArrayList(other.includesValues);
+        this.eagerLoadsValues    = new ArrayList(other.eagerLoadsValues);
+        this.ordinalWhereParams  = new HashMap(other.ordinalWhereParams);
+        this.ordinalHavingParams = new HashMap(other.ordinalHavingParams);
+        this.fromClause          = other.fromClause;
+        this.limit               = other.limit;
+        this.offset              = other.offset;
+        this.lock                = other.lock;
+        this.distinct            = other.distinct;
+        this.constructor         = other.constructor;
+        this.calculating         = other.calculating;
     }
 
     public T fetchOne() {
@@ -157,16 +157,16 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public void addWhere(String where, Object[] params) {
         this.whereValues.add(where);
-        this.whereParams.putAll(parseParams(where, params));
-    }
-
-    public void addGroup(String[] group) {
-        this.groupValues.addAll(List.of(group));
+        this.ordinalWhereParams.putAll(parseParams(where, params));
     }
 
     public void addHaving(String having, Object[] params) {
         this.havingValues.add(having);
-        this.havingParams.putAll(parseParams(having, params));
+        this.ordinalHavingParams.putAll(parseParams(having, params));
+    }
+
+    public void addGroup(String[] group) {
+        this.groupValues.addAll(List.of(group));
     }
 
     public void addOrder(String[] order) {
@@ -235,14 +235,14 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.eagerLoadsValues.clear();
     }
 
-    public void clearHaving() {
-        this.havingValues.clear();
-        this.havingParams.clear();
-    }
-
     public void clearWhere() {
         this.whereValues.clear();
-        this.whereParams.clear();
+        this.ordinalWhereParams.clear();
+    }
+
+    public void clearHaving() {
+        this.havingValues.clear();
+        this.ordinalHavingParams.clear();
     }
 
     public void clearOrder() {
@@ -324,16 +324,16 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {
-        applyParams(query); applyHints(query); return query;
+        applyOrdinalParams(query); applyHints(query); return query;
     }
 
     private Query parametize(Query query) {
-        applyParams(query); applyHints(query); return query;
+        applyOrdinalParams(query); applyHints(query); return query;
     }
 
-    private void applyParams(Query query) {
-        whereParams.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
-        havingParams.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
+    private void applyOrdinalParams(Query query) {
+        ordinalWhereParams.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
+        ordinalHavingParams.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
     }
 
     private void applyHints(Query query) {
@@ -371,10 +371,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private Map<Integer, Object> parseParams(String coditions, Object[] params) {
-        Integer[] indexes = indexParamsFor(coditions); return range(0, indexes.length).boxed().collect(toMap(i -> indexes[i], i -> params[i]));
+        Integer[] indexes = ordinalParamsFor(coditions); return range(0, indexes.length).boxed().collect(toMap(i -> indexes[i], i -> params[i]));
     }
 
-    private Integer[] indexParamsFor(String coditions) {
+    private Integer[] ordinalParamsFor(String coditions) {
         return compile("\\?(\\d+)").matcher(coditions).results().map(r -> r.group(1)).map(Integer::parseInt).toArray(Integer[]::new);
     }
 
