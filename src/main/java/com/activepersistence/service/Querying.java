@@ -55,6 +55,10 @@ public interface Querying<T> {
         return all().last(limit);
     }
 
+    public default T find(Object id) {
+        return all().find(id);
+    }
+
     public default T findBy(String conditions) {
         return all().findBy(conditions);
     }
