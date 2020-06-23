@@ -5,14 +5,14 @@ pom.xml
 <dependency>
   <groupId>com.github.lazaronixon</groupId>
   <artifactId>active-persistence</artifactId>
-  <version>0.0.4</version>
+  <version>0.0.5</version>
 </dependency>
 ```
 
-models/Student.java
+models/User.java
 ```java
 @Entity
-public class Student extends Base<Integer> {
+public class User extends Base<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,34 +20,34 @@ public class Student extends Base<Integer> {
 
     private String name;
 
-    private String address;
+    private String occupation;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
-    public Student() {
+    public User() {
     }
 
     // Get/Set omitted by brevity
 }
 ```
 
-services/StudentService.java
+users/UsersService.java
 ```java
 @ApplicationScoped
-public class StudentsService extends Base<Student> {
+public class UsersService extends Base<User> {
 
     @PersistenceContext
-    private EntityManager em;
+    private EntityManager entityManager;
 
-    public StudentsService() {
-        super(Student.class);
+    public UsersService() {
+        super(User.class);
     }
 
     @Override
     public EntityManager getEntityManager() {
-        return em;
+        return entityManager;
     }
 }
 ```
@@ -56,33 +56,41 @@ public class StudentsService extends Base<Student> {
 
 ### Create
 ```java
-Student student = new Student();
-student.name = "Nixon";
-student.address = "Avenue 45, number 4";
+usersService.create(new User("David", "Code Artist"));
 
-usersService.create(student);
+// Using the new method, an object can be instantiated without being saved
+
+User user = new User();
+user.name = "David";
+user.occupation = "Code Artist";
+// A call to usersService.save(user) will commit the record to the database
 ```
 
 ### Read
 ```java
-List<Student> students = studentsService.all().fetch();
-Student student = studentsService.first();
-Student student = studentsService.findBy("student.name = 'Nixon'");
-List<Student> students = studentsService.where("student.name = 'Nixon' AND student.occupation = 'Code Artist'").order("student.createdAt DESC").fetch();
+// return a collection with all users
+List<User> users = usersService.all().fetch();
+
+// return the first user
+User user = usersService.first();
+
+// return the first user named David
+User david = usersService.findBy("user.name = ?1", "David");
+
+// find all users named David who are Code Artists and sort by created_at in reverse chronological order
+List<User> users = usersService.where("user.name = ?1 AND user.occupation = ?2", "David", "Code Artist").order("user.createdAt DESC");
 ```
 
 ### Update
 ```java
-User user = usersService.findBy("student.name = 'David'");
-user.name = 'Dave';
+User user = userService.findBy("user.name = ?1", "David");
+user.name = 'Dave'
 usersService.save(user);
-// OR
-usersService.update(user);
 ```
 
 ### Delete
 ```java
-User user = usersService.findBy("student.name = 'David'")
+User user = usersService.findBy("user.name = ?1", "David");
 usersService.destroy(user);
 ```
 
@@ -90,87 +98,127 @@ usersService.destroy(user);
 
 ### Retrieving a Single Object
 ```java
-Student student = studentsService.find(10);
-Student student = studentsService.take();
+// Find the client with primary key (id) 10.
+Client client = clientsService.find(10);
 
-Student student = studentsService.first()
-List<Student> students = studentsService.first(3);
+// The take method retrieves a record without any implicit ordering
+Client client = clientsService.take();
+List<Client> clients = clientsService.take(2);
 
-Student student = studentsService.last()
-List<Student> students = studentsService.last(3);
+// The first method finds the first record ordered by primary key (default)
+Client client = clientsService.first();
+Client client = clientsService.order("client.firstName").first();
+List<Client> clients = clientsService.first(3);
 
-Student student = studentsService.findBy("student.name = 'Lifo'");
+// The last method finds the last record ordered by primary key (default)
+Client client = clientsService.last();
+Client client = clientsService.order("client.firstName").last();
+List<Client> clients = clientsService.last(3);
+
+// The find_by method finds the first record matching some conditions
+Client client = clientsService.findBy("client.firstName = ?1", "Lifo"); // #<Client id: 1, first_name: "Lifo">
+Client client = clientsService.findBy("client.firstName = ?1", "Jon"); // null
+
+Client client = clientsService.findByOrFail("client.firstName = ?1", "does not exist"); // NoResultException
 ```
 
 ### Conditions
 ```java
-List<Client> clients = studentsService.where("student.ordersCount = ?1", 10).fetch();
-List<Client> clients = studentsService.where("student.ordersCount = ?1 AND student.locked = ?2", 10, false).fetch();
+clientsService.where("client.orders_count = ?1", 10).fetch();
+clientsService.where("client.orders_count = ?1 AND clients.locked = ?2", 10, false).fetch();
 ```
 
 ### Ordering
 ```java
-List<Client> clients = studentsService.order("student.createdAt").fetch();
-List<Client> clients = studentsService.order("student.createdAt DESC").fetch();
-List<Client> clients = studentsService.order("student.createdAt ASC").fetch();
+clientsService.order("client.createdAt").fetch();
+clientsService.order("client.createdAt DESC").fetch();
+clientsService.order("client.createdAt ASC").fetch();
 ```
 
 ### Selecting Specific Fields
 ```java
-List<Client> clients = studentsService.select("student.viewableBy", "student.locked").fetch();
-List<Client> clients = studentsService.select("student.name").distinct().fetch();
+clientsService.select("student.viewableBy", "student.locked").fetch();
+clientsService.select("student.name").distinct().fetch();
 ```
 
 ### Limit and Offset
 ```java
-List<Client> clients = studentsService.limit(5).fetch();
-List<Client> clients = studentsService.limit(5).offset(30).fetch();
+clientsService.limit(5).fetch();
+clientsService.limit(5).offset(30).fetch();
 ```
 
 ### Group
 ```java
-List<Client> clients = studentsService.select("date(student.createdAt), sum(price)").group("date(student.createdAt)").fetch();
+ordersService.select("date(order.createdAt), sum(order.price)").group("date(order.createdAt)").fetch();
 ```
 
 ### Having
 ```java
-List<Client> clients = studentsService.select("date(student.createdAt), sum(student.price)").group("date(student.createdAt)").having("sum(student.price) > 100").fetch();
+ordersService.select("date(order.createdAt), sum(order.price)").group("date(order.createdAt)").having("sum(order.price) > 100").fetch();
+```
+
+### Unscope
+```java
+ordersService.where('order.id > 10').limit(20).order('order.id asc').unscope(ORDER).fetch();
 ```
 
 ### Reselect
 ```java
-List<Client> clients = studentsService.select("student.title", "student.body").reselect("student.createdAt").fetch();
+postsService.select("post.title", "post.body").reselect("post.createdAt").fetch();
 ```
 
 ### Reorder
 ```java
-List<Client> clients = studentsService.order("student.title", "student.body").reorder("student.createdAt").fetch();
+postsService.order("post.title").reorder("post.createdAt").fetch();
 ```
 
 ### Rewhere
 ```java
-List<Client> clients = studentsService.where("student.trashed = true").rewhere("student.trashed = false").fetch();
+articlesService.where("article.trashed = true").rewhere("article.trashed = false").fetch();
 ```
 
 ### Null Relation
 ```java
-List<Client> clients = studentsService.none();
+studentsService.none(); // returns an empty Relation and fires where 1=0.
 ```
 
 ### Locking Records for Update
 ```java
-Client client = studentsService.lock().first();
+Client client = clientsService.lock().first();
 ```
 
 ### Joining Tables
 ```java
-List<Author> authors = studentsService.joins("INNER JOIN posts").fetch();
+authorsService.joins("INNER JOIN posts").fetch();
 ```
 
 ### Eager Loading Associations
 ```java
-List<Client> clients = studentsService.includes("student.address").limit(10).fetch();
-List<Client> clients = studentsService.eagerLoads("student.address").limit(10).fetch();
+clientsService.includes("client.address").limit(10).fetch();
+clientsService.eagerLoads("client.address").limit(10).fetch();
+```
+
+### Applying a default scope
+```java
+public class StudentsService extends ApplicationService<Student> {
+    @Override
+    public boolean useDefaultScope() {
+        return true;
+    }
+
+    @Override
+    public Relation<Student> defaultScope() {
+        return where("student.name = 'nixon'");
+    }
+}
+
+clientsService.all(); // SELECT student FROM Student student WHERE student.name = 'nixon'
+clientsService.unscoped().all(); // SELECT student FROM Student student
+```
+
+### Merging of scopes
+```java
+usersService.scoping(active()).fetch();
 ```
 
 ### Existence of Objects
@@ -179,18 +227,26 @@ boolean exists = studentsService.exists("student.name = 'Lifo'");
 boolean exists = studentsService.where("student.name = 'Lifo'").exists();
 ```
 
+### Pluck
+```java
+clientsService.where("clients.active = true").pluck("clients.id"); //[1, 2, 3]
+clientsService.where("clients.active = true").ids; //[1, 2, 3]
+
+```
+
 ### Calculations
 ```java
-long   count   = studentsService.count();
-long   count1  = studentsService.count("student.id");
-long   sum     = (long) studentsService.sum("student.id");
-double average = (double) studentsService.average("student.id");
-int    minimum = (int) studentsService.minimum("student.id");
-int    maximum = (int) studentsService.maximum("student.id");
+long   count   = clientsService.count();
+long   count   = clientsService.count("client.age");
+double average = (double) clientsService.average("client.orders_count");
+int    minimum = (int) clientsService.minimum("client.age");
+int    maximum = (int) clientsService.maximum("client.age");
+long   total   = (long) clientsService.sum("client.orders_count");
 ```
 
 ## Requirements
 * JakartaEE 8
+* Java 9
 
 ## More info
 * https://guides.rubyonrails.org/active_record_querying.html
