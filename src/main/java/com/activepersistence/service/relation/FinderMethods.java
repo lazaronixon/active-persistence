@@ -16,51 +16,27 @@ public interface FinderMethods<T> {
     }
 
     public default T first() {
-        if (thiz().hasOrderValues()) {
-            return thiz().take();
-        } else {
-            return thiz().order().take();
-        }
+        return thiz().order("this.id").take();
     }
 
     public default T firstOrFail() {
-        if (thiz().hasOrderValues()) {
-            return thiz().takeOrFail();
-        } else {
-            return thiz().order("this.id").takeOrFail();
-        }
+        return thiz().order("this.id").takeOrFail();
     }
 
     public default List<T> first(int limit) {
-        if (thiz().hasOrderValues()) {
-            return thiz().take(limit);
-        } else {
-            return thiz().order("this.id").take(limit);
-        }
+        return thiz().order("this.id").take(limit);
     }
 
     public default T last() {
-        if (thiz().hasOrderValues()) {
-            return thiz().take();
-        } else {
-            return thiz().order("this.id DESC").take();
-        }
+        return thiz().order("this.id DESC").take();
     }
 
     public default T lastOrFail() {
-        if (thiz().hasOrderValues()) {
-            return thiz().takeOrFail();
-        } else {
-            return thiz().order("this.id DESC").takeOrFail();
-        }
+        return thiz().order("this.id DESC").takeOrFail();
     }
 
     public default List<T> last(int limit) {
-        if (thiz().hasOrderValues()) {
-            return thiz().take(limit);
-        } else {
-            return thiz().order("this.id DESC").take(limit);
-        }
+        return thiz().order("this.id DESC").take(limit);
     }
 
     public default T find(Object id) {

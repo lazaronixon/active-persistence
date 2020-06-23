@@ -250,10 +250,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.lock = lock;
     }
 
-    public boolean hasOrderValues() {
-        return !orderValues.isEmpty();
-    }
-
     public Relation<T> getCurrentScope() {
         return currentScope;
     }
