@@ -84,7 +84,7 @@ List<User> users = usersService.where("this.name = ?1 AND this.occupation = ?2")
 ### Update
 ```java
 User user = userService.bind(1, "David").findBy("this.name = ?1");
-user.name = 'Dave'
+user.name = "Dave";
 usersService.save(user);
 ```
 
@@ -165,7 +165,7 @@ ordersService.select("date(this.createdAt), sum(this.price)").group("date(this.c
 
 ### Unscope
 ```java
-ordersService.where('this.id > 10').limit(20).order('this.id asc').unscope(ORDER).fetch();
+ordersService.where("this.id > 10").limit(20).order("this.id asc").unscope(ORDER).fetch();
 ```
 
 ### Reselect
