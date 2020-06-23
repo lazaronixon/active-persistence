@@ -6,12 +6,12 @@ import java.util.List;
 
 public interface Calculation<T> {
 
+    public Relation<T> thiz();
+
     public Relation<T> spawn();
 
-    public String getEntityAlias();
-
     public default long count() {
-        return count(getEntityAlias());
+        return count(thiz().getEntityAlias());
     }
 
     public default long count(String field) {
@@ -35,7 +35,7 @@ public interface Calculation<T> {
     }
 
     public default List ids() {
-        return pluck(getEntityAlias() + ".id");
+        return pluck(thiz().getEntityAlias() + ".id");
     }
 
     public default List pluck(String... fields) {

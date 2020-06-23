@@ -7,8 +7,6 @@ public interface FinderMethods<T> {
 
     public Relation<T> thiz();
 
-    public String getEntityAlias();
-
     public default T take() {
         return thiz().limit(1).fetchOne();
     }
@@ -86,7 +84,7 @@ public interface FinderMethods<T> {
     }
 
     private String id() {
-        return getEntityAlias() + ".id";
+        return thiz().getEntityAlias() + ".id";
     }
 
 }

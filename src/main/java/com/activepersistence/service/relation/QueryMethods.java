@@ -12,15 +12,11 @@ public interface QueryMethods<T> {
 
     public Relation<T> spawn();
 
-    public Relation<T> getDefaultScope();
-
-    public Relation<T> getCurrentScope();
-
     public Base<T> getService();
 
     public default Relation<T> all() {
-        if (getCurrentScope() != null) {
-            return new Relation(getCurrentScope());
+        if (thiz().getCurrentScope() != null) {
+            return new Relation(thiz().getCurrentScope());
         } else {
             return defaultScoped();
         }
@@ -192,7 +188,7 @@ public interface QueryMethods<T> {
 
     private Relation<T> buildDefaultScope() {
         if (getService().useDefaultScope()) {
-            return evaluateDefaultScope(() -> getDefaultScope());
+            return evaluateDefaultScope(() -> thiz().getDefaultScope());
         } else {
             return null;
         }

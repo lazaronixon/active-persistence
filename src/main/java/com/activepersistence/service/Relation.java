@@ -257,24 +257,21 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return !orderValues.isEmpty();
     }
 
-    @Override
-    public Base getService() {
-        return service;
-    }
-
-    @Override
     public Relation<T> getCurrentScope() {
         return currentScope;
     }
 
-    @Override
     public Relation<T> getDefaultScope() {
         return service.defaultScope();
     }
 
-    @Override
     public String getEntityAlias() {
         return uncapitalize(entityClass.getSimpleName());
+    }
+
+    @Override
+    public Base<T> getService() {
+        return service;
     }
 
     @Override
