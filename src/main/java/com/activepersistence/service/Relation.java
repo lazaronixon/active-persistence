@@ -18,8 +18,8 @@ import javax.persistence.TypedQuery;
 
 public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T> {
 
-    private static final String BATCH_TYPE = "eclipselink.batch.type";
     private static final String BATCH = "eclipselink.batch";
+    
     private static final String LEFT_JOIN_FETCH = "eclipselink.left-join-fetch";
 
     private final EntityManager entityManager;
@@ -305,11 +305,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private TypedQuery<T> buildQuery() {
-        return parametize(service.buildQuery(toJpql())).setLockMode(buildLockMode()).setHint(BATCH_TYPE, "IN").setMaxResults(limit).setFirstResult(offset);
+        return parametize(service.buildQuery(toJpql())).setLockMode(buildLockMode()).setMaxResults(limit).setFirstResult(offset);
     }
 
     private Query buildQuery_() {
-        return parametize(service.buildQuery_(toJpql())).setLockMode(buildLockMode()).setHint(BATCH_TYPE, "IN").setMaxResults(limit).setFirstResult(offset);
+        return parametize(service.buildQuery_(toJpql())).setLockMode(buildLockMode()).setMaxResults(limit).setFirstResult(offset);
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {
