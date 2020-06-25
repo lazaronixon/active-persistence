@@ -1,14 +1,13 @@
 package com.activepersistence.service;
 
+import com.activepersistence.service.arel.Entity;
+import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.relation.Calculation;
 import com.activepersistence.service.relation.FinderMethods;
 import com.activepersistence.service.relation.QueryMethods;
-import static java.lang.String.format;
-import static java.lang.String.join;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import static java.util.Optional.ofNullable;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import static javax.persistence.LockModeType.NONE;
@@ -18,15 +17,13 @@ import javax.persistence.TypedQuery;
 
 public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T> {
 
-    private static final String BATCH = "eclipselink.batch";
-    
-    private static final String LEFT_JOIN_FETCH = "eclipselink.left-join-fetch";
-
     private final EntityManager entityManager;
 
     private final Class<T> entityClass;
 
     private final Base<T> service;
+
+    private final Entity entity;
 
     private List<String> selectValues = new ArrayList();
 
@@ -50,13 +47,13 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private String fromClause = null;
 
-    private int limit  = 0;
+    private int limitValue  = 0;
 
-    private int offset = 0;
+    private int offsetValue = 0;
 
-    private boolean lock = false;
+    private boolean lockValue = false;
 
-    private boolean distinct = false;
+    private boolean distinctValue = false;
 
     private boolean constructor = false;
 
@@ -68,6 +65,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.entityManager = service.getEntityManager();
         this.entityClass   = service.getEntityClass();
         this.service       = service;
+        this.entity        = new Entity(entityClass.getSimpleName(), "this");
     }
 
     public Relation(Relation<T> other) {
@@ -75,6 +73,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.entityManager       = other.entityManager;
         this.entityClass         = other.entityClass;
         this.service             = other.service;
+        this.entity              = other.entity;
         this.selectValues        = new ArrayList(other.selectValues);
         this.whereValues         = new ArrayList(other.whereValues);
         this.groupValues         = new ArrayList(other.groupValues);
@@ -86,10 +85,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.ordinalParameters   = new HashMap(other.ordinalParameters);
         this.namedParameters     = new HashMap(other.namedParameters);
         this.fromClause          = other.fromClause;
-        this.limit               = other.limit;
-        this.offset              = other.offset;
-        this.lock                = other.lock;
-        this.distinct            = other.distinct;
+        this.limitValue          = other.limitValue;
+        this.offsetValue         = other.offsetValue;
+        this.lockValue           = other.lockValue;
+        this.distinctValue       = other.distinctValue;
         this.constructor         = other.constructor;
         this.calculating         = other.calculating;
     }
@@ -123,13 +122,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public String toJpql() {
-        StringBuilder qlString = new StringBuilder(buildSelect());
-        if (!joinsValues.isEmpty())  qlString.append(" ").append(buildJoins());
-        if (!whereValues.isEmpty())  qlString.append(" ").append(buildWhere());
-        if (!groupValues.isEmpty())  qlString.append(" ").append(buildGroup());
-        if (!havingValues.isEmpty()) qlString.append(" ").append(buildHaving());
-        if (!orderValues.isEmpty())  qlString.append(" ").append(buildOrder());
-        return qlString.toString();
+        return buildArel().toJpql() ;
     }
 
     public void setCalculation(String calulation) {
@@ -184,20 +177,20 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.fromClause = fromClause;
     }
 
-    public void setOffset(int offset) {
-        this.offset = offset;
+    public void setOffsetValue(int offset) {
+        this.offsetValue = offset;
     }
 
-    public void setLimit(int limit) {
-        this.limit = limit;
+    public void setLimitValue(int limit) {
+        this.limitValue = limit;
     }
 
-    public void setDistinct(boolean distinct) {
-        this.distinct = distinct;
+    public void setDistinctValue(boolean distinct) {
+        this.distinctValue = distinct;
     }
 
-    public boolean hasDistinct() {
-        return distinct;
+    public boolean isDistinctValue() {
+        return distinctValue;
     }
 
     public void setConstructor(boolean constructor) {
@@ -246,8 +239,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.orderValues.clear();
     }
 
-    public void setLock(boolean lock) {
-        this.lock = lock;
+    public void setLockValue(boolean lock) {
+        this.lockValue = lock;
     }
 
     public Relation<T> getCurrentScope() {
@@ -274,42 +267,46 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     //<editor-fold defaultstate="collapsed" desc="private methods">
-    private String buildSelect() {
-        String select = format("SELECT %s", distinctExp() + constructor(selectExp()));
-        String from   = format("FROM %s", fromClauseOrThis());
-        return join(" ", select, from, "this");
+    private SelectManager buildArel() {
+        SelectManager arel = new SelectManager(entity);
+
+        joinsValues.forEach(join    -> arel.join(join));
+        whereValues.forEach(where   -> arel.where(where));
+        havingValues.forEach(having -> arel.having(having));
+        groupValues.forEach(group   -> arel.group(group));
+        orderValues.forEach(order   -> arel.order(order));
+
+        buildDistinct(arel);
+        buildSelect(arel);
+        buildFrom(arel);
+
+        return arel;
     }
 
-    private String selectExp() {
-        return separatedByComma(selectOrThis());
+    private void buildSelect(SelectManager arel) {
+        arel.constructor(constructor);
+        
+        if (selectValues.isEmpty()) {
+            arel.project("this");
+        } else {
+            selectValues.forEach(select -> arel.project(select));
+        }
     }
 
-    private String buildJoins() {
-        return separatedBySpace(joinsValues);
+    private void buildDistinct(SelectManager arel) {
+        arel.distinct(distinctValue && !calculating);
     }
 
-    private String buildWhere() {
-        return format("WHERE %s", separatedByAnd(whereValues));
-    }
-
-    private String buildGroup() {
-        return format("GROUP BY %s", separatedByComma(groupValues));
-    }
-
-    private String buildHaving() {
-        return format("HAVING %s", separatedByAnd(havingValues));
-    }
-
-    private String buildOrder() {
-        return format("ORDER BY %s", separatedByComma(orderValues));
+    private void buildFrom(SelectManager arel) {
+        if (fromClause != null) arel.from(fromClause);
     }
 
     private TypedQuery<T> buildQuery() {
-        return parametize(service.buildQuery(toJpql())).setLockMode(buildLockMode()).setMaxResults(limit).setFirstResult(offset);
+        return parametize(service.buildQuery(toJpql())).setLockMode(buildLockMode()).setMaxResults(limitValue).setFirstResult(offsetValue);
     }
 
     private Query buildQuery_() {
-        return parametize(service.buildQuery_(toJpql())).setLockMode(buildLockMode()).setMaxResults(limit).setFirstResult(offset);
+        return parametize(service.buildQuery_(toJpql())).setLockMode(buildLockMode()).setMaxResults(limitValue).setFirstResult(offsetValue);
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {
@@ -322,44 +319,16 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private void applyParams(Query query) {
         ordinalParameters.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
-        namedParameters.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
+        namedParameters.entrySet().forEach(p   -> query.setParameter(p.getKey(), p.getValue()));
     }
 
     private void applyHints(Query query) {
-        includesValues.forEach(value -> query.setHint(BATCH, value));
-        eagerLoadsValues.forEach(value -> query.setHint(LEFT_JOIN_FETCH, value));
-    }
-
-    private String separatedByAnd(List<String> values) {
-        return join(" AND ", values);
-    }
-
-    private String separatedBySpace(List<String> values) {
-        return join(" ", values);
-    }
-
-    private String separatedByComma(List<String> values) {
-        return join(", ", values);
-    }
-
-    private String distinctExp() {
-        return distinct && !calculating ? "DISTINCT " : "";
-    }
-
-    private List<String> selectOrThis() {
-        return selectValues.isEmpty() ? List.of("this") : selectValues;
-    }
-
-    private String fromClauseOrThis() {
-        return ofNullable(fromClause).orElse(entityClass.getSimpleName());
-    }
-
-    private String constructor(String fields) {
-        return constructor ? format("new %s(%s)", entityClass.getName(), fields) : fields;
+        includesValues.forEach(value   -> query.setHint("eclipselink.batch", value));
+        eagerLoadsValues.forEach(value -> query.setHint("eclipselink.left-join-fetch", value));
     }
 
     private LockModeType buildLockMode() {
-        return lock ? PESSIMISTIC_READ : NONE;
+        return lockValue ? PESSIMISTIC_READ : NONE;
     }
     //</editor-fold>
 

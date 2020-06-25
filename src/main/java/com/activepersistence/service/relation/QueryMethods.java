@@ -74,7 +74,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> limit_(int limit) {
-        thiz().setLimit(limit); return thiz();
+        thiz().setLimitValue(limit); return thiz();
     }
 
     public default Relation<T> offset(int offset) {
@@ -82,7 +82,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> offset_(int offset) {
-        thiz().setOffset(offset); return thiz();
+        thiz().setOffsetValue(offset); return thiz();
     }
 
     public default Relation<T> distinct() {
@@ -94,7 +94,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> distinct_(boolean value) {
-        thiz().setDistinct(value); return thiz();
+        thiz().setDistinctValue(value); return thiz();
     }
 
     public default Relation<T> none() {
@@ -126,7 +126,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> lock_() {
-        thiz().setLock(true); return thiz();
+        thiz().setLockValue(true); return thiz();
     }
 
     public default Relation<T> from(String value) {
@@ -159,15 +159,15 @@ public interface QueryMethods<T> {
                 case ORDER:
                     thiz().clearOrder();
                 case LIMIT:
-                    thiz().setLimit(0);
+                    thiz().setLimitValue(0);
                 case OFFSET:
-                    thiz().setOffset(0);
+                    thiz().setOffsetValue(0);
                 case INCLUDES:
                     thiz().clearIncludes();
                 case EAGER_LOADS:
                     thiz().clearEagerLoads();
                 case LOCK:
-                    thiz().setLock(false);
+                    thiz().setLockValue(false);
             }
         }
         return thiz();

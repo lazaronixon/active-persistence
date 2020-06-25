@@ -1,5 +1,6 @@
-package com.activepersistence.service.arel;
+package com.activepersistence.service.cases.arel;
 
+import com.activepersistence.service.arel.Entity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

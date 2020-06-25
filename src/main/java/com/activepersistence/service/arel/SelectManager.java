@@ -27,6 +27,10 @@ public class SelectManager {
         ctx.setDistinct(value); return this;
     }
 
+    public SelectManager from(String clause) {
+        ctx.setSource(new Entity(clause, "this")); return this;
+    }
+
     public SelectManager join(String join) {
         ctx.addJoin(new SqlLiteral(join)); return this;
     }

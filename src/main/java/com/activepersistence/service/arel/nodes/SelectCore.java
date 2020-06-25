@@ -28,10 +28,6 @@ public class SelectCore {
         return setQuantifier;
     }
 
-    public Entity getSource() {
-        return source;
-    }
-
     public List<SqlLiteral> getGroups() {
         return groups;
     }
@@ -42,6 +38,10 @@ public class SelectCore {
 
     public List<SqlLiteral> getJoins() {
         return joins;
+    }
+
+    public Entity getSource() {
+        return source;
     }
 
     public void setSource(Entity source) {
