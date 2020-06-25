@@ -8,6 +8,7 @@ public class SelectCore {
 
     private Entity source;
     private Distinct setQuantifier;
+    private Constructor setConstructor;
     private final List<SqlLiteral> projections;
     private final List<SqlLiteral> joins;
     private final List<SqlLiteral> wheres;
@@ -15,17 +16,22 @@ public class SelectCore {
     private final List<SqlLiteral> havings;
 
     public SelectCore() {
-        this.source = null;
-        this.setQuantifier = null;
-        this.projections   = new ArrayList();
-        this.joins         = new ArrayList();
-        this.wheres        = new ArrayList();
-        this.groups        = new ArrayList();
-        this.havings       = new ArrayList();
+        this.source         = null;
+        this.setQuantifier  = null;
+        this.setConstructor = null;
+        this.projections    = new ArrayList();
+        this.joins          = new ArrayList();
+        this.wheres         = new ArrayList();
+        this.groups         = new ArrayList();
+        this.havings        = new ArrayList();
     }
 
     public Distinct getSetQuantifier() {
         return setQuantifier;
+    }
+
+    public Constructor getSetConstructor() {
+        return setConstructor;
     }
 
     public List<SqlLiteral> getGroups() {
@@ -70,6 +76,10 @@ public class SelectCore {
 
     public void setDistinct(boolean value) {
         this.setQuantifier = value ? new Distinct() : null;
+    }
+
+    public void setConstructor(boolean value) {
+        this.setConstructor = value ? new Constructor(source.getName(), this.getProjections()) : null;
     }
 
     public List<SqlLiteral> getProjections() {

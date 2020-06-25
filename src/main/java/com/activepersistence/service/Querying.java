@@ -149,7 +149,7 @@ public interface Querying<T> {
         return all().lock();
     }
 
-    public default Relation<T> from(String value) {
+    public default Relation<T> from(Class value) {
         return all().from(value);
     }
 

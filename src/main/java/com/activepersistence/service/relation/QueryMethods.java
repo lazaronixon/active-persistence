@@ -129,11 +129,11 @@ public interface QueryMethods<T> {
         thiz().setLockValue(true); return thiz();
     }
 
-    public default Relation<T> from(String value) {
+    public default Relation<T> from(Class value) {
         return spawn().from_(value);
     }
 
-    public default Relation<T> from_(String value) {
+    public default Relation<T> from_(Class value) {
         thiz().setFromClause(value); return thiz();
     }
 

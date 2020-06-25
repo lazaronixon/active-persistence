@@ -25,6 +25,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private final Entity entity;
 
+    private Class fromClause = null;
+
     private List<String> selectValues = new ArrayList();
 
     private List<String> whereValues  = new ArrayList();
@@ -45,8 +47,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private HashMap<String, Object> namedParameters = new HashMap();
 
-    private String fromClause = null;
-
     private int limitValue  = 0;
 
     private int offsetValue = 0;
@@ -55,17 +55,13 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private boolean distinctValue = false;
 
-    private boolean constructor = false;
-
-    private boolean calculating = false;
-
     private Relation<T> currentScope = null;
 
     public Relation(Base service) {
         this.entityManager = service.getEntityManager();
         this.entityClass   = service.getEntityClass();
         this.service       = service;
-        this.entity        = new Entity(entityClass.getSimpleName(), "this");
+        this.entity        = new Entity(entityClass);
     }
 
     public Relation(Relation<T> other) {
@@ -89,8 +85,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.offsetValue         = other.offsetValue;
         this.lockValue           = other.lockValue;
         this.distinctValue       = other.distinctValue;
-        this.constructor         = other.constructor;
-        this.calculating         = other.calculating;
     }
 
     public T fetchOne() {
@@ -125,15 +119,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return buildArel().toJpql() ;
     }
 
-    public void setCalculation(String calulation) {
-        this.constructor  = false;
-        this.calculating  = true;
-        this.selectValues = List.of(calulation);
+    public void setSelect(String select) {
+        this.selectValues = List.of(select);
     }
 
     public void addSelect(String[] select) {
-        this.constructor = true;
-        this.calculating = false;
         this.selectValues.addAll(List.of(select));
     }
 
@@ -173,7 +163,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         namedParameters.put(name, value);
     }
 
-    public void setFromClause(String fromClause) {
+    public void setFromClause(Class fromClause) {
         this.fromClause = fromClause;
     }
 
@@ -193,21 +183,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return distinctValue;
     }
 
-    public void setConstructor(boolean constructor) {
-        this.constructor = constructor;
-    }
-
-    public void setCalculating(boolean calculating) {
-        this.calculating = calculating;
-    }
-
     public void clearFrom() {
         this.fromClause = null;
     }
 
     public void clearSelect() {
-        this.constructor = false;
-        this.calculating = false;
         this.selectValues.clear();
     }
 
@@ -266,7 +246,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return this;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="private methods">
     private SelectManager buildArel() {
         SelectManager arel = new SelectManager(entity);
 
@@ -283,18 +262,17 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return arel;
     }
 
+    private void buildDistinct(SelectManager arel) {
+        arel.distinct(distinctValue);
+    }
+
     private void buildSelect(SelectManager arel) {
-        arel.constructor(constructor);
-        
         if (selectValues.isEmpty()) {
             arel.project("this");
         } else {
+            arel.constructor(true);
             selectValues.forEach(select -> arel.project(select));
         }
-    }
-
-    private void buildDistinct(SelectManager arel) {
-        arel.distinct(distinctValue && !calculating);
     }
 
     private void buildFrom(SelectManager arel) {
@@ -330,6 +308,5 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private LockModeType buildLockMode() {
         return lockValue ? PESSIMISTIC_READ : NONE;
     }
-    //</editor-fold>
 
 }

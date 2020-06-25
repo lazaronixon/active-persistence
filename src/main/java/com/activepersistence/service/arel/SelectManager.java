@@ -19,16 +19,16 @@ public class SelectManager {
         ctx.addProjections(SqlLiteral.of(projections)); return this;
     }
 
-    public SelectManager distinct() {
-        return this.distinct(true);
+    public SelectManager constructor(boolean value) {
+        ctx.setConstructor(value); return this;
     }
 
     public SelectManager distinct(boolean value) {
         ctx.setDistinct(value); return this;
     }
 
-    public SelectManager from(String clause) {
-        ctx.setSource(new Entity(clause, "this")); return this;
+    public SelectManager from(Class klass) {
+        ctx.setSource(new Entity(klass)); return this;
     }
 
     public SelectManager join(String join) {

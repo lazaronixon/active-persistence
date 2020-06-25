@@ -40,13 +40,13 @@ public interface Calculation<T> {
 
     public default List pluck(String... fields) {
         Relation<T> relation = spawn();
-        relation.setCalculation(selectValuePluck(fields, relation));
+        //relation.setCalculation(selectValuePluck(fields, relation));
         return relation.fetch_();
     }
 
     private Object calculate(String operation, String field) {
         Relation<T> relation = spawn();
-        relation.setCalculation(selectValueCalculate(operation, field, relation));
+        //relation.setCalculation(selectValueCalculate(operation, field, relation));
         return relation.fetchOne();
     }
 
