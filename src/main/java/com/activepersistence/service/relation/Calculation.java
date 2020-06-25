@@ -59,7 +59,8 @@ public interface Calculation<T> {
     }
 
     private String distinct(Relation<T> relation) {
-        return relation.isDistinctValue() ? "DISTINCT " : "";
+        //return relation.isDistinctValue() ? "DISTINCT " : "";
+        return null;
     }
 
     private String separatedByComma(String[] values) {

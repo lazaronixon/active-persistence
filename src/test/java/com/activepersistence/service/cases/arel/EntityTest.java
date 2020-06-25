@@ -82,7 +82,7 @@ public class EntityTest {
     }
 
     @Test
-    public void testCanProjectSpecificFields() {
+    public void testCanProjectWithConstruct() {
         assertEquals("SELECT new com.activepersistence.service.models.User(this.id, this.name) FROM User this",
                 relation.project("this.id", "this.name").constructor(true).toJpql());
     }

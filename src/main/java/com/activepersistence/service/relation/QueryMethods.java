@@ -11,11 +11,17 @@ public interface QueryMethods<T> {
 
     public Relation<T> spawn();
 
+    public Values getValues();
+
     public Base<T> getService();
 
+    public Relation<T> getDefaultScope();
+
+    public Relation<T> getCurrentScope();
+
     public default Relation<T> all() {
-        if (thiz().getCurrentScope() != null) {
-            return new Relation(thiz().getCurrentScope());
+        if (getCurrentScope() != null) {
+            return new Relation(getCurrentScope());
         } else {
             return defaultScoped();
         }
@@ -26,7 +32,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> select_(String... fields) {
-        thiz().addSelect(fields); return thiz();
+        getValues().addSelect(fields); return thiz();
     }
 
     public default Relation<T> joins(String... values) {
@@ -34,7 +40,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> joins_(String... values) {
-        thiz().addJoins(values); return thiz();
+        getValues().addJoins(values); return thiz();
     }
 
     public default Relation<T> where(String conditions) {
@@ -42,7 +48,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> where_(String conditions) {
-        thiz().addWhere(conditions); return thiz();
+        getValues().addWhere(conditions); return thiz();
     }
 
     public default Relation<T> group(String... fields) {
@@ -50,7 +56,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> group_(String... fields) {
-        thiz().addGroup(fields); return thiz();
+        getValues().addGroup(fields); return thiz();
     }
 
     public default Relation<T> having(String conditions) {
@@ -58,7 +64,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> having_(String conditions) {
-        thiz().addHaving(conditions); return thiz();
+        getValues().addHaving(conditions); return thiz();
     }
 
     public default Relation<T> order(String... fields) {
@@ -66,7 +72,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> order_(String... fields) {
-        thiz().addOrder(fields); return thiz();
+        getValues().addOrder(fields); return thiz();
     }
 
     public default Relation<T> limit(int limit) {
@@ -74,7 +80,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> limit_(int limit) {
-        thiz().setLimitValue(limit); return thiz();
+        getValues().setLimitValue(limit); return thiz();
     }
 
     public default Relation<T> offset(int offset) {
@@ -82,7 +88,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> offset_(int offset) {
-        thiz().setOffsetValue(offset); return thiz();
+        getValues().setOffsetValue(offset); return thiz();
     }
 
     public default Relation<T> distinct() {
@@ -94,7 +100,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> distinct_(boolean value) {
-        thiz().setDistinctValue(value); return thiz();
+        getValues().setDistinctValue(value); return thiz();
     }
 
     public default Relation<T> none() {
@@ -110,7 +116,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> includes_(String... includes) {
-        thiz().addIncludes(includes); return thiz();
+        getValues().addIncludes(includes); return thiz();
     }
 
     public default Relation<T> eagerLoads(String... eagerLoads) {
@@ -118,7 +124,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> eagerLoads_(String... eagerLoads) {
-        thiz().addEagerLoads(eagerLoads); return thiz();
+        getValues().addEagerLoads(eagerLoads); return thiz();
     }
 
     public default Relation<T> lock() {
@@ -126,7 +132,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> lock_() {
-        thiz().setLockValue(true); return thiz();
+        getValues().setLockValue(true); return thiz();
     }
 
     public default Relation<T> from(Class value) {
@@ -134,7 +140,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> from_(Class value) {
-        thiz().setFromClause(value); return thiz();
+        getValues().setFromClause(value); return thiz();
     }
 
     public default Relation<T> unscope(ValidUnscopingValues... values) {
@@ -145,29 +151,29 @@ public interface QueryMethods<T> {
         for (ValidUnscopingValues value : values) {
             switch (value) {
                 case SELECT:
-                    thiz().clearSelect();
+                    getValues().clearSelect();
                 case FROM:
-                    thiz().clearFrom();
+                    getValues().setFromClause(null);
                 case JOINS:
-                    thiz().clearJoins();
+                    getValues().clearJoins();
                 case WHERE:
-                    thiz().clearWhere();
+                    getValues().clearWhere();
                 case GROUP:
-                    thiz().clearGroup();
+                    getValues().clearGroup();
                 case HAVING:
-                    thiz().clearHaving();
+                    getValues().clearHaving();
                 case ORDER:
-                    thiz().clearOrder();
+                    getValues().clearOrder();
                 case LIMIT:
-                    thiz().setLimitValue(0);
+                    getValues().setLimitValue(0);
                 case OFFSET:
-                    thiz().setOffsetValue(0);
+                    getValues().setOffsetValue(0);
                 case INCLUDES:
-                    thiz().clearIncludes();
+                    getValues().clearIncludes();
                 case EAGER_LOADS:
-                    thiz().clearEagerLoads();
+                    getValues().clearEagerLoads();
                 case LOCK:
-                    thiz().setLockValue(false);
+                    getValues().setLockValue(false);
             }
         }
         return thiz();
@@ -190,7 +196,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> bind_(int position, Object value) {
-        thiz().addOrdinalParameter(position, value); return thiz();
+        getValues().addOrdinalParameter(position, value); return thiz();
     }
 
     public default Relation<T> bind(String name, Object value) {
@@ -198,7 +204,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> bind_(String name, Object value) {
-        thiz().addNamedParameter(name, value); return thiz();
+        getValues().addNamedParameter(name, value); return thiz();
     }
 
     private Relation<T> defaultScoped() {
@@ -207,7 +213,7 @@ public interface QueryMethods<T> {
 
     private Relation<T> buildDefaultScope() {
         if (getService().useDefaultScope()) {
-            return evaluateDefaultScope(() -> thiz().getDefaultScope());
+            return evaluateDefaultScope(() -> getDefaultScope());
         } else {
             return null;
         }

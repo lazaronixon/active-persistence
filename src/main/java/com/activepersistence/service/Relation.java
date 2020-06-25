@@ -5,8 +5,7 @@ import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.relation.Calculation;
 import com.activepersistence.service.relation.FinderMethods;
 import com.activepersistence.service.relation.QueryMethods;
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.activepersistence.service.relation.Values;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
@@ -25,35 +24,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private final Entity entity;
 
-    private Class fromClause = null;
-
-    private List<String> selectValues = new ArrayList();
-
-    private List<String> whereValues  = new ArrayList();
-
-    private List<String> groupValues  = new ArrayList();
-
-    private List<String> havingValues = new ArrayList();
-
-    private List<String> orderValues  = new ArrayList();
-
-    private List<String> joinsValues  = new ArrayList();
-
-    private List<String> includesValues = new ArrayList();
-
-    private List<String> eagerLoadsValues = new ArrayList();
-
-    private HashMap<Integer, Object> ordinalParameters = new HashMap();
-
-    private HashMap<String, Object> namedParameters = new HashMap();
-
-    private int limitValue  = 0;
-
-    private int offsetValue = 0;
-
-    private boolean lockValue = false;
-
-    private boolean distinctValue = false;
+    private final Values values;
 
     private Relation<T> currentScope = null;
 
@@ -62,6 +33,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.entityClass   = service.getEntityClass();
         this.service       = service;
         this.entity        = new Entity(entityClass);
+        this.values        = new Values();
     }
 
     public Relation(Relation<T> other) {
@@ -70,21 +42,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.entityClass         = other.entityClass;
         this.service             = other.service;
         this.entity              = other.entity;
-        this.selectValues        = new ArrayList(other.selectValues);
-        this.whereValues         = new ArrayList(other.whereValues);
-        this.groupValues         = new ArrayList(other.groupValues);
-        this.havingValues        = new ArrayList(other.havingValues);
-        this.orderValues         = new ArrayList(other.orderValues);
-        this.joinsValues         = new ArrayList(other.joinsValues);
-        this.includesValues      = new ArrayList(other.includesValues);
-        this.eagerLoadsValues    = new ArrayList(other.eagerLoadsValues);
-        this.ordinalParameters   = new HashMap(other.ordinalParameters);
-        this.namedParameters     = new HashMap(other.namedParameters);
-        this.fromClause          = other.fromClause;
-        this.limitValue          = other.limitValue;
-        this.offsetValue         = other.offsetValue;
-        this.lockValue           = other.lockValue;
-        this.distinctValue       = other.distinctValue;
+        this.values              = new Values(other.values);
     }
 
     public T fetchOne() {
@@ -119,116 +77,19 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return buildArel().toJpql() ;
     }
 
-    public void setSelect(String select) {
-        this.selectValues = List.of(select);
-    }
-
-    public void addSelect(String[] select) {
-        this.selectValues.addAll(List.of(select));
-    }
-
-    public void addJoins(String[] joins) {
-        this.joinsValues.addAll(List.of(joins));
-    }
-
-    public void addWhere(String where) {
-        this.whereValues.add(where);
-    }
-
-    public void addHaving(String having) {
-        this.havingValues.add(having);
-    }
-
-    public void addGroup(String[] group) {
-        this.groupValues.addAll(List.of(group));
-    }
-
-    public void addOrder(String[] order) {
-        this.orderValues.addAll(List.of(order));
-    }
-
-    public void addIncludes(String[] includes) {
-        includesValues.addAll(List.of(includes));
-    }
-
-    public void addEagerLoads(String[] eagerLoads) {
-        eagerLoadsValues.addAll(List.of(eagerLoads));
-    }
-
-    public void addOrdinalParameter(int position, Object value) {
-        ordinalParameters.put(position, value);
-    }
-
-    public void addNamedParameter(String name, Object value) {
-        namedParameters.put(name, value);
-    }
-
-    public void setFromClause(Class fromClause) {
-        this.fromClause = fromClause;
-    }
-
-    public void setOffsetValue(int offset) {
-        this.offsetValue = offset;
-    }
-
-    public void setLimitValue(int limit) {
-        this.limitValue = limit;
-    }
-
-    public void setDistinctValue(boolean distinct) {
-        this.distinctValue = distinct;
-    }
-
-    public boolean isDistinctValue() {
-        return distinctValue;
-    }
-
-    public void clearFrom() {
-        this.fromClause = null;
-    }
-
-    public void clearSelect() {
-        this.selectValues.clear();
-    }
-
-    public void clearJoins() {
-        this.joinsValues.clear();
-    }
-
-    public void clearGroup() {
-        this.groupValues.clear();
-    }
-
-    public void clearIncludes() {
-        this.includesValues.clear();
-    }
-
-    public void clearEagerLoads() {
-        this.eagerLoadsValues.clear();
-    }
-
-    public void clearWhere() {
-        this.whereValues.clear();
-    }
-
-    public void clearHaving() {
-        this.havingValues.clear();
-    }
-
-    public void clearOrder() {
-        this.orderValues.clear();
-    }
-
-    public void setLockValue(boolean lock) {
-        this.lockValue = lock;
-    }
-
+    @Override
     public Relation<T> getCurrentScope() {
         return currentScope;
     }
 
+    @Override
     public Relation<T> getDefaultScope() {
         return service.defaultScope();
+    }
+
+    @Override
+    public Values getValues() {
+        return values;
     }
 
     @Override
@@ -249,11 +110,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private SelectManager buildArel() {
         SelectManager arel = new SelectManager(entity);
 
-        joinsValues.forEach(join    -> arel.join(join));
-        whereValues.forEach(where   -> arel.where(where));
-        havingValues.forEach(having -> arel.having(having));
-        groupValues.forEach(group   -> arel.group(group));
-        orderValues.forEach(order   -> arel.order(order));
+        values.getJoinsValues().forEach(join    -> arel.join(join));
+        values.getWhereValues().forEach(where   -> arel.where(where));
+        values.getHavingValues().forEach(having -> arel.having(having));
+        values.getGroupValues().forEach(group   -> arel.group(group));
+        values.getOrderValues().forEach(order   -> arel.order(order));
 
         buildDistinct(arel);
         buildSelect(arel);
@@ -263,28 +124,28 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void buildDistinct(SelectManager arel) {
-        arel.distinct(distinctValue);
+        arel.distinct(values.isDistinctValue());
     }
 
     private void buildSelect(SelectManager arel) {
-        if (selectValues.isEmpty()) {
+        if (values.getSelectValues().isEmpty()) {
             arel.project("this");
         } else {
             arel.constructor(true);
-            selectValues.forEach(select -> arel.project(select));
+            values.getSelectValues().forEach(select -> arel.project(select));
         }
     }
 
     private void buildFrom(SelectManager arel) {
-        if (fromClause != null) arel.from(fromClause);
+        if (values.getFromClause() != null) arel.from(values.getFromClause());
     }
 
     private TypedQuery<T> buildQuery() {
-        return parametize(service.buildQuery(toJpql())).setLockMode(buildLockMode()).setMaxResults(limitValue).setFirstResult(offsetValue);
+        return parametize(service.buildQuery(toJpql())).setLockMode(buildLockMode()).setMaxResults(values.getLimitValue()).setFirstResult(values.getOffsetValue());
     }
 
     private Query buildQuery_() {
-        return parametize(service.buildQuery_(toJpql())).setLockMode(buildLockMode()).setMaxResults(limitValue).setFirstResult(offsetValue);
+        return parametize(service.buildQuery_(toJpql())).setLockMode(buildLockMode()).setMaxResults(values.getLimitValue()).setFirstResult(values.getOffsetValue());
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {
@@ -296,17 +157,17 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void applyParams(Query query) {
-        ordinalParameters.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
-        namedParameters.entrySet().forEach(p   -> query.setParameter(p.getKey(), p.getValue()));
+        values.getOrdinalParameters().entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
+        values.getNamedParameters().entrySet().forEach(p   -> query.setParameter(p.getKey(), p.getValue()));
     }
 
     private void applyHints(Query query) {
-        includesValues.forEach(value   -> query.setHint("eclipselink.batch", value));
-        eagerLoadsValues.forEach(value -> query.setHint("eclipselink.left-join-fetch", value));
+        values.getIncludesValues().forEach(value   -> query.setHint("eclipselink.batch", value));
+        values.getEagerLoadsValues().forEach(value -> query.setHint("eclipselink.left-join-fetch", value));
     }
 
     private LockModeType buildLockMode() {
-        return lockValue ? PESSIMISTIC_READ : NONE;
+        return values.isLockValue() ? PESSIMISTIC_READ : NONE;
     }
 
 }
