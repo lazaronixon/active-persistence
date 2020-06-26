@@ -4,7 +4,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
 
-public class SqlLiteral {
+public class SqlLiteral extends Node {
 
     private final String value;
 

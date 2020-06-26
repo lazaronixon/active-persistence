@@ -3,7 +3,7 @@ package com.activepersistence.service.arel.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectStatement {
+public class SelectStatement extends Node {
 
     private final SelectCore core = new SelectCore();
 

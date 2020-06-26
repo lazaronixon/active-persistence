@@ -5,6 +5,7 @@ import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.nodes.Constructor;
 import com.activepersistence.service.arel.nodes.Distinct;
 import com.activepersistence.service.arel.nodes.EntityAlias;
+import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
@@ -81,7 +82,7 @@ public class ToJpql extends Visitor {
         return collector.append(o);
     }
 
-    private StringBuilder maybeVisit(Object thing, StringBuilder collector) {
+    private StringBuilder maybeVisit(Node thing, StringBuilder collector) {
         return thing != null ? visit(thing, collector.append(" ")) : collector;
     }
 

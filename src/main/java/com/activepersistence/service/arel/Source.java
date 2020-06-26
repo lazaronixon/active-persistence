@@ -1,9 +1,9 @@
 package com.activepersistence.service.arel;
 
-public interface Source {
+public interface Source  {
 
-    public String getAlias();
+    public abstract String getAlias();
 
-    public String getClassName();
+    public abstract String getClassName();
 
 }

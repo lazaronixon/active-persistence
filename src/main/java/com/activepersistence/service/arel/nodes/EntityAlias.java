@@ -1,9 +1,8 @@
 package com.activepersistence.service.arel.nodes;
 
-import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.Source;
 
-public class EntityAlias implements Source {
+public class EntityAlias extends Node implements Source {
 
     private final Source relation;
     private final String name;
@@ -19,12 +18,6 @@ public class EntityAlias implements Source {
 
     public String getName() {
         return name;
-    }
-
-    public String toJpql() {
-        StringBuilder collector = new StringBuilder();
-        collector = Entity.visitor.accept(this, collector);
-        return collector.toString();
     }
 
     @Override

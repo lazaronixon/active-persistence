@@ -1,5 +1,5 @@
 package com.activepersistence.service.arel.nodes;
 
-public class Distinct {
+public class Distinct extends Node {
 
 }

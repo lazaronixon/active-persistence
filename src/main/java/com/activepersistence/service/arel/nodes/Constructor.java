@@ -2,9 +2,10 @@ package com.activepersistence.service.arel.nodes;
 
 import java.util.List;
 
-public class Constructor {
+public class Constructor extends Node {
 
     private final String className;
+    
     private final List<SqlLiteral> projections;
 
     public Constructor(String className, List<SqlLiteral> projections) {
