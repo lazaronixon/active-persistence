@@ -72,8 +72,8 @@ public class EntityTest {
 
     @Test
     public void testFromSubQuery() {
-        SelectManager subQuery = new Entity(User.class, "this").project("this");
-        assertEquals("SELECT this FROM (SELECT this FROM User this) this",
-                relation.project("this").from(subQuery).toJpql());
+        SelectManager subquery = new Entity(User.class, "this").project("this.id", "this.name");
+        assertEquals("SELECT this FROM (SELECT this.id, this.name FROM User this) this",
+                relation.project("this").from(subquery).toJpql());
     }
 }

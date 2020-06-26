@@ -24,9 +24,9 @@ public class WhereTest {
 
     @Test
     public void testFromSubQuery() {
-        Relation<User> relation = usersService.all();
-        assertEquals("SELECT this FROM (SELECT this FROM User this) this",
-                relation.from(relation).toJpql());
+        Relation<User> subquery = usersService.select("this.id", "this.name");
+        assertEquals("SELECT this FROM (SELECT this.id, this.name FROM User this) this",
+                usersService.from(subquery).toJpql());
     }
 
 }
