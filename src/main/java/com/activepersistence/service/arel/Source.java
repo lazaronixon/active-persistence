@@ -1,6 +1,6 @@
 package com.activepersistence.service.arel;
 
-public interface Source  {
+public interface Source extends FactoryMethods {
 
     public abstract String getAlias();
 

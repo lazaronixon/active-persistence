@@ -53,7 +53,7 @@ public class SelectManager implements Source {
     }
 
     public EntityAlias as(String other) {
-        return new EntityAlias(this, other);
+        return createEntityAlias(this, other);
     }
 
     public String toJpql() {
