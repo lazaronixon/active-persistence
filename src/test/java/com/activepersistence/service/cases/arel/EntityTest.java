@@ -71,9 +71,16 @@ public class EntityTest {
     }
 
     @Test
+    public void testSubQuery() {
+        Entity entity = new Entity(User.class, "this");
+        assertEquals("(SELECT this.id, this.name FROM User this) other",
+                relation.project("this.id, this.name").from(entity).as("other").toJpql());
+    }
+
+    @Test
     public void testFromSubQuery() {
         SelectManager subquery = new Entity(User.class, "this").project("this.id", "this.name");
-        assertEquals("SELECT this FROM (SELECT this.id, this.name FROM User this) this",
-                relation.project("this").from(subquery).toJpql());
+        assertEquals("SELECT this.id FROM (SELECT this.id, this.name FROM User this) this",
+                relation.project("this.id").from(subquery.as("this")).toJpql());
     }
 }

@@ -6,6 +6,7 @@ import java.util.List;
 public class SelectStatement {
 
     private final SelectCore core = new SelectCore();
+
     private final List<SqlLiteral> orders = new ArrayList();
 
     public List<SqlLiteral> getOrders() {

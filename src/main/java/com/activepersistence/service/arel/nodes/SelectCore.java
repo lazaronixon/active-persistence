@@ -1,8 +1,8 @@
 package com.activepersistence.service.arel.nodes;
 
-import com.activepersistence.service.arel.Source;
 import java.util.ArrayList;
 import java.util.List;
+import com.activepersistence.service.arel.Source;
 
 public class SelectCore {
 

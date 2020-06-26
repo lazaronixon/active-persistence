@@ -75,10 +75,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return new Relation(service);
     }
 
-    public String toJpql() {
-        return buildArel().toJpql() ;
-    }
-
     @Override
     public Relation<T> getCurrentScope() {
         return currentScope;
@@ -107,6 +103,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     @Override
     public Relation<T> thiz() {
         return this;
+    }
+
+    public String toJpql() {
+        return getArel().toJpql() ;
     }
 
     public SelectManager getArel() {
@@ -142,7 +142,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void buildFrom(SelectManager arel) {
-        if (values.getFromClause() != null) arel.from(values.getFromClause().getArel().constructor(false));
+        if (values.getFromClause() != null) arel.from(values.getFromClause().getArel().constructor(false).as("this"));
     }
 
     private TypedQuery<T> buildQuery() {

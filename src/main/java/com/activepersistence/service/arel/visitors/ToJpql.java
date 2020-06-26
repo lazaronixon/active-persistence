@@ -4,6 +4,7 @@ import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.nodes.Constructor;
 import com.activepersistence.service.arel.nodes.Distinct;
+import com.activepersistence.service.arel.nodes.EntityAlias;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
@@ -15,12 +16,17 @@ public class ToJpql extends Visitor {
         return collector.append(o.getSimpleName()).append(" ").append(o.getAlias());
     }
 
+    public StringBuilder visitEntityAlias(EntityAlias o, StringBuilder collector) {
+        collector = visit(o.getRelation(), collector);
+        collector.append(" ");
+        collector.append(o.getName());
+        return collector;
+    }
+
     public StringBuilder visitSelectManager(SelectManager o, StringBuilder collector) {
         collector.append("(");
         collector = visit(o.getAst(), collector);
         collector.append(")");
-
-        collector.append(" ").append(o.getAlias());
 
         return collector;
     }
@@ -51,7 +57,7 @@ public class ToJpql extends Visitor {
         collector = maybeVisit(o.getSetQuantifier(), collector);
 
         if (o.getSetConstructor() != null) {
-            collector = visit(o.getSetConstructor(), collector);
+            collector = visitConstructor(o.getSetConstructor(), collector);
         } else {
             collectNodesFor(o.getProjections(), collector, " ");
         }
