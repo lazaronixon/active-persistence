@@ -146,11 +146,19 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private TypedQuery<T> buildQuery() {
-        return parametize(service.buildQuery(toJpql())).setLockMode(buildLockMode()).setMaxResults(values.getLimitValue()).setFirstResult(values.getOffsetValue());
+        return parametize(service.buildQuery(toJpql()))
+                .setLockMode(buildLockMode())
+                .setMaxResults(values.getLimitValue())
+                .setFirstResult(values.getOffsetValue())
+                .setHint("eclipselink.batch.type", "IN");
     }
 
     private Query buildQuery_() {
-        return parametize(service.buildQuery_(toJpql())).setLockMode(buildLockMode()).setMaxResults(values.getLimitValue()).setFirstResult(values.getOffsetValue());
+        return parametize(service.buildQuery_(toJpql()))
+                .setLockMode(buildLockMode())
+                .setMaxResults(values.getLimitValue())
+                .setFirstResult(values.getOffsetValue())
+                .setHint("eclipselink.batch.type", "IN");
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {
