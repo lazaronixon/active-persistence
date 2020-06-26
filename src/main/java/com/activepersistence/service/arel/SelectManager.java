@@ -66,4 +66,9 @@ public class SelectManager implements Source {
         return ctx.getSource().getClassName();
     }
 
+    @Override
+    public String getAlias() {
+        return ctx.getSource().getAlias();
+    }
+
 }

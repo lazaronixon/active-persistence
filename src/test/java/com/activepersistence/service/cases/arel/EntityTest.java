@@ -13,7 +13,7 @@ public class EntityTest {
 
     @BeforeEach
     public void setup() {
-        relation = new Entity(User.class);
+        relation = new Entity(User.class, "this");
     }
 
     @Test
@@ -72,7 +72,7 @@ public class EntityTest {
 
     @Test
     public void testFromSubQuery() {
-        SelectManager subQuery = new Entity(User.class).project("this");
+        SelectManager subQuery = new Entity(User.class, "this").project("this");
         assertEquals("SELECT this FROM (SELECT this FROM User this) this",
                 relation.project("this").from(subQuery).toJpql());
     }

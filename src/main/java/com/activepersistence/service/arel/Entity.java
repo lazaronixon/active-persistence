@@ -9,8 +9,11 @@ public class Entity implements Source {
 
     private final Class klass;
 
-    public Entity(Class klass) {
+    private final String alias;
+
+    public Entity(Class klass, String alias) {
         this.klass = klass;
+        this.alias = alias;
     }
 
     public SelectManager from() {
@@ -48,6 +51,11 @@ public class Entity implements Source {
     @Override
     public String getClassName() {
         return klass.getName();
+    }
+
+    @Override
+    public String getAlias() {
+        return alias;
     }
 
 }

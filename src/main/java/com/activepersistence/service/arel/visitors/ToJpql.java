@@ -21,6 +21,16 @@ public class ToJpql extends Visitor {
         collector.append(")");
 
         collector.append(" ").append(o.getAlias());
+
+        return collector;
+    }
+
+    public StringBuilder visitConstructor(Constructor o, StringBuilder collector) {
+        collector.append(" NEW ");
+        collector.append(o.getClassName()).append("(");
+        collectNodesFor(o.getProjections(), collector, "");
+        collector.append(")");
+
         return collector;
     }
 
@@ -59,14 +69,6 @@ public class ToJpql extends Visitor {
 
     public StringBuilder visitDistinct(Distinct o, StringBuilder collector) {
         return collector.append("DISTINCT");
-    }
-
-    public StringBuilder visitConstructor(Constructor o, StringBuilder collector) {
-        collector.append(" NEW ");
-        collector.append(o.getClassName()).append("(");
-        collectNodesFor(o.getProjections(), collector, "");
-        collector.append(")");
-        return collector;
     }
 
     public StringBuilder visitSqlLiteral(SqlLiteral o, StringBuilder collector) {
