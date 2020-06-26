@@ -26,6 +26,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private final Values values;
 
+    private SelectManager arel;
+
     private Relation<T> currentScope = null;
 
     public Relation(Base service) {
@@ -107,20 +109,24 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return this;
     }
 
+    public SelectManager getArel() {
+        return arel = arel != null ? arel : buildArel();
+    }
+
     private SelectManager buildArel() {
-        SelectManager arel = new SelectManager(entity);
+        SelectManager result = new SelectManager(entity);
 
-        values.getJoinsValues().forEach(join    -> arel.join(join));
-        values.getWhereValues().forEach(where   -> arel.where(where));
-        values.getHavingValues().forEach(having -> arel.having(having));
-        values.getGroupValues().forEach(group   -> arel.group(group));
-        values.getOrderValues().forEach(order   -> arel.order(order));
+        values.getJoinsValues().forEach(join    -> result.join(join));
+        values.getWhereValues().forEach(where   -> result.where(where));
+        values.getHavingValues().forEach(having -> result.having(having));
+        values.getGroupValues().forEach(group   -> result.group(group));
+        values.getOrderValues().forEach(order   -> result.order(order));
 
-        buildDistinct(arel);
-        buildSelect(arel);
-        buildFrom(arel);
+        buildDistinct(result);
+        buildSelect(result);
+        buildFrom(result);
 
-        return arel;
+        return result;
     }
 
     private void buildDistinct(SelectManager arel) {
@@ -137,7 +143,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void buildFrom(SelectManager arel) {
-        if (values.getFromClause() != null) arel.from(values.getFromClause());
+        if (values.getFromClause() != null) arel.from(values.getFromClause().getArel());
     }
 
     private TypedQuery<T> buildQuery() {

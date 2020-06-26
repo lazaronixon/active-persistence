@@ -1,12 +1,12 @@
 package com.activepersistence.service.arel.nodes;
 
-import com.activepersistence.service.arel.Entity;
+import com.activepersistence.service.arel.Source;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SelectCore {
 
-    private Entity source;
+    private Source source;
     private Distinct setQuantifier;
     private Constructor setConstructor;
     private final List<SqlLiteral> projections;
@@ -46,11 +46,11 @@ public class SelectCore {
         return joins;
     }
 
-    public Entity getSource() {
+    public Source getSource() {
         return source;
     }
 
-    public void setSource(Entity source) {
+    public void setSource(Source source) {
         this.source = source;
     }
 
@@ -79,7 +79,7 @@ public class SelectCore {
     }
 
     public void setConstructor(boolean value) {
-        this.setConstructor = value ? new Constructor(source.getName(), this.getProjections()) : null;
+        this.setConstructor = value ? new Constructor(source.getClassName(), this.getProjections()) : null;
     }
 
     public List<SqlLiteral> getProjections() {

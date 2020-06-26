@@ -19,7 +19,7 @@ public abstract class Visitor {
     }
 
     private Method getMethodFor(Class klass) {
-        return getMethod("visit" + capitalize(klass.getSimpleName()), klass, StringBuilder.class);
+        return getMethod("visit" + klass.getSimpleName(), klass, StringBuilder.class);
     }
 
     private Method getMethod(String methodName, Class... params) {
@@ -36,10 +36,6 @@ public abstract class Visitor {
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw new RuntimeException("Cannot send method " + method.getName(), ex);
         }
-    }
-
-    private String capitalize(String s) {
-        return s.substring(0, 1).toUpperCase() + s.substring(1);
     }
 
 }

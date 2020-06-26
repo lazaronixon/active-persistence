@@ -1,6 +1,7 @@
 package com.activepersistence.service.arel.visitors;
 
 import com.activepersistence.service.arel.Entity;
+import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.nodes.Constructor;
 import com.activepersistence.service.arel.nodes.Distinct;
 import com.activepersistence.service.arel.nodes.SelectCore;
@@ -12,6 +13,15 @@ public class ToJpql extends Visitor {
 
     public StringBuilder visitEntity(Entity o, StringBuilder collector) {
         return collector.append(o.getSimpleName()).append(" ").append(o.getAlias());
+    }
+
+    public StringBuilder visitSelectManager(SelectManager o, StringBuilder collector) {
+        collector.append("(");
+        collector = visit(o.getAst(), collector);
+        collector.append(")");
+
+        collector.append(" ").append(o.getAlias());
+        return collector;
     }
 
     public StringBuilder visitSelectStatement(SelectStatement o, StringBuilder collector) {
@@ -27,10 +37,11 @@ public class ToJpql extends Visitor {
 
     public StringBuilder visitSelectCore(SelectCore o, StringBuilder collector) {
         collector.append("SELECT");
+
         collector = maybeVisit(o.getSetQuantifier(), collector);
 
         if (o.getSetConstructor() != null) {
-            visit(o.getSetConstructor(), collector);
+            collector = visit(o.getSetConstructor(), collector);
         } else {
             collectNodesFor(o.getProjections(), collector, " ");
         }
@@ -42,6 +53,7 @@ public class ToJpql extends Visitor {
         collectNodesFor(o.getWheres(), collector, " WHERE ", " AND ");
         collectNodesFor(o.getGroups(), collector, " GROUP BY ");
         collectNodesFor(o.getHavings(), collector, " HAVING ", " AND ");
+
         return collector;
     }
 
@@ -50,7 +62,7 @@ public class ToJpql extends Visitor {
     }
 
     public StringBuilder visitConstructor(Constructor o, StringBuilder collector) {
-        collector.append(" new ");
+        collector.append(" NEW ");
         collector.append(o.getClassName()).append("(");
         collectNodesFor(o.getProjections(), collector, "");
         collector.append(")");

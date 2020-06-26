@@ -8,7 +8,7 @@ public class Constructor {
     private final List<SqlLiteral> projections;
 
     public Constructor(String className, List<SqlLiteral> projections) {
-        this.className = className;
+        this.className   = className;
         this.projections = projections;
     }
 

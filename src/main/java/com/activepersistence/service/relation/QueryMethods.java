@@ -128,18 +128,22 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> lock() {
-        return spawn().lock_();
+        return spawn().lock_(true);
     }
 
-    public default Relation<T> lock_() {
-        getValues().setLockValue(true); return thiz();
+    public default Relation<T> lock(boolean value) {
+        return spawn().lock_(value);
     }
 
-    public default Relation<T> from(Class value) {
+    public default Relation<T> lock_(boolean value) {
+        getValues().setLockValue(value); return thiz();
+    }
+
+    public default Relation<T> from(Relation<T> value) {
         return spawn().from_(value);
     }
 
-    public default Relation<T> from_(Class value) {
+    public default Relation<T> from_(Relation<T> value) {
         getValues().setFromClause(value); return thiz();
     }
 

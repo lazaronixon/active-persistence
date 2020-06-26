@@ -4,15 +4,15 @@ import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
 
-public class SelectManager {
+public class SelectManager implements Source {
 
     private final SelectStatement ast;
     private final SelectCore ctx;
 
-    public SelectManager(Entity entity) {
+    public SelectManager(Source source) {
         this.ast = new SelectStatement();
         this.ctx = this.ast.getCore();
-        this.ctx.setSource(entity);
+        this.ctx.setSource(source);
     }
 
     public SelectManager project(String... projections) {
@@ -27,8 +27,8 @@ public class SelectManager {
         ctx.setDistinct(value); return this;
     }
 
-    public SelectManager from(Class klass) {
-        ctx.setSource(new Entity(klass)); return this;
+    public SelectManager from(SelectManager subquery) {
+        ctx.setSource(subquery); return this;
     }
 
     public SelectManager join(String join) {
@@ -55,6 +55,15 @@ public class SelectManager {
         StringBuilder collector = new StringBuilder();
         collector = Entity.visitor.accept(ast, collector);
         return collector.toString();
+    }
+
+    public SelectStatement getAst() {
+        return ast;
+    }
+
+    @Override
+    public String getClassName() {
+        return ctx.getSource().getClassName();
     }
 
 }

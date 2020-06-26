@@ -149,8 +149,8 @@ public interface Querying<T> {
         return all().lock();
     }
 
-    public default Relation<T> from(Class value) {
-        return all().from(value);
+    public default Relation<T> from(Relation<T> relation) {
+        return all().from(relation);
     }
 
     public default Relation<T> none() {
