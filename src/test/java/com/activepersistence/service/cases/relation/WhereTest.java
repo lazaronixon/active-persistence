@@ -1,12 +1,16 @@
 package com.activepersistence.service.cases.relation;
 
 import com.activepersistence.service.models.UsersService;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class WhereTest {
 
-    private final UsersService usersService = new UsersService();
+    private UsersService usersService;
+
+    @BeforeEach
+    public void setup() { usersService = new UsersService(); }
 
     @Test
     public void testSelect() {

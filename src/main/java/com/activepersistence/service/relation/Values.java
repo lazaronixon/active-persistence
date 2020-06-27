@@ -65,8 +65,8 @@ public class Values {
         this.selectValues.addAll(List.of(select));
     }
 
-    public void addJoins(String[] joins) {
-        this.joinsValues.addAll(List.of(joins));
+    public void addJoins(String joins) {
+        this.joinsValues.add(joins);
     }
 
     public void addWhere(String where) {

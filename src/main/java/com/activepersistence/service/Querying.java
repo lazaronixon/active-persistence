@@ -101,8 +101,8 @@ public interface Querying<T> {
         return all().select(values);
     }
 
-    public default Relation<T> joins(String... values) {
-        return all().joins(values);
+    public default Relation<T> joins(String value) {
+        return all().joins(value);
     }
 
     public default Relation<T> group(String... values) {
@@ -147,6 +147,10 @@ public interface Querying<T> {
 
     public default Relation<T> lock() {
         return all().lock();
+    }
+
+    public default Relation<T> lock(boolean value) {
+        return all().lock(value);
     }
 
     public default Relation<T> from(String from) {

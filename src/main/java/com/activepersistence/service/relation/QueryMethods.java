@@ -15,13 +15,9 @@ public interface QueryMethods<T> {
 
     public Base<T> getService();
 
-    public Relation<T> getDefaultScope();
-
-    public Relation<T> getCurrentScope();
-
     public default Relation<T> all() {
-        if (getCurrentScope() != null) {
-            return new Relation(getCurrentScope());
+        if (thiz().getCurrentScope() != null) {
+            return new Relation(thiz().getCurrentScope());
         } else {
             return defaultScoped();
         }
@@ -35,12 +31,12 @@ public interface QueryMethods<T> {
         getValues().addSelect(fields); return thiz();
     }
 
-    public default Relation<T> joins(String... values) {
-        return spawn().joins_(values);
+    public default Relation<T> joins(String value) {
+        return spawn().joins_(value);
     }
 
-    public default Relation<T> joins_(String... values) {
-        getValues().addJoins(values); return thiz();
+    public default Relation<T> joins_(String value) {
+        getValues().addJoins(value); return thiz();
     }
 
     public default Relation<T> where(String conditions) {
@@ -217,7 +213,7 @@ public interface QueryMethods<T> {
 
     private Relation<T> buildDefaultScope() {
         if (getService().useDefaultScope()) {
-            return evaluateDefaultScope(() -> getDefaultScope());
+            return evaluateDefaultScope(() -> getService().defaultScope());
         } else {
             return null;
         }

@@ -2,7 +2,7 @@ package com.activepersistence.service.cases.arel;
 
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.models.User;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

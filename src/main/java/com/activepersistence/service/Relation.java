@@ -109,14 +109,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
                 .setHint("eclipselink.batch.type", "IN");
     }
 
-    @Override
     public Relation<T> getCurrentScope() {
         return currentScope;
-    }
-
-    @Override
-    public Relation<T> getDefaultScope() {
-        return service.defaultScope();
     }
 
     @Override

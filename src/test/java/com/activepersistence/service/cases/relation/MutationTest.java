@@ -4,12 +4,16 @@ import com.activepersistence.service.Relation;
 import com.activepersistence.service.models.User;
 import com.activepersistence.service.models.UsersService;
 import com.activepersistence.service.relation.ValidUnscopingValues;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class MutationTest {
 
-    private final UsersService usersService = new UsersService();
+    private UsersService usersService;
+
+    @BeforeEach
+    public void setup() { usersService = new UsersService(); }
 
     @Test
     public void testNotMutating() {
