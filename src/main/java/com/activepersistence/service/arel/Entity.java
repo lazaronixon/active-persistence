@@ -3,7 +3,7 @@ package com.activepersistence.service.arel;
 import com.activepersistence.service.arel.visitors.ToJpql;
 import com.activepersistence.service.arel.visitors.Visitor;
 
-public class Entity {
+public class Entity implements FactoryMethods, Source {
 
     public static Visitor visitor = new ToJpql();
 
@@ -48,6 +48,7 @@ public class Entity {
         return alias;
     }
 
+    @Override
     public String getClassName() {
         return klass.getName();
     }

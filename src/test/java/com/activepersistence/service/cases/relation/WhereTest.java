@@ -23,6 +23,12 @@ public class WhereTest {
     }
 
     @Test
+    public void testJoins() {
+        assertEquals("SELECT this FROM User this JOIN this.projects p",
+                usersService.joins("JOIN this.projects p").toJpql());
+    }
+
+    @Test
     public void testFromSubQuery() {
         Relation<User> subquery = usersService.select("this.id", "this.name");
         assertEquals("SELECT this FROM (SELECT this.id, this.name FROM User this) this",

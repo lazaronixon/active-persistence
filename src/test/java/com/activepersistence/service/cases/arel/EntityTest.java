@@ -1,6 +1,5 @@
 package com.activepersistence.service.cases.arel;
 
-import com.activepersistence.service.Arel;
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.models.User;
@@ -36,6 +35,12 @@ public class EntityTest {
     }
 
     @Test
+    public void testJoin() {
+        assertEquals("SELECT this FROM User this JOIN this.projects p",
+                relation.project("this").join("JOIN this.projects p").toJpql());
+    }
+
+    @Test
     public void testWhere() {
         assertEquals("SELECT this FROM User this WHERE this.id = 1",
                 relation.project("this").where("this.id = 1").toJpql());
@@ -57,12 +62,6 @@ public class EntityTest {
     public void testOrder() {
         assertEquals("SELECT this FROM User this ORDER BY this.id",
                 relation.project("this").order("this.id").toJpql());
-    }
-
-    @Test
-    public void testJoin() {
-        assertEquals("JOIN e.projects p",
-                relation.project("this").createStringJoin(Arel.jpql("JOIN e.projects p")).toJpql());
     }
 
     @Test

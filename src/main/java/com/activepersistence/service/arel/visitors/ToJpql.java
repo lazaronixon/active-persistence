@@ -5,12 +5,10 @@ import com.activepersistence.service.arel.nodes.Constructor;
 import com.activepersistence.service.arel.nodes.Distinct;
 import com.activepersistence.service.arel.nodes.EntityAlias;
 import com.activepersistence.service.arel.nodes.Grouping;
-import com.activepersistence.service.arel.nodes.JoinSource;
 import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
-import com.activepersistence.service.arel.nodes.StringJoin;
 import java.util.List;
 
 public class ToJpql extends Visitor {
@@ -40,6 +38,7 @@ public class ToJpql extends Visitor {
         collector.append(" FROM ");
         collector = visit(o.getSource(), collector);
 
+        collectNodesFor(o.getJoins(), collector, " ", " ");
         collectNodesFor(o.getWheres(), collector, " WHERE ", " AND ");
         collectNodesFor(o.getGroups(), collector, " GROUP BY ");
         collectNodesFor(o.getHavings(), collector, " HAVING ", " AND ");
@@ -54,10 +53,6 @@ public class ToJpql extends Visitor {
         collector.append(")");
 
         return collector;
-    }
-
-    public StringBuilder visitJoinSource(JoinSource o, StringBuilder collector) {
-        return visit(o.getLeft(), collector);
     }
 
 
@@ -86,10 +81,6 @@ public class ToJpql extends Visitor {
 
     public StringBuilder visitSqlLiteral(SqlLiteral o, StringBuilder collector) {
         return collector.append(o);
-    }
-
-    public StringBuilder visitStringJoin(StringJoin o, StringBuilder collector) {
-        return visit(o.getValue(), collector);
     }
 
     private StringBuilder maybeVisit(Node thing, StringBuilder collector) {

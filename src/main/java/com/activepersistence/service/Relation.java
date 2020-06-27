@@ -116,7 +116,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private SelectManager buildArel() {
         SelectManager result = new SelectManager(entity);
 
-        values.getJoinsValues().forEach(join    -> result.createStringJoin(Arel.jpql(join)));
+        values.getJoinsValues().forEach(join    -> result.join(join));
         values.getWhereValues().forEach(where   -> result.where(where));
         values.getHavingValues().forEach(having -> result.having(having));
         values.getGroupValues().forEach(group   -> result.group(group));

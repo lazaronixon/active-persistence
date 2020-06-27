@@ -1,6 +1,8 @@
 package com.activepersistence.service.arel.nodes;
 
-public class EntityAlias extends Node {
+import com.activepersistence.service.arel.Source;
+
+public class EntityAlias extends Node implements Source {
 
     private final Grouping relation;
 
@@ -17,6 +19,11 @@ public class EntityAlias extends Node {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String getClassName() {
+        return null;
     }
 
 }
