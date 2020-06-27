@@ -3,7 +3,6 @@ package com.activepersistence.service.arel.visitors;
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.nodes.Constructor;
 import com.activepersistence.service.arel.nodes.Distinct;
-import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
@@ -65,7 +64,7 @@ public class ToJpql extends Visitor {
         return collector.append(o);
     }
 
-    private StringBuilder maybeVisit(Node thing, StringBuilder collector) {
+    private StringBuilder maybeVisit(Visitable thing, StringBuilder collector) {
         return thing != null ? visit(thing, collector.append(" ")) : collector;
     }
 
@@ -77,7 +76,7 @@ public class ToJpql extends Visitor {
         collectNodesFor(nodes, collector, spacer, ", ");
     }
 
-    private void injectJoin(List list, StringBuilder collector, String joinStr) {
+    private void injectJoin(List<Visitable> list, StringBuilder collector, String joinStr) {
         for(int i = 0; i < list.size(); i++) { if (i != 0) collector.append(joinStr); collector = visit(list.get(i), collector); }
     }
 }

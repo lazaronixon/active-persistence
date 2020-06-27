@@ -5,11 +5,11 @@ import java.lang.reflect.Method;
 
 public abstract class Visitor {
 
-    public StringBuilder accept(Object object, StringBuilder collector) {
+    public StringBuilder accept(Visitable object, StringBuilder collector) {
         return visit(object, collector);
     }
 
-    public StringBuilder visit(Object o, StringBuilder collector) {
+    public StringBuilder visit(Visitable o, StringBuilder collector) {
         Method dispatchMethod = getMethodFor(o.getClass());
         if (collector != null) {
             return send(dispatchMethod, o, collector);

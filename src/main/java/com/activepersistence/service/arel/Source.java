@@ -1,6 +1,8 @@
 package com.activepersistence.service.arel;
 
-public interface Source {
+import com.activepersistence.service.arel.visitors.Visitable;
+
+public interface Source extends Visitable {
 
     public String getClassName();
 
