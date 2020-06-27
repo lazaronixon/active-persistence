@@ -77,38 +77,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return buildArel().toJpql();
     }
 
-    public SelectManager buildArel() {
-        SelectManager result = new SelectManager(entity);
-
-        values.getJoinsValues().forEach(join    -> result.join(join));
-        values.getWhereValues().forEach(where   -> result.where(where));
-        values.getHavingValues().forEach(having -> result.having(having));
-        values.getGroupValues().forEach(group   -> result.group(group));
-        values.getOrderValues().forEach(order   -> result.order(order));
-
-        buildDistinct(result);
-        buildSelect(result);
-        buildFrom(result);
-
-        return result;
-    }
-
-    public TypedQuery<T> buildQuery() {
-        return parametize(service.buildQuery(toJpql()))
-                .setLockMode(buildLockMode())
-                .setMaxResults(values.getLimitValue())
-                .setFirstResult(values.getOffsetValue())
-                .setHint("eclipselink.batch.type", "IN");
-    }
-
-    public Query buildQuery_() {
-        return parametize(service.buildQuery_(toJpql()))
-                .setLockMode(buildLockMode())
-                .setMaxResults(values.getLimitValue())
-                .setFirstResult(values.getOffsetValue())
-                .setHint("eclipselink.batch.type", "IN");
-    }
-
     public Relation<T> getCurrentScope() {
         return currentScope;
     }
@@ -131,6 +99,38 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     @Override
     public Relation<T> thiz() {
         return this;
+    }
+
+    private SelectManager buildArel() {
+        SelectManager result = new SelectManager(entity);
+
+        values.getJoinsValues().forEach(join    -> result.join(join));
+        values.getWhereValues().forEach(where   -> result.where(where));
+        values.getHavingValues().forEach(having -> result.having(having));
+        values.getGroupValues().forEach(group   -> result.group(group));
+        values.getOrderValues().forEach(order   -> result.order(order));
+
+        buildDistinct(result);
+        buildSelect(result);
+        buildFrom(result);
+
+        return result;
+    }
+
+    private TypedQuery<T> buildQuery() {
+        return parametize(service.buildQuery(toJpql()))
+                .setLockMode(buildLockMode())
+                .setMaxResults(values.getLimitValue())
+                .setFirstResult(values.getOffsetValue())
+                .setHint("eclipselink.batch.type", "IN");
+    }
+
+    private Query buildQuery_() {
+        return parametize(service.buildQuery_(toJpql()))
+                .setLockMode(buildLockMode())
+                .setMaxResults(values.getLimitValue())
+                .setFirstResult(values.getOffsetValue())
+                .setHint("eclipselink.batch.type", "IN");
     }
 
     private void buildDistinct(SelectManager arel) {
