@@ -104,7 +104,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> none_() {
-        thiz().where("1=0"); return thiz();
+        thiz().where_("1=0"); return thiz();
     }
 
     public default Relation<T> includes(String... includes) {

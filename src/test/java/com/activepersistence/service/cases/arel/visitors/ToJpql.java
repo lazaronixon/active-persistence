@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 public class ToJpql {
 
-    private Visitor visitor = Entity.visitor;
+    private final Visitor visitor = Entity.visitor;
 
     @Test
     public void testVisitSelectStatement() {
