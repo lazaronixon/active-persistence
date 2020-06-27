@@ -5,16 +5,26 @@ import java.util.List;
 
 public class SelectStatement extends Node {
 
-    private final SelectCore core = new SelectCore();
+    private final List<SelectCore> cores;
 
-    private final List<SqlLiteral> orders = new ArrayList();
+    private final List<SqlLiteral> orders;
+
+    public SelectStatement() {
+       cores  = List.of(new SelectCore());
+       orders = new ArrayList();
+    }
+
 
     public List<SqlLiteral> getOrders() {
         return orders;
     }
 
-    public SelectCore getCore() {
-        return core;
+    public List<SelectCore> getCores() {
+        return cores;
+    }
+
+    public SelectCore getLastCore() {
+        return cores.get(cores.size() - 1);
     }
 
     public void addOrders(List<SqlLiteral> expr) {

@@ -1,48 +1,22 @@
 package com.activepersistence.service.arel.visitors;
 
 import com.activepersistence.service.arel.Entity;
-import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.nodes.Constructor;
 import com.activepersistence.service.arel.nodes.Distinct;
 import com.activepersistence.service.arel.nodes.EntityAlias;
+import com.activepersistence.service.arel.nodes.Grouping;
+import com.activepersistence.service.arel.nodes.JoinSource;
 import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
+import com.activepersistence.service.arel.nodes.StringJoin;
 import java.util.List;
 
 public class ToJpql extends Visitor {
 
-    public StringBuilder visitEntity(Entity o, StringBuilder collector) {
-        return collector.append(o.getSimpleName()).append(" ").append(o.getAlias());
-    }
-
-    public StringBuilder visitEntityAlias(EntityAlias o, StringBuilder collector) {
-        collector = visit(o.getRelation(), collector);
-        collector.append(" ");
-        collector.append(o.getName());
-        return collector;
-    }
-
-    public StringBuilder visitSelectManager(SelectManager o, StringBuilder collector) {
-        collector.append("(");
-        collector = visit(o.getAst(), collector);
-        collector.append(")");
-
-        return collector;
-    }
-
-    public StringBuilder visitConstructor(Constructor o, StringBuilder collector) {
-        collector.append(" NEW ");
-        collector.append(o.getClassName()).append("(");
-        collectNodesFor(o.getProjections(), collector, "");
-        collector.append(")");
-
-        return collector;
-    }
-
     public StringBuilder visitSelectStatement(SelectStatement o, StringBuilder collector) {
-        collector = visitSelectCore(o.getCore(), collector);
+        for(SelectCore c : o.getCores()) { collector = visitSelectCore(c, collector); }
 
         if (!o.getOrders().isEmpty()) {
             collector.append(" ORDER BY ");
@@ -66,10 +40,42 @@ public class ToJpql extends Visitor {
         collector.append(" FROM ");
         collector = visit(o.getSource(), collector);
 
-        collectNodesFor(o.getJoins(), collector, " ", " ");
         collectNodesFor(o.getWheres(), collector, " WHERE ", " AND ");
         collectNodesFor(o.getGroups(), collector, " GROUP BY ");
         collectNodesFor(o.getHavings(), collector, " HAVING ", " AND ");
+
+        return collector;
+    }
+
+    public StringBuilder visitConstructor(Constructor o, StringBuilder collector) {
+        collector.append(" NEW ");
+        collector.append(o.getClassName()).append("(");
+        collectNodesFor(o.getProjections(), collector, "");
+        collector.append(")");
+
+        return collector;
+    }
+
+    public StringBuilder visitJoinSource(JoinSource o, StringBuilder collector) {
+        return visit(o.getLeft(), collector);
+    }
+
+
+    public StringBuilder visitEntity(Entity o, StringBuilder collector) {
+        return collector.append(o.getSimpleName()).append(" ").append(o.getAlias());
+    }
+
+    public StringBuilder visitEntityAlias(EntityAlias o, StringBuilder collector) {
+        collector = visit(o.getRelation(), collector);
+        collector.append(" ");
+        collector.append(o.getName());
+        return collector;
+    }
+
+    public StringBuilder visitGrouping(Grouping o, StringBuilder collector) {
+        collector.append("(");
+        collector = visit(o.getExpr(), collector);
+        collector.append(")");
 
         return collector;
     }
@@ -80,6 +86,10 @@ public class ToJpql extends Visitor {
 
     public StringBuilder visitSqlLiteral(SqlLiteral o, StringBuilder collector) {
         return collector.append(o);
+    }
+
+    public StringBuilder visitStringJoin(StringJoin o, StringBuilder collector) {
+        return visit(o.getValue(), collector);
     }
 
     private StringBuilder maybeVisit(Node thing, StringBuilder collector) {

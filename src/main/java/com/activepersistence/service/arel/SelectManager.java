@@ -1,19 +1,20 @@
 package com.activepersistence.service.arel;
 
 import com.activepersistence.service.arel.nodes.EntityAlias;
+import com.activepersistence.service.arel.nodes.JoinSource;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
 
-public class SelectManager implements Source {
+public class SelectManager implements FactoryMethods {
 
     private final SelectStatement ast;
     private final SelectCore ctx;
 
-    public SelectManager(Source source) {
+    public SelectManager(Object entity) {
         this.ast = new SelectStatement();
-        this.ctx = this.ast.getCore();
-        this.ctx.setSource(source);
+        this.ctx = this.ast.getLastCore();
+        this.ctx.getSource().setLeft(entity);
     }
 
     public SelectManager project(String... projections) {
@@ -28,12 +29,16 @@ public class SelectManager implements Source {
         ctx.setDistinct(value); return this;
     }
 
-    public SelectManager from(Source source) {
+    public SelectManager from(JoinSource source) {
         ctx.setSource(source); return this;
     }
 
-    public SelectManager join(String join) {
-        ctx.addJoin(new SqlLiteral(join)); return this;
+    public SelectManager from(Entity entity) {
+        ctx.setSource(new JoinSource(entity)); return this;
+    }
+
+    public SelectManager from(EntityAlias relation) {
+        ctx.setSource(new JoinSource(relation)); return this;
     }
 
     public SelectManager where(String condition) {
@@ -53,7 +58,7 @@ public class SelectManager implements Source {
     }
 
     public EntityAlias as(String other) {
-        return createEntityAlias(this, other);
+        return createEntityAlias(grouping(ast), other);
     }
 
     public String toJpql() {
@@ -64,16 +69,6 @@ public class SelectManager implements Source {
 
     public SelectStatement getAst() {
         return ast;
-    }
-
-    @Override
-    public String getClassName() {
-        return ctx.getSource().getClassName();
-    }
-
-    @Override
-    public String getAlias() {
-        return ctx.getSource().getAlias();
     }
 
 }

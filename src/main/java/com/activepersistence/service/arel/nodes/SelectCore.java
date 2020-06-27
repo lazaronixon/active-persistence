@@ -1,22 +1,21 @@
 package com.activepersistence.service.arel.nodes;
 
-import com.activepersistence.service.arel.Source;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SelectCore extends Node {
 
-    private Source source;
+    private JoinSource source;
     private Distinct setQuantifier;
     private Constructor setConstructor;
     private final List<SqlLiteral> projections;
-    private final List<SqlLiteral> joins;
+    private final List<StringJoin> joins;
     private final List<SqlLiteral> wheres;
     private final List<SqlLiteral> groups;
     private final List<SqlLiteral> havings;
 
     public SelectCore() {
-        this.source         = null;
+        this.source         = new JoinSource();
         this.setQuantifier  = null;
         this.setConstructor = null;
         this.projections    = new ArrayList();
@@ -42,15 +41,15 @@ public class SelectCore extends Node {
         return havings;
     }
 
-    public List<SqlLiteral> getJoins() {
+    public List<StringJoin> getJoins() {
         return joins;
     }
 
-    public Source getSource() {
+    public JoinSource getSource() {
         return source;
     }
 
-    public void setSource(Source source) {
+    public void setSource(JoinSource source) {
         this.source = source;
     }
 
@@ -58,7 +57,7 @@ public class SelectCore extends Node {
         this.projections.addAll(projections);
     }
 
-    public void addJoin(SqlLiteral join) {
+    public void addJoin(StringJoin join) {
         this.joins.add(join);
     }
 
@@ -79,7 +78,7 @@ public class SelectCore extends Node {
     }
 
     public void setConstructor(boolean value) {
-        this.setConstructor = value ? new Constructor(source.getClassName(), this.getProjections()) : null;
+        this.setConstructor = value ? new Constructor(source, this.getProjections()) : null;
     }
 
     public List<SqlLiteral> getProjections() {

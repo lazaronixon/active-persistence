@@ -3,7 +3,7 @@ package com.activepersistence.service.arel;
 import com.activepersistence.service.arel.visitors.ToJpql;
 import com.activepersistence.service.arel.visitors.Visitor;
 
-public class Entity implements Source {
+public class Entity {
 
     public static Visitor visitor = new ToJpql();
 
@@ -40,22 +40,16 @@ public class Entity implements Source {
         return from().project(things);
     }
 
-    public SelectManager join(String join) {
-        return from().join(join);
-    }
-
     public String getSimpleName() {
         return klass.getSimpleName();
     }
 
-    @Override
-    public String getClassName() {
-        return klass.getName();
-    }
-
-    @Override
     public String getAlias() {
         return alias;
+    }
+
+    public String getClassName() {
+        return klass.getName();
     }
 
 }
