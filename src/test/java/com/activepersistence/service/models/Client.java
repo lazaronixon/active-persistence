@@ -10,6 +10,8 @@ public class Client extends Base<Integer> {
 
     private Integer age;
 
+    private boolean active;
+
     @Override
     public Integer getId() {
         return id;
@@ -33,6 +35,14 @@ public class Client extends Base<Integer> {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
 }

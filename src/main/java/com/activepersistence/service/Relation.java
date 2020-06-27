@@ -26,7 +26,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private final Values values;
 
-    private Relation<T> currentScope;
+    private Relation<T> currentScope = null;
 
     public Relation(Base service) {
         this.entityManager = service.getEntityManager();
@@ -70,7 +70,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public Relation<T> unscoped() {
-        return new Relation(service);
+        return scoping(new Relation(service));
     }
 
     public String toJpql() {
