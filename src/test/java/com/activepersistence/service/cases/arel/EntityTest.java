@@ -1,7 +1,6 @@
 package com.activepersistence.service.cases.arel;
 
 import com.activepersistence.service.arel.Entity;
-import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.models.User;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +12,7 @@ public class EntityTest {
 
     @BeforeEach
     public void setup() {
-        relation = new Entity(User.class, "this");
+        relation = new Entity(User.class);
     }
 
     @Test
@@ -65,21 +64,8 @@ public class EntityTest {
     }
 
     @Test
-    public void testFrom() {
-        assertEquals("SELECT this FROM User this",
-                relation.project("this").toJpql());
-    }
-
-    @Test
-    public void testEntityAlias() {
-        assertEquals("(SELECT this.id, this.name FROM User this) other",
-                relation.project("this.id, this.name").as("other").toJpql());
-    }
-
-    @Test
     public void testFromSubQuery() {
-        SelectManager subquery = new Entity(User.class, "this").project("this.id", "this.name");
         assertEquals("SELECT subquery FROM (SELECT this.id, this.name FROM User this) subquery",
-                relation.project("subquery").from(subquery.as("subquery")).toJpql());
+                relation.project("subquery").from("(SELECT this.id, this.name FROM User this) subquery").toJpql());
     }
 }

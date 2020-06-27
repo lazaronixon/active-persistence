@@ -1,7 +1,5 @@
 package com.activepersistence.service.cases.relation;
 
-import com.activepersistence.service.Relation;
-import com.activepersistence.service.models.User;
 import com.activepersistence.service.models.UsersService;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
@@ -30,9 +28,8 @@ public class WhereTest {
 
     @Test
     public void testFromSubQuery() {
-        Relation<User> subquery = usersService.select("this.id", "this.name");
         assertEquals("SELECT NEW com.activepersistence.service.models.User(subquery.id, subquery.name) FROM (SELECT this.id, this.name FROM User this) subquery",
-                usersService.select("subquery.id, subquery.name").from(subquery).toJpql());
+                usersService.select("subquery.id, subquery.name").from("(SELECT this.id, this.name FROM User this) subquery").toJpql());
     }
 
 }

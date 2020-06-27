@@ -34,7 +34,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.entityManager = service.getEntityManager();
         this.entityClass   = service.getEntityClass();
         this.service       = service;
-        this.entity        = new Entity(entityClass, "this");
+        this.entity        = new Entity(entityClass);
         this.values        = new Values();
     }
 
@@ -142,9 +142,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void buildFrom(SelectManager arel) {
-        if (values.getFromClause() != null) {
-            arel.from(values.getFromClause().getArel().constructor(false).as("subquery"));
-        }
+        if (values.getFromClause() != null) arel.from(values.getFromClause());
     }
 
     private TypedQuery<T> buildQuery() {

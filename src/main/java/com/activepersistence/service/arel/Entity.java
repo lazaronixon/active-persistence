@@ -3,17 +3,14 @@ package com.activepersistence.service.arel;
 import com.activepersistence.service.arel.visitors.ToJpql;
 import com.activepersistence.service.arel.visitors.Visitor;
 
-public class Entity implements FactoryMethods, Source {
+public class Entity implements Source {
 
     public static Visitor visitor = new ToJpql();
 
     private final Class klass;
 
-    private final String alias;
-
-    public Entity(Class klass, String alias) {
+    public Entity(Class klass) {
         this.klass = klass;
-        this.alias = alias;
     }
 
     public SelectManager from() {
@@ -44,13 +41,13 @@ public class Entity implements FactoryMethods, Source {
         return klass.getSimpleName();
     }
 
-    public String getAlias() {
-        return alias;
-    }
-
     @Override
     public String getClassName() {
         return klass.getName();
+    }
+
+    public String getAlias() {
+        return "this";
     }
 
 }

@@ -1,13 +1,12 @@
 package com.activepersistence.service.relation;
 
-import com.activepersistence.service.Relation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class Values {
 
-   private Relation fromClause = null;
+   private String fromClause = null;
 
     private List<String> selectValues = new ArrayList();
 
@@ -114,11 +113,11 @@ public class Values {
         this.distinctValue = distinct;
     }
 
-    public void setFromClause(Relation fromClause) {
+    public void setFromClause(String fromClause) {
         this.fromClause = fromClause;
     }
 
-    public Relation getFromClause() {
+    public String getFromClause() {
         return fromClause;
     }
 

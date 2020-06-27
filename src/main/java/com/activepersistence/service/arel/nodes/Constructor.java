@@ -1,25 +1,24 @@
 package com.activepersistence.service.arel.nodes;
 
-import com.activepersistence.service.arel.Source;
 import java.util.List;
 
 public class Constructor extends Node {
 
-    private final Source source;
+    private final String name;
 
     private final List<SqlLiteral> projections;
 
-    public Constructor(Source source, List<SqlLiteral> projections) {
-        this.source = source;
+    public Constructor(String name, List<SqlLiteral> projections) {
+        this.name = name;
         this.projections = projections;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public List<SqlLiteral> getProjections() {
         return projections;
-    }
-
-    public String getClassName() {
-        return source.getClassName();
     }
 
 }

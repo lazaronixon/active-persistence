@@ -79,7 +79,7 @@ public class SelectCore extends Node {
     }
 
     public void setConstructor(boolean value) {
-        this.setConstructor = value ? new Constructor(source, this.getProjections()) : null;
+        this.setConstructor = value ? new Constructor(source.getClassName(), this.getProjections()) : null;
     }
 
     public List<SqlLiteral> getProjections() {

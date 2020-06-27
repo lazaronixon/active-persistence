@@ -3,8 +3,6 @@ package com.activepersistence.service.arel.visitors;
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.nodes.Constructor;
 import com.activepersistence.service.arel.nodes.Distinct;
-import com.activepersistence.service.arel.nodes.EntityAlias;
-import com.activepersistence.service.arel.nodes.Grouping;
 import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
@@ -14,7 +12,7 @@ import java.util.List;
 public class ToJpql extends Visitor {
 
     public StringBuilder visitSelectStatement(SelectStatement o, StringBuilder collector) {
-        for(SelectCore c : o.getCores()) { collector = visitSelectCore(c, collector); }
+        collector = visitSelectCore(o.getCore(), collector);
 
         if (!o.getOrders().isEmpty()) {
             collector.append(" ORDER BY ");
@@ -48,31 +46,15 @@ public class ToJpql extends Visitor {
 
     public StringBuilder visitConstructor(Constructor o, StringBuilder collector) {
         collector.append(" NEW ");
-        collector.append(o.getClassName()).append("(");
+        collector.append(o.getName()).append("(");
         collectNodesFor(o.getProjections(), collector, "");
         collector.append(")");
 
         return collector;
     }
 
-
     public StringBuilder visitEntity(Entity o, StringBuilder collector) {
         return collector.append(o.getSimpleName()).append(" ").append(o.getAlias());
-    }
-
-    public StringBuilder visitEntityAlias(EntityAlias o, StringBuilder collector) {
-        collector = visit(o.getRelation(), collector);
-        collector.append(" ");
-        collector.append(o.getName());
-        return collector;
-    }
-
-    public StringBuilder visitGrouping(Grouping o, StringBuilder collector) {
-        collector.append("(");
-        collector = visit(o.getExpr(), collector);
-        collector.append(")");
-
-        return collector;
     }
 
     public StringBuilder visitDistinct(Distinct o, StringBuilder collector) {
