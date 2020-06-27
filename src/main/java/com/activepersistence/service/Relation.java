@@ -135,14 +135,16 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private void buildSelect(SelectManager arel) {
         if (values.getSelectValues().isEmpty()) {
-            arel.project("this");
+            arel.constructor(false).project("this");
         } else {
             values.getSelectValues().forEach(select -> arel.constructor(true).project(select));
         }
     }
 
     private void buildFrom(SelectManager arel) {
-        if (values.getFromClause() != null) arel.from(values.getFromClause().getArel().constructor(false).as("this"));
+        if (values.getFromClause() != null) {
+            arel.from(values.getFromClause().getArel().constructor(false).as("subquery"));
+        }
     }
 
     private TypedQuery<T> buildQuery() {
