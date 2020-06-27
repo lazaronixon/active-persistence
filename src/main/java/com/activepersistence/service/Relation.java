@@ -26,8 +26,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private final Values values;
 
-    private SelectManager arel;
-
     private Relation<T> currentScope;
 
     public Relation(Base service) {
@@ -75,6 +73,42 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return new Relation(service);
     }
 
+    public String toJpql() {
+        return buildArel().toJpql();
+    }
+
+    public SelectManager buildArel() {
+        SelectManager result = new SelectManager(entity);
+
+        values.getJoinsValues().forEach(join    -> result.join(join));
+        values.getWhereValues().forEach(where   -> result.where(where));
+        values.getHavingValues().forEach(having -> result.having(having));
+        values.getGroupValues().forEach(group   -> result.group(group));
+        values.getOrderValues().forEach(order   -> result.order(order));
+
+        buildDistinct(result);
+        buildSelect(result);
+        buildFrom(result);
+
+        return result;
+    }
+
+    public TypedQuery<T> buildQuery() {
+        return parametize(service.buildQuery(toJpql()))
+                .setLockMode(buildLockMode())
+                .setMaxResults(values.getLimitValue())
+                .setFirstResult(values.getOffsetValue())
+                .setHint("eclipselink.batch.type", "IN");
+    }
+
+    public Query buildQuery_() {
+        return parametize(service.buildQuery_(toJpql()))
+                .setLockMode(buildLockMode())
+                .setMaxResults(values.getLimitValue())
+                .setFirstResult(values.getOffsetValue())
+                .setHint("eclipselink.batch.type", "IN");
+    }
+
     @Override
     public Relation<T> getCurrentScope() {
         return currentScope;
@@ -105,30 +139,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return this;
     }
 
-    public String toJpql() {
-        return getArel().toJpql() ;
-    }
-
-    public SelectManager getArel() {
-        return arel = arel != null ? arel : buildArel();
-    }
-
-    private SelectManager buildArel() {
-        SelectManager result = new SelectManager(entity);
-
-        values.getJoinsValues().forEach(join    -> result.join(join));
-        values.getWhereValues().forEach(where   -> result.where(where));
-        values.getHavingValues().forEach(having -> result.having(having));
-        values.getGroupValues().forEach(group   -> result.group(group));
-        values.getOrderValues().forEach(order   -> result.order(order));
-
-        buildDistinct(result);
-        buildSelect(result);
-        buildFrom(result);
-
-        return result;
-    }
-
     private void buildDistinct(SelectManager arel) {
         arel.distinct(values.isDistinctValue());
     }
@@ -143,22 +153,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private void buildFrom(SelectManager arel) {
         if (values.getFromClause() != null) arel.from(values.getFromClause());
-    }
-
-    private TypedQuery<T> buildQuery() {
-        return parametize(service.buildQuery(toJpql()))
-                .setLockMode(buildLockMode())
-                .setMaxResults(values.getLimitValue())
-                .setFirstResult(values.getOffsetValue())
-                .setHint("eclipselink.batch.type", "IN");
-    }
-
-    private Query buildQuery_() {
-        return parametize(service.buildQuery_(toJpql()))
-                .setLockMode(buildLockMode())
-                .setMaxResults(values.getLimitValue())
-                .setFirstResult(values.getOffsetValue())
-                .setHint("eclipselink.batch.type", "IN");
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {
