@@ -1,5 +1,6 @@
 package com.activepersistence.service.arel.nodes;
 
+import com.activepersistence.service.Arel;
 import com.activepersistence.service.arel.Source;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
@@ -20,8 +21,8 @@ public class SqlLiteral extends Node implements Source {
         this.className = className;
     }
 
-    public static List<SqlLiteral> of(String[] values) {
-        return range(0, values.length).mapToObj(i -> new SqlLiteral(values[i])).collect(toList());
+    public static List<SqlLiteral> of(String... values) {
+        return range(0, values.length).mapToObj(i -> Arel.jpql(values[i])).collect(toList());
     }
 
     @Override

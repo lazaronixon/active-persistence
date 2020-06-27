@@ -8,7 +8,6 @@ import com.activepersistence.service.arel.nodes.SqlLiteral;
 import com.activepersistence.service.arel.visitors.Visitable;
 import com.activepersistence.service.arel.visitors.Visitor;
 import com.activepersistence.service.models.User;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
@@ -35,13 +34,13 @@ public class ToJpql {
         SelectCore core = new SelectCore();
         core.setSource(new Entity(User.class));
         core.setDistinct(true);
-        core.addProjections(List.of(new SqlLiteral("this")));
+        core.addProjections(SqlLiteral.of("this"));
         assertEquals("SELECT DISTINCT this FROM User this", compile(core));
     }
 
     @Test
     public void testVisitConstructor() {
-        Constructor constructor = new Constructor("foo", List.of(new SqlLiteral("this.id, this.name")));
+        Constructor constructor = new Constructor("foo", SqlLiteral.of("this.id, this.name"));
         assertEquals(" NEW foo(this.id, this.name)", compile(constructor));
     }
 
