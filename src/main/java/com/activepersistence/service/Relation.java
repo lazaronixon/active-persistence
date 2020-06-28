@@ -141,7 +141,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         if (values.getSelectValues().isEmpty()) {
             arel.constructor(false).project("this");
         } else {
-            values.getSelectValues().forEach(select -> arel.constructor(true).project(select));
+            values.getSelectValues().forEach(s -> arel.constructor(true).project(s));
         }
     }
 

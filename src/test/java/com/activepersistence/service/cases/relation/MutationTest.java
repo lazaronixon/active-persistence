@@ -3,7 +3,7 @@ package com.activepersistence.service.cases.relation;
 import com.activepersistence.service.Relation;
 import com.activepersistence.service.models.User;
 import com.activepersistence.service.models.UsersService;
-import java.util.List;
+import static java.util.Arrays.asList;
 import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,7 @@ public class MutationTest {
         Relation<User> relation  = usersService.all();
         Relation<User> relation2 = relation.select_("foo");
         assertEquals(relation, relation2);
-        assertEquals(List.of("foo"), relation2.getValues().getSelectValues());
+        assertEquals(asList("foo"), relation2.getValues().getSelectValues());
     }
 
     @Test
@@ -38,7 +38,7 @@ public class MutationTest {
         Relation<User> relation  = usersService.all();
         Relation<User> relation2 = relation.joins_("foo");
         assertEquals(relation, relation2);
-        assertEquals(List.of("foo"), relation2.getValues().getJoinsValues());
+        assertEquals(asList("foo"), relation2.getValues().getJoinsValues());
     }
 
     @Test
@@ -46,7 +46,7 @@ public class MutationTest {
         Relation<User> relation  = usersService.all();
         Relation<User> relation2 = relation.where_("foo");
         assertEquals(relation, relation2);
-        assertEquals(List.of("foo"), relation2.getValues().getWhereValues());
+        assertEquals(asList("foo"), relation2.getValues().getWhereValues());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class MutationTest {
         Relation<User> relation  = usersService.all();
         Relation<User> relation2 = relation.group_("foo");
         assertEquals(relation, relation2);
-        assertEquals(List.of("foo"), relation2.getValues().getGroupValues());
+        assertEquals(asList("foo"), relation2.getValues().getGroupValues());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class MutationTest {
         Relation<User> relation  = usersService.all();
         Relation<User> relation2 = relation.having_("foo");
         assertEquals(relation, relation2);
-        assertEquals(List.of("foo"), relation2.getValues().getHavingValues());
+        assertEquals(asList("foo"), relation2.getValues().getHavingValues());
     }
 
     @Test
@@ -70,7 +70,7 @@ public class MutationTest {
         Relation<User> relation  = usersService.all();
         Relation<User> relation2 = relation.order_("foo");
         assertEquals(relation, relation2);
-        assertEquals(List.of("foo"), relation2.getValues().getOrderValues());
+        assertEquals(asList("foo"), relation2.getValues().getOrderValues());
     }
 
     @Test
@@ -94,7 +94,7 @@ public class MutationTest {
         Relation<User> relation  = usersService.all();
         Relation<User> relation2 = relation.none_();
         assertEquals(relation, relation2);
-        assertEquals(List.of("1=0"), relation2.getValues().getWhereValues());
+        assertEquals(asList("1=0"), relation2.getValues().getWhereValues());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class MutationTest {
         Relation<User> relation  = usersService.all();
         Relation<User> relation2 = relation.includes_("foo");
         assertEquals(relation, relation2);
-        assertEquals(List.of("foo"), relation2.getValues().getIncludesValues());
+        assertEquals(asList("foo"), relation2.getValues().getIncludesValues());
     }
 
     @Test
@@ -110,7 +110,7 @@ public class MutationTest {
         Relation<User> relation  = usersService.all();
         Relation<User> relation2 = relation.eagerLoads_("foo");
         assertEquals(relation, relation2);
-        assertEquals(List.of("foo"), relation2.getValues().getEagerLoadsValues());
+        assertEquals(asList("foo"), relation2.getValues().getEagerLoadsValues());
     }
 
     @Test

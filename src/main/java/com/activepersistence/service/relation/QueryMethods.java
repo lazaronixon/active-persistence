@@ -2,6 +2,7 @@ package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Base;
 import com.activepersistence.service.Relation;
+import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
 
@@ -28,7 +29,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> select_(String... fields) {
-        getValues().addSelect(fields); return thiz();
+        getValues().getSelectValues().addAll(asList(fields)); return thiz();
     }
 
     public default Relation<T> joins(String value) {
@@ -36,7 +37,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> joins_(String value) {
-        getValues().addJoins(value); return thiz();
+        getValues().getJoinsValues().add(value); return thiz();
     }
 
     public default Relation<T> where(String conditions) {
@@ -44,7 +45,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> where_(String conditions) {
-        getValues().addWhere(conditions); return thiz();
+        getValues().getWhereValues().add(conditions); return thiz();
     }
 
     public default Relation<T> group(String... fields) {
@@ -52,7 +53,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> group_(String... fields) {
-        getValues().addGroup(fields); return thiz();
+        getValues().getGroupValues().addAll(asList(fields)); return thiz();
     }
 
     public default Relation<T> having(String conditions) {
@@ -60,7 +61,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> having_(String conditions) {
-        getValues().addHaving(conditions); return thiz();
+        getValues().getHavingValues().add(conditions); return thiz();
     }
 
     public default Relation<T> order(String... fields) {
@@ -68,7 +69,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> order_(String... fields) {
-        getValues().addOrder(fields); return thiz();
+        getValues().getOrderValues().addAll(asList(fields)); return thiz();
     }
 
     public default Relation<T> limit(int limit) {
@@ -112,7 +113,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> includes_(String... includes) {
-        getValues().addIncludes(includes); return thiz();
+        getValues().getIncludesValues().addAll(asList(includes)); return thiz();
     }
 
     public default Relation<T> eagerLoads(String... eagerLoads) {
@@ -120,7 +121,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> eagerLoads_(String... eagerLoads) {
-        getValues().addEagerLoads(eagerLoads); return thiz();
+        getValues().getEagerLoadsValues().addAll(asList(eagerLoads)); return thiz();
     }
 
     public default Relation<T> lock() {
@@ -150,30 +151,18 @@ public interface QueryMethods<T> {
     public default Relation<T> unscope_(ValidUnscopingValues... values) {
         for (ValidUnscopingValues value : values) {
             switch (value) {
-                case SELECT:
-                    getValues().clearSelect();
-                case FROM:
-                    getValues().setFromClause(null);
-                case JOINS:
-                    getValues().clearJoins();
-                case WHERE:
-                    getValues().clearWhere();
-                case GROUP:
-                    getValues().clearGroup();
-                case HAVING:
-                    getValues().clearHaving();
-                case ORDER:
-                    getValues().clearOrder();
-                case LIMIT:
-                    getValues().setLimitValue(0);
-                case OFFSET:
-                    getValues().setOffsetValue(0);
-                case INCLUDES:
-                    getValues().clearIncludes();
-                case EAGER_LOADS:
-                    getValues().clearEagerLoads();
-                case LOCK:
-                    getValues().setLockValue(false);
+                case SELECT:      getValues().getSelectValues().clear();
+                case FROM:        getValues().setFromClause(null);
+                case JOINS:       getValues().getJoinsValues().clear();
+                case WHERE:       getValues().getWhereValues().clear();
+                case GROUP:       getValues().getGroupValues().clear();
+                case HAVING:      getValues().getHavingValues().clear();
+                case ORDER:       getValues().getOrderValues().clear();
+                case LIMIT:       getValues().setLimitValue(0);
+                case OFFSET:      getValues().setOffsetValue(0);
+                case INCLUDES:    getValues().getIncludesValues().clear();
+                case EAGER_LOADS: getValues().getEagerLoadsValues().clear();
+                case LOCK:        getValues().setLockValue(false);
             }
         }
         return thiz();
@@ -196,7 +185,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> bind_(int position, Object value) {
-        getValues().addOrdinalParameter(position, value); return thiz();
+        getValues().getOrdinalParameters().put(position, value); return thiz();
     }
 
     public default Relation<T> bind(String name, Object value) {
@@ -204,7 +193,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> bind_(String name, Object value) {
-        getValues().addNamedParameter(name, value); return thiz();
+        getValues().getNamedParameters().put(name, value); return thiz();
     }
 
     private Relation<T> defaultScoped() {
@@ -219,9 +208,6 @@ public interface QueryMethods<T> {
         }
     }
 
-    // The ignoreDefaultScope flag is used to prevent an infinite recursion
-    // situation where a default scope references a scope which has a default
-    // scope which references a scope...
     private Relation<T> evaluateDefaultScope(Supplier<Relation> supplier) {
         if (getService().shouldIgnoreDefaultScope()) return null;
 

@@ -57,112 +57,8 @@ public class Values {
         this.distinctValue     = other.distinctValue;
     }
 
-    public void setSelect(String select) {
-        this.selectValues = List.of(select);
-    }
-
-    public void addSelect(String[] select) {
-        this.selectValues.addAll(List.of(select));
-    }
-
-    public void addJoins(String joins) {
-        this.joinsValues.add(joins);
-    }
-
-    public void addWhere(String where) {
-        this.whereValues.add(where);
-    }
-
-    public void addHaving(String having) {
-        this.havingValues.add(having);
-    }
-
-    public void addGroup(String[] group) {
-        this.groupValues.addAll(List.of(group));
-    }
-
-    public void addOrder(String[] order) {
-        this.orderValues.addAll(List.of(order));
-    }
-
-    public void addIncludes(String[] includes) {
-        includesValues.addAll(List.of(includes));
-    }
-
-    public void addEagerLoads(String[] eagerLoads) {
-        eagerLoadsValues.addAll(List.of(eagerLoads));
-    }
-
-    public void addOrdinalParameter(int position, Object value) {
-        ordinalParameters.put(position, value);
-    }
-
-    public void addNamedParameter(String name, Object value) {
-        namedParameters.put(name, value);
-    }
-
-    public void setOffsetValue(int offset) {
-        this.offsetValue = offset;
-    }
-
-    public void setLimitValue(int limit) {
-        this.limitValue = limit;
-    }
-
-    public void setDistinctValue(boolean distinct) {
-        this.distinctValue = distinct;
-    }
-
-    public void setFromClause(String fromClause) {
-        this.fromClause = fromClause;
-    }
-
     public String getFromClause() {
         return fromClause;
-    }
-
-    public int getLimitValue() {
-        return limitValue;
-    }
-
-    public boolean isDistinctValue() {
-        return distinctValue;
-    }
-
-    public void clearSelect() {
-        this.selectValues.clear();
-    }
-
-    public void clearJoins() {
-        this.joinsValues.clear();
-    }
-
-    public void clearGroup() {
-        this.groupValues.clear();
-    }
-
-    public void clearIncludes() {
-        this.includesValues.clear();
-    }
-
-    public void clearEagerLoads() {
-        this.eagerLoadsValues.clear();
-    }
-
-    public void clearWhere() {
-        this.whereValues.clear();
-    }
-
-    public void clearHaving() {
-        this.havingValues.clear();
-    }
-
-    public void clearOrder() {
-        this.orderValues.clear();
-    }
-
-    public void setLockValue(boolean lock) {
-        this.lockValue = lock;
     }
 
     public List<String> getSelectValues() {
@@ -205,6 +101,10 @@ public class Values {
         return namedParameters;
     }
 
+    public int getLimitValue() {
+        return limitValue;
+    }
+
     public int getOffsetValue() {
         return offsetValue;
     }
@@ -213,4 +113,28 @@ public class Values {
         return lockValue;
     }
 
+    public boolean isDistinctValue() {
+        return distinctValue;
+    }
+
+    public void setFromClause(String fromClause) {
+        this.fromClause = fromClause;
+    }
+
+    public void setLimitValue(int limitValue) {
+        this.limitValue = limitValue;
+    }
+
+    public void setOffsetValue(int offsetValue) {
+        this.offsetValue = offsetValue;
+    }
+
+    public void setDistinctValue(boolean distinctValue) {
+        this.distinctValue = distinctValue;
+    }
+
+    public void setLockValue(boolean lockValue) {
+        this.lockValue = lockValue;
+    }
+    
 }
