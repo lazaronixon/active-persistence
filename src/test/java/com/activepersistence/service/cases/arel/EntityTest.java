@@ -1,7 +1,7 @@
 package com.activepersistence.service.cases.arel;
 
 import com.activepersistence.service.arel.Entity;
-import com.activepersistence.service.models.User;
+import com.activepersistence.service.models.Post;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,60 +12,60 @@ public class EntityTest {
 
     @BeforeEach
     public void setup() {
-        relation = new Entity(User.class);
+        relation = new Entity(Post.class);
     }
 
     @Test
     public void testProject() {
-        assertEquals("SELECT this FROM User this",
+        assertEquals("SELECT this FROM Post this",
                 relation.project("this").toJpql());
     }
 
     @Test
     public void testConstructor() {
-        assertEquals("SELECT NEW com.activepersistence.service.models.User(this.id, this.name) FROM User this",
-                relation.project("this.id", "this.name").constructor(true).toJpql());
+        assertEquals("SELECT NEW com.activepersistence.service.models.Post(this.id, this.title) FROM Post this",
+                relation.project("this.id", "this.title").constructor(true).toJpql());
     }
 
     @Test
     public void testDistinct() {
-        assertEquals("SELECT DISTINCT this FROM User this",
+        assertEquals("SELECT DISTINCT this FROM Post this",
                 relation.project("this").distinct(true).toJpql());
     }
 
     @Test
     public void testJoin() {
-        assertEquals("SELECT this FROM User this JOIN this.projects p",
-                relation.project("this").join("JOIN this.projects p").toJpql());
+        assertEquals("SELECT this FROM Post this JOIN this.comments c",
+                relation.project("this").join("JOIN this.comments c").toJpql());
     }
 
     @Test
     public void testWhere() {
-        assertEquals("SELECT this FROM User this WHERE this.id = 1",
+        assertEquals("SELECT this FROM Post this WHERE this.id = 1",
                 relation.project("this").where("this.id = 1").toJpql());
     }
 
     @Test
     public void testGroup() {
-        assertEquals("SELECT this.name, SUM(this.value) FROM User this GROUP BY this.name",
-                relation.project("this.name, SUM(this.value)").group("this.name").toJpql());
+        assertEquals("SELECT this.title, SUM(this.commentsCount) FROM Post this GROUP BY this.title",
+                relation.project("this.title, SUM(this.commentsCount)").group("this.title").toJpql());
     }
 
     @Test
     public void testHaving() {
-        assertEquals("SELECT this.name, SUM(this.value) FROM User this GROUP BY this.name HAVING SUM(this.value) > 10",
-                relation.project("this.name, SUM(this.value)").group("this.name").having("SUM(this.value) > 10").toJpql());
+        assertEquals("SELECT this.title, SUM(this.commentsCount) FROM Post this GROUP BY this.title HAVING SUM(this.commentsCount) > 10",
+                relation.project("this.title, SUM(this.commentsCount)").group("this.title").having("SUM(this.commentsCount) > 10").toJpql());
     }
 
     @Test
     public void testOrder() {
-        assertEquals("SELECT this FROM User this ORDER BY this.id",
+        assertEquals("SELECT this FROM Post this ORDER BY this.id",
                 relation.project("this").order("this.id").toJpql());
     }
 
     @Test
     public void testFromSubQuery() {
-        assertEquals("SELECT subquery FROM (SELECT this.id, this.name FROM User this) subquery",
-                relation.project("subquery").from("(SELECT this.id, this.name FROM User this) subquery").toJpql());
+        assertEquals("SELECT subquery FROM (SELECT this.id, this.title FROM Post this) subquery",
+                relation.project("subquery").from("(SELECT this.id, this.title FROM Post this) subquery").toJpql());
     }
 }

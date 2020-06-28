@@ -4,12 +4,12 @@ import com.activepersistence.service.Base;
 import com.activepersistence.service.Relation;
 import javax.persistence.EntityManager;
 
-public class UsersService extends Base<User> {
+public class PostsService extends Base<Post> {
 
     private EntityManager entityManager;
 
-    public UsersService() {
-        super(User.class);
+    public PostsService() {
+        super(Post.class);
     }
 
     @Override
@@ -17,7 +17,7 @@ public class UsersService extends Base<User> {
         return entityManager;
     }
 
-    public Relation<User> oneNeZero() {
+    public Relation<Post> oneNeZero() {
         return where("1=0");
     }
 

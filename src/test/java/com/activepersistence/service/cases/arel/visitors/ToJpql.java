@@ -7,7 +7,7 @@ import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
 import com.activepersistence.service.arel.visitors.Visitable;
 import com.activepersistence.service.arel.visitors.Visitor;
-import com.activepersistence.service.models.User;
+import com.activepersistence.service.models.Post;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
@@ -18,35 +18,35 @@ public class ToJpql {
     @Test
     public void testVisitSelectStatement() {
         SelectStatement statement = new SelectStatement();
-        statement.getCore().setSource(new Entity(User.class));
-        assertEquals("SELECT FROM User this", compile(statement));
+        statement.getCore().setSource(new Entity(Post.class));
+        assertEquals("SELECT FROM Post this", compile(statement));
     }
 
     @Test
     public void testVisitSelectCore() {
         SelectCore core = new SelectCore();
-        core.setSource(new Entity(User.class));
-        assertEquals("SELECT FROM User this", compile(core));
+        core.setSource(new Entity(Post.class));
+        assertEquals("SELECT FROM Post this", compile(core));
     }
 
     @Test
     public void testVisitDistinct() {
         SelectCore core = new SelectCore();
-        core.setSource(new Entity(User.class));
+        core.setSource(new Entity(Post.class));
         core.setDistinct(true);
         core.addProjections(SqlLiteral.of("this"));
-        assertEquals("SELECT DISTINCT this FROM User this", compile(core));
+        assertEquals("SELECT DISTINCT this FROM Post this", compile(core));
     }
 
     @Test
     public void testVisitConstructor() {
-        Constructor constructor = new Constructor("foo", SqlLiteral.of("this.id, this.name"));
-        assertEquals(" NEW foo(this.id, this.name)", compile(constructor));
+        Constructor constructor = new Constructor("foo", SqlLiteral.of("this.id, this.title, this.body"));
+        assertEquals(" NEW foo(this.id, this.title)", compile(constructor));
     }
 
     @Test
     public void testVisitEntity() {
-        assertEquals("User this", compile(new Entity(User.class)));
+        assertEquals("Post this", compile(new Entity(Post.class)));
     }
 
     private String compile(Visitable node) {

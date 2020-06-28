@@ -1,25 +1,25 @@
 package com.activepersistence.service.cases;
 
 import com.activepersistence.service.models.ClientsService;
-import com.activepersistence.service.models.UsersService;
+import com.activepersistence.service.models.PostsService;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RelationTest {
 
-    private UsersService usersService;
+    private PostsService postsService;
     private ClientsService clientsService;
 
     @BeforeEach
     public void setup() {
-        usersService = new UsersService();
+        postsService = new PostsService();
         clientsService = new ClientsService();
     }
 
     @Test
     public void testScoping() {
-        assertEquals("SELECT this FROM User this WHERE 1=0", usersService.oneNeZero().toJpql());
+        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.oneNeZero().toJpql());
     }
 
     @Test

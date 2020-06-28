@@ -1,6 +1,6 @@
 package com.activepersistence.service.cases.relation;
 
-import com.activepersistence.service.models.UsersService;
+import com.activepersistence.service.models.PostsService;
 import com.activepersistence.service.relation.ValidUnscopingValues;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,86 +8,86 @@ import org.junit.jupiter.api.Test;
 
 public class QueryMethodsTest {
 
-    private UsersService usersService;
+    private PostsService postsService;
 
     @BeforeEach
-    public void setup() { usersService = new UsersService(); }
+    public void setup() { postsService = new PostsService(); }
 
     @Test
     public void testAll() {
-        assertEquals("SELECT this FROM User this", usersService.all().toJpql());
+        assertEquals("SELECT this FROM Post this", postsService.all().toJpql());
     }
 
     @Test
     public void testSelect() {
-        assertEquals("SELECT NEW com.activepersistence.service.models.User(this.id, this.name) FROM User this",
-                usersService.select("this.id", "this.name").toJpql());
+        assertEquals("SELECT NEW com.activepersistence.service.models.Post(this.id, this.title) FROM Post this",
+                postsService.select("this.id", "this.title").toJpql());
     }
 
     @Test
     public void testDistinct() {
-        assertEquals("SELECT DISTINCT NEW com.activepersistence.service.models.User(this.id, this.name) FROM User this",
-                usersService.select("this.id", "this.name").distinct().toJpql());
+        assertEquals("SELECT DISTINCT NEW com.activepersistence.service.models.Post(this.id, this.title) FROM Post this",
+                postsService.select("this.id", "this.title").distinct().toJpql());
     }
 
     @Test
     public void testJoins() {
-        assertEquals("SELECT this FROM User this JOIN this.projects p",
-                usersService.joins("JOIN this.projects p").toJpql());
+        assertEquals("SELECT this FROM Post this JOIN this.comments c",
+                postsService.joins("JOIN this.comments c").toJpql());
     }
 
     @Test
     public void testWhere() {
-        assertEquals("SELECT this FROM User this WHERE this.name = 'nixon'",
-                usersService.where("this.name = 'nixon'").toJpql());
+        assertEquals("SELECT this FROM Post this WHERE this.title = 'nixon'",
+                postsService.where("this.title = 'nixon'").toJpql());
     }
 
     @Test
     public void testGroup() {
-        assertEquals("SELECT NEW com.activepersistence.service.models.User(this.id, this.name) FROM User this GROUP BY this.id, this.name",
-                usersService.select("this.id, this.name").group("this.id, this.name").toJpql());
+        assertEquals("SELECT NEW com.activepersistence.service.models.Post(this.id, this.title) FROM Post this GROUP BY this.id, this.title",
+                postsService.select("this.id, this.title").group("this.id, this.title").toJpql());
     }
 
     @Test
     public void testHaving() {
-        assertEquals("SELECT NEW com.activepersistence.service.models.User(this.id) FROM User this GROUP BY this.id HAVING COUNT(this.name) > 0",
-                usersService.select("this.id").group("this.id").having("COUNT(this.name) > 0").toJpql());
+        assertEquals("SELECT NEW com.activepersistence.service.models.Post(this.id) FROM Post this GROUP BY this.id HAVING COUNT(this.title) > 0",
+                postsService.select("this.id").group("this.id").having("COUNT(this.title) > 0").toJpql());
     }
 
     @Test
     public void testOrder() {
-        assertEquals("SELECT this FROM User this ORDER BY this.id", usersService.order("this.id").toJpql());
+        assertEquals("SELECT this FROM Post this ORDER BY this.id", postsService.order("this.id").toJpql());
     }
 
     @Test
     public void testNone() {
-        assertEquals("SELECT this FROM User this WHERE 1=0", usersService.none().toJpql());
+        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.none().toJpql());
     }
 
     @Test
     public void testFrom() {
-        assertEquals("SELECT NEW com.activepersistence.service.models.User(subquery.id, subquery.name) FROM (SELECT this.id, this.name FROM User this) subquery",
-                usersService.select("subquery.id, subquery.name").from("(SELECT this.id, this.name FROM User this) subquery").toJpql());
+        assertEquals("SELECT NEW com.activepersistence.service.models.Post(subquery.id, subquery.title) FROM (SELECT this.id, this.title FROM Post this) subquery",
+                postsService.select("subquery.id, subquery.title").from("(SELECT this.id, this.title FROM Post this) subquery").toJpql());
     }
 
     @Test
     public void testUnscope() {
-        assertEquals("SELECT this FROM User this", usersService.order("this.id").unscope(ValidUnscopingValues.ORDER).toJpql());
+        assertEquals("SELECT this FROM Post this", postsService.order("this.id").unscope(ValidUnscopingValues.ORDER).toJpql());
     }
 
     @Test
     public void testReSelect() {
-        assertEquals("SELECT NEW com.activepersistence.service.models.User(this.name) FROM User this", usersService.select("this.id").reselect("this.name").toJpql());
+        assertEquals("SELECT NEW com.activepersistence.service.models.Post(this.title) FROM Post this", postsService.select("this.id").reselect("this.title").toJpql());
     }
 
     @Test
     public void testReWhere() {
-        assertEquals("SELECT this FROM User this WHERE 1=0", usersService.where("1=0").rewhere("1=0").toJpql());
+        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.where("1=0").rewhere("1=0").toJpql());
     }
 
     @Test
     public void testReOrder() {
-        assertEquals("SELECT this FROM User this ORDER BY this.id", usersService.order("this.name").reorder("this.id").toJpql());
+        assertEquals("SELECT this FROM Post this ORDER BY this.id", postsService.order("this.title").reorder("this.id").toJpql());
     }
 
 }
