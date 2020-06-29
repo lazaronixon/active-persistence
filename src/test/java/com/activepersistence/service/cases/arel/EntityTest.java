@@ -2,15 +2,15 @@ package com.activepersistence.service.cases.arel;
 
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.models.Post;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
 
 public class EntityTest {
 
     private Entity relation;
 
-    @BeforeEach
+    @Before
     public void setup() {
         relation = new Entity(Post.class);
     }

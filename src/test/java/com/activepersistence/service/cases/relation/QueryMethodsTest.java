@@ -1,17 +1,18 @@
 package com.activepersistence.service.cases.relation;
 
+import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.PostsService;
 import com.activepersistence.service.relation.ValidUnscopingValues;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import javax.inject.Inject;
+import org.jboss.arquillian.persistence.UsingDataSet;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
-public class QueryMethodsTest {
+@UsingDataSet({"posts.yml"})
+public class QueryMethodsTest extends IntegrationTest {
 
+    @Inject
     private PostsService postsService;
-
-    @BeforeEach
-    public void setup() { postsService = new PostsService(); }
 
     @Test
     public void testAll() {
@@ -88,6 +89,11 @@ public class QueryMethodsTest {
     @Test
     public void testReOrder() {
         assertEquals("SELECT this FROM Post this ORDER BY this.id", postsService.order("this.title").reorder("this.id").toJpql());
+    }
+
+    @Test
+    public void testLimit() {
+        assertEquals(1, postsService.limit(1).fetch().size());
     }
 
 }

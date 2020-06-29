@@ -41,8 +41,10 @@ public class Post extends Base<Integer> implements Serializable {
         this.title = title;
     }
 
-    public Comment buildComment(String body) {
-        Comment comment = new Comment(body, this); comments.add(comment); return comment;
+    public Comment commentsBuild(String body) {
+        Comment comment = new Comment(body, this);
+        comments.add(comment);
+        return comment;
     }
 
     @Override

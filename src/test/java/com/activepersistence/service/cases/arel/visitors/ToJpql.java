@@ -8,8 +8,8 @@ import com.activepersistence.service.arel.nodes.SqlLiteral;
 import com.activepersistence.service.arel.visitors.Visitable;
 import com.activepersistence.service.arel.visitors.Visitor;
 import com.activepersistence.service.models.Post;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 public class ToJpql {
 

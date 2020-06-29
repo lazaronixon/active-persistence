@@ -2,16 +2,16 @@ package com.activepersistence.service.cases;
 
 import com.activepersistence.service.models.ClientsService;
 import com.activepersistence.service.models.PostsService;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
 
 public class RelationTest {
 
     private PostsService postsService;
     private ClientsService clientsService;
 
-    @BeforeEach
+    @Before
     public void setup() {
         postsService = new PostsService();
         clientsService = new ClientsService();

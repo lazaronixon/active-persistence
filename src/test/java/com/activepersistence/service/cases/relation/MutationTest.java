@@ -5,15 +5,15 @@ import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
 import static java.util.Arrays.asList;
 import java.util.Map;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
 
 public class MutationTest {
 
     private PostsService postsService;
 
-    @BeforeEach
+    @Before
     public void setup() { postsService = new PostsService(); }
 
     @Test

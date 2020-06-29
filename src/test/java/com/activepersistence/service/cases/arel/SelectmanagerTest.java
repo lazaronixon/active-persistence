@@ -3,15 +3,15 @@ package com.activepersistence.service.cases.arel;
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.models.Post;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
 
 public class SelectmanagerTest {
 
     private SelectManager manager;
 
-    @BeforeEach
+    @Before
     public void setup() {
         manager = new SelectManager(new Entity(Post.class));
     }
