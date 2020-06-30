@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Values {
 
-   private String fromClause = null;
+   private FromClause fromClause = null;
 
     private List<String> selectValues = new ArrayList();
 
@@ -57,7 +57,7 @@ public class Values {
         this.distinctValue     = other.distinctValue;
     }
 
-    public String getFromClause() {
+    public FromClause getFromClause() {
         return fromClause;
     }
 
@@ -117,7 +117,7 @@ public class Values {
         return distinctValue;
     }
 
-    public void setFromClause(String fromClause) {
+    public void setFromClause(FromClause fromClause) {
         this.fromClause = fromClause;
     }
 
@@ -136,5 +136,5 @@ public class Values {
     public void setLockValue(boolean lockValue) {
         this.lockValue = lockValue;
     }
-    
+
 }

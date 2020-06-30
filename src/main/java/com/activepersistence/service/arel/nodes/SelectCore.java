@@ -79,7 +79,7 @@ public class SelectCore extends Node {
     }
 
     public void setConstructor(String name) {
-        this.constructor = new Constructor(name, this.getProjections());
+        this.constructor = name != null ? new Constructor(name, this.getProjections()) : null;
     }
 
     public List<Node> getProjections() {

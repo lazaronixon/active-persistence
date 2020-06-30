@@ -69,8 +69,13 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testFrom() {
+        assertEquals("SELECT this FROM Topic this", postsService.from("Topic this").toJpql());
+    }
+
+    @Test
+    public void testFromSubquery() {
         assertEquals("SELECT NEW com.activepersistence.service.models.Post(subquery.id, subquery.title) FROM (SELECT this.id, this.title FROM Post this) subquery",
-                postsService.select("subquery.id, subquery.title").from("(SELECT this.id, this.title FROM Post this) subquery").toJpql());
+                postsService.select("subquery.id, subquery.title").from(postsService.select("this.id, this.title"), "subquery").toJpql());
     }
 
     @Test
