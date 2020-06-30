@@ -1,5 +1,6 @@
 package com.activepersistence.service.cases.arel;
 
+import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.models.Post;
 import static org.junit.Assert.assertEquals;
@@ -19,6 +20,12 @@ public class EntityTest {
     public void testProject() {
         assertEquals("SELECT this FROM Post this",
                 relation.project("this").toJpql());
+    }
+
+    @Test
+    public void testProjectNodes() {
+        assertEquals("SELECT this FROM Post this",
+                relation.project(jpql("this")).toJpql());
     }
 
     @Test

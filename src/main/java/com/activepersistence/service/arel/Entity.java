@@ -1,5 +1,6 @@
 package com.activepersistence.service.arel;
 
+import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.visitors.ToJpql;
 import com.activepersistence.service.arel.visitors.Visitor;
 
@@ -34,6 +35,10 @@ public class Entity implements Source {
     }
 
     public SelectManager project(String... things) {
+        return from().project(things);
+    }
+
+    public SelectManager project(Node... things) {
         return from().project(things);
     }
 

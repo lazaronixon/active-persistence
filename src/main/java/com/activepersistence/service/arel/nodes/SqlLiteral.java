@@ -20,13 +20,13 @@ public class SqlLiteral extends Node implements Source, Expressions {
     }
 
     @Override
-    public String toString() {
-        return value;
+    public SqlLiteral thiz() {
+        return this;
     }
 
     @Override
-    public SqlLiteral thiz() {
-        return this;
+    public String toString() {
+        return value;
     }
 
 }

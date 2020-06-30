@@ -1,9 +1,11 @@
 package com.activepersistence.service.arel;
 
 import static com.activepersistence.service.Arel.jpql;
+import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
+import static java.util.Arrays.asList;
 
 public class SelectManager {
 
@@ -18,6 +20,10 @@ public class SelectManager {
 
     public SelectManager project(String... projections) {
         ctx.addProjections(SqlLiteral.of(projections)); return this;
+    }
+
+    public SelectManager project(Node... projections) {
+        ctx.addProjections(asList(projections)); return this;
     }
 
     public SelectManager constructor(String name) {
