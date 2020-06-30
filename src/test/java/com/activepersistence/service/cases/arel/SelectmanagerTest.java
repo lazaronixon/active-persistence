@@ -42,7 +42,7 @@ public class SelectmanagerTest {
 
     @Test
     public void testFromSubQuery() {
-        assertEquals("SELECT FROM (SELECT FROM Client this) subquery", manager.from(manager2.as("subquery")).toJpql());
+        assertEquals("SELECT FROM (SELECT FROM Client this) subquery", manager.from(manager2.getAst(), "subquery").toJpql());
     }
 
     @Test

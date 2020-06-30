@@ -39,12 +39,8 @@ public class SelectManager {
         ctx.setSource(new SqlLiteral(from)); return this;
     }
 
-    public SelectManager from(TableAlias from) {
-        ctx.setSource(from); return this;
-    }
-
-    public TableAlias as(String other) {
-        return new TableAlias(ast, other) ;
+    public SelectManager from(SelectStatement relation, String subqueryName) {
+        ctx.setSource(new TableAlias(relation, subqueryName)); return this;
     }
 
     public SelectManager join(String join) {
