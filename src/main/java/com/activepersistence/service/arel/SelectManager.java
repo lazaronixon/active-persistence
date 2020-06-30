@@ -5,6 +5,7 @@ import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
+import com.activepersistence.service.arel.nodes.TableAlias;
 import static java.util.Arrays.asList;
 
 public class SelectManager {
@@ -36,6 +37,14 @@ public class SelectManager {
 
     public SelectManager from(String from) {
         ctx.setSource(new SqlLiteral(from)); return this;
+    }
+
+    public SelectManager from(TableAlias from) {
+        ctx.setSource(from); return this;
+    }
+
+    public TableAlias as(String other) {
+        return new TableAlias(ast, other) ;
     }
 
     public SelectManager join(String join) {

@@ -2,6 +2,7 @@ package com.activepersistence.service.cases.arel;
 
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.SelectManager;
+import com.activepersistence.service.models.Client;
 import com.activepersistence.service.models.Post;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -10,55 +11,63 @@ import org.junit.Test;
 public class SelectmanagerTest {
 
     private SelectManager manager;
+    private SelectManager manager2;
 
     @Before
     public void setup() {
-        manager = new SelectManager(new Entity(Post.class, "this"));
+        manager  = new SelectManager(new Entity(Post.class, "this"));
+        manager2 = new SelectManager(new Entity(Client.class, "this"));
     }
 
     @Test
     public void testProject() {
-        assertEquals(manager.toJpql(), "SELECT FROM Post this");
+        assertEquals("SELECT FROM Post this", manager.toJpql());
     }
 
     @Test
     public void testConstruct() {
-        assertEquals(manager.constructor(Post.class.getName()).toJpql(), "SELECT NEW com.activepersistence.service.models.Post() FROM Post this");
+        assertEquals("SELECT NEW com.activepersistence.service.models.Post() FROM Post this",
+                manager.constructor(Post.class.getName()).toJpql());
     }
 
     @Test
     public void testDistinct() {
-        assertEquals(manager.distinct(true).toJpql(), "SELECT DISTINCT FROM Post this");
+        assertEquals("SELECT DISTINCT FROM Post this", manager.distinct(true).toJpql());
     }
 
     @Test
     public void testFrom() {
-        assertEquals(manager.from("Another this").toJpql(), "SELECT FROM Another this");
+        assertEquals("SELECT FROM Another this", manager.from("Another this").toJpql());
+    }
+
+    @Test
+    public void testFromSubQuery() {
+        assertEquals("SELECT FROM (SELECT FROM Client this) subquery", manager.from(manager2.as("subquery")).toJpql());
     }
 
     @Test
     public void testJoin() {
-        assertEquals(manager.join("JOIN this.comments c").toJpql(), "SELECT FROM Post this JOIN this.comments c");
+        assertEquals("SELECT FROM Post this JOIN this.comments c", manager.join("JOIN this.comments c").toJpql());
     }
 
     @Test
     public void testWhere() {
-        assertEquals(manager.where("this.id = 1").toJpql(), "SELECT FROM Post this WHERE this.id = 1");
+        assertEquals("SELECT FROM Post this WHERE this.id = 1", manager.where("this.id = 1").toJpql());
     }
 
     @Test
     public void testGroup() {
-        assertEquals(manager.group("this.id, this.title").toJpql(), "SELECT FROM Post this GROUP BY this.id, this.title");
+        assertEquals("SELECT FROM Post this GROUP BY this.id, this.title", manager.group("this.id, this.title").toJpql());
     }
 
     @Test
     public void testHaving() {
-        assertEquals(manager.having("SUM(this.commentsCount) > 1").toJpql(), "SELECT FROM Post this HAVING SUM(this.commentsCount) > 1");
+        assertEquals("SELECT FROM Post this HAVING SUM(this.commentsCount) > 1", manager.having("SUM(this.commentsCount) > 1").toJpql());
     }
 
     @Test
     public void testOrder() {
-        assertEquals(manager.order("this.title").toJpql(), "SELECT FROM Post this ORDER BY this.title");
+        assertEquals("SELECT FROM Post this ORDER BY this.title", manager.order("this.title").toJpql());
     }
 
 }

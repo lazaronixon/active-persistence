@@ -12,6 +12,7 @@ import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
 import com.activepersistence.service.arel.nodes.Sum;
+import com.activepersistence.service.arel.nodes.TableAlias;
 import java.util.List;
 
 public class ToJpql extends Visitor {
@@ -88,6 +89,13 @@ public class ToJpql extends Visitor {
 
     public StringBuilder visitAvg(Avg o, StringBuilder collector) {
         return aggregate("AVG", o, collector);
+    }
+
+    public StringBuilder visitTableAlias(TableAlias o, StringBuilder collector) {
+        collector.append("(");
+        collector = visitSelectStatement(o.getRelation(), collector).append(")");
+        collector.append(" ").append(o.getName());
+        return collector;
     }
 
     private StringBuilder maybeVisit(Visitable thing, StringBuilder collector) {
