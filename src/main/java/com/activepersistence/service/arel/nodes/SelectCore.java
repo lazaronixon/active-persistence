@@ -9,11 +9,11 @@ public class SelectCore extends Node {
     private Source source;
     private Distinct setQuantifier;
     private Constructor setConstructor;
-    private final List<SqlLiteral> projections;
-    private final List<SqlLiteral> joins;
-    private final List<SqlLiteral> wheres;
-    private final List<SqlLiteral> groups;
-    private final List<SqlLiteral> havings;
+    private final List<Node> projections;
+    private final List<Node> joins;
+    private final List<Node> wheres;
+    private final List<Node> groups;
+    private final List<Node> havings;
 
     public SelectCore() {
         this.source         = null;
@@ -34,15 +34,15 @@ public class SelectCore extends Node {
         return setConstructor;
     }
 
-    public List<SqlLiteral> getGroups() {
+    public List<Node> getGroups() {
         return groups;
     }
 
-    public List<SqlLiteral> getHavings() {
+    public List<Node> getHavings() {
         return havings;
     }
 
-    public List<SqlLiteral> getJoins() {
+    public List<Node> getJoins() {
         return joins;
     }
 
@@ -54,23 +54,23 @@ public class SelectCore extends Node {
         this.source = source;
     }
 
-    public void addProjections(List<SqlLiteral> projections) {
+    public void addProjections(List<Node> projections) {
         this.projections.addAll(projections);
     }
 
-    public void addJoin(SqlLiteral join) {
+    public void addJoin(Node join) {
         this.joins.add(join);
     }
 
-    public void addWhere(SqlLiteral condition) {
+    public void addWhere(Node condition) {
         this.wheres.add(condition);
     }
 
-    public void addGroups(List<SqlLiteral> fields) {
+    public void addGroups(List<Node> fields) {
         this.groups.addAll(fields);
     }
 
-    public void addHaving(SqlLiteral condition) {
+    public void addHaving(Node condition) {
         this.havings.add(condition);
     }
 
@@ -82,11 +82,11 @@ public class SelectCore extends Node {
         this.setConstructor = value ? new Constructor(source.getClassName(), this.getProjections()) : null;
     }
 
-    public List<SqlLiteral> getProjections() {
+    public List<Node> getProjections() {
         return projections;
     }
 
-    public List<SqlLiteral> getWheres() {
+    public List<Node> getWheres() {
         return wheres;
     }
 

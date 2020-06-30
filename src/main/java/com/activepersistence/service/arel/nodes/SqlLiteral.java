@@ -21,7 +21,7 @@ public class SqlLiteral extends Node implements Source {
         this.className = className;
     }
 
-    public static List<SqlLiteral> of(String... values) {
+    public static List<Node> of(String... values) {
         return range(0, values.length).mapToObj(i -> Arel.jpql(values[i])).collect(toList());
     }
 

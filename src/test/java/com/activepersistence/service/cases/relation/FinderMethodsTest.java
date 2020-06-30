@@ -2,7 +2,7 @@ package com.activepersistence.service.cases.relation;
 
 import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.PostsService;
-import java.util.List;
+import static java.util.Arrays.asList;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -67,7 +67,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFindMultiple() {
-        assertEquals(2 ,postsService.find(List.of(1, 2)).size());
+        assertEquals(2 ,postsService.find(asList(1, 2)).size());
     }
 
     @Test

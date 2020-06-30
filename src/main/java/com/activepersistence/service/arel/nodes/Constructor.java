@@ -6,9 +6,9 @@ public class Constructor extends Node {
 
     private final String name;
 
-    private final List<SqlLiteral> projections;
+    private final List<Node> projections;
 
-    public Constructor(String name, List<SqlLiteral> projections) {
+    public Constructor(String name, List<Node> projections) {
         this.name = name;
         this.projections = projections;
     }
@@ -17,7 +17,7 @@ public class Constructor extends Node {
         return name;
     }
 
-    public List<SqlLiteral> getProjections() {
+    public List<Node> getProjections() {
         return projections;
     }
 

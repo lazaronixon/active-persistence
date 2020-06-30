@@ -7,17 +7,17 @@ public class SelectStatement extends Node {
 
     private final SelectCore core = new SelectCore();
 
-    private final List<SqlLiteral> orders = new ArrayList();
+    private final List<Node> orders = new ArrayList();
 
     public SelectCore getCore() {
         return core;
     }
 
-    public List<SqlLiteral> getOrders() {
+    public List<Node> getOrders() {
         return orders;
     }
 
-    public void addOrders(List<SqlLiteral> expr) {
+    public void addOrders(List<Node> expr) {
         this.orders.addAll(expr);
     }
 
