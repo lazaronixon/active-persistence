@@ -1,9 +1,7 @@
 <!DOCTYPE resources PUBLIC "-//Payara.fish//DTD Payara Server 4 Resource Definitions//EN" "https://raw.githubusercontent.com/payara/Payara-Server-Documentation/master/schemas/payara-resources_1_6.dtd">
 <resources>
-    <jdbc-resource pool-name="ArquillianEmbeddedDerbyPool" jndi-name="jdbc/arquillian"/>
-    <jdbc-connection-pool name="ArquillianEmbeddedDerbyPool"
-                          res-type="javax.sql.DataSource" 
-                          datasource-classname="org.h2.jdbcx.JdbcDataSource">
+    <jdbc-resource pool-name="ArquillianH2Pool" jndi-name="jdbc/arquillian"/>
+    <jdbc-connection-pool name="ArquillianH2Pool" res-type="javax.sql.DataSource" datasource-classname="org.h2.jdbcx.JdbcDataSource">
         <property name="user" value="sa"/>
         <property name="password" value=""/>
         <property name="url" value="jdbc:h2:file:./target/databases/h2/db"/>

@@ -1,16 +1,15 @@
 <arquillian xmlns="http://jboss.org/schema/arquillian"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="
         http://jboss.org/schema/arquillian
         http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
     
     <extension qualifier="persistence">
-        <property name="defaultDataSource">jdbc/arquillian</property>       
-    </extension>    
+        <property name="defaultDataSource">jdbc/arquillian</property>
+    </extension>
     
-    <container qualifier="payara-embedded" default="true">
-        <configuration>
-            <property name="resourcesXml">src/test/resources/payara-resources.xml</property>
-        </configuration>
-    </container>
+    <extension qualifier="persistence-script">
+        <property name="scriptsToExecuteBeforeTest">SET REFERENTIAL_INTEGRITY FALSE</property>
+        <property name="scriptsToExecuteAfterTest">SET REFERENTIAL_INTEGRITY TRUE</property>
+    </extension>
 </arquillian>

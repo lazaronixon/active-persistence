@@ -1,0 +1,5 @@
+<dataset>
+    <post id="1" body="hello world" />
+    <post id="2" body="beautiful day" />
+    <post id="3" body="beautiful night" />
+</dataset>   

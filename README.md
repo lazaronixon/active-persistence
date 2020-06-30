@@ -251,8 +251,13 @@ double average = (double) clientsService.average("this.ordersCount");
 ```
 
 ## Requirements
-* JakartaEE 8
 * Java 9
+* JakartaEE 8
+* Payara Server
+
+## Testing
+* Install Payara Server >= 5.201
+* Add Resources - ./asadmin add-resources path_to/payara-resources.xml
 
 ## More info
 * https://guides.rubyonrails.org/active_record_querying.html

@@ -1,0 +1,6 @@
+<dataset>
+    <client id="1" firstname="Nixon" age="32" active="true" />
+    <client id="2" firstname="Sebastiao" age="25" active="true" />
+    <client id="3" firstname="Marco Polo" age="20" active="false" />
+</dataset> 
+    

@@ -6,9 +6,11 @@ import com.activepersistence.service.relation.ValidUnscopingValues;
 import javax.inject.Inject;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
-@UsingDataSet({"posts.yml"})
+@UsingDataSet({"posts.xml", "comments.xml"})
 public class QueryMethodsTest extends IntegrationTest {
 
     @Inject
@@ -93,7 +95,37 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testLimit() {
-        assertEquals(1, postsService.limit(1).fetch().size());
+        assertEquals(2, postsService.limit(2).fetch().size());
+    }
+
+    @Test
+    public void testOffset() {
+        assertEquals(1, postsService.where("this.id IN (1, 2, 3)").limit(2).offset(2).fetch().size());
+    }
+
+    @Test
+    public void testIncludes() {
+        assertFalse(postsService.includes("this.comments").fetch().isEmpty());
+    }
+
+    @Test
+    public void testEagerLoads() {
+        assertFalse(postsService.eagerLoads("this.comments").fetch().isEmpty());
+    }
+
+    @Test
+    public void testLock() {
+        assertFalse(postsService.lock().fetch().isEmpty());
+    }
+
+    @Test
+    public void testOrdinalBind() {
+        assertNotNull(postsService.where("this.id = ?1").bind(1, 1));
+    }
+
+    @Test
+    public void testPlaceholderBind() {
+        assertNotNull(postsService.where("this.id = :id").bind("id", 1));
     }
 
 }
