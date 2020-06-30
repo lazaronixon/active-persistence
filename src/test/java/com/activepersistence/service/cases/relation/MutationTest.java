@@ -1,20 +1,19 @@
 package com.activepersistence.service.cases.relation;
 
+import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.Relation;
 import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
 import static java.util.Arrays.asList;
 import java.util.Map;
+import javax.inject.Inject;
 import static org.junit.Assert.assertEquals;
-import org.junit.Before;
 import org.junit.Test;
 
-public class MutationTest {
+public class MutationTest extends IntegrationTest {
 
+    @Inject
     private PostsService postsService;
-
-    @Before
-    public void setup() { postsService = new PostsService(); }
 
     @Test
     public void testNotMutating() {

@@ -1,21 +1,22 @@
 package com.activepersistence.service.cases;
 
+import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.ClientsService;
 import com.activepersistence.service.models.PostsService;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
+import javax.inject.Inject;
+import javax.persistence.NoResultException;
+import org.jboss.arquillian.persistence.UsingDataSet;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
-public class RelationTest {
+@UsingDataSet({"posts.xml", "comments.xml", "clients.xml"})
+public class RelationTest extends IntegrationTest {
 
+    @Inject
     private PostsService postsService;
-    private ClientsService clientsService;
 
-    @Before
-    public void setup() {
-        postsService = new PostsService();
-        clientsService = new ClientsService();
-    }
+    @Inject
+    private ClientsService clientsService;
 
     @Test
     public void testScoping() {
@@ -35,6 +36,31 @@ public class RelationTest {
     @Test
     public void testUnscopedAfter() {
         assertEquals("SELECT this FROM Client this", clientsService.where("1=0").unscoped().toJpql());
+    }
+
+    @Test
+    public void testFetchOne() {
+        assertNotNull(postsService.where("this.id = 1").fetchOne());
+    }
+
+    @Test
+    public void testFetchOneOrFail() {
+        assertThrows(NoResultException.class, () -> postsService.where("1=0").fetchOneOrFail());
+    }
+
+    @Test
+    public void testFetchExists() {
+        assertTrue(postsService.where("this.id = 1").fetchExists());
+    }
+
+    @Test
+    public void testFetch() {
+        assertNotNull(postsService.all().fetch());
+    }
+
+    @Test
+    public void testFetch_() {
+        assertNotNull(postsService.all().fetch_());
     }
 
 }

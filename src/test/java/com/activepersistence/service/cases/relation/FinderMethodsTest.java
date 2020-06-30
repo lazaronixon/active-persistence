@@ -32,8 +32,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testTakeOrFail() {
-        em.createQuery("DELETE FROM Post").executeUpdate();
-        assertThrows(NoResultException.class, () -> postsService.takeOrFail());
+        assertThrows(NoResultException.class, () -> postsService.where("1=0").takeOrFail());
     }
 
     @Test
@@ -58,8 +57,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testLastOrFail() {
-        em.createQuery("DELETE FROM Post").executeUpdate();
-        assertThrows(NoResultException.class, () -> postsService.lastOrFail());
+        assertThrows(NoResultException.class, () -> postsService.where("1=0").lastOrFail());
     }
 
     @Test
