@@ -115,7 +115,7 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testLock() {
-        assertFalse(postsService.lock().fetch().isEmpty());
+        assertNotNull(postsService.lock().fetchOne());
     }
 
     @Test

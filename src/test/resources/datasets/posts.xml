@@ -1,5 +1,5 @@
 <dataset>
-    <post id="1" body="hello world" />
-    <post id="2" body="beautiful day" />
-    <post id="3" body="beautiful night" />
+    <post id="1" title="hello world" body="My first post" />
+    <post id="2" title="beautiful day" body="Oh the sun" />
+    <post id="3" title="beautiful night" body="Oh the night" />
 </dataset>   

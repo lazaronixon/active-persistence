@@ -26,7 +26,7 @@ public class Post extends Base<Integer> implements Serializable {
     @Lob
     private String body;
 
-    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST})
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Comment> comments = new ArrayList();
 
     private LocalDateTime createdAt;

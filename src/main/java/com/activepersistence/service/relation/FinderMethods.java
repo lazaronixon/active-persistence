@@ -15,6 +15,10 @@ public interface FinderMethods<T> {
         return thiz().limit(1).fetchOneOrFail();
     }
 
+    public default List<T> take(int limit) {
+        return thiz().limit(limit).fetch();
+    }
+
     public default T first() {
         return thiz().order("this.id").take();
     }
@@ -61,9 +65,5 @@ public interface FinderMethods<T> {
 
     public default boolean exists() {
         return thiz().limit(1).fetchExists();
-    }
-
-    public default List<T> take(int limit) {
-        return thiz().limit(limit).fetch();
     }
 }
