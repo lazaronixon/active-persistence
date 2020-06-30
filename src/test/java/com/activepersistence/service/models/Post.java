@@ -18,13 +18,16 @@ public class Post extends Base<Integer> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String title;
 
     @Lob
     private String body;
+
+    private Integer likes_count;
 
     @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Comment> comments = new ArrayList();
@@ -70,6 +73,14 @@ public class Post extends Base<Integer> implements Serializable {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public Integer getLikes_count() {
+        return likes_count;
+    }
+
+    public void setLikes_count(Integer likes_count) {
+        this.likes_count = likes_count;
     }
 
     public List<Comment> getComments() {
