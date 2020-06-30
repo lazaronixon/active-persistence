@@ -13,7 +13,7 @@ public class EntityTest {
 
     @Before
     public void setup() {
-        relation = new Entity(Post.class);
+        relation = new Entity(Post.class, "this");
     }
 
     @Test

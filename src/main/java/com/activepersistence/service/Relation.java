@@ -32,7 +32,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.entityManager = service.getEntityManager();
         this.entityClass   = service.getEntityClass();
         this.service       = service;
-        this.entity        = new Entity(entityClass);
+        this.entity        = new Entity(entityClass, "this");
         this.values        = new Values();
     }
 

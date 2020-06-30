@@ -13,7 +13,7 @@ public class SelectmanagerTest {
 
     @Before
     public void setup() {
-        manager = new SelectManager(new Entity(Post.class));
+        manager = new SelectManager(new Entity(Post.class, "this"));
     }
 
     @Test
