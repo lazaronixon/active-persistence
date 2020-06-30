@@ -1,5 +1,6 @@
 package com.activepersistence.service.cases.arel.visitors;
 
+import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.nodes.Constructor;
 import com.activepersistence.service.arel.nodes.SelectCore;
@@ -40,13 +41,48 @@ public class ToJpql {
 
     @Test
     public void testVisitConstructor() {
-        Constructor constructor = new Constructor("foo", SqlLiteral.of("this.id, this.title, this.body"));
+        Constructor constructor = new Constructor("foo", SqlLiteral.of("this.id, this.title"));
         assertEquals(" NEW foo(this.id, this.title)", compile(constructor));
     }
 
     @Test
     public void testVisitEntity() {
         assertEquals("Post this", compile(new Entity(Post.class)));
+    }
+
+    @Test
+    public void testVisitCount() {
+        assertEquals("COUNT(this)", compile(jpql("this").count()));
+    }
+
+    @Test
+    public void testVisitCountDistinct() {
+        assertEquals("COUNT(DISTINCT this)", compile(jpql("this").count(true)));
+    }
+
+    @Test
+    public void testVisitCountAlias() {
+        assertEquals("COUNT(this) AS count_this", compile(jpql("this").count().as("count_this")));
+    }
+
+    @Test
+    public void testVisitSum() {
+        assertEquals("SUM(this.likes_count)", compile(jpql("this.likes_count").sum()));
+    }
+
+    @Test
+    public void testVisitMaximum() {
+        assertEquals("MAX(this.id)", compile(jpql("this.id").maximum()));
+    }
+
+    @Test
+    public void testVisitMinimum() {
+        assertEquals("MIN(this.id)", compile(jpql("this.id").minimum()));
+    }
+
+    @Test
+    public void testVisitAverage() {
+        assertEquals("AVG(this.id)", compile(jpql("this.id").average()));
     }
 
     private String compile(Visitable node) {

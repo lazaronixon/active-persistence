@@ -1,6 +1,6 @@
 package com.activepersistence.service.arel;
 
-import com.activepersistence.service.Arel;
+import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
@@ -33,11 +33,11 @@ public class SelectManager {
     }
 
     public SelectManager join(String join) {
-        ctx.addJoin(Arel.jpql(join)); return this;
+        ctx.addJoin(jpql(join)); return this;
     }
 
     public SelectManager where(String condition) {
-        ctx.addWhere(Arel.jpql(condition)); return this;
+        ctx.addWhere(jpql(condition)); return this;
     }
 
     public SelectManager group(String... fields) {
@@ -45,7 +45,7 @@ public class SelectManager {
     }
 
     public SelectManager having(String condition) {
-        ctx.addHaving(Arel.jpql(condition)); return this;
+        ctx.addHaving(jpql(condition)); return this;
     }
 
     public SelectManager order(String... expr) {

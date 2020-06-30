@@ -1,11 +1,17 @@
 package com.activepersistence.service.arel.visitors;
 
 import com.activepersistence.service.arel.Entity;
+import com.activepersistence.service.arel.nodes.Avg;
 import com.activepersistence.service.arel.nodes.Constructor;
+import com.activepersistence.service.arel.nodes.Count;
 import com.activepersistence.service.arel.nodes.Distinct;
+import com.activepersistence.service.arel.nodes.Function;
+import com.activepersistence.service.arel.nodes.Max;
+import com.activepersistence.service.arel.nodes.Min;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
+import com.activepersistence.service.arel.nodes.Sum;
 import java.util.List;
 
 public class ToJpql extends Visitor {
@@ -64,6 +70,26 @@ public class ToJpql extends Visitor {
         return collector.append(o);
     }
 
+    public StringBuilder visitCount(Count o, StringBuilder collector) {
+        return aggregate("COUNT", o, collector);
+    }
+
+    public StringBuilder visitSum(Sum o, StringBuilder collector) {
+        return aggregate("SUM", o, collector);
+    }
+
+    public StringBuilder visitMax(Max o, StringBuilder collector) {
+        return aggregate("MAX", o, collector);
+    }
+
+    public StringBuilder visitMin(Min o, StringBuilder collector) {
+        return aggregate("MIN", o, collector);
+    }
+
+    public StringBuilder visitAvg(Avg o, StringBuilder collector) {
+        return aggregate("AVG", o, collector);
+    }
+
     private StringBuilder maybeVisit(Visitable thing, StringBuilder collector) {
         return thing != null ? visit(thing, collector.append(" ")) : collector;
     }
@@ -78,5 +104,13 @@ public class ToJpql extends Visitor {
 
     private void injectJoin(List<Visitable> list, StringBuilder collector, String joinStr) {
         for(int i = 0; i < list.size(); i++) { if (i != 0) collector.append(joinStr); collector = visit(list.get(i), collector); }
+    }
+
+    private StringBuilder aggregate(String name, Function o, StringBuilder collector) {
+        collector.append(name).append("(");
+        if (o.isDistinct()) collector.append("DISTINCT ");
+        collector.append(o.getExpression()).append(")");
+        if (o.getAlias() != null) { collector.append(" AS "); visitSqlLiteral(o.getAlias(), collector); }
+        return collector;
     }
 }
