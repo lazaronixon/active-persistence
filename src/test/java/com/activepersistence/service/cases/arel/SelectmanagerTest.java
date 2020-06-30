@@ -23,7 +23,7 @@ public class SelectmanagerTest {
 
     @Test
     public void testConstruct() {
-        assertEquals(manager.constructor(true).toJpql(), "SELECT NEW com.activepersistence.service.models.Post() FROM Post this");
+        assertEquals(manager.constructor(Post.class.getName()).toJpql(), "SELECT NEW com.activepersistence.service.models.Post() FROM Post this");
     }
 
     @Test

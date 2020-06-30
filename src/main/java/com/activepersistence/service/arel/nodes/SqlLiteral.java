@@ -11,15 +11,8 @@ public class SqlLiteral extends Node implements Source, Expressions {
 
     private final String value;
 
-    private String className;
-
     public SqlLiteral(String value) {
         this.value = value;
-    }
-
-    public SqlLiteral(String value, String className) {
-        this.value = value;
-        this.className = className;
     }
 
     public static List<Node> of(String... values) {
@@ -29,11 +22,6 @@ public class SqlLiteral extends Node implements Source, Expressions {
     @Override
     public String toString() {
         return value;
-    }
-
-    @Override
-    public String getClassName() {
-        return className;
     }
 
     @Override

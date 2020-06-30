@@ -20,8 +20,8 @@ public class SelectManager {
         ctx.addProjections(SqlLiteral.of(projections)); return this;
     }
 
-    public SelectManager constructor(boolean value) {
-        ctx.setConstructor(value); return this;
+    public SelectManager constructor(String name) {
+        ctx.setConstructor(name); return this;
     }
 
     public SelectManager distinct(boolean value) {
@@ -29,7 +29,7 @@ public class SelectManager {
     }
 
     public SelectManager from(String from) {
-        ctx.setSource(new SqlLiteral(from, ctx.getSource().getClassName())); return this;
+        ctx.setSource(new SqlLiteral(from)); return this;
     }
 
     public SelectManager join(String join) {

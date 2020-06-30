@@ -139,9 +139,9 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private void buildSelect(SelectManager arel) {
         if (values.getSelectValues().isEmpty()) {
-            arel.constructor(false).project("this");
+            arel.project("this");
         } else {
-            values.getSelectValues().forEach(s -> arel.constructor(true).project(s));
+            values.getSelectValues().forEach(s -> arel.constructor(entityClass.getName()).project(s));
         }
     }
 

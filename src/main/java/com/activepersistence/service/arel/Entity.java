@@ -41,11 +41,6 @@ public class Entity implements Source {
         return klass.getSimpleName();
     }
 
-    @Override
-    public String getClassName() {
-        return klass.getName();
-    }
-
     public String getAlias() {
         return "this";
     }

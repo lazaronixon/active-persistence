@@ -24,7 +24,7 @@ public class EntityTest {
     @Test
     public void testConstructor() {
         assertEquals("SELECT NEW com.activepersistence.service.models.Post(this.id, this.title) FROM Post this",
-                relation.project("this.id", "this.title").constructor(true).toJpql());
+                relation.project("this.id", "this.title").constructor(Post.class.getName()).toJpql());
     }
 
     @Test

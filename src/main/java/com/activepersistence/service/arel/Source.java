@@ -4,6 +4,4 @@ import com.activepersistence.service.arel.visitors.Visitable;
 
 public interface Source extends Visitable {
 
-    public String getClassName();
-
 }

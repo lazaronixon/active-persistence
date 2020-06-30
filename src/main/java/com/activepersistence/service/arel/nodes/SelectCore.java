@@ -8,7 +8,7 @@ public class SelectCore extends Node {
 
     private Source source;
     private Distinct setQuantifier;
-    private Constructor setConstructor;
+    private Constructor constructor;
     private final List<Node> projections;
     private final List<Node> joins;
     private final List<Node> wheres;
@@ -18,7 +18,7 @@ public class SelectCore extends Node {
     public SelectCore() {
         this.source         = null;
         this.setQuantifier  = null;
-        this.setConstructor = null;
+        this.constructor    = null;
         this.projections    = new ArrayList();
         this.joins          = new ArrayList();
         this.wheres         = new ArrayList();
@@ -30,8 +30,8 @@ public class SelectCore extends Node {
         return setQuantifier;
     }
 
-    public Constructor getSetConstructor() {
-        return setConstructor;
+    public Constructor getConstructor() {
+        return constructor;
     }
 
     public List<Node> getGroups() {
@@ -78,8 +78,8 @@ public class SelectCore extends Node {
         this.setQuantifier = value ? new Distinct() : null;
     }
 
-    public void setConstructor(boolean value) {
-        this.setConstructor = value ? new Constructor(source.getClassName(), this.getProjections()) : null;
+    public void setConstructor(String name) {
+        this.constructor = new Constructor(name, this.getProjections());
     }
 
     public List<Node> getProjections() {

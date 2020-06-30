@@ -32,8 +32,8 @@ public class ToJpql extends Visitor {
 
         collector = maybeVisit(o.getSetQuantifier(), collector);
 
-        if (o.getSetConstructor() != null) {
-            collector = visitConstructor(o.getSetConstructor(), collector);
+        if (o.getConstructor() != null) {
+            collector = visitConstructor(o.getConstructor(), collector);
         } else {
             collectNodesFor(o.getProjections(), collector, " ");
         }
