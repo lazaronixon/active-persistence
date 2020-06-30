@@ -27,7 +27,7 @@ public class Post extends Base<Integer> implements Serializable {
     @Lob
     private String body;
 
-    private Integer likes_count;
+    private Integer likesCount;
 
     @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Comment> comments = new ArrayList();
@@ -75,12 +75,12 @@ public class Post extends Base<Integer> implements Serializable {
         this.body = body;
     }
 
-    public Integer getLikes_count() {
-        return likes_count;
+    public Integer getLikesCount() {
+        return likesCount;
     }
 
-    public void setLikes_count(Integer likes_count) {
-        this.likes_count = likes_count;
+    public void setLikesCount(Integer likesCount) {
+        this.likesCount = likesCount;
     }
 
     public List<Comment> getComments() {

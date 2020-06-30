@@ -29,7 +29,9 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> select_(String... fields) {
-        getValues().getSelectValues().addAll(asList(fields)); return thiz();
+        getValues().setConstructor(thiz().getClassName());
+        getValues().getSelectValues().addAll(asList(fields));
+        return thiz();
     }
 
     public default Relation<T> joins(String value) {
@@ -159,18 +161,31 @@ public interface QueryMethods<T> {
     public default Relation<T> unscope_(ValidUnscopingValues... values) {
         for (ValidUnscopingValues value : values) {
             switch (value) {
-                case SELECT:      getValues().getSelectValues().clear();
-                case FROM:        getValues().setFromClause(null);
-                case JOINS:       getValues().getJoinsValues().clear();
-                case WHERE:       getValues().getWhereValues().clear();
-                case GROUP:       getValues().getGroupValues().clear();
-                case HAVING:      getValues().getHavingValues().clear();
-                case ORDER:       getValues().getOrderValues().clear();
-                case LIMIT:       getValues().setLimitValue(0);
-                case OFFSET:      getValues().setOffsetValue(0);
-                case INCLUDES:    getValues().getIncludesValues().clear();
-                case EAGER_LOADS: getValues().getEagerLoadsValues().clear();
-                case LOCK:        getValues().setLockValue(false);
+                case SELECT:
+                    getValues().setConstructor(null);
+                    getValues().getSelectValues().clear();
+                case FROM:
+                    getValues().setFromClause(null);
+                case JOINS:
+                    getValues().getJoinsValues().clear();
+                case WHERE:
+                    getValues().getWhereValues().clear();
+                case GROUP:
+                    getValues().getGroupValues().clear();
+                case HAVING:
+                    getValues().getHavingValues().clear();
+                case ORDER:
+                    getValues().getOrderValues().clear();
+                case LIMIT:
+                    getValues().setLimitValue(0);
+                case OFFSET:
+                    getValues().setOffsetValue(0);
+                case INCLUDES:
+                    getValues().getIncludesValues().clear();
+                case EAGER_LOADS:
+                    getValues().getEagerLoadsValues().clear();
+                case LOCK:
+                    getValues().setLockValue(false);
             }
         }
         return thiz();

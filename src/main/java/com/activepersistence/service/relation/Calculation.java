@@ -1,7 +1,8 @@
 package com.activepersistence.service.relation;
 
+import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.Relation;
-import static java.lang.String.join;
+import static java.util.Arrays.asList;
 import java.util.List;
 
 public interface Calculation<T> {
@@ -39,32 +40,36 @@ public interface Calculation<T> {
     }
 
     public default List pluck(String... fields) {
-        Relation<T> relation = spawn();
-        //relation.setCalculation(selectValuePluck(fields, relation));
+        Relation relation = thiz().spawn();
+        relation.getValues().setConstructor(null);
+        relation.getValues().getSelectValues().clear();
+        relation.getValues().getSelectValues().addAll(asList(fields));
         return relation.fetch_();
     }
 
     private Object calculate(String operation, String field) {
-        Relation<T> relation = spawn();
-        //relation.setCalculation(selectValueCalculate(operation, field, relation));
+        Relation relation = thiz().spawn();
+        relation.getValues().setConstructor(null);
+        relation.getValues().setDistinctValue(false);
+        relation.getValues().getSelectValues().clear();
+
+        boolean distinct = thiz().getValues().isDistinctValue();
+
+        if(operation.equals("COUNT")) {
+            relation.getValues().getSelectValues().add(jpql(field).count(distinct).toJpql());
+        } else if (operation.equals("MIN")) {
+            relation.getValues().getSelectValues().add(jpql(field).minimum().toJpql());
+        } else if (operation.equals("MAX")) {
+            relation.getValues().getSelectValues().add(jpql(field).maximum().toJpql());
+        } else if (operation.equals("AVG")) {
+            relation.getValues().getSelectValues().add(jpql(field).average().toJpql());
+        } else if (operation.equals("SUM")) {
+            relation.getValues().getSelectValues().add(jpql(field).sum().toJpql());
+        } else {
+            throw new RuntimeException("Operation not supported: " + operation);
+        }
+
         return relation.fetchOne();
-    }
-
-    private String selectValueCalculate(String operation, String field, Relation<T> relation) {
-        return operation + "(" + distinct(relation) + field + ")";
-    }
-
-    private String selectValuePluck(String[] fields, Relation<T> relation) {
-        return distinct(relation) + separatedByComma(fields);
-    }
-
-    private String distinct(Relation<T> relation) {
-        //return relation.isDistinctValue() ? "DISTINCT " : "";
-        return null;
-    }
-
-    private String separatedByComma(String[] values) {
-        return join(", ", values);
     }
 
 }

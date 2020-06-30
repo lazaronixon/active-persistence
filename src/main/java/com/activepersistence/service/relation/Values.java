@@ -36,6 +36,8 @@ public class Values {
 
     private boolean distinctValue = false;
 
+    private String constructor = null;
+
     public Values() {
     }
 
@@ -55,6 +57,7 @@ public class Values {
         this.offsetValue       = other.offsetValue;
         this.lockValue         = other.lockValue;
         this.distinctValue     = other.distinctValue;
+        this.constructor       = other.constructor;
     }
 
     public FromClause getFromClause() {
@@ -117,6 +120,10 @@ public class Values {
         return distinctValue;
     }
 
+    public String getConstructor() {
+        return constructor;
+    }
+
     public void setFromClause(FromClause fromClause) {
         this.fromClause = fromClause;
     }
@@ -135,6 +142,10 @@ public class Values {
 
     public void setLockValue(boolean lockValue) {
         this.lockValue = lockValue;
+    }
+
+    public void setConstructor(String constructor) {
+        this.constructor = constructor;
     }
 
 }

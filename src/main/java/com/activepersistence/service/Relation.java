@@ -74,7 +74,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public String toJpql() {
-        return buildArel().toJpql();
+        return buildArel(true).toJpql();
     }
 
     public Relation<T> getCurrentScope() {
@@ -101,7 +101,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return this;
     }
 
-    private SelectManager buildArel() {
+    private SelectManager buildArel(boolean useConstructor) {
         SelectManager result = new SelectManager(entity);
 
         values.getJoinsValues().forEach(join    -> result.join(join));
@@ -110,6 +110,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         values.getGroupValues().forEach(group   -> result.group(group));
         values.getOrderValues().forEach(order   -> result.order(order));
 
+        buildConstructor(result, useConstructor);
         buildDistinct(result);
         buildSelect(result);
         buildFrom(result);
@@ -137,11 +138,15 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         arel.distinct(values.isDistinctValue());
     }
 
+    private void buildConstructor(SelectManager arel, boolean useConstructor) {
+        arel.constructor(useConstructor ? values.getConstructor() : null);
+    }
+
     private void buildSelect(SelectManager arel) {
         if (values.getSelectValues().isEmpty()) {
-            arel.constructor(null).project("this");
+            arel.project("this");
         } else {
-            values.getSelectValues().forEach(s -> arel.constructor(entityClass.getName()).project(s));
+            values.getSelectValues().forEach(s -> arel.project(s));
         }
     }
 
@@ -151,7 +156,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
             String name = values.getFromClause().getName();
 
             if (opts instanceof Relation) {
-                arel.from(((Relation) opts).buildArel().constructor(null).getAst(), name);
+                arel.from(((Relation) opts).buildArel(false).getAst(), name);
             } else {
                 arel.from((String) opts);
             }
@@ -178,6 +183,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private LockModeType buildLockMode() {
         return values.isLockValue() ? PESSIMISTIC_READ : NONE;
+    }
+
+    public String getClassName() {
+        return entityClass.getName();
     }
 
 }

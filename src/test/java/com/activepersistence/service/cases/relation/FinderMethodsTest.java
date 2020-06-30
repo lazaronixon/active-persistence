@@ -4,18 +4,13 @@ import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.PostsService;
 import static java.util.Arrays.asList;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 @UsingDataSet({"posts.xml", "comments.xml"})
 public class FinderMethodsTest extends IntegrationTest {
-
-    @PersistenceContext
-    private EntityManager em;
 
     @Inject
     private PostsService postsService;

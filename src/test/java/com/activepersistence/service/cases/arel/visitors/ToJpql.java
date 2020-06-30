@@ -67,7 +67,7 @@ public class ToJpql {
 
     @Test
     public void testVisitSum() {
-        assertEquals("SUM(this.likes_count)", compile(jpql("this.likes_count").sum()));
+        assertEquals("SUM(this.likesCount)", compile(jpql("this.likesCount").sum()));
     }
 
     @Test
