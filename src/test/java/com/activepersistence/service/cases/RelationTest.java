@@ -20,7 +20,12 @@ public class RelationTest extends IntegrationTest {
 
     @Test
     public void testScoping() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.oneNeZero().toJpql());
+        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.scoping(postsService.oneNeZero()).toJpql());
+    }
+
+    @Test
+    public void testScopingBlock() {
+        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.scoping(() -> postsService.oneNeZero()).toJpql());
     }
 
     @Test

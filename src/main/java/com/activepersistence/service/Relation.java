@@ -28,7 +28,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private final Values values;
 
-    private Relation<T> currentScope = null;
+    private Relation<T> currentScope;
 
     public Relation(Base service) {
         this.entityManager = service.getEntityManager();
@@ -68,11 +68,15 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public Relation<T> scoping(Relation relation) {
-        return new Relation(relation);
+        return scoping(() -> relation);
+    }
+
+    public Relation<T> scoping(Supplier<Relation> relation) {
+        return new Relation(relation.get());
     }
 
     public Relation<T> unscoped() {
-        return scoping(new Relation(service));
+        return relation();
     }
 
     public T findOrCreateBy(String conditions, Supplier<T> resource) {
@@ -85,6 +89,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public String toJpql() {
         return buildArel(true).toJpql();
+    }
+
+    public void setCurrentScope(Relation<T> currentScope) {
+        this.currentScope = currentScope;
     }
 
     public Relation<T> getCurrentScope() {
@@ -114,6 +122,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     @Override
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+
+    public String getClassName() {
+        return entityClass.getName();
     }
 
     private SelectManager buildArel(boolean useConstructor) {
@@ -200,8 +212,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return values.isLockValue() ? PESSIMISTIC_READ : NONE;
     }
 
-    public String getClassName() {
-        return entityClass.getName();
+    private Relation<T> relation() {
+        return scoping(() -> new Relation(service));
     }
 
 }

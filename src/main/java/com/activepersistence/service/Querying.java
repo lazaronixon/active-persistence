@@ -178,6 +178,10 @@ public interface Querying<T> {
         return buildRelation().scoping(relation);
     }
 
+    public default Relation<T> scoping(Supplier<Relation> relation) {
+        return buildRelation().scoping(relation);
+    }
+
     public default Relation<T> unscoped() {
         return buildRelation().unscoped();
     }
