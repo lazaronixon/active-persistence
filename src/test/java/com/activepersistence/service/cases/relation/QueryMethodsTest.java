@@ -1,13 +1,17 @@
 package com.activepersistence.service.cases.relation;
 
 import com.activepersistence.IntegrationTest;
+import com.activepersistence.service.models.Comment;
+import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
 import com.activepersistence.service.relation.ValidUnscopingValues;
+import java.util.List;
+import java.util.stream.Stream;
 import javax.inject.Inject;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 @UsingDataSet({"posts.xml", "comments.xml"})
@@ -110,12 +114,16 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testIncludes() {
-        assertFalse(postsService.includes("this.comments").fetch().isEmpty());
+        List<Post> posts = postsService.includes("this.comments").fetch();
+        Stream<Comment> comments = posts.stream().flatMap(p -> p.getComments().stream());
+        assertTrue(comments.findAny().isPresent());
     }
 
     @Test
     public void testEagerLoads() {
-        assertFalse(postsService.eagerLoads("this.comments").fetch().isEmpty());
+        List<Post> posts = postsService.eagerLoads("this.comments").fetch();
+        Stream<Comment> comments = posts.stream().flatMap(p -> p.getComments().stream());
+        assertTrue(comments.findAny().isPresent());
     }
 
     @Test
