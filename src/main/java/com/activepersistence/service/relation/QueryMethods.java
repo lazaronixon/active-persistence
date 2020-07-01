@@ -12,6 +12,8 @@ public interface QueryMethods<T> {
 
     public Relation<T> spawn();
 
+    public Relation<T> relation();
+
     public Values getValues();
 
     public Base<T> getService();
@@ -220,7 +222,7 @@ public interface QueryMethods<T> {
     }
 
     private Relation<T> defaultScoped() {
-        return new Relation(ofNullable(buildDefaultScope()).orElse(thiz()));
+        return ofNullable(buildDefaultScope()).orElse(relation());
     }
 
     private Relation<T> buildDefaultScope() {
@@ -241,4 +243,5 @@ public interface QueryMethods<T> {
             getService().setIgnoreDefaultScope(false);
         }
     }
+
 }

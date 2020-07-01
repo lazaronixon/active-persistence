@@ -39,7 +39,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public Relation(Relation<T> other) {
-        this.currentScope        = this;
         this.entityManager       = other.entityManager;
         this.entityClass         = other.entityClass;
         this.service             = other.service;
@@ -71,12 +70,16 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return scoping(() -> relation);
     }
 
-    public Relation<T> scoping(Supplier<Relation> relation) {
-        return new Relation(relation.get());
+    public Relation<T> scoping(Supplier<Relation> yield) {
+        Relation<T> scope = yield.get(); scope.setCurrentScope(this); return scope;
     }
 
     public Relation<T> unscoped() {
         return relation();
+    }
+
+    public Relation<T> unscoped(Supplier<Relation> yield) {
+        return relation().scoping(yield);
     }
 
     public T findOrCreateBy(String conditions, Supplier<T> resource) {
@@ -99,6 +102,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return currentScope;
     }
 
+    public String getClassName() {
+        return entityClass.getName();
+    }
+
     @Override
     public Values getValues() {
         return values;
@@ -110,22 +117,23 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     @Override
-    public Relation<T> spawn() {
-        return new Relation(this);
-    }
-
-    @Override
     public Relation<T> thiz() {
         return this;
     }
 
     @Override
-    public EntityManager getEntityManager() {
-        return entityManager;
+    public Relation<T> spawn() {
+        return new Relation(this);
     }
 
-    public String getClassName() {
-        return entityClass.getName();
+    @Override
+    public Relation<T> relation() {
+        return scoping(() -> new Relation(service));
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 
     private SelectManager buildArel(boolean useConstructor) {
@@ -210,10 +218,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private LockModeType buildLockMode() {
         return values.isLockValue() ? PESSIMISTIC_READ : NONE;
-    }
-
-    private Relation<T> relation() {
-        return scoping(() -> new Relation(service));
     }
 
 }

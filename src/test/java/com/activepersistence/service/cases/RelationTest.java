@@ -39,6 +39,11 @@ public class RelationTest extends IntegrationTest {
     }
 
     @Test
+    public void testUnscopedBlock() {
+        assertEquals("SELECT this FROM Client this WHERE 1=2", clientsService.where("1=1").unscoped(() -> clientsService.where("1=2")).toJpql());
+    }
+
+    @Test
     public void testUnscopedAfter() {
         assertEquals("SELECT this FROM Client this", clientsService.where("1=0").unscoped().toJpql());
     }
