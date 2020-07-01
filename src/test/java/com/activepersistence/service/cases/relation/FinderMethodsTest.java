@@ -42,12 +42,12 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testLast() {
-        // todo
+        assertEquals((Integer) 9999, postsService.last().getId());
     }
 
     @Test
     public void testLastWithLimit() {
-        // todo
+        assertEquals((Integer) 9999, postsService.last(2).get(0).getId());
     }
 
     @Test

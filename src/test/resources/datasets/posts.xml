@@ -4,4 +4,5 @@
     <post id="3" title="beautiful night" body="Oh the night" likescount="4" />
     <post id="4" title="flood" body="Oh the night" likescount="1" />
     <post id="5" title="flood" body="Oh the night" likescount="9999"/>
+    <post id="9999" title="last post" body="Oh the night" likescount="3"/>
 </dataset>   
