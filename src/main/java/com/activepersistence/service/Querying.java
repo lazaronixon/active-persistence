@@ -2,6 +2,7 @@ package com.activepersistence.service;
 
 import com.activepersistence.service.relation.ValidUnscopingValues;
 import java.util.List;
+import java.util.function.Supplier;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -77,6 +78,14 @@ public interface Querying<T> {
 
     public default boolean exists(String conditions) {
         return all().exists(conditions);
+    }
+
+    public default T findOrCreateBy(String conditions, Supplier<T> resource) {
+        return all().findOrCreateBy(conditions, resource);
+    }
+
+    public default T findOrGetBy(String conditions, Supplier<T> resource) {
+        return all().findOrCreateBy(conditions, resource);
     }
     //</editor-fold>
 

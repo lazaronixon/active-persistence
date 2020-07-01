@@ -7,6 +7,8 @@ import com.activepersistence.service.relation.FinderMethods;
 import com.activepersistence.service.relation.QueryMethods;
 import com.activepersistence.service.relation.Values;
 import java.util.List;
+import static java.util.Optional.ofNullable;
+import java.util.function.Supplier;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import static javax.persistence.LockModeType.NONE;
@@ -14,7 +16,7 @@ import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T> {
+public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, Persistence<T> {
 
     private final EntityManager entityManager;
 
@@ -73,6 +75,14 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return scoping(new Relation(service));
     }
 
+    public T findOrCreateBy(String conditions, Supplier<T> resource) {
+        return ofNullable(findBy(conditions)).orElseGet(() -> create(resource.get()));
+    }
+
+    public T findOrGetBy(String conditions, Supplier<T> resource) {
+        return ofNullable(findBy(conditions)).orElseGet(() -> resource.get());
+    }
+
     public String toJpql() {
         return buildArel(true).toJpql();
     }
@@ -99,6 +109,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     @Override
     public Relation<T> thiz() {
         return this;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 
     private SelectManager buildArel(boolean useConstructor) {

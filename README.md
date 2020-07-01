@@ -227,6 +227,12 @@ clientsService.unscoped().all(); // SELECT this FROM Student this
 usersService.scoping(usersService.active()).fetch();
 ```
 
+### Find or Build a New Object
+```java
+Post createdPost = postsService.findOrCreateBy("this.title = 'awesome title'",() -> new Post("awesome title", "body", 0));
+Post newPost     = postsService.findOrGetBy("this.title = 'awesome title'",() -> new Post("awesome title", "body", 0));
+```
+
 ### Existence of Objects
 ```java
 boolean exists = studentsService.exists("this.name = 'Lifo'");

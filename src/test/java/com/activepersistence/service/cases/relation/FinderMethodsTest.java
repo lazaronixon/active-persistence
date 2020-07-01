@@ -1,6 +1,7 @@
 package com.activepersistence.service.cases.relation;
 
 import com.activepersistence.IntegrationTest;
+import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
 import static java.util.Arrays.asList;
 import javax.inject.Inject;
@@ -85,5 +86,32 @@ public class FinderMethodsTest extends IntegrationTest {
         assertTrue(postsService.exists("this.title = 'hello world'"));
     }
 
+    @Test
+    public void testFindOrCreateBy() {
+        long postsCount = postsService.count();
+        Post createdPost = postsService.findOrCreateBy("this.title = 'awesome title'",() -> new Post("awesome title", "body", 0));
+        assertEquals(postsCount + 1, postsService.count());
+        assertEquals("body", createdPost.getBody());
+    }
+
+    @Test
+    public void testFindOrCreateByNotCreate() {
+        long postsCount   = postsService.count();
+        Post existentPost = postsService.findOrCreateBy("this.title = 'hello world'",() -> new Post("hello world", "body", 0));
+        assertEquals(postsCount, postsService.count());
+        assertEquals("My first post", existentPost.getBody());
+    }
+
+    @Test
+    public void testFindOrGetBy() {
+        Post newPost = postsService.findOrGetBy("this.title = 'awesome title'",() -> new Post("awesome title", "body", 0));
+        assertEquals("body", newPost.getBody());
+    }
+
+    @Test
+    public void testFindOrGetByInitialize() {
+        Post newPost = postsService.findOrGetBy("this.title = 'hello world'",() -> new Post("hello world", "body", 0));
+        assertEquals("My first post", newPost.getBody());
+    }
 
 }

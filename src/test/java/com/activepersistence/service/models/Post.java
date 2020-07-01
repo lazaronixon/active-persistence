@@ -44,6 +44,12 @@ public class Post extends Base<Integer> implements Serializable {
         this.title = title;
     }
 
+    public Post(String title, String body, Integer likesCount) {
+        this.title = title;
+        this.body = body;
+        this.likesCount = likesCount;
+    }
+
     public Comment commentsBuild(String body) {
         Comment comment = new Comment(body, this);
         comments.add(comment);
