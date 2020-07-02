@@ -17,8 +17,4 @@ public class SelectStatement extends Node {
         return orders;
     }
 
-    public void addOrders(List<Node> expr) {
-        this.orders.addAll(expr);
-    }
-
 }

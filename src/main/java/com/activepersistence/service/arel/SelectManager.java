@@ -20,11 +20,11 @@ public class SelectManager {
     }
 
     public SelectManager project(String... projections) {
-        ctx.addProjections(SqlLiteral.of(projections)); return this;
+        ctx.getProjections().addAll(SqlLiteral.of(projections)); return this;
     }
 
     public SelectManager project(Node... projections) {
-        ctx.addProjections(asList(projections)); return this;
+        ctx.getProjections().addAll(asList(projections)); return this;
     }
 
     public SelectManager constructor(String name) {
@@ -44,23 +44,23 @@ public class SelectManager {
     }
 
     public SelectManager join(String join) {
-        ctx.addJoin(jpql(join)); return this;
+        ctx.getJoins().add(jpql(join)); return this;
     }
 
     public SelectManager where(String condition) {
-        ctx.addWhere(jpql(condition)); return this;
+        ctx.getWheres().add(jpql(condition)); return this;
     }
 
     public SelectManager group(String... fields) {
-        ctx.addGroups(SqlLiteral.of(fields)); return this;
+        ctx.getGroups().addAll(SqlLiteral.of(fields)); return this;
     }
 
     public SelectManager having(String condition) {
-        ctx.addHaving(jpql(condition)); return this;
+        ctx.getHavings().add(jpql(condition)); return this;
     }
 
     public SelectManager order(String... expr) {
-        ast.addOrders(SqlLiteral.of(expr)); return this;
+        ast.getOrders().addAll(SqlLiteral.of(expr)); return this;
     }
 
     public String toJpql() {

@@ -35,7 +35,7 @@ public class ToJpql {
         SelectCore core = new SelectCore();
         core.setSource(new Entity(Post.class, "this"));
         core.setDistinct(true);
-        core.addProjections(SqlLiteral.of("this"));
+        core.getProjections().addAll(SqlLiteral.of("this"));
         assertEquals("SELECT DISTINCT this FROM Post this", compile(core));
     }
 

@@ -54,26 +54,6 @@ public class SelectCore extends Node {
         this.source = source;
     }
 
-    public void addProjections(List<Node> projections) {
-        this.projections.addAll(projections);
-    }
-
-    public void addJoin(Node join) {
-        this.joins.add(join);
-    }
-
-    public void addWhere(Node condition) {
-        this.wheres.add(condition);
-    }
-
-    public void addGroups(List<Node> fields) {
-        this.groups.addAll(fields);
-    }
-
-    public void addHaving(Node condition) {
-        this.havings.add(condition);
-    }
-
     public void setDistinct(boolean value) {
         this.setQuantifier = value ? new Distinct() : null;
     }
