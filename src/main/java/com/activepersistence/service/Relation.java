@@ -207,16 +207,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void buildFrom(SelectManager arel) {
-        if (values.getFromClause() != null) {
-            Object opts = values.getFromClause().getValue();
-            String name = values.getFromClause().getName();
-
-            if (opts instanceof Relation) {
-                arel.from(((Relation) opts).buildArel(false).getAst(), name);
-            } else {
-                arel.from((String) opts);
-            }
-        }
+        if (values.getFromClause() != null) arel.from(values.getFromClause());
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {

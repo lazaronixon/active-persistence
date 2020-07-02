@@ -77,12 +77,6 @@ public class QueryMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testFromSubquery() {
-        assertEquals("SELECT NEW com.activepersistence.service.models.Post(subquery.id, subquery.title) FROM (SELECT this.id, this.title FROM Post this) subquery",
-                postsService.select("subquery.id, subquery.title").from(postsService.select("this.id, this.title"), "subquery").toJpql());
-    }
-
-    @Test
     public void testUnscope() {
         assertEquals("SELECT this FROM Post this", postsService.order("this.id").unscope(ValidUnscopingValues.ORDER).toJpql());
     }

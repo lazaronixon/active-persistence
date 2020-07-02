@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Values {
 
-   private FromClause fromClause = null;
+   private String fromClause = null;
 
     private List<String> selectValues = new ArrayList();
 
@@ -60,7 +60,7 @@ public class Values {
         this.constructor       = other.constructor;
     }
 
-    public FromClause getFromClause() {
+    public String getFromClause() {
         return fromClause;
     }
 
@@ -124,7 +124,7 @@ public class Values {
         return constructor;
     }
 
-    public void setFromClause(FromClause fromClause) {
+    public void setFromClause(String fromClause) {
         this.fromClause = fromClause;
     }
 

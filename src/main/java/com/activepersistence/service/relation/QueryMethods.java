@@ -145,15 +145,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> from_(String value) {
-        getValues().setFromClause(new FromClause(value)); return thiz();
-    }
-
-    public default Relation<T> from(Relation<T> relation, String subqueryName) {
-        return spawn().from_(relation, subqueryName);
-    }
-
-    public default Relation<T> from_(Relation<T> relation, String subqueryName) {
-        getValues().setFromClause(new FromClause(relation, subqueryName)); return thiz();
+        getValues().setFromClause(value); return thiz();
     }
 
     public default Relation<T> unscope(ValidUnscopingValues... values) {

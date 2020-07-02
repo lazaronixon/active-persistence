@@ -125,7 +125,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.all();
         Relation<Post> relation2 = relation.from_("foo");
         assertEquals(relation, relation2);
-        assertEquals("foo", relation2.getValues().getFromClause().getValue());
+        assertEquals("foo", relation2.getValues().getFromClause());
     }
 
     @Test

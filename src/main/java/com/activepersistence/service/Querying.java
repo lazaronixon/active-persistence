@@ -166,10 +166,6 @@ public interface Querying<T> {
         return all().from(from);
     }
 
-    public default Relation<T> from(Relation relation, String subqueryName) {
-        return all().from(relation, subqueryName);
-    }
-
     public default Relation<T> none() {
         return all().none();
     }

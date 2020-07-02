@@ -41,11 +41,6 @@ public class SelectmanagerTest {
     }
 
     @Test
-    public void testFromSubQuery() {
-        assertEquals("SELECT FROM (SELECT FROM Client this) subquery", manager.from(manager2.getAst(), "subquery").toJpql());
-    }
-
-    @Test
     public void testJoin() {
         assertEquals("SELECT FROM Post this JOIN this.comments c", manager.join("JOIN this.comments c").toJpql());
     }
