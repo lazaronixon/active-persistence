@@ -19,21 +19,21 @@ public class ToJpql {
     @Test
     public void testVisitSelectStatement() {
         SelectStatement statement = new SelectStatement();
-        statement.getCore().setSource(new Entity(Post.class, "this"));
+        statement.getCore().getSource().setLeft(new Entity(Post.class, "this"));
         assertEquals("SELECT FROM Post this", compile(statement));
     }
 
     @Test
     public void testVisitSelectCore() {
         SelectCore core = new SelectCore();
-        core.setSource(new Entity(Post.class, "this"));
+        core.getSource().setLeft(new Entity(Post.class, "this"));
         assertEquals("SELECT FROM Post this", compile(core));
     }
 
     @Test
     public void testVisitDistinct() {
         SelectCore core = new SelectCore();
-        core.setSource(new Entity(Post.class, "this"));
+        core.getSource().setLeft(new Entity(Post.class, "this"));
         core.setDistinct(true);
         core.getProjections().addAll(SqlLiteral.of("this"));
         assertEquals("SELECT DISTINCT this FROM Post this", compile(core));

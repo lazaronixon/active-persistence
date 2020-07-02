@@ -13,10 +13,10 @@ public class SelectManager {
     private final SelectStatement ast;
     private final SelectCore ctx;
 
-    public SelectManager(Entity source) {
+    public SelectManager(Entity entity) {
         this.ast = new SelectStatement();
         this.ctx = this.ast.getCore();
-        this.ctx.setSource(source);
+        this.ctx.getSource().setLeft(entity);
     }
 
     public SelectManager project(String... projections) {
@@ -36,11 +36,11 @@ public class SelectManager {
     }
 
     public SelectManager from(String from) {
-        ctx.setSource(new SqlLiteral(from)); return this;
+        ctx.getSource().setLeft(jpql(from)); return this;
     }
 
     public SelectManager join(String join) {
-        ctx.getJoins().add(jpql(join)); return this;
+        ctx.getSource().getRight().add(jpql(join)); return this;
     }
 
     public SelectManager where(String condition) {
@@ -61,6 +61,10 @@ public class SelectManager {
 
     public List<Node> getConstraints() {
         return ctx.getWheres();
+    }
+
+    public List<SqlLiteral> getJoinSources() {
+        return ctx.getSource().getRight();
     }
 
     public SelectStatement getAst() {

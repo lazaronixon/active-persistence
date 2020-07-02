@@ -9,7 +9,7 @@ public abstract class Visitor {
         return visit(object, collector);
     }
 
-    public StringBuilder visit(Visitable o, StringBuilder collector) {
+    public StringBuilder visit(Object o, StringBuilder collector) {
         Method dispatchMethod = getMethodFor(o.getClass());
         if (collector != null) {
             return send(dispatchMethod, o, collector);

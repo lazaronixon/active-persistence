@@ -7,6 +7,7 @@ import com.activepersistence.service.arel.nodes.Count;
 import com.activepersistence.service.arel.nodes.DeleteStatement;
 import com.activepersistence.service.arel.nodes.Distinct;
 import com.activepersistence.service.arel.nodes.Function;
+import com.activepersistence.service.arel.nodes.JoinSource;
 import com.activepersistence.service.arel.nodes.Max;
 import com.activepersistence.service.arel.nodes.Min;
 import com.activepersistence.service.arel.nodes.SelectCore;
@@ -49,7 +50,6 @@ public class ToJpql extends Visitor {
         collector.append(" FROM ");
         collector = visit(o.getSource(), collector);
 
-        collectNodesFor(o.getJoins(), collector, " ", " ");
         collectNodesFor(o.getWheres(), collector, " WHERE ", " AND ");
         collectNodesFor(o.getGroups(), collector, " GROUP BY ");
         collectNodesFor(o.getHavings(), collector, " HAVING ", " AND ");
@@ -68,6 +68,17 @@ public class ToJpql extends Visitor {
 
     public StringBuilder visitEntity(Entity o, StringBuilder collector) {
         return collector.append(o.getSimpleName()).append(" ").append(o.getAlias());
+    }
+
+    public StringBuilder visitJoinSource(JoinSource o, StringBuilder collector) {
+        if (o.getLeft() != null) {
+            collector = visit(o.getLeft(), collector);
+        }
+        if (!o.getRight().isEmpty()) {
+            if (o.getLeft() != null) collector.append(" ");
+            injectJoin(o.getRight(), collector, " ");
+        }
+        return collector;
     }
 
     public StringBuilder visitDistinct(Distinct o, StringBuilder collector) {
@@ -110,7 +121,7 @@ public class ToJpql extends Visitor {
         collectNodesFor(nodes, collector, spacer, ", ");
     }
 
-    private void injectJoin(List<Visitable> list, StringBuilder collector, String joinStr) {
+    private void injectJoin(List list, StringBuilder collector, String joinStr) {
         for(int i = 0; i < list.size(); i++) { if (i != 0) collector.append(joinStr); collector = visit(list.get(i), collector); }
     }
 
