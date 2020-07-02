@@ -95,6 +95,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return where(conditions).destroyAll();
     }
 
+    public int deleteAll() {
+        return 0;
+    }
+
     public String toJpql() {
         return buildArel(true).toJpql();
     }

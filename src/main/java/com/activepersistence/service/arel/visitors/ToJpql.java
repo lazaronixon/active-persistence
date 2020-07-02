@@ -4,6 +4,7 @@ import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.nodes.Avg;
 import com.activepersistence.service.arel.nodes.Constructor;
 import com.activepersistence.service.arel.nodes.Count;
+import com.activepersistence.service.arel.nodes.DeleteStatement;
 import com.activepersistence.service.arel.nodes.Distinct;
 import com.activepersistence.service.arel.nodes.Function;
 import com.activepersistence.service.arel.nodes.Max;
@@ -16,6 +17,13 @@ import com.activepersistence.service.arel.nodes.TableAlias;
 import java.util.List;
 
 public class ToJpql extends Visitor {
+
+    public StringBuilder visitDeleteStatement(DeleteStatement o, StringBuilder collector) {
+        collector.append("DELETE FROM ");
+        collector = visitEntity(o.getRelation(), collector);
+        collectNodesFor(o.getWheres(), collector, " WHERE ", " AND ");
+        return collector;
+    }
 
     public StringBuilder visitSelectStatement(SelectStatement o, StringBuilder collector) {
         collector = visitSelectCore(o.getCore(), collector);
