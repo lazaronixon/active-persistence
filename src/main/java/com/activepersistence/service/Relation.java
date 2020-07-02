@@ -91,6 +91,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return fetch().stream().map((r) -> { destroy(r); return r; }).collect(toList());
     }
 
+    public List<T> destroyBy(String conditions) {
+        return where(conditions).destroyAll();
+    }
+
     public String toJpql() {
         return buildArel(true).toJpql();
     }

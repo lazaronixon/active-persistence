@@ -75,4 +75,11 @@ public class RelationTest extends IntegrationTest {
         assertEquals(count - 3, postsService.count());
     }
 
+    @Test
+    public void destroyBy() {
+        long count = postsService.count();
+        postsService.destroyBy("this.id IN (1,2,3)");
+        assertEquals(count - 3, postsService.count());
+    }
+
 }

@@ -197,6 +197,10 @@ public interface Querying<T> {
     public default List<T> destroyAll() {
         return all().destroyAll();
     }
+
+    public default List<T> destroyBy(String conditions) {
+        return all().destroyBy(conditions);
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="calculation methods">
