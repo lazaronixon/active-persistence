@@ -14,7 +14,8 @@ public class DeleteManagerTest {
 
     @Before
     public void setup() {
-        manager = new DeleteManager(new Entity(Post.class, "this"));
+        manager = new DeleteManager();
+        manager.from(new Entity(Post.class, "this"));
     }
 
     @Test

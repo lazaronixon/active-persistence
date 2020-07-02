@@ -10,8 +10,12 @@ public class DeleteManager {
 
     private final DeleteStatement ast;
 
-    public DeleteManager(Entity relation) {
-        this.ast = new DeleteStatement(relation);
+    public DeleteManager() {
+        this.ast = new DeleteStatement();
+    }
+
+    public DeleteManager from(Entity entity) {
+        ast.setRelation(entity); return this;
     }
 
     public DeleteManager where(String condition) {

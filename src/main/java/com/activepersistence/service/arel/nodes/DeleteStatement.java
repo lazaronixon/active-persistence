@@ -10,14 +10,8 @@ public class DeleteStatement extends Node {
 
     private List<Node> wheres;
 
-    public DeleteStatement(Entity relation) {
-        this.relation = relation;
+    public DeleteStatement() {
         this.wheres = new ArrayList();
-    }
-
-    public DeleteStatement(Entity relation, List<Node> wheres) {
-        this.relation = relation;
-        this.wheres = wheres;
     }
 
     public Entity getRelation() {

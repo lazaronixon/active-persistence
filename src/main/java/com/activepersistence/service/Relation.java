@@ -49,23 +49,23 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public T fetchOne() {
-        return buildQuery().getResultStream().findFirst().orElse(null);
+        return buildQuery(toJpql()).getResultStream().findFirst().orElse(null);
     }
 
     public T fetchOneOrFail() {
-        return buildQuery().getSingleResult();
+        return buildQuery(toJpql()).getSingleResult();
     }
 
     public List<T> fetch() {
-        return buildQuery().getResultList();
+        return buildQuery(toJpql()).getResultList();
     }
 
     public List<Object> fetch_() {
-        return buildQuery_().getResultList();
+        return buildQuery_(toJpql()).getResultList();
     }
 
     public boolean fetchExists() {
-        return buildQuery().getResultStream().findAny().isPresent();
+        return buildQuery(toJpql()).getResultStream().findAny().isPresent();
     }
 
     public Relation<T> scoping(Relation relation) {
@@ -98,9 +98,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public int deleteAll() {
         SelectManager arel = buildArel(false);
-        DeleteManager stmt = new DeleteManager(entity);
+        DeleteManager stmt = new DeleteManager();
+        stmt.from(entity);
         stmt.setWheres(arel.getConstraints());
-        return buildUpdateQuery(stmt.toJpql()).executeUpdate();
+        return executeUpdate(stmt.toJpql());
     }
 
     public int deleteBy(String conditions) {
@@ -170,24 +171,27 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return result;
     }
 
-    private TypedQuery<T> buildQuery() {
-        return parametize(service.buildQuery(toJpql()))
+    private TypedQuery<T> buildQuery(String query) {
+        return parametize(service.buildQuery(query))
                 .setLockMode(buildLockMode())
                 .setMaxResults(values.getLimitValue())
                 .setFirstResult(values.getOffsetValue())
                 .setHint("eclipselink.batch.type", "IN");
     }
 
-    private Query buildQuery_() {
-        return parametize(service.buildQuery_(toJpql()))
+    private Query buildQuery_(String query) {
+        return parametize(service.buildQuery_(query))
                 .setLockMode(buildLockMode())
                 .setMaxResults(values.getLimitValue())
                 .setFirstResult(values.getOffsetValue())
                 .setHint("eclipselink.batch.type", "IN");
     }
 
-    private Query buildUpdateQuery(String jpql) {
-        return parametize(service.buildQuery_(jpql));
+    private int executeUpdate(String query) {
+        return parametize(service.buildQuery_(query))
+                .setMaxResults(values.getLimitValue())
+                .setFirstResult(values.getOffsetValue())
+                .executeUpdate();
     }
 
     private void buildDistinct(SelectManager arel) {
