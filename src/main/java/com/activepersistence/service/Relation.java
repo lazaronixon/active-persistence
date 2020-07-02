@@ -60,7 +60,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return buildQuery().getResultList();
     }
 
-    public List fetch_() {
+    public List<Object> fetch_() {
         return buildQuery_().getResultList();
     }
 

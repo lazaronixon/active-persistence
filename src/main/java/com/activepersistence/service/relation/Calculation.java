@@ -35,11 +35,11 @@ public interface Calculation<T> {
         return calculate("SUM", field);
     }
 
-    public default List ids() {
+    public default List<Object> ids() {
         return pluck("this.id");
     }
 
-    public default List pluck(String... fields) {
+    public default List<Object> pluck(String... fields) {
         Relation relation = thiz().spawn();
         relation.getValues().setConstructor(null);
         relation.getValues().getSelectValues().clear();

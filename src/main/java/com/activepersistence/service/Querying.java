@@ -232,11 +232,11 @@ public interface Querying<T> {
         return all().sum(field);
     }
 
-    public default List pluck(String... field) {
+    public default List<Object> pluck(String... field) {
         return all().pluck(field);
     }
 
-    public default List ids() {
+    public default List<Object> ids() {
         return all().ids();
     }
     //</editor-fold>

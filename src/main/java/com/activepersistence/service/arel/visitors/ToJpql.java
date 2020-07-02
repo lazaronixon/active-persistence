@@ -113,15 +113,15 @@ public class ToJpql extends Visitor {
         return thing != null ? visit(thing, collector.append(" ")) : collector;
     }
 
-    private void collectNodesFor(List nodes, StringBuilder collector, String spacer, String connector) {
+    private void collectNodesFor(List<? extends Visitable> nodes, StringBuilder collector, String spacer, String connector) {
         if (!nodes.isEmpty()) collector.append(spacer); injectJoin(nodes, collector, connector);
     }
 
-    private void collectNodesFor(List nodes, StringBuilder collector, String spacer) {
+    private void collectNodesFor(List<? extends Visitable> nodes, StringBuilder collector, String spacer) {
         collectNodesFor(nodes, collector, spacer, ", ");
     }
 
-    private void injectJoin(List list, StringBuilder collector, String joinStr) {
+    private void injectJoin(List<? extends Visitable> list, StringBuilder collector, String joinStr) {
         for(int i = 0; i < list.size(); i++) { if (i != 0) collector.append(joinStr); collector = visit(list.get(i), collector); }
     }
 
