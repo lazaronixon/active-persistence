@@ -1,5 +1,6 @@
 package com.activepersistence.service.cases;
 
+import com.activepersistence.ActivePersistenceError;
 import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.ClientsService;
 import com.activepersistence.service.models.PostsService;
@@ -87,6 +88,11 @@ public class RelationTest extends IntegrationTest {
         long count = postsService.count();
         assertEquals(3, postsService.where("this.id IN (1,2,3)").deleteAll());
         assertEquals(count - 3, postsService.count());
+    }
+
+    @Test
+    public void testDeleteAllWithDistinct() {
+        assertThrows(ActivePersistenceError.class,() -> postsService.distinct().deleteAll());
     }
 
     @Test

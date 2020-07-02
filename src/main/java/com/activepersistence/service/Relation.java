@@ -1,5 +1,6 @@
 package com.activepersistence.service;
 
+import com.activepersistence.ActivePersistenceError;
 import com.activepersistence.service.arel.DeleteManager;
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.SelectManager;
@@ -97,11 +98,15 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public int deleteAll() {
-        SelectManager arel = buildArel(false);
-        DeleteManager stmt = new DeleteManager();
-        stmt.from(entity);
-        stmt.setWheres(arel.getConstraints());
-        return executeUpdate(stmt.toJpql());
+        if (isValidRelationForDelete()) {
+            SelectManager arel = buildArel(false);
+            DeleteManager stmt = new DeleteManager();
+            stmt.from(entity);
+            stmt.setWheres(arel.getConstraints());
+            return executeUpdate(stmt.toJpql());
+        } else {
+            throw new ActivePersistenceError("delete_all doesn't support this relation");
+        }
     }
 
     public int deleteBy(String conditions) {
@@ -234,6 +239,13 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private LockModeType buildLockMode() {
         return values.isLockValue() ? PESSIMISTIC_READ : NONE;
+    }
+
+    private boolean isValidRelationForDelete() {
+        return values.isDistinctValue() == false
+                && values.getGroupValues().isEmpty()
+                && values.getHavingValues().isEmpty()
+                && values.getJoinsValues().isEmpty();
     }
 
 }
