@@ -7,6 +7,7 @@ import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
 import com.activepersistence.service.arel.nodes.TableAlias;
 import static java.util.Arrays.asList;
+import java.util.List;
 
 public class SelectManager {
 
@@ -63,14 +64,18 @@ public class SelectManager {
         ast.getOrders().addAll(SqlLiteral.of(expr)); return this;
     }
 
-    public String toJpql() {
-        StringBuilder collector = new StringBuilder();
-        collector = Entity.visitor.accept(ast, collector);
-        return collector.toString();
+    public List<Node> getConstraints() {
+        return ctx.getWheres();
     }
 
     public SelectStatement getAst() {
         return ast;
+    }
+
+    public String toJpql() {
+        StringBuilder collector = new StringBuilder();
+        collector = Entity.visitor.accept(ast, collector);
+        return collector.toString();
     }
 
 }

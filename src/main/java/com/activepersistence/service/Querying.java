@@ -201,6 +201,14 @@ public interface Querying<T> {
     public default List<T> destroyBy(String conditions) {
         return all().destroyBy(conditions);
     }
+
+    public default int deleteAll() {
+        return all().deleteAll();
+    }
+
+    public default int deleteBy(String conditions) {
+        return all().deleteBy(conditions);
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="calculation methods">

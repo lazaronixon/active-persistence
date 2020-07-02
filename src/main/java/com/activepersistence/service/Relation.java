@@ -1,5 +1,6 @@
 package com.activepersistence.service;
 
+import com.activepersistence.service.arel.DeleteManager;
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.relation.Calculation;
@@ -96,7 +97,14 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public int deleteAll() {
-        return 0;
+        SelectManager arel = buildArel(false);
+        DeleteManager stmt = new DeleteManager(entity);
+        stmt.setWheres(arel.getConstraints());
+        return buildUpdateQuery(stmt.toJpql()).executeUpdate();
+    }
+
+    public int deleteBy(String conditions) {
+        return where(conditions).deleteAll();
     }
 
     public String toJpql() {
@@ -176,6 +184,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
                 .setMaxResults(values.getLimitValue())
                 .setFirstResult(values.getOffsetValue())
                 .setHint("eclipselink.batch.type", "IN");
+    }
+
+    private Query buildUpdateQuery(String jpql) {
+        return parametize(service.buildQuery_(jpql));
     }
 
     private void buildDistinct(SelectManager arel) {

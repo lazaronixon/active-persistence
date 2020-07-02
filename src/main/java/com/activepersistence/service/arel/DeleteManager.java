@@ -19,7 +19,7 @@ public class DeleteManager {
         ast.getWheres().add(jpql(condition)); return this;
     }
 
-    public void wheres(List<Node> conditions) {
+    public void setWheres(List<Node> conditions) {
         ast.setWheres(conditions);
     }
 
