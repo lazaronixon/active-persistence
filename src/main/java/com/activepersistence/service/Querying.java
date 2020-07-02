@@ -186,10 +186,6 @@ public interface Querying<T> {
         return buildRelation().unscoped();
     }
 
-    public default Relation<T> unscoped(Supplier<Relation> relation) {
-        return buildRelation().unscoped(relation);
-    }
-
     public default Relation<T> bind(int position, Object value) {
         return all().bind(position, value);
     }

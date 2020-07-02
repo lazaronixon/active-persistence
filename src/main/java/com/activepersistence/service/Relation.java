@@ -78,10 +78,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return relation();
     }
 
-    public Relation<T> unscoped(Supplier<Relation> yield) {
-        return relation().scoping(yield);
-    }
-
     public T findOrCreateBy(String conditions, Supplier<T> resource) {
         return ofNullable(findBy(conditions)).orElseGet(() -> create(resource.get()));
     }
