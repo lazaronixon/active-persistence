@@ -8,7 +8,7 @@ import com.activepersistence.service.arel.nodes.SqlLiteral;
 import static java.util.Arrays.asList;
 import java.util.List;
 
-public class SelectManager extends TreeManager{
+public class SelectManager {
 
     private final SelectStatement ast;
     private final SelectCore ctx;

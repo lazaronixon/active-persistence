@@ -6,7 +6,7 @@ import com.activepersistence.service.arel.nodes.Node;
 import java.util.List;
 
 
-public class DeleteManager extends TreeManager {
+public class DeleteManager {
 
     private final DeleteStatement ast;
 
