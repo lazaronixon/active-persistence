@@ -14,6 +14,7 @@ import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
 import com.activepersistence.service.arel.nodes.Sum;
+import com.activepersistence.service.arel.nodes.UpdateStatement;
 import java.util.List;
 
 public class ToJpql extends Visitor {
@@ -21,6 +22,14 @@ public class ToJpql extends Visitor {
     public StringBuilder visitDeleteStatement(DeleteStatement o, StringBuilder collector) {
         collector.append("DELETE FROM ");
         collector = visitEntity(o.getRelation(), collector);
+        collectNodesFor(o.getWheres(), collector, " WHERE ", " AND ");
+        return collector;
+    }
+
+    public StringBuilder visitUpdateStatement(UpdateStatement o, StringBuilder collector) {
+        collector.append("UPDATE ");
+        collector = visitEntity(o.getRelation(), collector);
+        collectNodesFor(o.getValues(), collector, " SET ");
         collectNodesFor(o.getWheres(), collector, " WHERE ", " AND ");
         return collector;
     }

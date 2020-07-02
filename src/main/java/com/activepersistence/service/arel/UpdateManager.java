@@ -1,23 +1,28 @@
 package com.activepersistence.service.arel;
 
 import static com.activepersistence.service.Arel.jpql;
-import com.activepersistence.service.arel.nodes.DeleteStatement;
 import com.activepersistence.service.arel.nodes.Node;
+import com.activepersistence.service.arel.nodes.UpdateStatement;
+import static java.util.Arrays.asList;
 import java.util.List;
 
-public class DeleteManager {
+public class UpdateManager {
 
-    private final DeleteStatement ast;
+    private final UpdateStatement ast;
 
-    public DeleteManager() {
-        this.ast = new DeleteStatement();
+    public UpdateManager() {
+        this.ast = new UpdateStatement();
     }
 
-    public DeleteManager from(Entity entity) {
+    public UpdateManager entity(Entity entity) {
         ast.setRelation(entity); return this;
     }
 
-    public DeleteManager where(String condition) {
+    public UpdateManager set(String values) {
+        ast.setValues(asList(jpql(values))); return this;
+    }
+
+    public UpdateManager where(String condition) {
         ast.getWheres().add(jpql(condition)); return this;
     }
 

@@ -19,7 +19,7 @@ public class DeleteManagerTest {
     }
 
     @Test
-    public void testFrom() {
+    public void testAll() {
         assertEquals("DELETE FROM Post this", manager.toJpql());
     }
 
