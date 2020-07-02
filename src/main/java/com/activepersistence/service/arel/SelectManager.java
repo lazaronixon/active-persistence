@@ -8,15 +8,14 @@ import com.activepersistence.service.arel.nodes.SqlLiteral;
 import static java.util.Arrays.asList;
 import java.util.List;
 
-public class SelectManager {
+public class SelectManager extends TreeManager{
 
     private final SelectStatement ast;
     private final SelectCore ctx;
 
     public SelectManager(Entity entity) {
-        this.ast = new SelectStatement();
+        this.ast = new SelectStatement(entity);
         this.ctx = this.ast.getCore();
-        this.ctx.getSource().setLeft(entity);
     }
 
     public SelectManager project(String... projections) {

@@ -14,10 +14,6 @@ public class SqlLiteral extends Node implements Source {
         this.value = value;
     }
 
-    public static List<Node> of(String... values) {
-        return range(0, values.length).mapToObj(i -> jpql(values[i])).collect(toList());
-    }
-
     public Count count() {
         return new Count(this);
     }
@@ -40,6 +36,10 @@ public class SqlLiteral extends Node implements Source {
 
     public Avg average() {
         return new Avg(this);
+    }
+
+    public static List<Node> of(String... values) {
+        return range(0, values.length).mapToObj(i -> jpql(values[i])).collect(toList());
     }
 
     @Override

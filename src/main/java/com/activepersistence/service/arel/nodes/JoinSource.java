@@ -9,7 +9,8 @@ public class JoinSource extends Node {
     private Source left;
     private final List<SqlLiteral> right;
 
-    public JoinSource() {
+    public JoinSource(Source left) {
+        this.left  = left;
         this.right = new ArrayList();
     }
 

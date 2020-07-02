@@ -6,13 +6,12 @@ import com.activepersistence.service.arel.nodes.Node;
 import java.util.List;
 
 
-public class DeleteManager {
+public class DeleteManager extends TreeManager {
 
     private final DeleteStatement ast;
 
     public DeleteManager(Entity relation) {
         this.ast = new DeleteStatement(relation);
-        this.ast.setRelation(relation);
     }
 
     public DeleteManager where(String condition) {

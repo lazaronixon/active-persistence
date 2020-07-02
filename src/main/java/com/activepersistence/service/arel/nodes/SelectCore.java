@@ -1,5 +1,6 @@
 package com.activepersistence.service.arel.nodes;
 
+import com.activepersistence.service.arel.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +14,8 @@ public class SelectCore extends Node {
     private final List<Node> groups;
     private final List<Node> havings;
 
-    public SelectCore() {
-        this.source         = new JoinSource();
+    public SelectCore(Entity entity) {
+        this.source         = new JoinSource(entity);
         this.setQuantifier  = null;
         this.constructor    = null;
         this.projections    = new ArrayList();
