@@ -193,6 +193,10 @@ public interface Querying<T> {
     public default Relation<T> bind(String name, Object value) {
         return all().bind(name, value);
     }
+
+    public default List<T> destroyAll() {
+        return all().destroyAll();
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="calculation methods">

@@ -9,6 +9,7 @@ import com.activepersistence.service.relation.Values;
 import java.util.List;
 import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
+import static java.util.stream.Collectors.toList;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import static javax.persistence.LockModeType.NONE;
@@ -84,6 +85,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public T findOrGetBy(String conditions, Supplier<T> resource) {
         return ofNullable(findBy(conditions)).orElseGet(() -> resource.get());
+    }
+
+    public List<T> destroyAll() {
+        return fetch().stream().map((r) -> { destroy(r); return r; }).collect(toList());
     }
 
     public String toJpql() {

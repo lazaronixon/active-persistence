@@ -68,4 +68,11 @@ public class RelationTest extends IntegrationTest {
         assertNotNull(postsService.all().fetch_());
     }
 
+    @Test
+    public void destroyAll() {
+        long count = postsService.count();
+        postsService.where("this.id IN (1,2,3)").destroyAll();
+        assertEquals(count - 3, postsService.count());
+    }
+
 }
