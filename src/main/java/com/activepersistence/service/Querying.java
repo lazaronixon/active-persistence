@@ -214,11 +214,11 @@ public interface Querying<T> {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="calculation methods">
-    public default long count() {
+    public default Object count() {
         return all().count();
     }
 
-    public default long count(String field) {
+    public default Object count(String field) {
         return all().count(field);
     }
 

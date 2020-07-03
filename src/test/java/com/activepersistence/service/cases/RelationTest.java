@@ -76,21 +76,21 @@ public class RelationTest extends IntegrationTest {
 
     @Test
     public void testDestroyAll() {
-        long count = postsService.count();
+        long count = (long) postsService.count();
         postsService.where("this.id IN (1,2,3)").destroyAll();
         assertEquals(count - 3, postsService.count());
     }
 
     @Test
     public void testDestroyBy() {
-        long count = postsService.count();
+        long count = (long) postsService.count();
         postsService.destroyBy("this.id IN (1,2,3)");
         assertEquals(count - 3, postsService.count());
     }
 
     @Test
     public void testDeleteAll() {
-        long count = postsService.count();
+        long count = (long) postsService.count();
         assertEquals(3, postsService.where("this.id IN (1,2,3)").deleteAll());
         assertEquals(count - 3, postsService.count());
     }
@@ -103,12 +103,12 @@ public class RelationTest extends IntegrationTest {
     @Test
     public void testeDeleteAllWithoutConditions() {
         postsService.deleteAll();
-        assertEquals(0, postsService.count());
+        assertEquals(0L, postsService.count());
     }
 
     @Test
     public void testDeleteBy() {
-        long count = postsService.count();
+        long count = (long) postsService.count();
         assertEquals(3, postsService.deleteBy("this.id IN (1,2,3)"));
         assertEquals(count - 3, postsService.count());
     }

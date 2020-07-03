@@ -16,12 +16,12 @@ public class CalculationTest extends IntegrationTest {
 
     @Test
     public void testCount() {
-        assertEquals(2, postsService.where("this.id IN (1, 2)").count());
+        assertEquals(2L, postsService.where("this.id IN (1, 2)").count());
     }
 
     @Test
     public void testCountDistinct() {
-        assertEquals(1, postsService.where("this.id IN (4, 5)").distinct().count("this.title"));
+        assertEquals(1L, postsService.where("this.id IN (4, 5)").distinct().count("this.title"));
     }
 
     @Test

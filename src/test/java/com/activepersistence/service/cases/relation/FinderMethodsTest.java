@@ -88,7 +88,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFindOrCreateBy() {
-        long postsCount = postsService.count();
+        long postsCount = (long) postsService.count();
         Post createdPost = postsService.findOrCreateBy("this.title = 'awesome title'",() -> new Post("awesome title", "body", 0));
         assertEquals(postsCount + 1, postsService.count());
         assertEquals("body", createdPost.getBody());
@@ -96,7 +96,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFindOrCreateByNotCreate() {
-        long postsCount   = postsService.count();
+        long postsCount   = (long) postsService.count();
         Post existentPost = postsService.findOrCreateBy("this.title = 'hello world'",() -> new Post("hello world", "body", 0));
         assertEquals(postsCount, postsService.count());
         assertEquals("My first post", existentPost.getBody());

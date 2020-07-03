@@ -11,11 +11,11 @@ public interface Calculation<T> {
 
     public Relation<T> spawn();
 
-    public default long count() {
+    public default Object count() {
         return count("this");
     }
 
-    public default long count(String field) {
+    public default Object count(String field) {
         return (long) calculate("COUNT", field);
     }
 
@@ -49,27 +49,34 @@ public interface Calculation<T> {
 
     private Object calculate(String operation, String field) {
         Relation relation = thiz().spawn();
-        relation.getValues().setConstructor(null);
-        relation.getValues().setDistinctValue(false);
-        relation.getValues().getSelectValues().clear();
+        Values   values   = prepareValues(relation.getValues());
 
-        boolean distinct = thiz().getValues().isDistinctValue();
-
-        if(operation.equals("COUNT")) {
-            relation.getValues().getSelectValues().add(jpql(field).count(distinct).toJpql());
+        if (operation.equals("COUNT")) {
+            values.getSelectValues().add(jpql(field).count(isDistinct()).toJpql());
         } else if (operation.equals("MIN")) {
-            relation.getValues().getSelectValues().add(jpql(field).minimum().toJpql());
+            values.getSelectValues().add(jpql(field).minimum().toJpql());
         } else if (operation.equals("MAX")) {
-            relation.getValues().getSelectValues().add(jpql(field).maximum().toJpql());
+            values.getSelectValues().add(jpql(field).maximum().toJpql());
         } else if (operation.equals("AVG")) {
-            relation.getValues().getSelectValues().add(jpql(field).average().toJpql());
+            values.getSelectValues().add(jpql(field).average().toJpql());
         } else if (operation.equals("SUM")) {
-            relation.getValues().getSelectValues().add(jpql(field).sum().toJpql());
+            values.getSelectValues().add(jpql(field).sum().toJpql());
         } else {
             throw new RuntimeException("Operation not supported: " + operation);
         }
 
         return relation.fetchOne();
+    }
+
+    private boolean isDistinct() {
+        return thiz().getValues().isDistinctValue();
+    }
+
+    private Values prepareValues(Values values) {
+        values.setConstructor(null);
+        values.setDistinctValue(false);
+        values.getSelectValues().clear();
+        return values;
     }
 
 }
