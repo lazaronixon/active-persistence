@@ -34,6 +34,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private Relation<T> currentScope;
 
+    private SelectManager arel;
+
     public Relation(Base service) {
         this.entityManager = service.getEntityManager();
         this.entityClass   = service.getEntityClass();
@@ -87,7 +89,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public T findOrGetBy(String conditions, Supplier<T> resource) {
-        return ofNullable(findBy(conditions)).orElseGet(() -> resource.get());
+        return ofNullable(findBy(conditions)).orElseGet(resource::get);
     }
 
     public List<T> destroyAll() {
@@ -100,11 +102,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public int deleteAll() {
         if (isValidRelationForUpdate()) {
-            SelectManager arel = buildArel(false);
             DeleteManager stmt = new DeleteManager();
             stmt.from(entity);
-            stmt.setWheres(arel.getConstraints());
-            stmt.setOrders(arel.getOrders());
+            stmt.setWheres(getArel().getConstraints());
+            stmt.setOrders(getArel().getOrders());
             return executeUpdate(stmt.toJpql());
         } else {
             throw new ActivePersistenceError("delete_all doesn't support this relation");
@@ -113,12 +114,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public int updateAll(String updates) {
         if (isValidRelationForUpdate()) {
-            SelectManager arel = buildArel(false);
             UpdateManager stmt = new UpdateManager();
             stmt.entity(entity);
             stmt.set(updates);
-            stmt.setWheres(arel.getConstraints());
-            stmt.setOrders(arel.getOrders());
+            stmt.setWheres(getArel().getConstraints());
+            stmt.setOrders(getArel().getOrders());
             return executeUpdate(stmt.toJpql());
         } else {
             throw new ActivePersistenceError("update_all doesn't support this relation");
@@ -130,7 +130,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public String toJpql() {
-        return buildArel(true).toJpql();
+        return getArel().toJpql();
     }
 
     public void setCurrentScope(Relation<T> currentScope) {
@@ -175,7 +175,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return entityManager;
     }
 
-    private SelectManager buildArel(boolean useConstructor) {
+    private SelectManager getArel() {
+        return arel = ofNullable(arel).orElseGet(this::buildArel);
+    }
+
+    private SelectManager buildArel() {
         SelectManager result = new SelectManager(entity);
 
         values.getJoinsValues().forEach(join    -> result.join(join));
@@ -184,7 +188,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         values.getGroupValues().forEach(group   -> result.group(group));
         values.getOrderValues().forEach(order   -> result.order(order));
 
-        buildConstructor(result, useConstructor);
+        buildConstructor(result);
         buildDistinct(result);
         buildSelect(result);
         buildFrom(result);
@@ -219,15 +223,15 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         arel.distinct(values.isDistinctValue());
     }
 
-    private void buildConstructor(SelectManager arel, boolean useConstructor) {
-        arel.constructor(useConstructor ? values.getConstructor() : null);
+    private void buildConstructor(SelectManager arel) {
+        arel.constructor(values.getConstructor());
     }
 
     private void buildSelect(SelectManager arel) {
         if (values.getSelectValues().isEmpty()) {
             arel.project("this");
         } else {
-            values.getSelectValues().forEach(s -> arel.project(s));
+            values.getSelectValues().forEach(arel::project);
         }
     }
 

@@ -214,12 +214,12 @@ public interface QueryMethods<T> {
     }
 
     private Relation<T> defaultScoped() {
-        return ofNullable(buildDefaultScope()).orElse(relation());
+        return ofNullable(buildDefaultScope()).orElseGet(this::relation);
     }
 
     private Relation<T> buildDefaultScope() {
         if (getService().useDefaultScope()) {
-            return evaluateDefaultScope(() -> getService().defaultScope());
+            return evaluateDefaultScope(getService()::defaultScope);
         } else {
             return null;
         }

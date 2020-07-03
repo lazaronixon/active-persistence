@@ -26,7 +26,7 @@ public class RelationTest extends IntegrationTest {
 
     @Test
     public void testScopingBlock() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.scoping(() -> postsService.oneNeZero()).toJpql());
+        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.scoping(postsService::oneNeZero).toJpql());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class RelationTest extends IntegrationTest {
 
     @Test
     public void testFetchOneOrFail() {
-        assertThrows(NoResultException.class, () -> postsService.where("1=0").fetchOneOrFail());
+        assertThrows(NoResultException.class, postsService.where("1=0")::fetchOneOrFail);
     }
 
     @Test
@@ -92,7 +92,7 @@ public class RelationTest extends IntegrationTest {
 
     @Test
     public void testDeleteAllWithDistinct() {
-        assertThrows(ActivePersistenceError.class,() -> postsService.distinct().deleteAll());
+        assertThrows(ActivePersistenceError.class, postsService.distinct()::deleteAll);
     }
 
     @Test
