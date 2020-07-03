@@ -1,5 +1,6 @@
 package com.activepersistence.service;
 
+import java.util.function.Supplier;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
@@ -9,17 +10,17 @@ public interface Persistence<T> {
 
     @Transactional
     public default T create(T entity) {
-        getEntityManager().persist(entity); return entity;
+        return flush(() -> { getEntityManager().persist(entity); return entity; });
     }
 
     @Transactional
     public default T update(T entity) {
-        return getEntityManager().merge(entity);
+        return flush(() -> getEntityManager().merge(entity));
     }
 
     @Transactional
     public default void destroy(T entity) {
-        getEntityManager().remove(getEntityManager().merge(entity));
+        flush(() -> getEntityManager().remove(getEntityManager().merge(entity)));
     }
 
     @Transactional
@@ -33,6 +34,14 @@ public interface Persistence<T> {
 
     public default void reload(T entity) {
         getEntityManager().refresh(entity);
+    }
+
+    private T flush(Supplier<T> yield) {
+        T result = yield.get(); getEntityManager().flush(); return result;
+    }
+
+    private void flush(Runnable yield) {
+        yield.run(); getEntityManager().flush();
     }
 
 }
