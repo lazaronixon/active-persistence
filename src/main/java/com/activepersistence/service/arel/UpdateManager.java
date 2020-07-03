@@ -19,7 +19,7 @@ public class UpdateManager {
     }
 
     public UpdateManager set(String values) {
-        ast.setValues(SqlLiteral.of(values)); return this;
+        ast.setValues(SqlLiteral.asList(values)); return this;
     }
 
     public UpdateManager where(String condition) {
@@ -27,7 +27,7 @@ public class UpdateManager {
     }
 
     public UpdateManager order(String... orders) {
-        ast.getOrders().addAll(SqlLiteral.of(orders)); return this;
+        ast.getOrders().addAll(SqlLiteral.asList(orders)); return this;
     }
 
     public void setWheres(List<Node> conditions) {

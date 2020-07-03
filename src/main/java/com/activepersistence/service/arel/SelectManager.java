@@ -19,7 +19,7 @@ public class SelectManager {
     }
 
     public SelectManager project(String... projections) {
-        ctx.getProjections().addAll(SqlLiteral.of(projections)); return this;
+        ctx.getProjections().addAll(SqlLiteral.asList(projections)); return this;
     }
 
     public SelectManager project(Node... projections) {
@@ -47,7 +47,7 @@ public class SelectManager {
     }
 
     public SelectManager group(String... fields) {
-        ctx.getGroups().addAll(SqlLiteral.of(fields)); return this;
+        ctx.getGroups().addAll(SqlLiteral.asList(fields)); return this;
     }
 
     public SelectManager having(String condition) {
@@ -55,7 +55,7 @@ public class SelectManager {
     }
 
     public SelectManager order(String... expr) {
-        ast.getOrders().addAll(SqlLiteral.of(expr)); return this;
+        ast.getOrders().addAll(SqlLiteral.asList(expr)); return this;
     }
 
     public List<Node> getConstraints() {

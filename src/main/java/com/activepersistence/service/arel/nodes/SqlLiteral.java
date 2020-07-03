@@ -1,10 +1,10 @@
 package com.activepersistence.service.arel.nodes;
 
-import static com.activepersistence.service.Arel.jpql;
+import com.activepersistence.service.Arel;
 import com.activepersistence.service.arel.Source;
+import java.util.Arrays;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.IntStream.range;
 
 public class SqlLiteral extends Node implements Source {
 
@@ -38,8 +38,8 @@ public class SqlLiteral extends Node implements Source {
         return new Avg(this);
     }
 
-    public static List<Node> of(String... values) {
-        return range(0, values.length).mapToObj(i -> jpql(values[i])).collect(toList());
+    public static List<Node> asList(String... values) {
+        return Arrays.asList(values).stream().map(Arel::jpql).collect(toList());
     }
 
     @Override

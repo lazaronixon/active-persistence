@@ -32,7 +32,7 @@ public class ToJpql {
         Entity entity = new Entity(Post.class, "this");
         UpdateStatement statement = new UpdateStatement();
         statement.setRelation(entity);
-        statement.setValues(SqlLiteral.of("this.name = 'test'"));
+        statement.setValues(SqlLiteral.asList("this.name = 'test'"));
         assertEquals("UPDATE Post this SET this.name = 'test'", compile(statement));
     }
 
@@ -55,13 +55,13 @@ public class ToJpql {
         Entity entity = new Entity(Post.class, "this");
         SelectCore core = new SelectCore(entity);
         core.setDistinct(true);
-        core.getProjections().addAll(SqlLiteral.of("this"));
+        core.getProjections().addAll(SqlLiteral.asList("this"));
         assertEquals("SELECT DISTINCT this FROM Post this", compile(core));
     }
 
     @Test
     public void testVisitConstructor() {
-        Constructor constructor = new Constructor("foo", SqlLiteral.of("this.id, this.title"));
+        Constructor constructor = new Constructor("foo", SqlLiteral.asList("this.id, this.title"));
         assertEquals(" NEW foo(this.id, this.title)", compile(constructor));
     }
 
