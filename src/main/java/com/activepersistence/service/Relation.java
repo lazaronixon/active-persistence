@@ -72,12 +72,16 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return buildQuery(toJpql()).getResultStream().findAny().isPresent();
     }
 
-    public Relation<T> scoping(Relation relation) {
-        return scoping(() -> relation);
+    public Relation<T> merge(Relation<T> other) {
+        return spawn().merge_(other);
     }
 
-    public Relation<T> scoping(Supplier<Relation> yield) {
-        Relation<T> scope = yield.get(); scope.setCurrentScope(this); return scope;
+    public Relation<T> merge_(Relation<T> other) {
+        values.merge(other.getValues()); return thiz();
+    }
+
+    public Relation<T> scoping(Relation<T> scope) {
+        scope.setCurrentScope(this); return scope;
     }
 
     public Relation<T> unscoped() {
@@ -167,7 +171,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     @Override
     public Relation<T> relation() {
-        return scoping(() -> new Relation(service));
+        return scoping(new Relation(service));
     }
 
     @Override

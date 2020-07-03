@@ -1,98 +1,105 @@
 package com.activepersistence.service.relation;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class Values {
 
-   private String fromClause = null;
-
-    private List<String> selectValues = new ArrayList();
-
-    private List<String> whereValues = new ArrayList();
-
-    private List<String> groupValues = new ArrayList();
-
-    private List<String> havingValues = new ArrayList();
-
-    private List<String> orderValues = new ArrayList();
-
-    private List<String> joinsValues = new ArrayList();
-
-    private List<String> includesValues = new ArrayList();
-
-    private List<String> eagerLoadsValues = new ArrayList();
-
-    private HashMap<Integer, Object> ordinalParameters = new HashMap();
-
-    private HashMap<String, Object> namedParameters = new HashMap();
-
-    private int limitValue = 0;
-
-    private int offsetValue = 0;
-
-    private boolean lockValue = false;
-
+    private String constructor    = null;
+    private String fromClause     = null;
+    private int limitValue        = 0;
+    private int offsetValue       = 0;
+    private boolean lockValue     = false;
     private boolean distinctValue = false;
 
-    private String constructor = null;
+    private Set<String> selectValues     = new LinkedHashSet();
+    private Set<String> whereValues      = new LinkedHashSet();
+    private Set<String> groupValues      = new LinkedHashSet();
+    private Set<String> havingValues     = new LinkedHashSet();
+    private Set<String> orderValues      = new LinkedHashSet();
+    private Set<String> joinsValues      = new LinkedHashSet();
+    private Set<String> includesValues   = new LinkedHashSet();
+    private Set<String> eagerLoadsValues = new LinkedHashSet();
+
+    private HashMap<Integer, Object> ordinalParameters = new HashMap();
+    private HashMap<String, Object> namedParameters    = new HashMap();
 
     public Values() {
     }
 
     public Values(Values other) {
-        this.fromClause        = other.fromClause;
-        this.selectValues      = new ArrayList(other.selectValues);
-        this.whereValues       = new ArrayList(other.whereValues);
-        this.groupValues       = new ArrayList(other.groupValues);
-        this.havingValues      = new ArrayList(other.havingValues);
-        this.orderValues       = new ArrayList(other.orderValues);
-        this.joinsValues       = new ArrayList(other.joinsValues);
-        this.includesValues    = new ArrayList(other.includesValues);
-        this.eagerLoadsValues  = new ArrayList(other.eagerLoadsValues);
-        this.ordinalParameters = new HashMap(other.ordinalParameters);
-        this.namedParameters   = new HashMap(other.namedParameters);
-        this.limitValue        = other.limitValue;
-        this.offsetValue       = other.offsetValue;
-        this.lockValue         = other.lockValue;
-        this.distinctValue     = other.distinctValue;
-        this.constructor       = other.constructor;
+        constructor       = other.constructor;
+        fromClause        = other.fromClause;
+        limitValue        = other.limitValue;
+        offsetValue       = other.offsetValue;
+        lockValue         = other.lockValue;
+        distinctValue     = other.distinctValue;
+        selectValues      = new LinkedHashSet(other.selectValues);
+        whereValues       = new LinkedHashSet(other.whereValues);
+        groupValues       = new LinkedHashSet(other.groupValues);
+        havingValues      = new LinkedHashSet(other.havingValues);
+        orderValues       = new LinkedHashSet(other.orderValues);
+        joinsValues       = new LinkedHashSet(other.joinsValues);
+        includesValues    = new LinkedHashSet(other.includesValues);
+        eagerLoadsValues  = new LinkedHashSet(other.eagerLoadsValues);
+        ordinalParameters = new HashMap(other.ordinalParameters);
+        namedParameters   = new HashMap(other.namedParameters);
+    }
+
+    public Values merge(Values other) {
+        if (other.getConstructor() != null) constructor = other.getConstructor();
+        if (other.getFromClause()  != null) fromClause  = other.getFromClause();
+        if (other.getLimitValue()  != 0) limitValue  = other.getLimitValue();
+        if (other.getOffsetValue() != 0) offsetValue = other.getOffsetValue();
+        if (other.isLockValue()) lockValue = other.isLockValue();
+        if (other.isDistinctValue()) distinctValue = other.isDistinctValue();
+        selectValues.addAll(other.getSelectValues());
+        whereValues.addAll(other.getWhereValues());
+        groupValues.addAll(other.getGroupValues());
+        havingValues.addAll(other.getHavingValues());
+        orderValues.addAll(other.getOrderValues());
+        joinsValues.addAll(other.getJoinsValues());
+        includesValues.addAll(other.getIncludesValues());
+        eagerLoadsValues.addAll(other.getEagerLoadsValues());
+        ordinalParameters.putAll(other.getOrdinalParameters());
+        namedParameters.putAll(other.getNamedParameters());
+        return this;
     }
 
     public String getFromClause() {
         return fromClause;
     }
 
-    public List<String> getSelectValues() {
+    public Set<String> getSelectValues() {
         return selectValues;
     }
 
-    public List<String> getWhereValues() {
+    public Set<String> getWhereValues() {
         return whereValues;
     }
 
-    public List<String> getGroupValues() {
+    public Set<String> getGroupValues() {
         return groupValues;
     }
 
-    public List<String> getHavingValues() {
+    public Set<String> getHavingValues() {
         return havingValues;
     }
 
-    public List<String> getOrderValues() {
+    public Set<String> getOrderValues() {
         return orderValues;
     }
 
-    public List<String> getJoinsValues() {
+    public Set<String> getJoinsValues() {
         return joinsValues;
     }
 
-    public List<String> getIncludesValues() {
+    public Set<String> getIncludesValues() {
         return includesValues;
     }
 
-    public List<String> getEagerLoadsValues() {
+    public Set<String> getEagerLoadsValues() {
         return eagerLoadsValues;
     }
 

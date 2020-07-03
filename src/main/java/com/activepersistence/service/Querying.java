@@ -47,6 +47,10 @@ public interface Querying<T> {
     public default int updateAll(String updates) {
         return all().updateAll(updates);
     }
+
+    public default Relation<T> merge(Relation other) {
+        return buildRelation().merge(other);
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="finder methods">
@@ -193,10 +197,6 @@ public interface Querying<T> {
     }
 
     public default Relation<T> scoping(Relation<T> relation) {
-        return buildRelation().scoping(relation);
-    }
-
-    public default Relation<T> scoping(Supplier<Relation> relation) {
         return buildRelation().scoping(relation);
     }
 

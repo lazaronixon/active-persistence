@@ -219,7 +219,7 @@ public interface QueryMethods<T> {
 
     private Relation<T> buildDefaultScope() {
         if (getService().useDefaultScope()) {
-            return evaluateDefaultScope(getService()::defaultScope);
+            return evaluateDefaultScope(() -> thiz().merge_(getService().defaultScope()));
         } else {
             return null;
         }

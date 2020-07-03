@@ -20,28 +20,33 @@ public class RelationTest extends IntegrationTest {
     private ClientsService clientsService;
 
     @Test
-    public void testScoping() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.scoping(postsService.oneNeZero()).toJpql());
+    public void testMerge() {
+        assertEquals("SELECT this FROM Post this WHERE 1=0",
+                postsService.merge(postsService.oneNeZero()).toJpql());
     }
 
     @Test
-    public void testScopingBlock() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.scoping(postsService::oneNeZero).toJpql());
+    public void testScoping() {
+        assertEquals("SELECT this FROM Post this WHERE 1=0",
+                postsService.scoping(postsService.oneNeZero()).toJpql());
     }
 
     @Test
     public void testDefaultScope() {
-        assertEquals("SELECT this FROM Client this WHERE this.active = true", clientsService.all().toJpql());
+        assertEquals("SELECT this FROM Client this WHERE this.active = true",
+                clientsService.all().toJpql());
     }
 
     @Test
     public void testUnscoped() {
-        assertEquals("SELECT this FROM Client this", clientsService.unscoped().all().toJpql());
+        assertEquals("SELECT this FROM Client this",
+                clientsService.unscoped().all().toJpql());
     }
 
     @Test
     public void testUnscopedAfter() {
-        assertEquals("SELECT this FROM Client this", clientsService.where("1=0").unscoped().toJpql());
+        assertEquals("SELECT this FROM Client this",
+                clientsService.where("1=0").unscoped().toJpql());
     }
 
     @Test
@@ -116,7 +121,7 @@ public class RelationTest extends IntegrationTest {
 
     @Test
     public void testUpdateAllWithDistinct() {
-        assertThrows(ActivePersistenceError.class,() -> postsService.distinct().updateAll("this.name = 'testing'"));
+        assertThrows(ActivePersistenceError.class, () -> postsService.distinct().updateAll("this.name = 'testing'"));
     }
 
 }
