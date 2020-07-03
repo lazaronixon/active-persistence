@@ -9,19 +9,13 @@ public class SelectCore extends Node {
     private JoinSource source;
     private Distinct setQuantifier;
     private Constructor constructor;
-    private final List<Node> projections;
-    private final List<Node> wheres;
-    private final List<Node> groups;
-    private final List<Node> havings;
+    private final List<Node> projections  = new ArrayList();
+    private final List<Node> wheres       = new ArrayList();
+    private final List<Node> groups       = new ArrayList();
+    private final List<Node> havings      = new ArrayList();
 
     public SelectCore(Entity entity) {
-        this.source         = new JoinSource(entity);
-        this.setQuantifier  = null;
-        this.constructor    = null;
-        this.projections    = new ArrayList();
-        this.wheres         = new ArrayList();
-        this.groups         = new ArrayList();
-        this.havings        = new ArrayList();
+        this.source = new JoinSource(entity);
     }
 
     public Distinct getSetQuantifier() {

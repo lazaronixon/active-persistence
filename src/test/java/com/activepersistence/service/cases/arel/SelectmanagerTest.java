@@ -2,7 +2,6 @@ package com.activepersistence.service.cases.arel;
 
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.SelectManager;
-import com.activepersistence.service.models.Client;
 import com.activepersistence.service.models.Post;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -11,12 +10,10 @@ import org.junit.Test;
 public class SelectmanagerTest {
 
     private SelectManager manager;
-    private SelectManager manager2;
 
     @Before
     public void setup() {
         manager  = new SelectManager(new Entity(Post.class, "this"));
-        manager2 = new SelectManager(new Entity(Client.class, "this"));
     }
 
     @Test

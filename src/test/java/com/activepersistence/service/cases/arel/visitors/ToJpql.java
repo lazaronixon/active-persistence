@@ -3,9 +3,12 @@ package com.activepersistence.service.cases.arel.visitors;
 import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.nodes.Constructor;
+import com.activepersistence.service.arel.nodes.DeleteStatement;
+import com.activepersistence.service.arel.nodes.JoinSource;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
+import com.activepersistence.service.arel.nodes.UpdateStatement;
 import com.activepersistence.service.arel.visitors.Visitable;
 import com.activepersistence.service.arel.visitors.Visitor;
 import com.activepersistence.service.models.Post;
@@ -15,6 +18,23 @@ import org.junit.Test;
 public class ToJpql {
 
     private final Visitor visitor = Entity.visitor;
+
+    @Test
+    public void testVisitDeleteStatement() {
+        Entity entity = new Entity(Post.class, "this");
+        DeleteStatement statement = new DeleteStatement();
+        statement.setRelation(entity);
+        assertEquals("DELETE FROM Post this", compile(statement));
+    }
+
+    @Test
+    public void testVisitUpdateStatement() {
+        Entity entity = new Entity(Post.class, "this");
+        UpdateStatement statement = new UpdateStatement();
+        statement.setRelation(entity);
+        statement.setValues(SqlLiteral.of("this.name = 'test'"));
+        assertEquals("UPDATE Post this SET this.name = 'test'", compile(statement));
+    }
 
     @Test
     public void testVisitSelectStatement() {
@@ -48,6 +68,13 @@ public class ToJpql {
     @Test
     public void testVisitEntity() {
         assertEquals("Post this", compile(new Entity(Post.class, "this")));
+    }
+
+    @Test
+    public void testVisitJoinSource() {
+        JoinSource joinsource = new JoinSource(new Entity(Post.class, "this"));
+        joinsource.getRight().add(jpql("JOIN Client c"));
+        assertEquals("Post this JOIN Client c", compile(joinsource));
     }
 
     @Test

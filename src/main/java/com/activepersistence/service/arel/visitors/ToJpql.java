@@ -23,6 +23,7 @@ public class ToJpql extends Visitor {
         collector.append("DELETE FROM ");
         collector = visitEntity(o.getRelation(), collector);
         collectNodesFor(o.getWheres(), collector, " WHERE ", " AND ");
+        collectNodesFor(o.getOrders(), collector, " ORDER BY ");
         return collector;
     }
 
@@ -31,6 +32,7 @@ public class ToJpql extends Visitor {
         collector = visitEntity(o.getRelation(), collector);
         collectNodesFor(o.getValues(), collector, " SET ");
         collectNodesFor(o.getWheres(), collector, " WHERE ", " AND ");
+        collectNodesFor(o.getOrders(), collector, " ORDER BY ");
         return collector;
     }
 

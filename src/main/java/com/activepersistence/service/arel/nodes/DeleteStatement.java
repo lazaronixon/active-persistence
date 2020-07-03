@@ -8,11 +8,9 @@ public class DeleteStatement extends Node {
 
     private Entity relation;
 
-    private List<Node> wheres;
+    private List<Node> wheres = new ArrayList();
 
-    public DeleteStatement() {
-        this.wheres = new ArrayList();
-    }
+    private List<Node> orders = new ArrayList();
 
     public Entity getRelation() {
         return relation;
@@ -28,6 +26,14 @@ public class DeleteStatement extends Node {
 
     public void setWheres(List<Node> wheres) {
         this.wheres = wheres;
+    }
+
+    public List<Node> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Node> orders) {
+        this.orders = orders;
     }
 
 }

@@ -29,6 +29,11 @@ public class DeleteManagerTest {
     }
 
     @Test
+    public void testOrder() {
+        assertEquals("DELETE FROM Post this ORDER BY this.id", manager.order("this.id").toJpql());
+    }
+
+    @Test
     public void testWhereAnd() {
         assertEquals("DELETE FROM Post this WHERE 1=0 AND 1=2", manager.where("1=0").where("1=2").toJpql());
     }

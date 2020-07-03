@@ -2,8 +2,8 @@ package com.activepersistence.service.arel;
 
 import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.arel.nodes.Node;
+import com.activepersistence.service.arel.nodes.SqlLiteral;
 import com.activepersistence.service.arel.nodes.UpdateStatement;
-import static java.util.Arrays.asList;
 import java.util.List;
 
 public class UpdateManager {
@@ -19,15 +19,23 @@ public class UpdateManager {
     }
 
     public UpdateManager set(String values) {
-        ast.setValues(asList(jpql(values))); return this;
+        ast.setValues(SqlLiteral.of(values)); return this;
     }
 
     public UpdateManager where(String condition) {
         ast.getWheres().add(jpql(condition)); return this;
     }
 
+    public UpdateManager order(String... orders) {
+        ast.getOrders().addAll(SqlLiteral.of(orders)); return this;
+    }
+
     public void setWheres(List<Node> conditions) {
         ast.setWheres(conditions);
+    }
+
+    public void setOrders(List<Node> orders) {
+        ast.setOrders(orders);
     }
 
     public String toJpql() {

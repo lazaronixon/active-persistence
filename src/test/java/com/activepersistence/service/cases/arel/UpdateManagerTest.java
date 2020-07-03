@@ -30,6 +30,12 @@ public class UpdateManagerTest {
     }
 
     @Test
+    public void testOrder() {
+        assertEquals("UPDATE Post this SET this.title = 'testing' ORDER BY this.id",
+                manager.set("this.title = 'testing'").order("this.id").toJpql());
+    }
+
+    @Test
     public void testWhereAnd() {
         assertEquals("UPDATE Post this SET this.title = 'testing' WHERE this.title = 'old' AND this.likes_count > 0",
                 manager.set("this.title = 'testing'").where("this.title = 'old'").where("this.likes_count > 0").toJpql());

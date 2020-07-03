@@ -108,4 +108,15 @@ public class RelationTest extends IntegrationTest {
         assertEquals(count - 3, postsService.count());
     }
 
+    @Test
+    public void testUpdateAll() {
+        assertEquals(3, postsService.where("this.id IN (1,2,3)").updateAll("this.title = 'testing'"));
+        assertEquals("testing", postsService.find(1).getTitle());
+    }
+
+    @Test
+    public void testUpdateAllWithDistinct() {
+        assertThrows(ActivePersistenceError.class,() -> postsService.distinct().updateAll("this.name = 'testing'"));
+    }
+
 }

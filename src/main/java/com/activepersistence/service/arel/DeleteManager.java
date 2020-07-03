@@ -3,6 +3,7 @@ package com.activepersistence.service.arel;
 import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.arel.nodes.DeleteStatement;
 import com.activepersistence.service.arel.nodes.Node;
+import com.activepersistence.service.arel.nodes.SqlLiteral;
 import java.util.List;
 
 public class DeleteManager {
@@ -21,8 +22,16 @@ public class DeleteManager {
         ast.getWheres().add(jpql(condition)); return this;
     }
 
+    public DeleteManager order(String... orders) {
+        ast.getOrders().addAll(SqlLiteral.of(orders)); return this;
+    }
+
     public void setWheres(List<Node> conditions) {
         ast.setWheres(conditions);
+    }
+
+    public void setOrders(List<Node> orders) {
+        ast.setOrders(orders);
     }
 
     public String toJpql() {

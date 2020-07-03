@@ -62,6 +62,10 @@ public class SelectManager {
         return ctx.getWheres();
     }
 
+    public List<Node> getOrders() {
+        return ast.getOrders();
+    }
+
     public List<SqlLiteral> getJoinSources() {
         return ctx.getSource().getRight();
     }

@@ -8,14 +8,11 @@ public class UpdateStatement extends Node {
 
     private Entity relation;
 
-    private List<Node> wheres;
+    private List<Node> wheres = new ArrayList();
 
-    private List<Node> values;
+    private List<Node> orders = new ArrayList();
 
-    public UpdateStatement() {
-        this.values = new ArrayList();
-        this.wheres = new ArrayList();
-    }
+    private List<Node> values = new ArrayList();
 
     public Entity getRelation() {
         return relation;
@@ -31,6 +28,14 @@ public class UpdateStatement extends Node {
 
     public void setWheres(List<Node> wheres) {
         this.wheres = wheres;
+    }
+
+    public List<Node> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Node> orders) {
+        this.orders = orders;
     }
 
     public List<Node> getValues() {

@@ -8,11 +8,10 @@ public class SelectStatement extends Node {
 
     private final SelectCore core;
 
-    private final List<Node> orders;
+    private final List<Node> orders = new ArrayList();
 
     public SelectStatement(Entity entity) {
-        this.core   = new SelectCore(entity);
-        this.orders = new ArrayList();
+        this.core = new SelectCore(entity);
     }
 
     public SelectCore getCore() {

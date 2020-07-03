@@ -19,6 +19,36 @@ public interface Querying<T> {
         return buildRelation().all();
     }
 
+    //<editor-fold defaultstate="collapsed" desc="relation methods">
+    public default T findOrCreateBy(String conditions, Supplier<T> resource) {
+        return all().findOrCreateBy(conditions, resource);
+    }
+
+    public default T findOrGetBy(String conditions, Supplier<T> resource) {
+        return all().findOrCreateBy(conditions, resource);
+    }
+
+    public default List<T> destroyAll() {
+        return all().destroyAll();
+    }
+
+    public default List<T> destroyBy(String conditions) {
+        return all().destroyBy(conditions);
+    }
+
+    public default int deleteAll() {
+        return all().deleteAll();
+    }
+
+    public default int deleteBy(String conditions) {
+        return all().deleteBy(conditions);
+    }
+
+    public default int updateAll(String updates) {
+        return all().updateAll(updates);
+    }
+    //</editor-fold>
+
     //<editor-fold defaultstate="collapsed" desc="finder methods">
     public default T take() {
         return all().take();
@@ -78,14 +108,6 @@ public interface Querying<T> {
 
     public default boolean exists(String conditions) {
         return all().exists(conditions);
-    }
-
-    public default T findOrCreateBy(String conditions, Supplier<T> resource) {
-        return all().findOrCreateBy(conditions, resource);
-    }
-
-    public default T findOrGetBy(String conditions, Supplier<T> resource) {
-        return all().findOrCreateBy(conditions, resource);
     }
     //</editor-fold>
 
@@ -188,22 +210,6 @@ public interface Querying<T> {
 
     public default Relation<T> bind(String name, Object value) {
         return all().bind(name, value);
-    }
-
-    public default List<T> destroyAll() {
-        return all().destroyAll();
-    }
-
-    public default List<T> destroyBy(String conditions) {
-        return all().destroyBy(conditions);
-    }
-
-    public default int deleteAll() {
-        return all().deleteAll();
-    }
-
-    public default int deleteBy(String conditions) {
-        return all().deleteBy(conditions);
     }
     //</editor-fold>
 

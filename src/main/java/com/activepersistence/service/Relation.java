@@ -4,6 +4,7 @@ import com.activepersistence.ActivePersistenceError;
 import com.activepersistence.service.arel.DeleteManager;
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.SelectManager;
+import com.activepersistence.service.arel.UpdateManager;
 import com.activepersistence.service.relation.Calculation;
 import com.activepersistence.service.relation.FinderMethods;
 import com.activepersistence.service.relation.QueryMethods;
@@ -98,14 +99,29 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public int deleteAll() {
-        if (isValidRelationForDelete()) {
+        if (isValidRelationForUpdate()) {
             SelectManager arel = buildArel(false);
             DeleteManager stmt = new DeleteManager();
             stmt.from(entity);
             stmt.setWheres(arel.getConstraints());
+            stmt.setOrders(arel.getOrders());
             return executeUpdate(stmt.toJpql());
         } else {
             throw new ActivePersistenceError("delete_all doesn't support this relation");
+        }
+    }
+
+    public int updateAll(String updates) {
+        if (isValidRelationForUpdate()) {
+            SelectManager arel = buildArel(false);
+            UpdateManager stmt = new UpdateManager();
+            stmt.entity(entity);
+            stmt.set(updates);
+            stmt.setWheres(arel.getConstraints());
+            stmt.setOrders(arel.getOrders());
+            return executeUpdate(stmt.toJpql());
+        } else {
+            throw new ActivePersistenceError("update_all doesn't support this relation");
         }
     }
 
@@ -241,7 +257,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return values.isLockValue() ? PESSIMISTIC_READ : NONE;
     }
 
-    private boolean isValidRelationForDelete() {
+    private boolean isValidRelationForUpdate() {
         return values.isDistinctValue() == false
                 && values.getGroupValues().isEmpty()
                 && values.getHavingValues().isEmpty()
