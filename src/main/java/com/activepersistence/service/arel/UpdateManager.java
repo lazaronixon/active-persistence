@@ -6,7 +6,7 @@ import com.activepersistence.service.arel.nodes.SqlLiteral;
 import com.activepersistence.service.arel.nodes.UpdateStatement;
 import java.util.List;
 
-public class UpdateManager {
+public class UpdateManager extends TreeManager {
 
     private final UpdateStatement ast;
 
@@ -38,10 +38,8 @@ public class UpdateManager {
         ast.setOrders(orders);
     }
 
-    public String toJpql() {
-        StringBuilder collector = new StringBuilder();
-        collector = Entity.visitor.accept(ast, collector);
-        return collector.toString();
+    @Override
+    public UpdateStatement getAst() {
+        return ast;
     }
-
 }

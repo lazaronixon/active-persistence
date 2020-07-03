@@ -6,7 +6,7 @@ import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.SqlLiteral;
 import java.util.List;
 
-public class DeleteManager {
+public class DeleteManager extends TreeManager {
 
     private final DeleteStatement ast;
 
@@ -34,10 +34,9 @@ public class DeleteManager {
         ast.setOrders(orders);
     }
 
-    public String toJpql() {
-        StringBuilder collector = new StringBuilder();
-        collector = Entity.visitor.accept(ast, collector);
-        return collector.toString();
+    @Override
+    public DeleteStatement getAst() {
+        return ast;
     }
 
 }

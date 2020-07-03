@@ -8,7 +8,7 @@ import com.activepersistence.service.arel.nodes.SqlLiteral;
 import static java.util.Arrays.asList;
 import java.util.List;
 
-public class SelectManager {
+public class SelectManager extends TreeManager {
 
     private final SelectStatement ast;
     private final SelectCore ctx;
@@ -70,14 +70,9 @@ public class SelectManager {
         return ctx.getSource().getRight();
     }
 
+    @Override
     public SelectStatement getAst() {
         return ast;
-    }
-
-    public String toJpql() {
-        StringBuilder collector = new StringBuilder();
-        collector = Entity.visitor.accept(ast, collector);
-        return collector.toString();
     }
 
 }
