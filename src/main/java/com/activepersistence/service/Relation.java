@@ -145,10 +145,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return currentScope;
     }
 
-    public String getClassName() {
-        return entityClass.getName();
-    }
-
     @Override
     public Values getValues() {
         return values;
@@ -177,6 +173,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     @Override
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+
+    @Override
+    public Class<T> getEntityClass() {
+        return entityClass;
     }
 
     private SelectManager getArel() {
@@ -228,7 +229,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void buildConstructor(SelectManager arel) {
-        arel.constructor(values.getConstructor());
+        arel.constructor(values.isConstructor() ? entityClass : null);
     }
 
     private void buildSelect(SelectManager arel) {

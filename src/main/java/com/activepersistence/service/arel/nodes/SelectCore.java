@@ -46,8 +46,8 @@ public class SelectCore extends Node {
         this.setQuantifier = value ? new Distinct() : null;
     }
 
-    public void setConstructor(String name) {
-        this.constructor = name != null ? new Constructor(name, this.getProjections()) : null;
+    public void setConstructor(Class klass) {
+        this.constructor = (klass != null ? new Constructor(klass, this.getProjections()) : null);
     }
 
     public List<Node> getProjections() {

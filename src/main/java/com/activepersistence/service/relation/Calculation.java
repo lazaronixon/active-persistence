@@ -41,7 +41,7 @@ public interface Calculation<T> {
 
     public default List<Object> pluck(String... fields) {
         Relation relation = thiz().spawn();
-        relation.getValues().setConstructor(null);
+        relation.getValues().setConstructor(false);
         relation.getValues().getSelectValues().clear();
         relation.getValues().getSelectValues().addAll(asList(fields));
         return relation.fetch_();
@@ -73,7 +73,7 @@ public interface Calculation<T> {
     }
 
     private Values prepareValues(Values values) {
-        values.setConstructor(null);
+        values.setConstructor(false);
         values.setDistinctValue(false);
         values.getSelectValues().clear();
         return values;

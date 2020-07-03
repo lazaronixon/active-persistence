@@ -18,6 +18,8 @@ public interface QueryMethods<T> {
 
     public Base<T> getService();
 
+    public Class<T> getEntityClass();
+
     public default Relation<T> all() {
         if (thiz().getCurrentScope() != null) {
             return new Relation(thiz().getCurrentScope());
@@ -31,7 +33,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> select_(String... fields) {
-        getValues().setConstructor(thiz().getClassName());
+        getValues().setConstructor(true);
         getValues().getSelectValues().addAll(asList(fields));
         return thiz();
     }
@@ -156,7 +158,7 @@ public interface QueryMethods<T> {
         for (ValidUnscopingValues value : values) {
             switch (value) {
                 case SELECT:
-                    getValues().setConstructor(null);
+                    getValues().setConstructor(false);
                     getValues().getSelectValues().clear();
                 case FROM:
                     getValues().setFromClause(null);

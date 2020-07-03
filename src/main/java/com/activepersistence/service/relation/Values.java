@@ -6,12 +6,12 @@ import java.util.Set;
 
 public class Values {
 
-    private String constructor    = null;
     private String fromClause     = null;
     private int limitValue        = 0;
     private int offsetValue       = 0;
     private boolean lockValue     = false;
     private boolean distinctValue = false;
+    private boolean constructor   = false;
 
     private Set<String> selectValues     = new LinkedHashSet();
     private Set<String> whereValues      = new LinkedHashSet();
@@ -48,12 +48,12 @@ public class Values {
     }
 
     public Values merge(Values other) {
-        if (other.getConstructor() != null) constructor = other.getConstructor();
         if (other.getFromClause()  != null) fromClause  = other.getFromClause();
         if (other.getLimitValue()  != 0) limitValue  = other.getLimitValue();
         if (other.getOffsetValue() != 0) offsetValue = other.getOffsetValue();
         if (other.isLockValue()) lockValue = other.isLockValue();
         if (other.isDistinctValue()) distinctValue = other.isDistinctValue();
+        if (other.isConstructor()) constructor = other.isConstructor();
         selectValues.addAll(other.getSelectValues());
         whereValues.addAll(other.getWhereValues());
         groupValues.addAll(other.getGroupValues());
@@ -127,7 +127,7 @@ public class Values {
         return distinctValue;
     }
 
-    public String getConstructor() {
+    public boolean isConstructor() {
         return constructor;
     }
 
@@ -151,7 +151,7 @@ public class Values {
         this.lockValue = lockValue;
     }
 
-    public void setConstructor(String constructor) {
+    public void setConstructor(boolean constructor) {
         this.constructor = constructor;
     }
 

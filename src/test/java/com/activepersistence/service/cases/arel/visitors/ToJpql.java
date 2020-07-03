@@ -61,8 +61,8 @@ public class ToJpql {
 
     @Test
     public void testVisitConstructor() {
-        Constructor constructor = new Constructor("foo", SqlLiteral.asList("this.id, this.title"));
-        assertEquals(" NEW foo(this.id, this.title)", compile(constructor));
+        Constructor constructor = new Constructor(Object.class, SqlLiteral.asList("this.id, this.title"));
+        assertEquals(" NEW java.lang.Object(this.id, this.title)", compile(constructor));
     }
 
     @Test

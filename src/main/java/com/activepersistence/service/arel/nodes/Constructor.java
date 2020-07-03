@@ -4,21 +4,25 @@ import java.util.List;
 
 public class Constructor extends Node {
 
-    private final String name;
+    private final Class klass;
 
     private final List<Node> projections;
 
-    public Constructor(String name, List<Node> projections) {
-        this.name = name;
+    public Constructor(Class klass, List<Node> projections) {
+        this.klass = klass;
         this.projections = projections;
     }
 
-    public String getName() {
-        return name;
+    public Class getKlass() {
+        return klass;
     }
 
     public List<Node> getProjections() {
         return projections;
+    }
+
+    public String getName() {
+        return klass.getName();
     }
 
 }
