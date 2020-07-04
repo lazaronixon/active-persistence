@@ -275,7 +275,7 @@ long   total   = (long)   clientsService.sum("this.ordersCount");
 double average = (double) clientsService.average("this.ordersCount");
 ```
 
-## Requirements
+## Recommended Environment
 * Java 9
 * JakartaEE 8
 * Payara Server
