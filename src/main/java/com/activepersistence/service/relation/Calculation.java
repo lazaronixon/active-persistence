@@ -2,7 +2,6 @@ package com.activepersistence.service.relation;
 
 import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.Relation;
-import static java.util.Arrays.asList;
 import java.util.List;
 import java.util.Set;
 
@@ -49,20 +48,19 @@ public interface Calculation<T> {
 
     private Object calculate(String operation, String field) {
         Relation relation = thiz().spawn();
-        Values   values   = relation.getValues();
-        values.setConstructor(false);
-        values.setDistinctValue(false);
+        relation.getValues().setConstructor(false);
+        relation.getValues().setDistinctValue(false);
 
         if (operation.equals("COUNT")) {
-            values.setSelectValues(Set.of(jpql(field).count(isDistinct()).toJpql()));
+            relation.getValues().setSelectValues(Set.of(jpql(field).count(isDistinct()).toJpql()));
         } else if (operation.equals("MIN")) {
-            values.setSelectValues(Set.of(jpql(field).minimum().toJpql()));
+            relation.getValues().setSelectValues(Set.of(jpql(field).minimum().toJpql()));
         } else if (operation.equals("MAX")) {
-            values.setSelectValues(Set.of(jpql(field).maximum().toJpql()));
+            relation.getValues().setSelectValues(Set.of(jpql(field).maximum().toJpql()));
         } else if (operation.equals("AVG")) {
-            values.setSelectValues(Set.of(jpql(field).average().toJpql()));
+            relation.getValues().setSelectValues(Set.of(jpql(field).average().toJpql()));
         } else if (operation.equals("SUM")) {
-            values.setSelectValues(Set.of(jpql(field).sum().toJpql()));
+            relation.getValues().setSelectValues(Set.of(jpql(field).sum().toJpql()));
         } else {
             throw new RuntimeException("Operation not supported: " + operation);
         }

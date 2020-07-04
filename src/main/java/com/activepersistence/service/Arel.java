@@ -8,8 +8,4 @@ public class Arel {
         return new SqlLiteral(rawJpql);
     }
 
-    public static SqlLiteral thiz() {
-        return new SqlLiteral("this");
-    }
-
 }

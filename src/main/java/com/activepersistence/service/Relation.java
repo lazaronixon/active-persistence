@@ -229,7 +229,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void buildConstructor(SelectManager arel) {
-        arel.constructor(values.isConstructor() ? entityClass : null);
+        if (values.isConstructor()) arel.constructor(entityClass);
     }
 
     private void buildSelect(SelectManager arel) {

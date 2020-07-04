@@ -77,8 +77,18 @@ public class QueryMethodsTest extends IntegrationTest {
     }
 
     @Test
+    public void testFromNull() {
+        assertEquals("SELECT this FROM Post this", postsService.from("Teste this").from(null).toJpql());
+    }
+
+    @Test
     public void testUnscope() {
         assertEquals("SELECT this FROM Post this", postsService.order("this.id").unscope(ValidUnscopingValues.ORDER).toJpql());
+    }
+
+    @Test
+    public void testUnscopeFrom() {
+        assertEquals("SELECT this FROM Post this", postsService.from("Teste this").unscope(ValidUnscopingValues.FROM).toJpql());
     }
 
     @Test
