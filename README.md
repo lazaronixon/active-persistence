@@ -166,8 +166,7 @@ ordersService.select("date(this.createdAt), sum(this.price)").group("date(this.c
 
 ### Total of grouped items
 ```java
-ordersService.group("this.status").count
-// => { 'awaiting_approval' => 7, 'paid' => 12 }
+ordersService.group("this.status").count // => { 'awaiting_approval' => 7, 'paid' => 12 }
 ```
 
 ### Having
