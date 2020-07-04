@@ -267,8 +267,8 @@ clientsService.where("this.active = true").ids; //[1, 2, 3]
 
 ### Calculations
 ```java
-long   count   = (long) clientsService.count();
-long   count   = (long) clientsService.count("this.age");
+long   count   = (long)   clientsService.count();
+long   count   = (long)   clientsService.count("this.age");
 int    minimum = (int)    clientsService.minimum("this.age");
 int    maximum = (int)    clientsService.maximum("this.age");
 long   total   = (long)   clientsService.sum("this.ordersCount");
