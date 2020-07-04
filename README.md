@@ -149,8 +149,8 @@ clientsService.order("this.createdAt ASC").fetch();
 
 ### Selecting Specific Fields
 ```java
-clientsService.select("this.viewableBy", "this.locked").fetch();
-clientsService.select("this.name").distinct().fetch();
+Client client = clientsService.select("this.viewableBy", "this.locked").fetch();
+Client client = clientsService.select("this.name").distinct().fetch();
 ```
 
 ### Limit and Offset
@@ -166,7 +166,7 @@ ordersService.select("date(this.createdAt), sum(this.price)").group("date(this.c
 
 ### Total of grouped items
 ```java
-ordersService.group("this.status").count // => { 'awaiting_approval' => 7, 'paid' => 12 }
+HashMap<String, Long> result = ordersService.group("this.status").count // => { 'awaiting_approval' => 7, 'paid' => 12 }
 ```
 
 ### Having
@@ -267,8 +267,8 @@ clientsService.where("this.active = true").ids; //[1, 2, 3]
 
 ### Calculations
 ```java
-long   count   = clientsService.count();
-long   count   = clientsService.count("this.age");
+long   count   = (long) clientsService.count();
+long   count   = (long) clientsService.count("this.age");
 int    minimum = (int)    clientsService.minimum("this.age");
 int    maximum = (int)    clientsService.maximum("this.age");
 long   total   = (long)   clientsService.sum("this.ordersCount");
