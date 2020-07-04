@@ -86,12 +86,18 @@ List<User> users = usersService.where("this.name = ?1 AND this.occupation = ?2")
 User user = userService.bind(1, "David").findBy("this.name = ?1");
 user.name = "Dave";
 usersService.save(user);
+//OR
+usersService.updateAll("this.maxLoginAttempts = 3, mustChangePassword = 'true'");
 ```
 
 ### Delete
 ```java
 User user = usersService.bind(1, "David").findBy("this.name = ?1");
 usersService.destroy(user);
+//OR
+usersService.destroyBy("this.name = 'David'");
+//OR
+usersService.destroyAll();
 ```
 
 ## Retrieving Objects from the Database
@@ -158,10 +164,18 @@ clientsService.limit(5).offset(30).fetch();
 ordersService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").fetch();
 ```
 
+### Total of grouped items
+```java
+ordersService.group("this.status").count
+// => { 'awaiting_approval' => 7, 'paid' => 12 }
+```
+
 ### Having
 ```java
 ordersService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").having("sum(this.price) > 100").fetch();
 ```
+
+## Overriding Conditions
 
 ### Unscope
 ```java
@@ -183,28 +197,28 @@ postsService.order("this.title").reorder("this.createdAt").fetch();
 articlesService.where("this.trashed = true").rewhere("this.trashed = false").fetch();
 ```
 
-### Null Relation
+## Null Relation
 ```java
 studentsService.none(); // returns an empty Relation and fires where 1=0.
 ```
 
-### Locking Records for Update
+## Locking Records for Update
 ```java
 Client client = clientsService.lock().first();
 ```
 
-### Joining Tables
+## Joining Tables
 ```java
 authorsService.joins("INNER JOIN posts").fetch();
 ```
 
-### Eager Loading Associations
+## Eager Loading Associations
 ```java
 clientsService.includes("client.address").limit(10).fetch();
 clientsService.eagerLoads("client.address").limit(10).fetch();
 ```
 
-### Applying a default scope
+## Applying a default scope
 ```java
 public class StudentsService extends ApplicationService<Student> {
     @Override
@@ -218,13 +232,19 @@ public class StudentsService extends ApplicationService<Student> {
     }
 }
 
-clientsService.all(); // SELECT this FROM Student this WHERE this.name = 'nixon'
-clientsService.unscoped().all(); // SELECT this FROM Student this
+clientsService.all(); // SELECT this FROM Client this WHERE this.name = 'nixon'
+clientsService.unscoped().all(); // SELECT this FROM Client this
 ```
 
 ### Merging of scopes
 ```java
 usersService.scoping(usersService.active()).fetch();
+```
+
+### Removing All Scoping
+```java
+clientsService.unscoped().all();
+clientsService.where("this.published = false").unscoped.all
 ```
 
 ### Find or Build a New Object
