@@ -4,15 +4,11 @@ import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.PostsService;
 import static java.util.Arrays.asList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import javax.inject.Inject;
 import org.jboss.arquillian.persistence.UsingDataSet;
-import org.junit.Assert;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 @UsingDataSet({"posts.xml", "comments.xml"})
