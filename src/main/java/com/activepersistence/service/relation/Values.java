@@ -11,7 +11,7 @@ public class Values {
     private int offsetValue       = 0;
     private boolean lockValue     = false;
     private boolean distinctValue = false;
-    private boolean constructor   = true;
+    private boolean constructor   = false;
 
     private Set<String> selectValues     = new LinkedHashSet();
     private Set<String> whereValues      = new LinkedHashSet();
