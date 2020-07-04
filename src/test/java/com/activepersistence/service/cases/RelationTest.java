@@ -20,12 +20,6 @@ public class RelationTest extends IntegrationTest {
     private ClientsService clientsService;
 
     @Test
-    public void testMerge() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0",
-                postsService.merge(postsService.oneNeZero()).toJpql());
-    }
-
-    @Test
     public void testScoping() {
         assertEquals("SELECT this FROM Post this WHERE 1=0",
                 postsService.scoping(postsService.oneNeZero()).toJpql());

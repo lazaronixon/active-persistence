@@ -8,6 +8,7 @@ import com.activepersistence.service.arel.UpdateManager;
 import com.activepersistence.service.relation.Calculation;
 import com.activepersistence.service.relation.FinderMethods;
 import com.activepersistence.service.relation.QueryMethods;
+import com.activepersistence.service.relation.SpawnMethods;
 import com.activepersistence.service.relation.Values;
 import java.util.List;
 import static java.util.Optional.ofNullable;
@@ -20,7 +21,7 @@ import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, Persistence<T> {
+public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, Persistence<T>, SpawnMethods<T> {
 
     private final EntityManager entityManager;
 
@@ -70,14 +71,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public boolean fetchExists() {
         return buildQuery(toJpql()).getResultStream().findAny().isPresent();
-    }
-
-    public Relation<T> merge(Relation<T> other) {
-        return spawn().merge_(other);
-    }
-
-    public Relation<T> merge_(Relation<T> other) {
-        values.merge(other.getValues()); return thiz();
     }
 
     public Relation<T> scoping(Relation<T> scope) {
@@ -146,6 +139,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     @Override
+    public Relation<T> spawn() {
+        return SpawnMethods.super.spawn();
+    }
+
+    @Override
     public Values getValues() {
         return values;
     }
@@ -158,11 +156,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     @Override
     public Relation<T> thiz() {
         return this;
-    }
-
-    @Override
-    public Relation<T> spawn() {
-        return new Relation(this);
     }
 
     @Override
