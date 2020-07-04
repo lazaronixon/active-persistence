@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <groupId>com.github.lazaronixon</groupId>
     <artifactId>active-persistence</artifactId>
     <packaging>jar</packaging>
-    <version>0.0.7-SNAPSHOT</version>
-    
+    <version>0.0.8-SNAPSHOT</version>
+
     <name>ActivePersistence</name>
-    <url>https://github.com/lazaronixon/active-persistence</url> 
-    
+    <url>https://github.com/lazaronixon/active-persistence</url>
+
     <description>
         <![CDATA[Active Persistence is a implementation of Active Record Query Interface for JPA]]>
     </description>
@@ -17,7 +17,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>9</maven.compiler.source>
-        <maven.compiler.target>9</maven.compiler.target>        
+        <maven.compiler.target>9</maven.compiler.target>
     </properties>
 
     <dependencyManagement>
@@ -30,8 +30,8 @@
                 <scope>import</scope>
             </dependency>
         </dependencies>
-    </dependencyManagement>                                                                                                    
-    
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>jakarta.platform</groupId>
@@ -39,7 +39,7 @@
             <version>8.0.0</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <!-- JUnit dependency for the test -->
         <dependency>
             <groupId>junit</groupId>
@@ -47,31 +47,31 @@
             <version>4.13</version>
             <scope>test</scope>
         </dependency>
-               
+
         <!-- The Arquilian JUnit annotations -->
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <!-- The Arquilian DBUnit annotations -->
         <dependency>
             <groupId>org.jboss.arquillian.extension</groupId>
             <artifactId>arquillian-persistence-dbunit</artifactId>
             <version>1.0.0.Alpha7</version>
             <scope>test</scope>
-        </dependency>            
-        
+        </dependency>
+
         <!-- Remote Payara Client-->
         <dependency>
             <groupId>fish.payara.arquillian</groupId>
             <artifactId>arquillian-payara-server-remote</artifactId>
             <version>2.3</version>
             <scope>test</scope>
-        </dependency>                                                                           
-    </dependencies>       
-    
+        </dependency>
+    </dependencies>
+
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
@@ -82,7 +82,7 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
     </distributionManagement>
-    
+
     <licenses>
         <license>
             <name>MIT License</name>
@@ -90,20 +90,20 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    
+
     <scm>
         <connection>scm:git:https://github.com/lazaronixon/active-persistence.git</connection>
         <developerConnection>scm:git:https://github.com/lazaronixon/active-persistence.git</developerConnection>
         <url>https://github.com/lazaronixon/active-persistence</url>
     </scm>
-    
+
     <developers>
         <developer>
             <id>lazaronixon</id>
             <name>Lazaro Nixon</name>
         </developer>
-    </developers>     
-    
+    </developers>
+
     <profiles>
         <profile>
             <id>release</id>
@@ -148,8 +148,8 @@
                                 </goals>
                             </execution>
                         </executions>
-                    </plugin>            
-                </plugins>                
+                    </plugin>
+                </plugins>
             </build>
         </profile>
     </profiles>
