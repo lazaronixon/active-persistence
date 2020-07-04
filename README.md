@@ -96,8 +96,10 @@ User user = usersService.bind(1, "David").findBy("this.name = ?1");
 usersService.destroy(user);
 //OR
 usersService.destroyBy("this.name = 'David'");
+usersService.destroyAll()
 //OR
-usersService.destroyAll();
+usersService.deleteBy("this.name = 'David'");
+usersService.deleteAll()
 ```
 
 ## Retrieving Objects from the Database
@@ -263,8 +265,8 @@ boolean exists = studentsService.where("this.name = 'Lifo'").exists();
 
 ### Pluck
 ```java
-clientsService.where("this.active = true").pluck("this.id"); //[1, 2, 3]
-clientsService.where("this.active = true").ids; //[1, 2, 3]
+List<Integer> ids = clientsService.where("this.active = true").pluck("this.id"); //[1, 2, 3]
+List<Integer> ids = clientsService.where("this.active = true").ids; //[1, 2, 3]
 
 ```
 

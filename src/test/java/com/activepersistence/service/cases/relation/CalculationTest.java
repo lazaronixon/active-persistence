@@ -5,9 +5,12 @@ import com.activepersistence.service.models.PostsService;
 import static java.util.Arrays.asList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import org.jboss.arquillian.persistence.UsingDataSet;
+import org.junit.Assert;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -50,7 +53,15 @@ public class CalculationTest extends IntegrationTest {
 
     @Test
     public void testPluck() {
-        assertEquals(asList("flood", "flood"), postsService.where("this.id IN (4, 5)").pluck("this.title"));
+        List<Object> results = postsService.where("this.id IN (4, 5)").pluck("this.title");
+        assertEquals(asList("flood", "flood"), results);
+    }
+
+    @Test
+    public void testPluckMultiple() {
+        List<Object[]> results = postsService.where("this.id IN (4, 5)").pluck("this.id", "this.title");
+        assertArrayEquals(new Object[] {4, "flood"}, results.get(0));
+        assertArrayEquals(new Object[] {5, "flood"}, results.get(1));
     }
 
     @Test

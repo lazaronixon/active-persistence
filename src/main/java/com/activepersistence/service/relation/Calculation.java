@@ -41,7 +41,7 @@ public interface Calculation<T> {
         return pluck("this.id");
     }
 
-    public default List<Object> pluck(String... fields) {
+    public default List pluck(String... fields) {
         Relation<T> relation = thiz().spawn();
         relation.getValues().setConstructor(false);
         relation.getValues().setSelectValues(Set.of(fields));
@@ -91,7 +91,7 @@ public interface Calculation<T> {
 
     private Object fetchGroupedResult(Relation<T> relation, Values values) {
         List<Object[]> results = relation.fetch_();
-        
+
         if (values.getGroupValues().size() > 1) {
             return results.stream().collect(toMap(v -> copyOfRange(v, 1, v.length), v -> v[0]));
         } else {

@@ -25,7 +25,7 @@ public interface Querying<T> {
     }
 
     public default T findOrInitializeBy(String conditions, Supplier<T> resource) {
-        return all().findOrCreateBy(conditions, resource);
+        return all().findOrInitializeBy(conditions, resource);
     }
 
     public default List<T> destroyAll() {
@@ -238,7 +238,7 @@ public interface Querying<T> {
         return all().sum(field);
     }
 
-    public default List<Object> pluck(String... field) {
+    public default List pluck(String... field) {
         return all().pluck(field);
     }
 
