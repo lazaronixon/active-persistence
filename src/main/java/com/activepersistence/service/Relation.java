@@ -22,7 +22,7 @@ import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, Persistence<T>, SpawnMethods<T>, Scoping<T> {
+public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, SpawnMethods<T>, Scoping<T> {
 
     private final EntityManager entityManager;
 
@@ -79,7 +79,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public T findOrCreateBy(String conditions, Supplier<T> resource) {
-        return ofNullable(findBy(conditions)).orElseGet(() -> create(resource.get()));
+        return ofNullable(findBy(conditions)).orElseGet(() -> service.create(resource.get()));
     }
 
     public T findOrInitializeBy(String conditions, Supplier<T> resource) {
@@ -87,7 +87,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public List<T> destroyAll() {
-        return fetch().stream().map((r) -> { destroy(r); return r; }).collect(toList());
+        return fetch().stream().map((r) -> { service.destroy(r); return r; }).collect(toList());
     }
 
     public List<T> destroyBy(String conditions) {
@@ -158,11 +158,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     @Override
     public Relation<T> relation() {
         return scoping(new Relation(service));
-    }
-
-    @Override
-    public EntityManager getEntityManager() {
-        return entityManager;
     }
 
     private SelectManager getArel() {
