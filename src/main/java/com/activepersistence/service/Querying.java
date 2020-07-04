@@ -24,7 +24,7 @@ public interface Querying<T> {
         return all().findOrCreateBy(conditions, resource);
     }
 
-    public default T findOrGetBy(String conditions, Supplier<T> resource) {
+    public default T findOrInitializeBy(String conditions, Supplier<T> resource) {
         return all().findOrCreateBy(conditions, resource);
     }
 

@@ -87,7 +87,7 @@ User user = userService.bind(1, "David").findBy("this.name = ?1");
 user.name = "Dave";
 usersService.save(user);
 //OR
-usersService.updateAll("this.maxLoginAttempts = 3, mustChangePassword = 'true'");
+usersService.updateAll("this.maxLoginAttempts = 3, this.mustChangePassword = 'true'");
 ```
 
 ### Delete
@@ -161,17 +161,18 @@ clientsService.limit(5).offset(30).fetch();
 
 ### Group
 ```java
-ordersService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").fetch();
+List<Order> orders = ordersService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").fetch();
 ```
 
 ### Total of grouped items
 ```java
-HashMap<String, Long> result = ordersService.group("this.status").count // => { 'awaiting_approval' => 7, 'paid' => 12 }
+HashMap<String, Long> result = ordersService.group("this.status").count
+// => { 'awaiting_approval' => 7, 'paid' => 12 }
 ```
 
 ### Having
 ```java
-ordersService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").having("sum(this.price) > 100").fetch();
+List<Order> orders = ordersService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").having("sum(this.price) > 100").fetch();
 ```
 
 ## Overriding Conditions
@@ -238,18 +239,20 @@ clientsService.unscoped().all(); // SELECT this FROM Client this
 ### Merging of scopes
 ```java
 usersService.scoping(usersService.active()).fetch();
+// OR
+usersService.merge(usersService.active()).fetch();
 ```
 
 ### Removing All Scoping
 ```java
-clientsService.unscoped().all();
-clientsService.where("this.published = false").unscoped.all
+clientsService.unscoped().fetch();
+clientsService.where("this.published = false").unscoped().fetch();
 ```
 
 ### Find or Build a New Object
 ```java
 Post createdPost = postsService.findOrCreateBy("this.title = 'awesome title'",() -> new Post("awesome title", "body", 0));
-Post newPost     = postsService.findOrGetBy("this.title = 'awesome title'",() -> new Post("awesome title", "body", 0));
+Post newPost     = postsService.findOrInitializeBy("this.title = 'awesome title'",() -> new Post("awesome title", "body", 0));
 ```
 
 ### Existence of Objects

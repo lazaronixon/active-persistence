@@ -92,7 +92,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return ofNullable(findBy(conditions)).orElseGet(() -> create(resource.get()));
     }
 
-    public T findOrGetBy(String conditions, Supplier<T> resource) {
+    public T findOrInitializeBy(String conditions, Supplier<T> resource) {
         return ofNullable(findBy(conditions)).orElseGet(resource::get);
     }
 

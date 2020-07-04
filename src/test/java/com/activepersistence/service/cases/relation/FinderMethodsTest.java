@@ -103,14 +103,14 @@ public class FinderMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testFindOrGetBy() {
-        Post newPost = postsService.findOrGetBy("this.title = 'awesome title'",() -> new Post("awesome title", "body", 0));
+    public void testFindOrInitializeBy() {
+        Post newPost = postsService.findOrInitializeBy("this.title = 'awesome title'",() -> new Post("awesome title", "body", 0));
         assertEquals("body", newPost.getBody());
     }
 
     @Test
     public void testFindOrGetByInitialize() {
-        Post newPost = postsService.findOrGetBy("this.title = 'hello world'",() -> new Post("hello world", "body", 0));
+        Post newPost = postsService.findOrInitializeBy("this.title = 'hello world'",() -> new Post("hello world", "body", 0));
         assertEquals("My first post", newPost.getBody());
     }
 
