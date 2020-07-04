@@ -33,9 +33,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> select_(String... fields) {
-        getValues().setConstructor(true);
-        getValues().getSelectValues().addAll(asList(fields));
-        return thiz();
+        getValues().getSelectValues().addAll(asList(fields)); return thiz();
     }
 
     public default Relation<T> joins(String value) {
@@ -158,7 +156,6 @@ public interface QueryMethods<T> {
         for (ValidUnscopingValues value : values) {
             switch (value) {
                 case SELECT:
-                    getValues().setConstructor(false);
                     getValues().getSelectValues().clear();
                 case FROM:
                     getValues().setFromClause(null);

@@ -11,7 +11,7 @@ public class Values {
     private int offsetValue       = 0;
     private boolean lockValue     = false;
     private boolean distinctValue = false;
-    private boolean constructor   = false;
+    private boolean constructor   = true;
 
     private Set<String> selectValues     = new LinkedHashSet();
     private Set<String> whereValues      = new LinkedHashSet();
@@ -129,6 +129,10 @@ public class Values {
 
     public boolean isConstructor() {
         return constructor;
+    }
+
+    public void setSelectValues(Set<String> selectValues) {
+        this.selectValues = selectValues;
     }
 
     public void setFromClause(String fromClause) {

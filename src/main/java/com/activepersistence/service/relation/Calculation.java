@@ -4,6 +4,7 @@ import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.Relation;
 import static java.util.Arrays.asList;
 import java.util.List;
+import java.util.Set;
 
 public interface Calculation<T> {
 
@@ -42,25 +43,26 @@ public interface Calculation<T> {
     public default List<Object> pluck(String... fields) {
         Relation relation = thiz().spawn();
         relation.getValues().setConstructor(false);
-        relation.getValues().getSelectValues().clear();
-        relation.getValues().getSelectValues().addAll(asList(fields));
+        relation.getValues().setSelectValues(Set.of(fields));
         return relation.fetch_();
     }
 
     private Object calculate(String operation, String field) {
         Relation relation = thiz().spawn();
-        Values   values   = prepareValues(relation.getValues());
+        Values   values   = relation.getValues();
+        values.setConstructor(false);
+        values.setDistinctValue(false);
 
         if (operation.equals("COUNT")) {
-            values.getSelectValues().add(jpql(field).count(isDistinct()).toJpql());
+            values.setSelectValues(Set.of(jpql(field).count(isDistinct()).toJpql()));
         } else if (operation.equals("MIN")) {
-            values.getSelectValues().add(jpql(field).minimum().toJpql());
+            values.setSelectValues(Set.of(jpql(field).minimum().toJpql()));
         } else if (operation.equals("MAX")) {
-            values.getSelectValues().add(jpql(field).maximum().toJpql());
+            values.setSelectValues(Set.of(jpql(field).maximum().toJpql()));
         } else if (operation.equals("AVG")) {
-            values.getSelectValues().add(jpql(field).average().toJpql());
+            values.setSelectValues(Set.of(jpql(field).average().toJpql()));
         } else if (operation.equals("SUM")) {
-            values.getSelectValues().add(jpql(field).sum().toJpql());
+            values.setSelectValues(Set.of(jpql(field).sum().toJpql()));
         } else {
             throw new RuntimeException("Operation not supported: " + operation);
         }
@@ -70,13 +72,6 @@ public interface Calculation<T> {
 
     private boolean isDistinct() {
         return thiz().getValues().isDistinctValue();
-    }
-
-    private Values prepareValues(Values values) {
-        values.setConstructor(false);
-        values.setDistinctValue(false);
-        values.getSelectValues().clear();
-        return values;
     }
 
 }
