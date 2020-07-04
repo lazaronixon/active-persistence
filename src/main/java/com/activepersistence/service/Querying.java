@@ -13,14 +13,12 @@ public interface Querying<T> {
 
     public Class<T> getEntityClass();
 
-    public Relation<T> buildRelation();
-
     public default Relation<T> all() {
-        return buildRelation().all();
+        return relation().all();
     }
 
     public default Relation<T> unscoped() {
-        return buildRelation().unscoped();
+        return relation().unscoped();
     }
 
     //<editor-fold defaultstate="collapsed" desc="relation methods">
@@ -268,5 +266,9 @@ public interface Querying<T> {
         return getEntityManager().createQuery(qlString);
     }
     //</editor-fold>
+
+    private Relation<T> relation() {
+        return new Relation((Base) this);
+    }
 
 }

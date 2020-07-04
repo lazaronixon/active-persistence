@@ -16,12 +16,13 @@ public abstract class Base<T> implements Persistence<T>, Querying<T>  {
     public abstract EntityManager getEntityManager();
 
     @Override
-    public Class<T> getEntityClass() { return entityClass; }
+    public Class<T> getEntityClass() {
+        return entityClass;
+    }
 
-    @Override
-    public Relation<T> buildRelation() { return new Relation(this); }
-
-    public boolean useDefaultScope() { return false; }
+    public boolean useDefaultScope() {
+        return false;
+    }
 
     public Relation<T> defaultScope() {
         throw new UnsupportedOperationException("defaultScope() must be implemented when useDefaultScope() is true.");
