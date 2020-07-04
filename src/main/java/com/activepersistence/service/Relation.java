@@ -131,6 +131,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.currentScope = currentScope;
     }
 
+    @Override
     public Relation<T> getCurrentScope() {
         return currentScope;
     }

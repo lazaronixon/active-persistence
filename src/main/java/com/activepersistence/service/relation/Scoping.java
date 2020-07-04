@@ -11,11 +11,13 @@ public interface Scoping<T> {
 
     public Base<T> getService();
 
+    public Relation<T> getCurrentScope();
+
     public Relation<T> relation();
 
     public default Relation<T> all() {
-        if (thiz().getCurrentScope() != null) {
-            return new Relation(thiz().getCurrentScope());
+        if (getCurrentScope() != null) {
+            return new Relation(getCurrentScope());
         } else {
             return defaultScoped();
         }
