@@ -3,9 +3,13 @@ package com.activepersistence.service.cases.relation;
 import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.PostsService;
 import static java.util.Arrays.asList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import javax.inject.Inject;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 @UsingDataSet({"posts.xml", "comments.xml"})
@@ -52,6 +56,14 @@ public class CalculationTest extends IntegrationTest {
     @Test
     public void testIds() {
         assertEquals(asList(1, 2), postsService.where("this.id IN (1, 2)").ids());
+    }
+
+    @Test
+    public void testCountGrouped() {
+        HashMap<String, Long> result = (HashMap) postsService.where("this.id IN (3, 4, 5)").group("this.title").count();
+        assertEquals(Long.valueOf(1), result.get("beautiful night"));
+        assertEquals(Long.valueOf(2), result.get("flood"));
+        assertEquals(2, result.size());
     }
 
 }

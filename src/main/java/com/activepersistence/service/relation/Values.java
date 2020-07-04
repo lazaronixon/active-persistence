@@ -25,8 +25,7 @@ public class Values {
     private HashMap<Integer, Object> ordinalParameters = new HashMap();
     private HashMap<String, Object> namedParameters    = new HashMap();
 
-    public Values() {
-    }
+    public Values() {}
 
     public Values(Values other) {
         constructor       = other.constructor;

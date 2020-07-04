@@ -2,8 +2,10 @@ package com.activepersistence.service.relation;
 
 import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.Relation;
+import static java.util.Arrays.copyOfRange;
 import java.util.List;
 import java.util.Set;
+import static java.util.stream.Collectors.toMap;
 
 public interface Calculation<T> {
 
@@ -16,7 +18,7 @@ public interface Calculation<T> {
     }
 
     public default Object count(String field) {
-        return (long) calculate("COUNT", field);
+        return calculate("COUNT", field);
     }
 
     public default Object minimum(String field) {
@@ -40,7 +42,7 @@ public interface Calculation<T> {
     }
 
     public default List<Object> pluck(String... fields) {
-        Relation relation = thiz().spawn();
+        Relation<T> relation = thiz().spawn();
         relation.getValues().setConstructor(false);
         relation.getValues().setSelectValues(Set.of(fields));
         return relation.fetch_();
@@ -51,21 +53,50 @@ public interface Calculation<T> {
         relation.getValues().setConstructor(false);
         relation.getValues().setDistinctValue(false);
 
-        if (operation.equals("COUNT")) {
-            relation.getValues().setSelectValues(Set.of(jpql(field).count(isDistinct()).toJpql()));
-        } else if (operation.equals("MIN")) {
-            relation.getValues().setSelectValues(Set.of(jpql(field).minimum().toJpql()));
-        } else if (operation.equals("MAX")) {
-            relation.getValues().setSelectValues(Set.of(jpql(field).maximum().toJpql()));
-        } else if (operation.equals("AVG")) {
-            relation.getValues().setSelectValues(Set.of(jpql(field).average().toJpql()));
-        } else if (operation.equals("SUM")) {
-            relation.getValues().setSelectValues(Set.of(jpql(field).sum().toJpql()));
+        if (relation.getValues().getGroupValues().isEmpty()) {
+            return executeSimpleCalculation(relation, operation, field);
         } else {
-            throw new RuntimeException("Operation not supported: " + operation);
+            return executeGroupedCalculation(relation, operation, field);
         }
+    }
 
-        return relation.fetchOne();
+    private Object executeSimpleCalculation(Relation<T> relation, String operation, String field) {
+        relation.getValues().setSelectValues(Set.of(operationOverAggregateColumn(operation, field))); return relation.fetchOne();
+    }
+
+    private Object executeGroupedCalculation(Relation<T> relation, String operation, String field) {
+        Values values = relation.getValues();
+        values.getSelectValues().clear();
+        values.getSelectValues().add(operationOverAggregateColumn(operation, field));
+        values.getSelectValues().addAll(values.getGroupValues());
+        return fetchGroupedResult(relation, values);
+    }
+
+    private String operationOverAggregateColumn(String operation, String field) {
+        switch (operation) {
+            case "COUNT":
+                return jpql(field).count(isDistinct()).toJpql();
+            case "MIN":
+                return jpql(field).minimum().toJpql();
+            case "MAX":
+                return jpql(field).maximum().toJpql();
+            case "AVG":
+                return jpql(field).average().toJpql();
+            case "SUM":
+                return jpql(field).sum().toJpql();
+            default:
+                throw new RuntimeException("Operation not supported: " + operation);
+        }
+    }
+
+    private Object fetchGroupedResult(Relation<T> relation, Values values) {
+        List<Object[]> results = relation.fetch_();
+        
+        if (values.getGroupValues().size() > 1) {
+            return results.stream().collect(toMap(v -> copyOfRange(v, 1, v.length), v -> v[0]));
+        } else {
+            return results.stream().collect(toMap(v -> v[1], v -> v[0]));
+        }
     }
 
     private boolean isDistinct() {

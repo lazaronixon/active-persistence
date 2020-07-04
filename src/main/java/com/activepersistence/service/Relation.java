@@ -64,7 +64,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return buildQuery(toJpql()).getResultList();
     }
 
-    public List<Object> fetch_() {
+    public List fetch_() {
         return buildQuery_(toJpql()).getResultList();
     }
 
