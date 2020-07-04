@@ -1,10 +1,7 @@
 package com.activepersistence.service.relation;
 
-import com.activepersistence.service.Base;
 import com.activepersistence.service.Relation;
 import static java.util.Arrays.asList;
-import static java.util.Optional.ofNullable;
-import java.util.function.Supplier;
 
 public interface QueryMethods<T> {
 
@@ -12,21 +9,7 @@ public interface QueryMethods<T> {
 
     public Relation<T> spawn();
 
-    public Relation<T> relation();
-
     public Values getValues();
-
-    public Base<T> getService();
-
-    public Class<T> getEntityClass();
-
-    public default Relation<T> all() {
-        if (thiz().getCurrentScope() != null) {
-            return new Relation(thiz().getCurrentScope());
-        } else {
-            return defaultScoped();
-        }
-    }
 
     public default Relation<T> select(String... fields) {
         return spawn().select_(fields);
@@ -213,29 +196,6 @@ public interface QueryMethods<T> {
 
     public default Relation<T> bind_(String name, Object value) {
         getValues().getNamedParameters().put(name, value); return thiz();
-    }
-
-    private Relation<T> defaultScoped() {
-        return ofNullable(buildDefaultScope()).orElseGet(this::relation);
-    }
-
-    private Relation<T> buildDefaultScope() {
-        if (getService().useDefaultScope()) {
-            return evaluateDefaultScope(() -> thiz().merge_(getService().defaultScope()));
-        } else {
-            return null;
-        }
-    }
-
-    private Relation<T> evaluateDefaultScope(Supplier<Relation> supplier) {
-        if (getService().shouldIgnoreDefaultScope()) return null;
-
-        try {
-            getService().setIgnoreDefaultScope(true);
-            return supplier.get();
-        } finally {
-            getService().setIgnoreDefaultScope(false);
-        }
     }
 
 }

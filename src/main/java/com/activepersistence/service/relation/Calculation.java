@@ -9,9 +9,9 @@ import static java.util.stream.Collectors.toMap;
 
 public interface Calculation<T> {
 
-    public Relation<T> thiz();
-
     public Relation<T> spawn();
+
+    public Values getValues();
 
     public default Object count() {
         return count("this");
@@ -42,14 +42,14 @@ public interface Calculation<T> {
     }
 
     public default List pluck(String... fields) {
-        Relation<T> relation = thiz().spawn();
+        Relation<T> relation = spawn();
         relation.getValues().setConstructor(false);
         relation.getValues().setSelectValues(Set.of(fields));
         return relation.fetch_();
     }
 
     private Object calculate(String operation, String field) {
-        Relation relation = thiz().spawn();
+        Relation relation = spawn();
         relation.getValues().setConstructor(false);
         relation.getValues().setDistinctValue(false);
 
@@ -100,7 +100,7 @@ public interface Calculation<T> {
     }
 
     private boolean isDistinct() {
-        return thiz().getValues().isDistinctValue();
+        return getValues().isDistinctValue();
     }
 
 }

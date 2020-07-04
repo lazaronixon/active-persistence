@@ -19,6 +19,10 @@ public interface Querying<T> {
         return buildRelation().all();
     }
 
+    public default Relation<T> unscoped() {
+        return buildRelation().unscoped();
+    }
+
     //<editor-fold defaultstate="collapsed" desc="relation methods">
     public default T findOrCreateBy(String conditions, Supplier<T> resource) {
         return all().findOrCreateBy(conditions, resource);
@@ -49,7 +53,7 @@ public interface Querying<T> {
     }
 
     public default Relation<T> merge(Relation other) {
-        return buildRelation().merge(other);
+        return all().merge(other);
     }
     //</editor-fold>
 
@@ -194,14 +198,6 @@ public interface Querying<T> {
 
     public default Relation<T> none() {
         return all().none();
-    }
-
-    public default Relation<T> scoping(Relation<T> relation) {
-        return buildRelation().scoping(relation);
-    }
-
-    public default Relation<T> unscoped() {
-        return buildRelation().unscoped();
     }
 
     public default Relation<T> bind(int position, Object value) {

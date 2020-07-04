@@ -8,6 +8,7 @@ import com.activepersistence.service.arel.UpdateManager;
 import com.activepersistence.service.relation.Calculation;
 import com.activepersistence.service.relation.FinderMethods;
 import com.activepersistence.service.relation.QueryMethods;
+import com.activepersistence.service.relation.Scoping;
 import com.activepersistence.service.relation.SpawnMethods;
 import com.activepersistence.service.relation.Values;
 import java.util.List;
@@ -21,7 +22,7 @@ import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, Persistence<T>, SpawnMethods<T> {
+public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, Persistence<T>, SpawnMethods<T>, Scoping<T> {
 
     private final EntityManager entityManager;
 
@@ -75,10 +76,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public Relation<T> scoping(Relation<T> scope) {
         scope.setCurrentScope(this); return scope;
-    }
-
-    public Relation<T> unscoped() {
-        return relation();
     }
 
     public T findOrCreateBy(String conditions, Supplier<T> resource) {
@@ -166,11 +163,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     @Override
     public EntityManager getEntityManager() {
         return entityManager;
-    }
-
-    @Override
-    public Class<T> getEntityClass() {
-        return entityClass;
     }
 
     private SelectManager getArel() {
