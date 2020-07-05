@@ -4,7 +4,7 @@ import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.Comment;
 import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
-import com.activepersistence.service.relation.ValidUnscopingValues;
+import com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.inject.Inject;

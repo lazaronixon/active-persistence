@@ -5,6 +5,10 @@ import static java.util.Arrays.asList;
 
 public interface QueryMethods<T> {
 
+    public enum ValidUnscopingValues {
+        WHERE, SELECT, GROUP, ORDER, LOCK, LIMIT, OFFSET, JOINS, INCLUDES, EAGER_LOADS, FROM, HAVING
+    }
+
     public Relation<T> thiz();
 
     public Relation<T> spawn();

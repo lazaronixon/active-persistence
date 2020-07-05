@@ -1,6 +1,6 @@
 package com.activepersistence.service;
 
-import com.activepersistence.service.relation.ValidUnscopingValues;
+import com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues;
 import java.util.List;
 import java.util.function.Supplier;
 import javax.persistence.EntityManager;
