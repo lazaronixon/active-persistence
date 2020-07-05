@@ -184,6 +184,11 @@ List<Order> orders = ordersService.select("date(this.createdAt), sum(this.price)
 ordersService.where("this.id > 10").limit(20).order("this.id asc").unscope(ORDER).fetch();
 ```
 
+### Only
+```java
+ordersService.where("this.id > 10").limit(20).order("this.id asc").only(ORDER).fetch();
+```
+
 ### Reselect
 ```java
 postsService.select("this.title", "this.body").reselect("this.createdAt").fetch();

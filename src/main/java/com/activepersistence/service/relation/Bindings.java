@@ -28,11 +28,11 @@ public interface Bindings<T> {
     }
 
     public default Relation<T> bind(int position, Base record) {
-        return thiz().bind(position, record.getId());
+        return bind(position, record.getId());
     }
 
     public default Relation<T> bind(String name, Base record) {
-        return thiz().bind(name, record.getId());
+        return bind(name, record.getId());
     }
 
 }

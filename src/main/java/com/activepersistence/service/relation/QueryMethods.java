@@ -1,7 +1,13 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
+import com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues;
+import static com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues.ORDER;
+import static com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues.SELECT;
+import static com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues.WHERE;
 import static java.util.Arrays.asList;
+import java.util.List;
+import java.util.stream.Stream;
 
 public interface QueryMethods<T> {
 
@@ -98,7 +104,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> none_() {
-        thiz().where_("1=0"); return thiz();
+        where_("1=0"); return thiz();
     }
 
     public default Relation<T> includes(String... includes) {
@@ -142,48 +148,73 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> unscope_(ValidUnscopingValues... values) {
-        for (ValidUnscopingValues value : values) {
-            switch (value) {
-                case SELECT:
-                    getValues().getSelectValues().clear();
-                    getValues().setConstructor(false);
-                case FROM:
-                    getValues().setFromClause(null);
-                case JOINS:
-                    getValues().getJoinsValues().clear();
-                case WHERE:
-                    getValues().getWhereValues().clear();
-                case GROUP:
-                    getValues().getGroupValues().clear();
-                case HAVING:
-                    getValues().getHavingValues().clear();
-                case ORDER:
-                    getValues().getOrderValues().clear();
-                case LIMIT:
-                    getValues().setLimitValue(0);
-                case OFFSET:
-                    getValues().setOffsetValue(0);
-                case INCLUDES:
-                    getValues().getIncludesValues().clear();
-                case EAGER_LOADS:
-                    getValues().getEagerLoadsValues().clear();
-                case LOCK:
-                    getValues().setLockValue(false);
-            }
-        }
-        return thiz();
+        asList(values).forEach(this::unscope_); return thiz();
+    }
+
+    public default Relation<T> except(ValidUnscopingValues... values) {
+        return unscope(values);
+    }
+
+    public default Relation<T> only(ValidUnscopingValues... values) {
+        List<ValidUnscopingValues> scopes     = asList(ValidUnscopingValues.values());
+        List<ValidUnscopingValues> values_    = asList(values);
+        Stream<ValidUnscopingValues> unscopes = scopes.stream().filter((v) -> !values_.contains(v));
+        return unscope(unscopes.toArray(ValidUnscopingValues[]::new));
     }
 
     public default Relation<T> reselect(String... fields) {
-        return spawn().unscope(ValidUnscopingValues.SELECT).select(fields);
+        return unscope(SELECT).select(fields);
     }
 
     public default Relation<T> rewhere(String conditions) {
-        return spawn().unscope(ValidUnscopingValues.WHERE).where(conditions);
+        return unscope(WHERE).where(conditions);
     }
 
     public default Relation<T> reorder(String... fields) {
-        return spawn().unscope(ValidUnscopingValues.ORDER).order(fields);
+        return unscope(ORDER).order(fields);
+    }
+
+    private void unscope_(ValidUnscopingValues value) {
+        switch (value) {
+            case SELECT:
+                getValues().getSelectValues().clear();
+                getValues().setConstructor(false);
+                break;
+            case FROM:
+                getValues().setFromClause(null);
+                break;
+            case JOINS:
+                getValues().getJoinsValues().clear();
+                break;
+            case WHERE:
+                getValues().getWhereValues().clear();
+                break;
+            case GROUP:
+                getValues().getGroupValues().clear();
+                break;
+            case HAVING:
+                getValues().getHavingValues().clear();
+                break;
+            case ORDER:
+                getValues().getOrderValues().clear();
+                break;
+            case LIMIT:
+                getValues().setLimitValue(0);
+                break;
+            case OFFSET:
+                getValues().setOffsetValue(0);
+                break;
+            case INCLUDES:
+                getValues().getIncludesValues().clear();
+                break;
+            case EAGER_LOADS:
+                getValues().getEagerLoadsValues().clear();
+                break;
+            case LOCK:
+                getValues().setLockValue(false);
+                break;
+
+        }
     }
 
 }

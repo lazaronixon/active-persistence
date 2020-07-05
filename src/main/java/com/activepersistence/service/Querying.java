@@ -192,6 +192,14 @@ public interface Querying<T> {
         return all().unscope(values);
     }
 
+    public default Relation<T> except(ValidUnscopingValues... values) {
+        return all().except(values);
+    }
+
+    public default Relation<T> only(ValidUnscopingValues... values) {
+        return all().only(values);
+    }
+
     public default Relation<T> reselect(String... values) {
         return all().reselect(values);
     }
