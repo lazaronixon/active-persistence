@@ -1,8 +1,8 @@
 package com.activepersistence.service.relation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
 
 public class Values {
 
@@ -13,14 +13,14 @@ public class Values {
     private boolean distinctValue = false;
     private boolean constructor   = false;
 
-    private Set<String> selectValues     = new LinkedHashSet();
-    private Set<String> whereValues      = new LinkedHashSet();
-    private Set<String> groupValues      = new LinkedHashSet();
-    private Set<String> havingValues     = new LinkedHashSet();
-    private Set<String> orderValues      = new LinkedHashSet();
-    private Set<String> joinsValues      = new LinkedHashSet();
-    private Set<String> includesValues   = new LinkedHashSet();
-    private Set<String> eagerLoadsValues = new LinkedHashSet();
+    private List<String> selectValues     = new ArrayList();
+    private List<String> whereValues      = new ArrayList();
+    private List<String> groupValues      = new ArrayList();
+    private List<String> havingValues     = new ArrayList();
+    private List<String> orderValues      = new ArrayList();
+    private List<String> joinsValues      = new ArrayList();
+    private List<String> includesValues   = new ArrayList();
+    private List<String> eagerLoadsValues = new ArrayList();
 
     private HashMap<Integer, Object> ordinalParameters = new HashMap();
     private HashMap<String, Object> namedParameters    = new HashMap();
@@ -34,14 +34,14 @@ public class Values {
         offsetValue       = other.offsetValue;
         lockValue         = other.lockValue;
         distinctValue     = other.distinctValue;
-        selectValues      = new LinkedHashSet(other.selectValues);
-        whereValues       = new LinkedHashSet(other.whereValues);
-        groupValues       = new LinkedHashSet(other.groupValues);
-        havingValues      = new LinkedHashSet(other.havingValues);
-        orderValues       = new LinkedHashSet(other.orderValues);
-        joinsValues       = new LinkedHashSet(other.joinsValues);
-        includesValues    = new LinkedHashSet(other.includesValues);
-        eagerLoadsValues  = new LinkedHashSet(other.eagerLoadsValues);
+        selectValues      = new ArrayList(other.selectValues);
+        whereValues       = new ArrayList(other.whereValues);
+        groupValues       = new ArrayList(other.groupValues);
+        havingValues      = new ArrayList(other.havingValues);
+        orderValues       = new ArrayList(other.orderValues);
+        joinsValues       = new ArrayList(other.joinsValues);
+        includesValues    = new ArrayList(other.includesValues);
+        eagerLoadsValues  = new ArrayList(other.eagerLoadsValues);
         ordinalParameters = new HashMap(other.ordinalParameters);
         namedParameters   = new HashMap(other.namedParameters);
     }
@@ -70,35 +70,35 @@ public class Values {
         return fromClause;
     }
 
-    public Set<String> getSelectValues() {
+    public List<String> getSelectValues() {
         return selectValues;
     }
 
-    public Set<String> getWhereValues() {
+    public List<String> getWhereValues() {
         return whereValues;
     }
 
-    public Set<String> getGroupValues() {
+    public List<String> getGroupValues() {
         return groupValues;
     }
 
-    public Set<String> getHavingValues() {
+    public List<String> getHavingValues() {
         return havingValues;
     }
 
-    public Set<String> getOrderValues() {
+    public List<String> getOrderValues() {
         return orderValues;
     }
 
-    public Set<String> getJoinsValues() {
+    public List<String> getJoinsValues() {
         return joinsValues;
     }
 
-    public Set<String> getIncludesValues() {
+    public List<String> getIncludesValues() {
         return includesValues;
     }
 
-    public Set<String> getEagerLoadsValues() {
+    public List<String> getEagerLoadsValues() {
         return eagerLoadsValues;
     }
 
@@ -130,7 +130,7 @@ public class Values {
         return constructor;
     }
 
-    public void setSelectValues(Set<String> selectValues) {
+    public void setSelectValues(List<String> selectValues) {
         this.selectValues = selectValues;
     }
 

@@ -2,9 +2,9 @@ package com.activepersistence.service.relation;
 
 import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.Relation;
+import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import java.util.List;
-import java.util.Set;
 import static java.util.stream.Collectors.toMap;
 
 public interface Calculation<T> {
@@ -44,7 +44,7 @@ public interface Calculation<T> {
     public default List pluck(String... fields) {
         Relation<T> relation = spawn();
         relation.getValues().setConstructor(false);
-        relation.getValues().setSelectValues(Set.of(fields));
+        relation.getValues().setSelectValues(asList(fields));
         return relation.fetch_();
     }
 
@@ -61,7 +61,7 @@ public interface Calculation<T> {
     }
 
     private Object executeSimpleCalculation(Relation<T> relation, String operation, String field) {
-        relation.getValues().setSelectValues(Set.of(operationOverAggregateColumn(operation, field))); return relation.fetchOne();
+        relation.getValues().setSelectValues(asList(operationOverAggregateColumn(operation, field))); return relation.fetchOne();
     }
 
     private Object executeGroupedCalculation(Relation<T> relation, String operation, String field) {
