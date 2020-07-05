@@ -235,7 +235,7 @@ public class StudentsService extends ApplicationService<Student> {
 
     @Override
     public Relation<Student> defaultScope() {
-        return where("student.name = 'nixon'");
+        return where("this.name = 'nixon'");
     }
 }
 
