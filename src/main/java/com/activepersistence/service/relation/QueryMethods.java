@@ -156,7 +156,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> only(ValidUnscopingValues... values) {
-        return unscope(exceptScopes(values));
+        return unscope(allScopesExcept(values));
     }
 
     public default Relation<T> reselect(String... fields) {
@@ -171,7 +171,7 @@ public interface QueryMethods<T> {
         return unscope(ORDER).order(fields);
     }
 
-    private ValidUnscopingValues[] exceptScopes(ValidUnscopingValues[] values) {
+    private ValidUnscopingValues[] allScopesExcept(ValidUnscopingValues[] values) {
         List<ValidUnscopingValues> scopes     = asList(ValidUnscopingValues.values());
         List<ValidUnscopingValues> values_    = asList(values);
         Stream<ValidUnscopingValues> unscopes = scopes.stream().filter((v) -> !values_.contains(v));
