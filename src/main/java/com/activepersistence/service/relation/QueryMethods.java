@@ -171,6 +171,22 @@ public interface QueryMethods<T> {
         return unscope(ORDER).order(fields);
     }
 
+    public default Relation<T> bind(int position, Object value) {
+        return spawn().bind_(position, value);
+    }
+
+    public default Relation<T> bind_(int position, Object value) {
+        getValues().getOrdinalParameters().put(position, value); return thiz();
+    }
+
+    public default Relation<T> bind(String name, Object value) {
+        return spawn().bind_(name, value);
+    }
+
+    public default Relation<T> bind_(String name, Object value) {
+        getValues().getNamedParameters().put(name, value); return thiz();
+    }
+
     private ValidUnscopingValues[] allScopesExcept(ValidUnscopingValues[] values) {
         List<ValidUnscopingValues> scopes     = asList(ValidUnscopingValues.values());
         List<ValidUnscopingValues> values_    = asList(values);

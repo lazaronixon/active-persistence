@@ -4,7 +4,6 @@ import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.Comment;
 import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
-import com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues;
 import static com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues.FROM;
 import static com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues.ORDER;
 import java.util.List;
@@ -14,6 +13,7 @@ import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import org.junit.Before;
 import org.junit.Test;
 
 @UsingDataSet({"posts.xml", "comments.xml"})
@@ -140,6 +140,28 @@ public class QueryMethodsTest extends IntegrationTest {
     @Test
     public void testLock() {
         assertNotNull(postsService.lock().fetchOne());
+    }
+
+    @Test
+    public void testOrdinalBind() {
+        assertNotNull(postsService.where("this.id = ?1").bind(1, 1));
+    }
+
+    @Test
+    public void testPlaceholderBind() {
+        assertNotNull(postsService.where("this.id = :id").bind("id", 1));
+    }
+
+    @Test
+    public void testOrdinalBindWithModel() {
+        Post postOne = postsService.find(1);
+        assertNotNull(postsService.where("this.id = ?1").bind(1, postOne));
+    }
+
+    @Test
+    public void testPlaceholderBindWithModel() {
+        Post postOne = postsService.find(1);
+        assertNotNull(postsService.where("this.id = :id").bind("id", postOne));
     }
 
 }

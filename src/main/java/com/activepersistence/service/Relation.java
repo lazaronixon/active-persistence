@@ -21,9 +21,8 @@ import static javax.persistence.LockModeType.NONE;
 import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import com.activepersistence.service.relation.Bindings;
 
-public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, SpawnMethods<T>, Scoping<T>, Bindings<T> {
+public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, SpawnMethods<T>, Scoping<T> {
 
     private final EntityManager entityManager;
 
@@ -138,11 +137,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     @Override
-    public Relation<T> spawn() {
-        return SpawnMethods.super.spawn();
-    }
-
-    @Override
     public Values getValues() {
         return values;
     }
@@ -160,6 +154,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     @Override
     public Relation<T> relation() {
         return scoping(new Relation(service));
+    }
+
+    @Override
+    public Relation<T> spawn() {
+        return SpawnMethods.super.spawn();
     }
 
     private SelectManager getArel() {
