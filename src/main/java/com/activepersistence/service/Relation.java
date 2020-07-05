@@ -21,8 +21,9 @@ import static javax.persistence.LockModeType.NONE;
 import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import com.activepersistence.service.relation.Bindings;
 
-public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, SpawnMethods<T>, Scoping<T> {
+public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, SpawnMethods<T>, Scoping<T>, Bindings<T> {
 
     private final EntityManager entityManager;
 

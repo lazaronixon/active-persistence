@@ -21,41 +21,63 @@ public interface Querying<T> {
         return relation().unscoped();
     }
 
-    //<editor-fold defaultstate="collapsed" desc="relation methods">
-    public default T findOrCreateBy(String conditions, Supplier<T> resource) {
-        return all().findOrCreateBy(conditions, resource);
-    }
-
-    public default T findOrInitializeBy(String conditions, Supplier<T> resource) {
-        return all().findOrInitializeBy(conditions, resource);
-    }
-
-    public default List<T> destroyAll() {
-        return all().destroyAll();
-    }
-
-    public default List<T> destroyBy(String conditions) {
-        return all().destroyBy(conditions);
-    }
-
-    public default int deleteAll() {
-        return all().deleteAll();
-    }
-
-    public default int deleteBy(String conditions) {
-        return all().deleteBy(conditions);
-    }
-
-    public default int updateAll(String updates) {
-        return all().updateAll(updates);
-    }
-
     public default Relation<T> merge(Relation other) {
         return all().merge(other);
     }
+
+    //<editor-fold defaultstate="collapsed" desc="Bindings">
+    public default Relation<T> bind(int position, Object value) {
+        return all().bind(position, value);
+    }
+
+    public default Relation<T> bind(String name, Object value) {
+        return all().bind(name, value);
+    }
+
+    public default Relation<T> bind(int position, com.activepersistence.model.Base model) {
+        return all().bind(position, model.getId());
+    }
+
+    public default Relation<T> bind(String name, com.activepersistence.model.Base model) {
+        return all().bind(name, model.getId());
+    }
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="finder methods">
+    //<editor-fold defaultstate="collapsed" desc="Calculation">
+    public default Object count() {
+        return all().count();
+    }
+
+    public default Object count(String field) {
+        return all().count(field);
+    }
+
+    public default Object minimum(String field) {
+        return all().minimum(field);
+    }
+
+    public default Object maximum(String field) {
+        return all().maximum(field);
+    }
+
+    public default Object average(String field) {
+        return all().average(field);
+    }
+
+    public default Object sum(String field) {
+        return all().sum(field);
+    }
+
+    public default List pluck(String... field) {
+        return all().pluck(field);
+    }
+
+    public default List<Object> ids() {
+        return all().ids();
+    }
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="FinderMethods">
     public default T take() {
         return all().take();
     }
@@ -117,7 +139,7 @@ public interface Querying<T> {
     }
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="query methods">
+    //<editor-fold defaultstate="collapsed" desc="QueryMethods">
     public default Relation<T> where(String conditions) {
         return all().where(conditions);
     }
@@ -197,51 +219,39 @@ public interface Querying<T> {
     public default Relation<T> none() {
         return all().none();
     }
+    //</editor-fold>
 
-    public default Relation<T> bind(int position, Object value) {
-        return all().bind(position, value);
+    //<editor-fold defaultstate="collapsed" desc="Relation">
+    public default T findOrCreateBy(String conditions, Supplier<T> resource) {
+        return all().findOrCreateBy(conditions, resource);
     }
 
-    public default Relation<T> bind(String name, Object value) {
-        return all().bind(name, value);
+    public default T findOrInitializeBy(String conditions, Supplier<T> resource) {
+        return all().findOrInitializeBy(conditions, resource);
+    }
+
+    public default List<T> destroyAll() {
+        return all().destroyAll();
+    }
+
+    public default List<T> destroyBy(String conditions) {
+        return all().destroyBy(conditions);
+    }
+
+    public default int deleteAll() {
+        return all().deleteAll();
+    }
+
+    public default int deleteBy(String conditions) {
+        return all().deleteBy(conditions);
+    }
+
+    public default int updateAll(String updates) {
+        return all().updateAll(updates);
     }
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="calculation methods">
-    public default Object count() {
-        return all().count();
-    }
-
-    public default Object count(String field) {
-        return all().count(field);
-    }
-
-    public default Object minimum(String field) {
-        return all().minimum(field);
-    }
-
-    public default Object maximum(String field) {
-        return all().maximum(field);
-    }
-
-    public default Object average(String field) {
-        return all().average(field);
-    }
-
-    public default Object sum(String field) {
-        return all().sum(field);
-    }
-
-    public default List pluck(String... field) {
-        return all().pluck(field);
-    }
-
-    public default List<Object> ids() {
-        return all().ids();
-    }
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="build query methods">
+    //<editor-fold defaultstate="collapsed" desc="Quering">
     public default Query buildNativeQuery(String qlString) {
         return getEntityManager().createNativeQuery(qlString, getEntityClass());
     }

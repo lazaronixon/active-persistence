@@ -21,11 +21,6 @@ public class QueryMethodsTest extends IntegrationTest {
     private PostsService postsService;
 
     @Test
-    public void testAll() {
-        assertEquals("SELECT this FROM Post this", postsService.all().toJpql());
-    }
-
-    @Test
     public void testSelect() {
         assertEquals("SELECT NEW com.activepersistence.service.models.Post(this.id, this.title) FROM Post this",
                 postsService.select("this.id", "this.title").toJpql());
@@ -133,16 +128,6 @@ public class QueryMethodsTest extends IntegrationTest {
     @Test
     public void testLock() {
         assertNotNull(postsService.lock().fetchOne());
-    }
-
-    @Test
-    public void testOrdinalBind() {
-        assertNotNull(postsService.where("this.id = ?1").bind(1, 1));
-    }
-
-    @Test
-    public void testPlaceholderBind() {
-        assertNotNull(postsService.where("this.id = :id").bind("id", 1));
     }
 
 }
