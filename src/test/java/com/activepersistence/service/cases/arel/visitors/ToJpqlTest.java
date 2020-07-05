@@ -15,7 +15,7 @@ import com.activepersistence.service.models.Post;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
-public class ToJpql {
+public class ToJpqlTest {
 
     private final Visitor visitor = Entity.visitor;
 
