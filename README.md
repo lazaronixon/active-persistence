@@ -170,7 +170,7 @@ List<Order> orders = ordersService.select("date(this.createdAt)", "sum(this.pric
 
 ### Total of grouped items
 ```java
-HashMap<String, Long> result = (HasMap) ordersService.group("this.status").count
+HashMap<String, Long> result = (HashMap) ordersService.group("this.status").count
 // => { 'awaiting_approval' => 7, 'paid' => 12 }
 ```
 
@@ -266,8 +266,8 @@ Post newPost     = postsService.findOrInitializeBy("this.title = 'awesome title'
 
 ## Finding by SQL
 ```java
-List<post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = 5");
-List<post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
+List<Post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = 5");
+List<Post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
 // OR
 List<Object[]> posts = postsService.selectAll("SELECT id, title FROM Post WHERE id = 5");
 List<Object[]> posts = postsService.selectAll("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
