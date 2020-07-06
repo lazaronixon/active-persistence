@@ -78,12 +78,12 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         scope.setCurrentScope(this); return scope;
     }
 
-    public T findOrCreateBy(String conditions, Supplier<T> resource) {
-        return ofNullable(findBy(conditions)).orElseGet(() -> service.create(resource.get()));
+    public T findOrCreateBy(String conditions, T resource) {
+        return ofNullable(findBy(conditions)).orElseGet(() -> service.create(resource));
     }
 
-    public T findOrInitializeBy(String conditions, Supplier<T> resource) {
-        return ofNullable(findBy(conditions)).orElseGet(resource::get);
+    public T findOrInitializeBy(String conditions, T resource) {
+        return ofNullable(findBy(conditions)).orElseGet(() -> resource);
     }
 
     public List<T> destroyAll() {

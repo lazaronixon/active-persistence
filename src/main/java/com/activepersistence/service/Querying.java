@@ -236,11 +236,11 @@ public interface Querying<T> {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Relation">
-    public default T findOrCreateBy(String conditions, Supplier<T> resource) {
+    public default T findOrCreateBy(String conditions, T resource) {
         return all().findOrCreateBy(conditions, resource);
     }
 
-    public default T findOrInitializeBy(String conditions, Supplier<T> resource) {
+    public default T findOrInitializeBy(String conditions, T resource) {
         return all().findOrInitializeBy(conditions, resource);
     }
 
