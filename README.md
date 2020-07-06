@@ -87,6 +87,8 @@ User user = userService.bind(1, "David").findBy("this.name = ?1");
 user.name = "Dave";
 usersService.save(user);
 //OR
+usersService.update(user);
+//OR
 usersService.updateAll("this.maxLoginAttempts = 3, this.mustChangePassword = 'true'");
 ```
 
@@ -163,18 +165,18 @@ clientsService.limit(5).offset(30).fetch();
 
 ### Group
 ```java
-List<Order> orders = ordersService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").fetch();
+List<Order> orders = ordersService.select("date(this.createdAt)", "sum(this.price)").group("date(this.createdAt)").fetch();
 ```
 
 ### Total of grouped items
 ```java
-HashMap<String, Long> result = ordersService.group("this.status").count
+HashMap<String, Long> result = (HasMap) ordersService.group("this.status").count
 // => { 'awaiting_approval' => 7, 'paid' => 12 }
 ```
 
 ### Having
 ```java
-List<Order> orders = ordersService.select("date(this.createdAt), sum(this.price)").group("date(this.createdAt)").having("sum(this.price) > 100").fetch();
+List<Order> orders = ordersService.select("date(this.createdAt)", "sum(this.price)").group("date(this.createdAt)").having("sum(this.price) > 100").fetch();
 ```
 
 ## Overriding Conditions
@@ -216,7 +218,7 @@ Client client = clientsService.lock().first();
 
 ## Joining Tables
 ```java
-authorsService.joins("INNER JOIN posts").fetch();
+authorsService.joins("JOIN Post p").fetch();
 ```
 
 ## Eager Loading Associations
