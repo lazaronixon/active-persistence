@@ -262,6 +262,15 @@ Post createdPost = postsService.findOrCreateBy("this.title = 'awesome title'",()
 Post newPost     = postsService.findOrInitializeBy("this.title = 'awesome title'",() -> new Post("awesome title", "body", 0));
 ```
 
+## Finding by SQL
+```java
+List<post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = 5");
+List<post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
+// OR
+List<Object[]> posts = postsService.selectAll("SELECT id, title FROM Post WHERE id = 5");
+List<Object[]> posts = postsService.selectAll("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
+```
+
 ### Existence of Objects
 ```java
 boolean exists = studentsService.exists("this.name = 'Lifo'");

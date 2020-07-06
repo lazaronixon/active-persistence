@@ -193,7 +193,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private TypedQuery<T> buildQuery(String query) {
-        return parametize(service.buildQuery(query))
+        return parametize(createTypedQuery(query))
                 .setLockMode(buildLockMode())
                 .setMaxResults(values.getLimitValue())
                 .setFirstResult(values.getOffsetValue())
@@ -201,7 +201,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private Query buildQuery_(String query) {
-        return parametize(service.buildQuery_(query))
+        return parametize(createQuery(query))
                 .setLockMode(buildLockMode())
                 .setMaxResults(values.getLimitValue())
                 .setFirstResult(values.getOffsetValue())
@@ -209,10 +209,18 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private int executeUpdate(String query) {
-        return parametize(service.buildQuery_(query))
+        return parametize(createQuery(query))
                 .setMaxResults(values.getLimitValue())
                 .setFirstResult(values.getOffsetValue())
                 .executeUpdate();
+    }
+
+    private TypedQuery<T> createTypedQuery(String qlString) {
+        return entityManager.createQuery(qlString, entityClass);
+    }
+
+    private Query createQuery(String qlString) {
+        return entityManager.createQuery(qlString);
     }
 
     private void buildDistinct(SelectManager arel) {

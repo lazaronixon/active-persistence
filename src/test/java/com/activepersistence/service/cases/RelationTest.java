@@ -9,7 +9,7 @@ import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-@UsingDataSet({"posts.xml", "comments.xml", "clients.xml"})
+@UsingDataSet({"posts.xml", "comments.xml"})
 public class RelationTest extends IntegrationTest {
 
     @Inject

@@ -1,7 +1,9 @@
 package com.activepersistence.service;
 
 import com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -264,33 +266,33 @@ public interface Querying<T> {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Quering">
-    public default Query buildNativeQuery(String qlString) {
-        return getEntityManager().createNativeQuery(qlString, getEntityClass());
+    public default List<T> findBySql(String sql) {
+        return findBySql(sql, new HashMap());
     }
 
-    public default Query buildNativeQuery(String qlString, Class resultClass) {
-        return getEntityManager().createNativeQuery(qlString, resultClass);
+    public default List<T> findBySql(String sql, Map<Integer, Object> binds) {
+        return parametize(getEntityManager().createNativeQuery(sql, getEntityClass()), binds).getResultList();
     }
 
-    public default Query buildNativeQuery_(String sqlQuery) {
-        return getEntityManager().createNativeQuery(sqlQuery);
+    public default List selectAll(String sql) {
+        return selectAll(sql, new HashMap());
     }
 
-    public default TypedQuery<T> buildQuery(String qlString) {
-        return getEntityManager().createQuery(qlString, getEntityClass());
-    }
-
-    public default <R> TypedQuery<R> buildQuery(String qlString, Class<R> resultClass) {
-        return getEntityManager().createQuery(qlString, resultClass);
-    }
-
-    public default Query buildQuery_(String qlString) {
-        return getEntityManager().createQuery(qlString);
+    public default List selectAll(String sql, Map<Integer, Object> binds) {
+        return parametize(getEntityManager().createNativeQuery(sql), binds).getResultList();
     }
     //</editor-fold>
 
     private Relation<T> relation() {
         return new Relation((Base) this);
+    }
+
+    private Query parametize(Query query, Map<Integer, Object> binds) {
+        applyParams(query, binds); return query;
+    }
+
+    private void applyParams(Query query, Map<Integer, Object> binds) {
+        binds.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
     }
 
 }
