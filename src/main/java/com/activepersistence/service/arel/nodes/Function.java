@@ -4,16 +4,16 @@ import static com.activepersistence.service.Arel.jpql;
 
 public abstract class Function extends Node {
 
-    private final SqlLiteral expression;
-    private SqlLiteral alias;
+    private final JpqlLiteral expression;
+    private JpqlLiteral alias;
 
     private boolean distinct;
 
-    public Function(SqlLiteral expression) {
+    public Function(JpqlLiteral expression) {
         this.expression = expression;
     }
 
-    public Function(SqlLiteral expression, boolean distinct) {
+    public Function(JpqlLiteral expression, boolean distinct) {
         this.expression = expression;
         this.distinct = distinct;
     }
@@ -23,11 +23,11 @@ public abstract class Function extends Node {
         return this;
     }
 
-    public SqlLiteral getExpression() {
+    public JpqlLiteral getExpression() {
         return expression;
     }
 
-    public SqlLiteral getAlias() {
+    public JpqlLiteral getAlias() {
         return alias;
     }
 

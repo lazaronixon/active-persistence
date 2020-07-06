@@ -12,7 +12,7 @@ import com.activepersistence.service.arel.nodes.Max;
 import com.activepersistence.service.arel.nodes.Min;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
-import com.activepersistence.service.arel.nodes.SqlLiteral;
+import com.activepersistence.service.arel.nodes.JpqlLiteral;
 import com.activepersistence.service.arel.nodes.Sum;
 import com.activepersistence.service.arel.nodes.TableAlias;
 import com.activepersistence.service.arel.nodes.UpdateStatement;
@@ -104,7 +104,7 @@ public class ToJpql extends Visitor {
         return collector.append("DISTINCT");
     }
 
-    public StringBuilder visitSqlLiteral(SqlLiteral o, StringBuilder collector) {
+    public StringBuilder visitJpqlLiteral(JpqlLiteral o, StringBuilder collector) {
         return collector.append(o);
     }
 
@@ -148,7 +148,7 @@ public class ToJpql extends Visitor {
         collector.append(name).append("(");
         if (o.isDistinct()) collector.append("DISTINCT ");
         collector.append(o.getExpression()).append(")");
-        if (o.getAlias() != null) { collector.append(" AS "); visitSqlLiteral(o.getAlias(), collector); }
+        if (o.getAlias() != null) { collector.append(" AS "); visitJpqlLiteral(o.getAlias(), collector); }
         return collector;
     }
 }

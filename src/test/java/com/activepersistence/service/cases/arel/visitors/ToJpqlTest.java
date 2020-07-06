@@ -7,12 +7,12 @@ import com.activepersistence.service.arel.nodes.DeleteStatement;
 import com.activepersistence.service.arel.nodes.JoinSource;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
-import com.activepersistence.service.arel.nodes.SqlLiteral;
 import com.activepersistence.service.arel.nodes.TableAlias;
 import com.activepersistence.service.arel.nodes.UpdateStatement;
 import com.activepersistence.service.arel.visitors.Visitable;
 import com.activepersistence.service.arel.visitors.Visitor;
 import com.activepersistence.service.models.Post;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -33,7 +33,7 @@ public class ToJpqlTest {
         Entity entity = new Entity(Post.class, "this");
         UpdateStatement statement = new UpdateStatement();
         statement.setRelation(entity);
-        statement.setValues(SqlLiteral.asList("this.name = 'test'"));
+        statement.setValues(asList(jpql("this.name = 'test'")));
         assertEquals("UPDATE Post this SET this.name = 'test'", compile(statement));
     }
 
@@ -56,13 +56,13 @@ public class ToJpqlTest {
         Entity entity = new Entity(Post.class, "this");
         SelectCore core = new SelectCore(entity);
         core.setDistinct(true);
-        core.getProjections().addAll(SqlLiteral.asList("this"));
+        core.getProjections().addAll(asList(jpql("this")));
         assertEquals("SELECT DISTINCT this FROM Post this", compile(core));
     }
 
     @Test
     public void testVisitConstructor() {
-        Constructor constructor = new Constructor(Object.class, SqlLiteral.asList("this.id, this.title"));
+        Constructor constructor = new Constructor(Object.class, asList(jpql("this.id, this.title")));
         assertEquals(" NEW java.lang.Object(this.id, this.title)", compile(constructor));
     }
 

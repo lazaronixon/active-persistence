@@ -6,11 +6,11 @@ import java.util.Arrays;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
 
-public class SqlLiteral extends Node implements Source {
+public class JpqlLiteral extends Node implements Source {
 
     private final String value;
 
-    public SqlLiteral(String value) {
+    public JpqlLiteral(String value) {
         this.value = value;
     }
 
@@ -38,7 +38,7 @@ public class SqlLiteral extends Node implements Source {
         return new Avg(this);
     }
 
-    public static List<Node> asList(String... values) {
+    public static List<Node> fromArray(String[] values) {
         return Arrays.asList(values).stream().map(Arel::jpql).collect(toList());
     }
 

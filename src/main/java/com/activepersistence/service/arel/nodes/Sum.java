@@ -2,7 +2,7 @@ package com.activepersistence.service.arel.nodes;
 
 public class Sum extends Function {
 
-    public Sum(SqlLiteral expression) {
+    public Sum(JpqlLiteral expression) {
         super(expression);
     }
 

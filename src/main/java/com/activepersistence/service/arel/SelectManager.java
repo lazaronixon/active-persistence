@@ -4,7 +4,7 @@ import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
-import com.activepersistence.service.arel.nodes.SqlLiteral;
+import com.activepersistence.service.arel.nodes.JpqlLiteral;
 import com.activepersistence.service.arel.nodes.TableAlias;
 import static java.util.Arrays.asList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class SelectManager extends TreeManager {
     }
 
     public SelectManager project(String... projections) {
-        ctx.getProjections().addAll(SqlLiteral.asList(projections)); return this;
+        ctx.getProjections().addAll(JpqlLiteral.fromArray(projections)); return this;
     }
 
     public SelectManager project(Node... projections) {
@@ -52,7 +52,7 @@ public class SelectManager extends TreeManager {
     }
 
     public SelectManager group(String... fields) {
-        ctx.getGroups().addAll(SqlLiteral.asList(fields)); return this;
+        ctx.getGroups().addAll(JpqlLiteral.fromArray(fields)); return this;
     }
 
     public SelectManager having(String condition) {
@@ -60,7 +60,7 @@ public class SelectManager extends TreeManager {
     }
 
     public SelectManager order(String... expr) {
-        ast.getOrders().addAll(SqlLiteral.asList(expr)); return this;
+        ast.getOrders().addAll(JpqlLiteral.fromArray(expr)); return this;
     }
 
     public TableAlias as(String other) {
@@ -75,7 +75,7 @@ public class SelectManager extends TreeManager {
         return ast.getOrders();
     }
 
-    public List<SqlLiteral> getJoinSources() {
+    public List<JpqlLiteral> getJoinSources() {
         return ctx.getSource().getRight();
     }
 

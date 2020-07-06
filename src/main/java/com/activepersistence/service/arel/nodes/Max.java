@@ -2,7 +2,7 @@ package com.activepersistence.service.arel.nodes;
 
 public class Max extends Function {
 
-    public Max(SqlLiteral expression) {
+    public Max(JpqlLiteral expression) {
         super(expression);
     }
 

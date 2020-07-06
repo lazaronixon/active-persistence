@@ -7,7 +7,7 @@ import java.util.List;
 public class JoinSource extends Node {
 
     private Source left;
-    private final List<SqlLiteral> right = new ArrayList();
+    private final List<JpqlLiteral> right = new ArrayList();
 
     public JoinSource(Source left) {
         this.left = left;
@@ -21,7 +21,7 @@ public class JoinSource extends Node {
         this.left = left;
     }
 
-    public List<SqlLiteral> getRight() {
+    public List<JpqlLiteral> getRight() {
         return right;
     }
 

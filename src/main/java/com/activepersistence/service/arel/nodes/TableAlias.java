@@ -5,9 +5,9 @@ import com.activepersistence.service.arel.Source;
 public class TableAlias extends Node implements Source {
 
     private final SelectStatement relation;
-    private final SqlLiteral name;
+    private final JpqlLiteral name;
 
-    public TableAlias(SelectStatement relation, SqlLiteral name) {
+    public TableAlias(SelectStatement relation, JpqlLiteral name) {
         this.relation = relation;
         this.name = name;
     }
@@ -16,7 +16,7 @@ public class TableAlias extends Node implements Source {
         return relation;
     }
 
-    public SqlLiteral getName() {
+    public JpqlLiteral getName() {
         return name;
     }
 

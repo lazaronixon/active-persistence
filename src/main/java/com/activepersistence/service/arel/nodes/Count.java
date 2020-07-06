@@ -2,11 +2,11 @@ package com.activepersistence.service.arel.nodes;
 
 public class Count extends Function {
 
-    public Count(SqlLiteral expression) {
+    public Count(JpqlLiteral expression) {
         super(expression);
     }
 
-    public Count(SqlLiteral expression, boolean distinct) {
+    public Count(JpqlLiteral expression, boolean distinct) {
         super(expression, distinct);
     }
 
