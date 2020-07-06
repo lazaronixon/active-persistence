@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Values {
 
-    private String fromClause     = null;
+    private FromClause fromClause = new FromClause();
     private int limitValue        = 0;
     private int offsetValue       = 0;
     private boolean lockValue     = false;
@@ -47,7 +47,7 @@ public class Values {
     }
 
     public Values merge(Values other) {
-        if (other.getFromClause()  != null) fromClause  = other.getFromClause();
+        if (other.getFromClause().isEmpty() == false) fromClause  = other.getFromClause();
         if (other.getLimitValue()  != 0) limitValue  = other.getLimitValue();
         if (other.getOffsetValue() != 0) offsetValue = other.getOffsetValue();
         if (other.isLockValue()) lockValue = other.isLockValue();
@@ -66,7 +66,7 @@ public class Values {
         return this;
     }
 
-    public String getFromClause() {
+    public FromClause getFromClause() {
         return fromClause;
     }
 
@@ -134,7 +134,7 @@ public class Values {
         this.selectValues = selectValues;
     }
 
-    public void setFromClause(String fromClause) {
+    public void setFromClause(FromClause fromClause) {
         this.fromClause = fromClause;
     }
 

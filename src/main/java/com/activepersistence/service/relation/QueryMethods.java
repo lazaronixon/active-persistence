@@ -140,7 +140,15 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> from_(String value) {
-        getValues().setFromClause(value); return thiz();
+        getValues().setFromClause(new FromClause(value)); return thiz();
+    }
+
+    public default Relation<T> from(Relation relation) {
+        return spawn().from_(relation);
+    }
+
+    public default Relation<T> from_(Relation relation) {
+        getValues().setFromClause(new FromClause(relation, "this")); return thiz();
     }
 
     public default Relation<T> unscope(ValidUnscopingValues... values) {
@@ -201,7 +209,7 @@ public interface QueryMethods<T> {
                 getValues().setConstructor(false);
                 break;
             case FROM:
-                getValues().setFromClause(null);
+                getValues().setFromClause(new FromClause());
                 break;
             case JOINS:
                 getValues().getJoinsValues().clear();

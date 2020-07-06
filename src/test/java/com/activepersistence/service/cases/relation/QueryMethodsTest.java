@@ -1,6 +1,7 @@
 package com.activepersistence.service.cases.relation;
 
 import com.activepersistence.IntegrationTest;
+import com.activepersistence.service.models.ClientsService;
 import com.activepersistence.service.models.Comment;
 import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
@@ -21,6 +22,9 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Inject
     private PostsService postsService;
+
+    @Inject
+    private ClientsService clientsService;
 
     @Test
     public void testSelect() {
@@ -74,8 +78,8 @@ public class QueryMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testFromNull() {
-        assertEquals("SELECT this FROM Post this", postsService.from("Teste this").from(null).toJpql());
+    public void testFromSubquery() {
+        assertEquals("SELECT this FROM (SELECT this FROM Client this) this", postsService.from(clientsService.unscoped()).toJpql());
     }
 
     @Test
