@@ -142,6 +142,16 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     @Override
+    public String getAlias() {
+        return entity.getAlias();
+    }
+
+    @Override
+    public String getPrimaryKey() {
+        return getAlias() + ".id";
+    }
+
+    @Override
     public Base<T> getService() {
         return service;
     }
@@ -215,7 +225,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private void buildSelect(SelectManager arel) {
         if (values.getSelectValues().isEmpty()) {
-            arel.project("this");
+            arel.project(getAlias());
         } else {
             values.getSelectValues().forEach(arel::project);
         }

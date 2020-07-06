@@ -7,6 +7,8 @@ public interface FinderMethods<T> {
 
     public Relation<T> thiz();
 
+    public String getPrimaryKey();
+
     public default T take() {
         return thiz().limit(1).fetchOne();
     }
@@ -20,35 +22,35 @@ public interface FinderMethods<T> {
     }
 
     public default T first() {
-        return thiz().order("this.id").take();
+        return thiz().order(getPrimaryKey()).take();
     }
 
     public default T firstOrFail() {
-        return thiz().order("this.id").takeOrFail();
+        return thiz().order(getPrimaryKey()).takeOrFail();
     }
 
     public default List<T> first(int limit) {
-        return thiz().order("this.id").take(limit);
+        return thiz().order(getPrimaryKey()).take(limit);
     }
 
     public default T last() {
-        return thiz().order("this.id DESC").take();
+        return thiz().order(getPrimaryKey() + " DESC").take();
     }
 
     public default T lastOrFail() {
-        return thiz().order("this.id DESC").takeOrFail();
+        return thiz().order(getPrimaryKey() + " DESC").takeOrFail();
     }
 
     public default List<T> last(int limit) {
-        return thiz().order("this.id DESC").take(limit);
+        return thiz().order(getPrimaryKey() + " DESC").take(limit);
     }
 
     public default T find(Object id) {
-        return thiz().where("this.id = :_id").bind("_id", id).takeOrFail();
+        return thiz().where(getPrimaryKey() + " = :_id").bind("_id", id).takeOrFail();
     }
 
     public default List<T> find(List<Object> ids) {
-        return thiz().where("this.id IN :_ids").bind("_ids", ids).fetch();
+        return thiz().where(getPrimaryKey() + " IN :_ids").bind("_ids", ids).fetch();
     }
 
     public default T findBy(String conditions) {

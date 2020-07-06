@@ -79,7 +79,7 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testFromSubquery() {
-        assertEquals("SELECT this FROM (SELECT this FROM Client this) this", postsService.from(clientsService.unscoped()).toJpql());
+        assertEquals("SELECT NEW com.activepersistence.service.models.Post(subquery.title) FROM (SELECT this FROM Client this) subquery", postsService.select("subquery.title").from(clientsService.unscoped()).toJpql());
     }
 
     @Test

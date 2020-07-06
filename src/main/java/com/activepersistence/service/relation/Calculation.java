@@ -13,8 +13,12 @@ public interface Calculation<T> {
 
     public Values getValues();
 
+    public String getAlias();
+
+    public String getPrimaryKey();
+
     public default Object count() {
-        return count("this");
+        return count(getAlias());
     }
 
     public default Object count(String field) {
@@ -38,7 +42,7 @@ public interface Calculation<T> {
     }
 
     public default List<Object> ids() {
-        return pluck("this.id");
+        return pluck(getPrimaryKey());
     }
 
     public default List pluck(String... fields) {

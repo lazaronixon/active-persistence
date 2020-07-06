@@ -148,7 +148,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> from_(Relation relation) {
-        getValues().setFromClause(new FromClause(relation, "this")); return thiz();
+        getValues().setFromClause(new FromClause(relation, "subquery")); return thiz();
     }
 
     public default Relation<T> unscope(ValidUnscopingValues... values) {
