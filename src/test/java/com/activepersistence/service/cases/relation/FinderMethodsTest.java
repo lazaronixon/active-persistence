@@ -92,6 +92,7 @@ public class FinderMethodsTest extends IntegrationTest {
         Post createdPost = postsService.findOrCreateBy("this.title = 'awesome title'",() -> new Post("awesome title", "body", 0));
         assertEquals(postsCount + 1, postsService.count());
         assertEquals("body", createdPost.getBody());
+        assertTrue(createdPost.isPersisted());
     }
 
     @Test
@@ -100,18 +101,21 @@ public class FinderMethodsTest extends IntegrationTest {
         Post existentPost = postsService.findOrCreateBy("this.title = 'hello world'",() -> new Post("hello world", "body", 0));
         assertEquals(postsCount, postsService.count());
         assertEquals("My first post", existentPost.getBody());
+        assertTrue(existentPost.isPersisted());
     }
 
     @Test
     public void testFindOrInitializeBy() {
-        Post newPost = postsService.findOrInitializeBy("this.title = 'awesome title'",() -> new Post("awesome title", "body", 0));
+        Post newPost = postsService.findOrInitializeBy("this.title = 'not found'",() -> new Post("awesome title", "body", 0));
         assertEquals("body", newPost.getBody());
+        assertTrue(newPost.isNewRecord());
     }
 
     @Test
-    public void testFindOrGetByInitialize() {
+    public void testFindOrInitializeByNotInitialize() {
         Post newPost = postsService.findOrInitializeBy("this.title = 'hello world'",() -> new Post("hello world", "body", 0));
         assertEquals("My first post", newPost.getBody());
+        assertTrue(newPost.isPersisted());
     }
 
 }
