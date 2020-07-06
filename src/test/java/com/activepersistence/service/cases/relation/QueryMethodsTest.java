@@ -11,10 +11,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import org.jboss.arquillian.persistence.UsingDataSet;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 @UsingDataSet({"posts.xml", "comments.xml"})
@@ -75,11 +72,6 @@ public class QueryMethodsTest extends IntegrationTest {
     @Test
     public void testFrom() {
         assertEquals("SELECT this FROM Topic this", postsService.from("Topic this").toJpql());
-    }
-
-    @Test
-    public void testFromSubquery() {
-        assertEquals("SELECT NEW com.activepersistence.service.models.Post(subquery.title) FROM (SELECT this FROM Client this) subquery", postsService.select("subquery.title").from(clientsService.unscoped()).toJpql());
     }
 
     @Test

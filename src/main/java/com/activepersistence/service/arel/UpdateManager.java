@@ -1,8 +1,8 @@
 package com.activepersistence.service.arel;
 
 import static com.activepersistence.service.Arel.jpql;
-import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.JpqlLiteral;
+import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.UpdateStatement;
 import static java.util.Arrays.asList;
 import java.util.List;

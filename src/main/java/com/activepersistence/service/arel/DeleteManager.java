@@ -2,8 +2,8 @@ package com.activepersistence.service.arel;
 
 import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.arel.nodes.DeleteStatement;
-import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.JpqlLiteral;
+import com.activepersistence.service.arel.nodes.Node;
 import java.util.List;
 
 public class DeleteManager extends TreeManager {

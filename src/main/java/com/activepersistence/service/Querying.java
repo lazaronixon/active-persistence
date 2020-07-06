@@ -4,10 +4,8 @@ import com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 
 public interface Querying<T> {
 
@@ -224,10 +222,6 @@ public interface Querying<T> {
 
     public default Relation<T> from(String from) {
         return all().from(from);
-    }
-
-    public default Relation<T> from(Relation relation) {
-        return all().from(relation);
     }
 
     public default Relation<T> none() {

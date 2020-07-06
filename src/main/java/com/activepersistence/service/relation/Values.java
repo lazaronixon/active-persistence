@@ -6,8 +6,8 @@ import java.util.List;
 
 public class Values {
 
-    private FromClause fromClause = new FromClause();
-    
+    private String fromClause     = null;
+
     private int limitValue        = 0;
     private int offsetValue       = 0;
     private boolean lockValue     = false;
@@ -47,7 +47,7 @@ public class Values {
         namedParameters   = new HashMap(other.namedParameters);
     }
 
-    public FromClause getFromClause() {
+    public String getFromClause() {
         return fromClause;
     }
 
@@ -115,7 +115,7 @@ public class Values {
         this.selectValues = selectValues;
     }
 
-    public void setFromClause(FromClause fromClause) {
+    public void setFromClause(String fromClause) {
         this.fromClause = fromClause;
     }
 

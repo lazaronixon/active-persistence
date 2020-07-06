@@ -13,7 +13,6 @@ import com.activepersistence.service.relation.SpawnMethods;
 import com.activepersistence.service.relation.Values;
 import java.util.List;
 import static java.util.Optional.ofNullable;
-import java.util.function.Supplier;
 import static java.util.stream.Collectors.toList;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
@@ -240,15 +239,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void buildFrom(SelectManager arel) {
-        if (!values.getFromClause().isEmpty()) {
-            Object opts = values.getFromClause().getValue();
-            String name = values.getFromClause().getName();
-            if (opts instanceof Relation) {
-                arel.from(((Relation) opts).getArel().as(name));
-            } else {
-                arel.from((String) opts);
-            }
-        }
+        if (values.getFromClause() != null) arel.from(values.getFromClause());
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {

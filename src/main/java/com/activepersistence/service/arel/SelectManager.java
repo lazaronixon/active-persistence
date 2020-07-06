@@ -1,11 +1,10 @@
 package com.activepersistence.service.arel;
 
 import static com.activepersistence.service.Arel.jpql;
+import com.activepersistence.service.arel.nodes.JpqlLiteral;
 import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
-import com.activepersistence.service.arel.nodes.JpqlLiteral;
-import com.activepersistence.service.arel.nodes.TableAlias;
 import static java.util.Arrays.asList;
 import java.util.List;
 
@@ -39,10 +38,6 @@ public class SelectManager extends TreeManager {
         ctx.getSource().setLeft(jpql(from)); return this;
     }
 
-    public SelectManager from(TableAlias from) {
-        ctx.getSource().setLeft(from); return this;
-    }
-
     public SelectManager join(String join) {
         ctx.getSource().getRight().add(jpql(join)); return this;
     }
@@ -61,10 +56,6 @@ public class SelectManager extends TreeManager {
 
     public SelectManager order(String... expr) {
         ast.getOrders().addAll(JpqlLiteral.fromArray(expr)); return this;
-    }
-
-    public TableAlias as(String other) {
-        return new TableAlias(ast, jpql(other));
     }
 
     public List<Node> getConstraints() {
