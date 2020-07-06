@@ -2,6 +2,7 @@ package com.activepersistence.service.relation;
 
 import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.Relation;
+import com.activepersistence.service.arel.nodes.Function;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import java.util.List;
@@ -65,29 +66,29 @@ public interface Calculation<T> {
     }
 
     private Object executeSimpleCalculation(Relation<T> relation, String operation, String field) {
-        relation.getValues().setSelectValues(asList(operationOverAggregateColumn(operation, field))); return relation.fetchOne();
+        relation.getValues().setSelectValues(asList(operationOverAggregateColumn(operation, field).toJpql())); return relation.fetchOne();
     }
 
     private Object executeGroupedCalculation(Relation<T> relation, String operation, String field) {
         Values values = relation.getValues();
         values.getSelectValues().clear();
-        values.getSelectValues().add(operationOverAggregateColumn(operation, field));
+        values.getSelectValues().add(operationOverAggregateColumn(operation, field).toJpql());
         values.getSelectValues().addAll(values.getGroupValues());
         return fetchGroupedResult(relation, values);
     }
 
-    private String operationOverAggregateColumn(String operation, String field) {
+    private Function operationOverAggregateColumn(String operation, String field) {
         switch (operation) {
             case "COUNT":
-                return jpql(field).count(isDistinct()).toJpql();
+                return jpql(field).count(isDistinct());
             case "MIN":
-                return jpql(field).minimum().toJpql();
+                return jpql(field).minimum();
             case "MAX":
-                return jpql(field).maximum().toJpql();
+                return jpql(field).maximum();
             case "AVG":
-                return jpql(field).average().toJpql();
+                return jpql(field).average();
             case "SUM":
-                return jpql(field).sum().toJpql();
+                return jpql(field).sum();
             default:
                 throw new RuntimeException("Operation not supported: " + operation);
         }
