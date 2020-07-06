@@ -7,6 +7,7 @@ import java.util.List;
 public class Values {
 
     private FromClause fromClause = new FromClause();
+    
     private int limitValue        = 0;
     private int offsetValue       = 0;
     private boolean lockValue     = false;
@@ -44,26 +45,6 @@ public class Values {
         eagerLoadsValues  = new ArrayList(other.eagerLoadsValues);
         ordinalParameters = new HashMap(other.ordinalParameters);
         namedParameters   = new HashMap(other.namedParameters);
-    }
-
-    public Values merge(Values other) {
-        if (other.getFromClause().isEmpty() == false) fromClause  = other.getFromClause();
-        if (other.getLimitValue()  != 0) limitValue  = other.getLimitValue();
-        if (other.getOffsetValue() != 0) offsetValue = other.getOffsetValue();
-        if (other.isLockValue()) lockValue = other.isLockValue();
-        if (other.isDistinctValue()) distinctValue = other.isDistinctValue();
-        if (other.isConstructor()) constructor = other.isConstructor();
-        selectValues.addAll(other.getSelectValues());
-        whereValues.addAll(other.getWhereValues());
-        groupValues.addAll(other.getGroupValues());
-        havingValues.addAll(other.getHavingValues());
-        orderValues.addAll(other.getOrderValues());
-        joinsValues.addAll(other.getJoinsValues());
-        includesValues.addAll(other.getIncludesValues());
-        eagerLoadsValues.addAll(other.getEagerLoadsValues());
-        ordinalParameters.putAll(other.getOrdinalParameters());
-        namedParameters.putAll(other.getNamedParameters());
-        return this;
     }
 
     public FromClause getFromClause() {

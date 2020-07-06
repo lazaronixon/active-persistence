@@ -17,7 +17,7 @@ public interface SpawnMethods<T> {
     }
 
     public default Relation<T> merge_(Relation<T> other) {
-        getValues().merge(other.getValues()); return thiz();
+        return new Merger(thiz(), other).merge();
     }
 
 }
