@@ -5,10 +5,6 @@ import static java.util.Arrays.asList;
 
 public interface QueryMethods<T> {
 
-    public enum ValidUnscopingValues {
-        WHERE, SELECT, GROUP, ORDER, LOCK, LIMIT, OFFSET, JOINS, INCLUDES, EAGER_LOADS, FROM, HAVING
-    }
-
     public Relation<T> thiz();
 
     public Relation<T> spawn();
@@ -137,24 +133,24 @@ public interface QueryMethods<T> {
         getValues().setFrom(value); return thiz();
     }
 
-    public default Relation<T> unscope(ValidUnscopingValues... values) {
+    public default Relation<T> unscope(String... values) {
         return spawn().unscope_(values);
     }
 
-    public default Relation<T> unscope_(ValidUnscopingValues... args) {
+    public default Relation<T> unscope_(String... args) {
         getValues().getUnscope().addAll(asList(args)); asList(args).forEach(getValues()::unscoping); return thiz();
     }
 
     public default Relation<T> reselect(String... fields) {
-        return unscope(ValidUnscopingValues.SELECT).select(fields);
+        return unscope("select").select(fields);
     }
 
     public default Relation<T> rewhere(String conditions) {
-        return unscope(ValidUnscopingValues.WHERE).where(conditions);
+        return unscope("where").where(conditions);
     }
 
     public default Relation<T> reorder(String... fields) {
-        return unscope(ValidUnscopingValues.ORDER).order(fields);
+        return unscope("order").order(fields);
     }
 
     public default Relation<T> bind(int position, Object value) {

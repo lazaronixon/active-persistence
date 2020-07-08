@@ -1,7 +1,6 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
-import com.activepersistence.service.Relation.ValueMethods;
 import static java.util.Arrays.asList;
 
 public interface SpawnMethods<T> {
@@ -22,11 +21,11 @@ public interface SpawnMethods<T> {
         return new Merger(thiz(), other).merge();
     }
 
-    public default Relation<T> except(ValueMethods... skips) {
+    public default Relation<T> except(String... skips) {
         return relationWith(getValues().except(asList(skips)));
     }
 
-    public default Relation<T> only(ValueMethods... onlies) {
+    public default Relation<T> only(String... onlies) {
         return relationWith(getValues().slice(asList(onlies)));
     }
 

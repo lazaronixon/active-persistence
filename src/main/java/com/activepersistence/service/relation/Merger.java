@@ -1,7 +1,6 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
-import com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues;
 
 public class Merger {
 
@@ -15,7 +14,7 @@ public class Merger {
     }
 
     public Relation merge() {
-        relation.unscope_(values.getUnscope().toArray(ValidUnscopingValues[]::new));
+        relation.unscope_(values.getUnscope().toArray(String[]::new));
 
         if (shouldReplaceFromClause()) relation.from_(values.getFrom());
         if (shouldReplaceLockValue()) relation.lock_(values.isLock());

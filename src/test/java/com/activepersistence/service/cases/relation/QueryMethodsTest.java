@@ -5,7 +5,6 @@ import com.activepersistence.service.models.ClientsService;
 import com.activepersistence.service.models.Comment;
 import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
-import com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.inject.Inject;
@@ -76,17 +75,17 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testUnscope() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.where("1=0").order("this.id").unscope(ValidUnscopingValues.ORDER).toJpql());
+        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.where("1=0").order("this.id").unscope("order").toJpql());
     }
 
     @Test
     public void testUnscopeFrom() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.where("1=0").from("Teste this").unscope(ValidUnscopingValues.FROM).toJpql());
+        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.where("1=0").from("Teste this").unscope("from").toJpql());
     }
 
     @Test
     public void testUnscopeWithMerge() {
-        assertEquals("SELECT this FROM Post this", postsService.order("this.id").merge(postsService.unscope(ValidUnscopingValues.ORDER)).toJpql());
+        assertEquals("SELECT this FROM Post this", postsService.order("this.id").merge(postsService.unscope("order")).toJpql());
     }
 
     @Test

@@ -1,7 +1,5 @@
 package com.activepersistence.service.relation;
 
-import com.activepersistence.service.Relation.ValueMethods;
-import com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import java.util.HashMap;
@@ -9,6 +7,13 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class Values {
+
+    private final static String[] VALUE_METHODS = new String[] {
+        "from",
+        "limit", "offset", "lock", "distinct", "constructor",
+        "select", "where", "group", "having", "order", "joins", "includes", "eagerLoads",
+        "ordinalBind", "namedBind"
+    };
 
     private String from = null;
 
@@ -26,7 +31,7 @@ public class Values {
     private List<String> joins      = new ArrayList();
     private List<String> includes   = new ArrayList();
     private List<String> eagerLoads = new ArrayList();
-    private List<ValidUnscopingValues> unscope = new ArrayList();
+    private List<String> unscope    = new ArrayList();
 
     private HashMap<Integer, Object> ordinalBind = new HashMap();
     private HashMap<String, Object> namedBind    = new HashMap();
@@ -105,7 +110,7 @@ public class Values {
         return offset;
     }
 
-    public List<ValidUnscopingValues> getUnscope() {
+    public List<String> getUnscope() {
         return unscope;
     }
 
@@ -149,67 +154,67 @@ public class Values {
         this.constructor = constructor;
     }
 
-    public Values except(List<ValueMethods> skips) {
+    public Values except(List<String> skips) {
         return dup().except_(skips);
     }
 
-    public Values except_(List<ValueMethods> skips) {
+    public Values except_(List<String> skips) {
         skips.forEach(this::reset); return this;
     }
 
-    public Values slice(List<ValueMethods> onlies) {
+    public Values slice(List<String> onlies) {
         return dup().slice_(onlies);
     }
 
-    public Values slice_(List<ValueMethods> onlies) {
-        asList(ValueMethods.values()).stream().filter(not(onlies::contains)).forEach(this::reset); return this;
+    public Values slice_(List<String> onlies) {
+        asList(VALUE_METHODS).stream().filter(not(onlies::contains)).forEach(this::reset); return this;
     }
 
     public Values dup() {
         return new Values(this);
     }
 
-    public void reset(ValueMethods value) {
+    public void reset(String value) {
         switch (value) {
-            case FROM: from = null; break;
+            case "from": from = null; break;
 
-            case LIMIT: limit = 0; break;
-            case OFFSET: offset = 0; break;
-            case LOCK: lock = false; break;
-            case DISTINCT: distinct = false; break;
-            case CONSTRUCTOR: constructor = false; break;
+            case "limit": limit = 0; break;
+            case "offset": offset = 0; break;
+            case "lock": lock = false; break;
+            case "distinct": distinct = false; break;
+            case "constructor": constructor = false; break;
 
-            case SELECT: select.clear(); break;
-            case WHERE: where.clear();  break;
-            case GROUP: group.clear();  break;
-            case HAVING: having.clear(); break;
-            case ORDER: order.clear();  break;
-            case JOINS: joins.clear();  break;
-            case INCLUDES: includes.clear(); break;
-            case EAGER_LOADS: eagerLoads.clear(); break;
+            case "select": select.clear(); break;
+            case "where": where.clear();  break;
+            case "group": group.clear();  break;
+            case "having": having.clear(); break;
+            case "order": order.clear();  break;
+            case "joins": joins.clear();  break;
+            case "includes": includes.clear(); break;
+            case "eagerLoads": eagerLoads.clear(); break;
 
-            case ORDINAL_BIND: getOrdinalBind().clear(); break;
-            case NAMED_BIND: getNamedBind().clear(); break;
+            case "ordinalBind": ordinalBind.clear(); break;
+            case "namedBind": namedBind.clear(); break;
         }
     }
 
-    public void unscoping(ValidUnscopingValues value) {
+    public void unscoping(String value) {
         switch (value) {
-            case FROM: from = null; break;
+            case "from": from = null; break;
 
-            case WHERE:   where.clear(); namedBind.clear(); ordinalBind.clear(); break;
-            case HAVING: having.clear(); namedBind.clear(); ordinalBind.clear(); break;
+            case "where":   where.clear(); namedBind.clear(); ordinalBind.clear(); break;
+            case "having": having.clear(); namedBind.clear(); ordinalBind.clear(); break;
 
-            case LIMIT:   limit = 0; break;
-            case OFFSET: offset = 0; break;
-            case LOCK: lock = false; break;
+            case "limit":   limit = 0; break;
+            case "offset": offset = 0; break;
+            case "lock": lock = false; break;
 
-            case SELECT: select.clear(); constructor = false; break;
-            case GROUP: group.clear(); break;
-            case ORDER: order.clear(); break;
-            case JOINS: joins.clear(); break;
-            case INCLUDES: includes.clear(); break;
-            case EAGER_LOADS: eagerLoads.clear(); break;
+            case "select": select.clear(); constructor = false; break;
+            case "group": group.clear(); break;
+            case "order": order.clear(); break;
+            case "joins": joins.clear(); break;
+            case "includes": includes.clear(); break;
+            case "eagerLoads": eagerLoads.clear(); break;
         }
     }
 
