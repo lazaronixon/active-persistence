@@ -208,12 +208,16 @@ public interface QueryMethods<T> {
                 break;
             case WHERE:
                 getValues().getWhereValues().clear();
+                getValues().getNamedParameters().clear();
+                getValues().getOrdinalParameters().clear();
                 break;
             case GROUP:
                 getValues().getGroupValues().clear();
                 break;
             case HAVING:
                 getValues().getHavingValues().clear();
+                getValues().getNamedParameters().clear();
+                getValues().getOrdinalParameters().clear();
                 break;
             case ORDER:
                 getValues().getOrderValues().clear();
