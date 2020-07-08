@@ -1,6 +1,6 @@
 package com.activepersistence.service;
 
-import com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues;
+import com.activepersistence.service.relation.QueryMethods.UnscopingValues;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -197,15 +197,15 @@ public interface Querying<T> {
         return all().eagerLoads(values);
     }
 
-    public default Relation<T> unscope(ValidUnscopingValues... values) {
+    public default Relation<T> unscope(UnscopingValues... values) {
         return all().unscope(values);
     }
 
-    public default Relation<T> except(ValidUnscopingValues... values) {
+    public default Relation<T> except(UnscopingValues... values) {
         return all().except(values);
     }
 
-    public default Relation<T> only(ValidUnscopingValues... values) {
+    public default Relation<T> only(UnscopingValues... values) {
         return all().only(values);
     }
 

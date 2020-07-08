@@ -1,6 +1,8 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
+import com.activepersistence.service.relation.QueryMethods.UnscopingValues;
+import static java.util.Arrays.asList;
 
 public interface SpawnMethods<T> {
 
@@ -18,6 +20,18 @@ public interface SpawnMethods<T> {
 
     public default Relation<T> merge_(Relation<T> other) {
         return new Merger(thiz(), other).merge();
+    }
+
+    public default Relation<T> except(UnscopingValues... skips) {
+        return relationWith(getValues().except(asList(skips)));
+    }
+
+    public default Relation<T> only(UnscopingValues... onlies) {
+        return relationWith(getValues().slice(asList(onlies)));
+    }
+
+    private Relation<T> relationWith(Values values) {
+        return new Relation(thiz(), values);
     }
 
 }

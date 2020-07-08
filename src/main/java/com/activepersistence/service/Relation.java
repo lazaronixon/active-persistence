@@ -44,6 +44,14 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         this.values        = new Values();
     }
 
+    public Relation(Relation<T> other, Values values) {
+        this.entityManager = other.entityManager;
+        this.entityClass   = other.entityClass;
+        this.service       = other.service;
+        this.entity        = other.entity;
+        this.values        = values;
+    }
+
     public Relation(Relation<T> other) {
         this.entityManager       = other.entityManager;
         this.entityClass         = other.entityClass;

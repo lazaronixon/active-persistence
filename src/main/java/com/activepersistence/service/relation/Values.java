@@ -1,8 +1,11 @@
 package com.activepersistence.service.relation;
 
+import com.activepersistence.service.relation.QueryMethods.UnscopingValues;
 import java.util.ArrayList;
+import static java.util.Arrays.asList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class Values {
 
@@ -139,4 +142,50 @@ public class Values {
         this.constructor = constructor;
     }
 
+    public Values except(List<UnscopingValues> skips) {
+        return dup().except_(skips);
+    }
+
+    public Values except_(List<UnscopingValues> skips) {
+        skips.forEach(this::reset); return this;
+    }
+
+    public Values slice(List<UnscopingValues> onlies) {
+        return dup().slice_(onlies);
+    }
+
+    public Values slice_(List<UnscopingValues> onlies) {
+        allValueMethods().stream().filter(not(onlies::contains)).forEach(this::reset); return this;
+    }
+
+    public Values dup() {
+        return new Values(this);
+    }
+
+    public void reset(UnscopingValues value) {
+        switch (value) {
+            case SELECT:      selectValues.clear(); constructor = false; break;
+            case GROUP:       groupValues.clear();      break;
+            case ORDER:       orderValues.clear();      break;
+            case JOINS:       joinsValues.clear();      break;
+            case INCLUDES:    includesValues.clear();   break;
+            case EAGER_LOADS: eagerLoadsValues.clear(); break;
+
+            case LIMIT:       limitValue    = 0;     break;
+            case OFFSET:      offsetValue   = 0;     break;
+            case LOCK:        lockValue     = false; break;
+
+            case FROM:        fromClause = null; break;
+            case WHERE:       whereValues.clear();  namedParameters.clear(); ordinalParameters.clear(); break;
+            case HAVING:      havingValues.clear(); namedParameters.clear(); ordinalParameters.clear(); break;
+        }
+    }
+
+    private static <T> Predicate<T> not(Predicate<T> t) {
+        return t.negate();
+    }
+
+    private List<UnscopingValues> allValueMethods() {
+        return asList(UnscopingValues.values());
+    }
 }

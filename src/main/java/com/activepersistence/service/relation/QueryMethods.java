@@ -1,17 +1,14 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
-import com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues;
-import static com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues.ORDER;
-import static com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues.SELECT;
-import static com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues.WHERE;
+import static com.activepersistence.service.relation.QueryMethods.UnscopingValues.ORDER;
+import static com.activepersistence.service.relation.QueryMethods.UnscopingValues.SELECT;
+import static com.activepersistence.service.relation.QueryMethods.UnscopingValues.WHERE;
 import static java.util.Arrays.asList;
-import java.util.List;
-import java.util.stream.Stream;
 
 public interface QueryMethods<T> {
 
-    public enum ValidUnscopingValues {
+    public enum UnscopingValues {
         WHERE, SELECT, GROUP, ORDER, LOCK, LIMIT, OFFSET, JOINS, INCLUDES, EAGER_LOADS, FROM, HAVING
     }
 
@@ -143,20 +140,12 @@ public interface QueryMethods<T> {
         getValues().setFromClause(value); return thiz();
     }
 
-    public default Relation<T> unscope(ValidUnscopingValues... values) {
+    public default Relation<T> unscope(UnscopingValues... values) {
         return spawn().unscope_(values);
     }
 
-    public default Relation<T> unscope_(ValidUnscopingValues... values) {
-        asList(values).forEach(this::unscope_); return thiz();
-    }
-
-    public default Relation<T> except(ValidUnscopingValues... values) {
-        return unscope(values);
-    }
-
-    public default Relation<T> only(ValidUnscopingValues... values) {
-        return unscope(allScopesExcept(values));
+    public default Relation<T> unscope_(UnscopingValues... skips) {
+        getValues().except_(asList(skips)); return thiz();
     }
 
     public default Relation<T> reselect(String... fields) {
@@ -185,60 +174,6 @@ public interface QueryMethods<T> {
 
     public default Relation<T> bind_(String name, Object value) {
         getValues().getNamedParameters().put(name, value); return thiz();
-    }
-
-    private ValidUnscopingValues[] allScopesExcept(ValidUnscopingValues[] values) {
-        List<ValidUnscopingValues> scopes     = asList(ValidUnscopingValues.values());
-        List<ValidUnscopingValues> values_    = asList(values);
-        Stream<ValidUnscopingValues> unscopes = scopes.stream().filter((v) -> !values_.contains(v));
-        return unscopes.toArray(ValidUnscopingValues[]::new);
-    }
-
-    private void unscope_(ValidUnscopingValues value) {
-        switch (value) {
-            case SELECT:
-                getValues().getSelectValues().clear();
-                getValues().setConstructor(false);
-                break;
-            case FROM:
-                getValues().setFromClause(null);
-                break;
-            case JOINS:
-                getValues().getJoinsValues().clear();
-                break;
-            case WHERE:
-                getValues().getWhereValues().clear();
-                getValues().getNamedParameters().clear();
-                getValues().getOrdinalParameters().clear();
-                break;
-            case GROUP:
-                getValues().getGroupValues().clear();
-                break;
-            case HAVING:
-                getValues().getHavingValues().clear();
-                getValues().getNamedParameters().clear();
-                getValues().getOrdinalParameters().clear();
-                break;
-            case ORDER:
-                getValues().getOrderValues().clear();
-                break;
-            case LIMIT:
-                getValues().setLimitValue(0);
-                break;
-            case OFFSET:
-                getValues().setOffsetValue(0);
-                break;
-            case INCLUDES:
-                getValues().getIncludesValues().clear();
-                break;
-            case EAGER_LOADS:
-                getValues().getEagerLoadsValues().clear();
-                break;
-            case LOCK:
-                getValues().setLockValue(false);
-                break;
-
-        }
     }
 
 }
