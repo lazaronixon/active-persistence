@@ -1,14 +1,11 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
-import static com.activepersistence.service.relation.QueryMethods.UnscopingValues.ORDER;
-import static com.activepersistence.service.relation.QueryMethods.UnscopingValues.SELECT;
-import static com.activepersistence.service.relation.QueryMethods.UnscopingValues.WHERE;
 import static java.util.Arrays.asList;
 
 public interface QueryMethods<T> {
 
-    public enum UnscopingValues {
+    public enum ValidUnscopingValues {
         WHERE, SELECT, GROUP, ORDER, LOCK, LIMIT, OFFSET, JOINS, INCLUDES, EAGER_LOADS, FROM, HAVING
     }
 
@@ -140,24 +137,24 @@ public interface QueryMethods<T> {
         getValues().setFrom(value); return thiz();
     }
 
-    public default Relation<T> unscope(UnscopingValues... values) {
+    public default Relation<T> unscope(ValidUnscopingValues... values) {
         return spawn().unscope_(values);
     }
 
-    public default Relation<T> unscope_(UnscopingValues... skips) {
-        getValues().except_(asList(skips)); return thiz();
+    public default Relation<T> unscope_(ValidUnscopingValues... args) {
+        getValues().getUnscope().addAll(asList(args)); asList(args).forEach(getValues()::unscoping); return thiz();
     }
 
     public default Relation<T> reselect(String... fields) {
-        return unscope(SELECT).select(fields);
+        return unscope(ValidUnscopingValues.SELECT).select(fields);
     }
 
     public default Relation<T> rewhere(String conditions) {
-        return unscope(WHERE).where(conditions);
+        return unscope(ValidUnscopingValues.WHERE).where(conditions);
     }
 
     public default Relation<T> reorder(String... fields) {
-        return unscope(ORDER).order(fields);
+        return unscope(ValidUnscopingValues.ORDER).order(fields);
     }
 
     public default Relation<T> bind(int position, Object value) {

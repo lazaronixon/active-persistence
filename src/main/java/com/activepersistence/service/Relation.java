@@ -24,6 +24,13 @@ import javax.persistence.TypedQuery;
 
 public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, SpawnMethods<T>, Scoping<T> {
 
+    public enum ValueMethods {
+        FROM,
+        LIMIT, OFFSET, LOCK, DISTINCT, CONSTRUCTOR,
+        SELECT, WHERE, GROUP, HAVING, ORDER, JOINS, INCLUDES, EAGER_LOADS,
+        ORDINAL_BIND, NAMED_BIND
+    }
+
     private final EntityManager entityManager;
 
     private final Class<T> entityClass;
