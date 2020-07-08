@@ -13,6 +13,7 @@ import com.activepersistence.service.relation.SpawnMethods;
 import com.activepersistence.service.relation.Values;
 import java.util.List;
 import static java.util.Optional.ofNullable;
+import java.util.function.Supplier;
 import static java.util.stream.Collectors.toList;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
@@ -32,8 +33,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private final Entity entity;
 
     private final Values values;
-
-    private Relation<T> currentScope;
 
     private SelectManager arel;
 
@@ -74,7 +73,17 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public Relation<T> scoping(Relation<T> scope) {
-        scope.setCurrentScope(this); return scope;
+        return scoping(() -> scope);
+    }
+
+    public Relation<T> scoping(Supplier<Relation> yield) {
+        Relation<T> previous = Scoping.getCurrentScope();
+        try {
+            Scoping.setCurrentScope(thiz());
+            return yield.get();
+        } finally {
+            Scoping.setCurrentScope(previous);
+        }
     }
 
     public T findOrCreateBy(String conditions, T resource) {
@@ -126,15 +135,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return getArel().toJpql();
     }
 
-    public void setCurrentScope(Relation<T> currentScope) {
-        this.currentScope = currentScope;
-    }
-
-    @Override
-    public Relation<T> getCurrentScope() {
-        return currentScope;
-    }
-
     @Override
     public Values getValues() {
         return values;
@@ -158,11 +158,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     @Override
     public Relation<T> thiz() {
         return this;
-    }
-
-    @Override
-    public Relation<T> relation() {
-        return scoping(new Relation(service));
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.activepersistence.service.relation.QueryMethods.ValidUnscopingValues;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -13,17 +14,25 @@ public interface Querying<T> {
 
     public Class<T> getEntityClass();
 
+    public Relation<T> getRelation();
+
+    //<editor-fold defaultstate="collapsed" desc="Scoping">
     public default Relation<T> all() {
-        return relation().all();
+        return getRelation().all();
     }
 
     public default Relation<T> unscoped() {
-        return relation().unscoped();
+        return getRelation().unscoped();
+    }
+
+    public default Relation<T> unscoped(Supplier<Relation> yield) {
+        return getRelation().unscoped(yield);
     }
 
     public default Relation<T> merge(Relation other) {
         return all().merge(other);
     }
+    //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Bindings">
     public default Relation<T> bind(int position, Object value) {
@@ -259,7 +268,7 @@ public interface Querying<T> {
     }
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Quering">
+    //<editor-fold defaultstate="collapsed" desc="Querying">
     public default List<T> findBySql(String sql) {
         return findBySql(sql, new HashMap());
     }
@@ -276,10 +285,6 @@ public interface Querying<T> {
         return parametize(getEntityManager().createNativeQuery(sql), binds).getResultList();
     }
     //</editor-fold>
-
-    private Relation<T> relation() {
-        return new Relation((Base) this);
-    }
 
     private Query parametize(Query query, Map<Integer, Object> binds) {
         applyParams(query, binds); return query;

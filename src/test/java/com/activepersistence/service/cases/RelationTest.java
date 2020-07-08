@@ -22,13 +22,19 @@ public class RelationTest extends IntegrationTest {
     }
 
     @Test
+    public void testScopingWithBlock() {
+        assertEquals("SELECT this FROM Post this WHERE 1=0",
+                postsService.all().scoping(() -> postsService.oneNeZero()).toJpql());
+    }
+
+    @Test
     public void testFetchOne() {
         assertNotNull(postsService.where("this.id = 1").fetchOne());
     }
 
     @Test
     public void testFetchOneOrFail() {
-        assertThrows(NoResultException.class, postsService.where("1=0")::fetchOneOrFail);
+        assertThrows(NoResultException.class,() -> postsService.where("1=0").fetchOneOrFail());
     }
 
     @Test
@@ -69,7 +75,7 @@ public class RelationTest extends IntegrationTest {
 
     @Test
     public void testDeleteAllWithDistinct() {
-        assertThrows(ActivePersistenceError.class, postsService.distinct()::deleteAll);
+        assertThrows(ActivePersistenceError.class,() -> postsService.distinct().deleteAll());
     }
 
     @Test

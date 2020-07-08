@@ -28,7 +28,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testTakeOrFail() {
-        assertThrows(NoResultException.class, postsService.where("1=0")::takeOrFail);
+        assertThrows(NoResultException.class,() -> postsService.where("1=0").takeOrFail());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testLastOrFail() {
-        assertThrows(NoResultException.class, postsService.where("1=0")::lastOrFail);
+        assertThrows(NoResultException.class,() -> postsService.where("1=0").lastOrFail());
     }
 
     @Test
