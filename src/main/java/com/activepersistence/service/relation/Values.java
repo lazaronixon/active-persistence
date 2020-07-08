@@ -195,6 +195,7 @@ public class Values {
 
             case "ordinalBind": ordinalBind.clear(); break;
             case "namedBind": namedBind.clear(); break;
+            default: throw new RuntimeException("invalid reset value: " + value);
         }
     }
 
@@ -215,6 +216,7 @@ public class Values {
             case "joins": joins.clear(); break;
             case "includes": includes.clear(); break;
             case "eagerLoads": eagerLoads.clear(); break;
+            default: throw new RuntimeException("invalid unscoping value: " + value);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.activepersistence.service.relation;
 
+import com.activepersistence.service.Base;
 import com.activepersistence.service.Relation;
 import static java.util.Arrays.asList;
 
@@ -8,6 +9,8 @@ public interface SpawnMethods<T> {
     public Relation<T> thiz();
 
     public Values getValues();
+
+    public Base<T> getService();
 
     public default Relation<T> spawn() {
         return new Relation(thiz());
@@ -30,7 +33,7 @@ public interface SpawnMethods<T> {
     }
 
     private Relation<T> relationWith(Values values) {
-        return new Relation(thiz(), values);
+        return new Relation(getService(), values);
     }
 
 }

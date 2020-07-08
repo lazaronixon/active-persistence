@@ -37,18 +37,18 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private SelectManager arel;
 
     public Relation(Base service) {
+        this.entity        = new Entity(service.getEntityClass(), "this");
         this.entityManager = service.getEntityManager();
         this.entityClass   = service.getEntityClass();
         this.service       = service;
-        this.entity        = new Entity(entityClass, "this");
         this.values        = new Values();
     }
 
-    public Relation(Relation<T> other, Values values) {
-        this.entityManager = other.entityManager;
-        this.entityClass   = other.entityClass;
-        this.service       = other.service;
-        this.entity        = other.entity;
+    public Relation(Base service, Values values) {
+        this.entity        = new Entity(service.getEntityClass(), "this");
+        this.entityManager = service.getEntityManager();
+        this.entityClass   = service.getEntityClass();
+        this.service       = service;
         this.values        = values;
     }
 
