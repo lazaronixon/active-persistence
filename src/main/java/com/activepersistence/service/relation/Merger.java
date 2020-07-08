@@ -14,33 +14,33 @@ public class Merger {
     }
 
     public Relation merge() {
-        if (shouldReplaceFromClause()) relation.from_(values.getFromClause());
-        if (shouldReplaceLockValue()) relation.lock_(values.isLockValue());
-        
-        if (values.isDistinctValue()) relation.distinct_(values.isDistinctValue());
-        if (values.getLimitValue() != 0) relation.limit_(values.getLimitValue());
-        if (values.getOffsetValue() != 0) relation.offset_(values.getOffsetValue());
+        if (shouldReplaceFromClause()) relation.from_(values.getFrom());
+        if (shouldReplaceLockValue()) relation.lock_(values.isLock());
 
-        values.getSelectValues().forEach(relation::select_);
-        values.getWhereValues().forEach(relation::where_);
-        values.getGroupValues().forEach(relation::group_);
-        values.getHavingValues().forEach(relation::having_);
-        values.getOrderValues().forEach(relation::order_);
-        values.getJoinsValues().forEach(relation::joins_);
-        values.getIncludesValues().forEach(relation::includes_);
-        values.getEagerLoadsValues().forEach(relation::eagerLoads_);
-        values.getOrdinalParameters().forEach(relation::bind_);
-        values.getNamedParameters().forEach(relation::bind_);
+        if (values.isDistinct()) relation.distinct_(values.isDistinct());
+        if (values.getLimit() != 0) relation.limit_(values.getLimit());
+        if (values.getOffset() != 0) relation.offset_(values.getOffset());
+
+        values.getSelect().forEach(relation::select_);
+        values.getWhere().forEach(relation::where_);
+        values.getGroup().forEach(relation::group_);
+        values.getHaving().forEach(relation::having_);
+        values.getOrder().forEach(relation::order_);
+        values.getJoins().forEach(relation::joins_);
+        values.getIncludes().forEach(relation::includes_);
+        values.getEagerLoads().forEach(relation::eagerLoads_);
+        values.getOrdinalBind().forEach(relation::bind_);
+        values.getNamedBind().forEach(relation::bind_);
 
         return relation;
     }
 
     private boolean shouldReplaceLockValue() {
-        return relation.getValues().isLockValue() == false && values.isLockValue();
+        return relation.getValues().isLock() == false && values.isLock();
     }
 
     private boolean shouldReplaceFromClause() {
-        return relation.getValues().getFromClause() == null && values.getFromClause() != null;
+        return relation.getValues().getFrom() == null && values.getFrom() != null;
     }
 
 }

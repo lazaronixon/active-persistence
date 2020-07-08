@@ -23,7 +23,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> select_(String... fields) {
-        getValues().getSelectValues().addAll(asList(fields));
+        getValues().getSelect().addAll(asList(fields));
         getValues().setConstructor(true);
         return thiz();
     }
@@ -33,7 +33,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> joins_(String value) {
-        getValues().getJoinsValues().add(value); return thiz();
+        getValues().getJoins().add(value); return thiz();
     }
 
     public default Relation<T> where(String conditions) {
@@ -41,7 +41,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> where_(String conditions) {
-        getValues().getWhereValues().add(conditions); return thiz();
+        getValues().getWhere().add(conditions); return thiz();
     }
 
     public default Relation<T> group(String... fields) {
@@ -49,7 +49,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> group_(String... fields) {
-        getValues().getGroupValues().addAll(asList(fields)); return thiz();
+        getValues().getGroup().addAll(asList(fields)); return thiz();
     }
 
     public default Relation<T> having(String conditions) {
@@ -57,7 +57,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> having_(String conditions) {
-        getValues().getHavingValues().add(conditions); return thiz();
+        getValues().getHaving().add(conditions); return thiz();
     }
 
     public default Relation<T> order(String... fields) {
@@ -65,7 +65,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> order_(String... fields) {
-        getValues().getOrderValues().addAll(asList(fields)); return thiz();
+        getValues().getOrder().addAll(asList(fields)); return thiz();
     }
 
     public default Relation<T> limit(int limit) {
@@ -73,7 +73,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> limit_(int limit) {
-        getValues().setLimitValue(limit); return thiz();
+        getValues().setLimit(limit); return thiz();
     }
 
     public default Relation<T> offset(int offset) {
@@ -81,7 +81,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> offset_(int offset) {
-        getValues().setOffsetValue(offset); return thiz();
+        getValues().setOffset(offset); return thiz();
     }
 
     public default Relation<T> distinct() {
@@ -93,7 +93,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> distinct_(boolean value) {
-        getValues().setDistinctValue(value); return thiz();
+        getValues().setDistinct(value); return thiz();
     }
 
     public default Relation<T> none() {
@@ -109,7 +109,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> includes_(String... includes) {
-        getValues().getIncludesValues().addAll(asList(includes)); return thiz();
+        getValues().getIncludes().addAll(asList(includes)); return thiz();
     }
 
     public default Relation<T> eagerLoads(String... eagerLoads) {
@@ -117,7 +117,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> eagerLoads_(String... eagerLoads) {
-        getValues().getEagerLoadsValues().addAll(asList(eagerLoads)); return thiz();
+        getValues().getEagerLoads().addAll(asList(eagerLoads)); return thiz();
     }
 
     public default Relation<T> lock() {
@@ -129,7 +129,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> lock_(boolean value) {
-        getValues().setLockValue(value); return thiz();
+        getValues().setLock(value); return thiz();
     }
 
     public default Relation<T> from(String value) {
@@ -137,7 +137,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> from_(String value) {
-        getValues().setFromClause(value); return thiz();
+        getValues().setFrom(value); return thiz();
     }
 
     public default Relation<T> unscope(UnscopingValues... values) {
@@ -165,7 +165,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> bind_(int position, Object value) {
-        getValues().getOrdinalParameters().put(position, value); return thiz();
+        getValues().getOrdinalBind().put(position, value); return thiz();
     }
 
     public default Relation<T> bind(String name, Object value) {
@@ -173,7 +173,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> bind_(String name, Object value) {
-        getValues().getNamedParameters().put(name, value); return thiz();
+        getValues().getNamedBind().put(name, value); return thiz();
     }
 
 }

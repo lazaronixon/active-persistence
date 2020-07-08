@@ -49,16 +49,16 @@ public interface Calculation<T> {
     public default List pluck(String... fields) {
         Relation<T> relation = spawn();
         relation.getValues().setConstructor(false);
-        relation.getValues().setSelectValues(asList(fields));
+        relation.getValues().setSelect(asList(fields));
         return relation.fetch_();
     }
 
     private Object calculate(String operation, String field) {
         Relation relation = spawn();
         relation.getValues().setConstructor(false);
-        relation.getValues().setDistinctValue(false);
+        relation.getValues().setDistinct(false);
 
-        if (relation.getValues().getGroupValues().isEmpty()) {
+        if (relation.getValues().getGroup().isEmpty()) {
             return executeSimpleCalculation(relation, operation, field);
         } else {
             return executeGroupedCalculation(relation, operation, field);
@@ -66,14 +66,14 @@ public interface Calculation<T> {
     }
 
     private Object executeSimpleCalculation(Relation<T> relation, String operation, String field) {
-        relation.getValues().setSelectValues(asList(operationOverAggregateColumn(operation, field).toJpql())); return relation.fetchOne();
+        relation.getValues().setSelect(asList(operationOverAggregateColumn(operation, field).toJpql())); return relation.fetchOne();
     }
 
     private Object executeGroupedCalculation(Relation<T> relation, String operation, String field) {
         Values values = relation.getValues();
-        values.getSelectValues().clear();
-        values.getSelectValues().add(operationOverAggregateColumn(operation, field).toJpql());
-        values.getSelectValues().addAll(values.getGroupValues());
+        values.getSelect().clear();
+        values.getSelect().add(operationOverAggregateColumn(operation, field).toJpql());
+        values.getSelect().addAll(values.getGroup());
         return fetchGroupedResult(relation, values);
     }
 
@@ -97,7 +97,7 @@ public interface Calculation<T> {
     private Object fetchGroupedResult(Relation<T> relation, Values values) {
         List<Object[]> results = relation.fetch_();
 
-        if (values.getGroupValues().size() > 1) {
+        if (values.getGroup().size() > 1) {
             return results.stream().collect(toMap(v -> copyOfRange(v, 1, v.length), v -> v[0]));
         } else {
             return results.stream().collect(toMap(v -> v[1], v -> v[0]));
@@ -105,7 +105,7 @@ public interface Calculation<T> {
     }
 
     private boolean isDistinct() {
-        return getValues().isDistinctValue();
+        return getValues().isDistinct();
     }
 
 }

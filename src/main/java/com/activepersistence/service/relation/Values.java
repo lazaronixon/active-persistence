@@ -9,133 +9,133 @@ import java.util.function.Predicate;
 
 public class Values {
 
-    private String fromClause     = null;
+    private String from = null;
 
-    private int limitValue        = 0;
-    private int offsetValue       = 0;
-    private boolean lockValue     = false;
-    private boolean distinctValue = false;
-    private boolean constructor   = false;
+    private int limit           = 0;
+    private int offset          = 0;
+    private boolean lock        = false;
+    private boolean distinct    = false;
+    private boolean constructor = false;
 
-    private List<String> selectValues     = new ArrayList();
-    private List<String> whereValues      = new ArrayList();
-    private List<String> groupValues      = new ArrayList();
-    private List<String> havingValues     = new ArrayList();
-    private List<String> orderValues      = new ArrayList();
-    private List<String> joinsValues      = new ArrayList();
-    private List<String> includesValues   = new ArrayList();
-    private List<String> eagerLoadsValues = new ArrayList();
+    private List<String> select     = new ArrayList();
+    private List<String> where      = new ArrayList();
+    private List<String> group      = new ArrayList();
+    private List<String> having     = new ArrayList();
+    private List<String> order      = new ArrayList();
+    private List<String> joins      = new ArrayList();
+    private List<String> includes   = new ArrayList();
+    private List<String> eagerLoads = new ArrayList();
 
-    private HashMap<Integer, Object> ordinalParameters = new HashMap();
-    private HashMap<String, Object> namedParameters    = new HashMap();
+    private HashMap<Integer, Object> ordinalBind = new HashMap();
+    private HashMap<String, Object> namedBind    = new HashMap();
 
     public Values() {}
 
     public Values(Values other) {
-        constructor       = other.constructor;
-        fromClause        = other.fromClause;
-        limitValue        = other.limitValue;
-        offsetValue       = other.offsetValue;
-        lockValue         = other.lockValue;
-        distinctValue     = other.distinctValue;
-        selectValues      = new ArrayList(other.selectValues);
-        whereValues       = new ArrayList(other.whereValues);
-        groupValues       = new ArrayList(other.groupValues);
-        havingValues      = new ArrayList(other.havingValues);
-        orderValues       = new ArrayList(other.orderValues);
-        joinsValues       = new ArrayList(other.joinsValues);
-        includesValues    = new ArrayList(other.includesValues);
-        eagerLoadsValues  = new ArrayList(other.eagerLoadsValues);
-        ordinalParameters = new HashMap(other.ordinalParameters);
-        namedParameters   = new HashMap(other.namedParameters);
+        constructor  = other.constructor;
+        from         = other.from;
+        limit        = other.limit;
+        offset       = other.offset;
+        lock         = other.lock;
+        distinct     = other.distinct;
+        select       = new ArrayList(other.select);
+        where        = new ArrayList(other.where);
+        group        = new ArrayList(other.group);
+        having       = new ArrayList(other.having);
+        order        = new ArrayList(other.order);
+        joins        = new ArrayList(other.joins);
+        includes     = new ArrayList(other.includes);
+        eagerLoads   = new ArrayList(other.eagerLoads);
+        ordinalBind  = new HashMap(other.ordinalBind);
+        namedBind    = new HashMap(other.namedBind);
     }
 
-    public String getFromClause() {
-        return fromClause;
+    public String getFrom() {
+        return from;
     }
 
-    public List<String> getSelectValues() {
-        return selectValues;
+    public List<String> getSelect() {
+        return select;
     }
 
-    public List<String> getWhereValues() {
-        return whereValues;
+    public List<String> getWhere() {
+        return where;
     }
 
-    public List<String> getGroupValues() {
-        return groupValues;
+    public List<String> getGroup() {
+        return group;
     }
 
-    public List<String> getHavingValues() {
-        return havingValues;
+    public List<String> getHaving() {
+        return having;
     }
 
-    public List<String> getOrderValues() {
-        return orderValues;
+    public List<String> getOrder() {
+        return order;
     }
 
-    public List<String> getJoinsValues() {
-        return joinsValues;
+    public List<String> getJoins() {
+        return joins;
     }
 
-    public List<String> getIncludesValues() {
-        return includesValues;
+    public List<String> getIncludes() {
+        return includes;
     }
 
-    public List<String> getEagerLoadsValues() {
-        return eagerLoadsValues;
+    public List<String> getEagerLoads() {
+        return eagerLoads;
     }
 
-    public HashMap<Integer, Object> getOrdinalParameters() {
-        return ordinalParameters;
+    public HashMap<Integer, Object> getOrdinalBind() {
+        return ordinalBind;
     }
 
-    public HashMap<String, Object> getNamedParameters() {
-        return namedParameters;
+    public HashMap<String, Object> getNamedBind() {
+        return namedBind;
     }
 
-    public int getLimitValue() {
-        return limitValue;
+    public int getLimit() {
+        return limit;
     }
 
-    public int getOffsetValue() {
-        return offsetValue;
+    public int getOffset() {
+        return offset;
     }
 
-    public boolean isLockValue() {
-        return lockValue;
+    public boolean isLock() {
+        return lock;
     }
 
-    public boolean isDistinctValue() {
-        return distinctValue;
+    public boolean isDistinct() {
+        return distinct;
     }
 
     public boolean isConstructor() {
         return constructor;
     }
 
-    public void setSelectValues(List<String> selectValues) {
-        this.selectValues = selectValues;
+    public void setSelect(List<String> select) {
+        this.select = select;
     }
 
-    public void setFromClause(String fromClause) {
-        this.fromClause = fromClause;
+    public void setFrom(String from) {
+        this.from = from;
     }
 
-    public void setLimitValue(int limitValue) {
-        this.limitValue = limitValue;
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 
-    public void setOffsetValue(int offsetValue) {
-        this.offsetValue = offsetValue;
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
-    public void setDistinctValue(boolean distinctValue) {
-        this.distinctValue = distinctValue;
+    public void setDistinct(boolean distinct) {
+        this.distinct = distinct;
     }
 
-    public void setLockValue(boolean lockValue) {
-        this.lockValue = lockValue;
+    public void setLock(boolean lock) {
+        this.lock = lock;
     }
 
     public void setConstructor(boolean constructor) {
@@ -164,20 +164,20 @@ public class Values {
 
     public void reset(UnscopingValues value) {
         switch (value) {
-            case SELECT:      selectValues.clear(); constructor = false; break;
-            case GROUP:       groupValues.clear();      break;
-            case ORDER:       orderValues.clear();      break;
-            case JOINS:       joinsValues.clear();      break;
-            case INCLUDES:    includesValues.clear();   break;
-            case EAGER_LOADS: eagerLoadsValues.clear(); break;
+            case SELECT: select.clear(); constructor = false; break;
+            case GROUP: group.clear(); break;
+            case ORDER: order.clear(); break;
+            case JOINS: joins.clear(); break;
+            case INCLUDES: includes.clear(); break;
+            case EAGER_LOADS: eagerLoads.clear(); break;
 
-            case LIMIT:       limitValue    = 0;     break;
-            case OFFSET:      offsetValue   = 0;     break;
-            case LOCK:        lockValue     = false; break;
+            case LIMIT: limit = 0; break;
+            case OFFSET: offset = 0; break;
+            case LOCK: lock = false; break;
 
-            case FROM:        fromClause = null; break;
-            case WHERE:       whereValues.clear();  namedParameters.clear(); ordinalParameters.clear(); break;
-            case HAVING:      havingValues.clear(); namedParameters.clear(); ordinalParameters.clear(); break;
+            case FROM: from = null; break;
+            case WHERE: where.clear(); namedBind.clear(); ordinalBind.clear(); break;
+            case HAVING: having.clear(); namedBind.clear(); ordinalBind.clear(); break;
         }
     }
 

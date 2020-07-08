@@ -180,11 +180,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private SelectManager buildArel() {
         SelectManager result = new SelectManager(entity);
 
-        values.getJoinsValues().forEach(join    -> result.join(join));
-        values.getWhereValues().forEach(where   -> result.where(where));
-        values.getHavingValues().forEach(having -> result.having(having));
-        values.getGroupValues().forEach(group   -> result.group(group));
-        values.getOrderValues().forEach(order   -> result.order(order));
+        values.getJoins().forEach(join    -> result.join(join));
+        values.getWhere().forEach(where   -> result.where(where));
+        values.getHaving().forEach(having -> result.having(having));
+        values.getGroup().forEach(group   -> result.group(group));
+        values.getOrder().forEach(order   -> result.order(order));
 
         buildConstructor(result);
         buildDistinct(result);
@@ -197,23 +197,23 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private TypedQuery<T> buildQuery(String query) {
         return parametize(createTypedQuery(query))
                 .setLockMode(buildLockMode())
-                .setMaxResults(values.getLimitValue())
-                .setFirstResult(values.getOffsetValue())
+                .setMaxResults(values.getLimit())
+                .setFirstResult(values.getOffset())
                 .setHint("eclipselink.batch.type", "IN");
     }
 
     private Query buildQuery_(String query) {
         return parametize(createQuery(query))
                 .setLockMode(buildLockMode())
-                .setMaxResults(values.getLimitValue())
-                .setFirstResult(values.getOffsetValue())
+                .setMaxResults(values.getLimit())
+                .setFirstResult(values.getOffset())
                 .setHint("eclipselink.batch.type", "IN");
     }
 
     private int executeUpdate(String query) {
         return parametize(createQuery(query))
-                .setMaxResults(values.getLimitValue())
-                .setFirstResult(values.getOffsetValue())
+                .setMaxResults(values.getLimit())
+                .setFirstResult(values.getOffset())
                 .executeUpdate();
     }
 
@@ -226,7 +226,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void buildDistinct(SelectManager arel) {
-        arel.distinct(values.isDistinctValue());
+        arel.distinct(values.isDistinct());
     }
 
     private void buildConstructor(SelectManager arel) {
@@ -234,15 +234,15 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void buildSelect(SelectManager arel) {
-        if (values.getSelectValues().isEmpty()) {
+        if (values.getSelect().isEmpty()) {
             arel.project(getAlias());
         } else {
-            values.getSelectValues().forEach(arel::project);
+            values.getSelect().forEach(arel::project);
         }
     }
 
     private void buildFrom(SelectManager arel) {
-        if (values.getFromClause() != null) arel.from(values.getFromClause());
+        if (values.getFrom() != null) arel.from(values.getFrom());
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {
@@ -254,24 +254,24 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void applyParams(Query query) {
-        values.getOrdinalParameters().entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
-        values.getNamedParameters().entrySet().forEach(p   -> query.setParameter(p.getKey(), p.getValue()));
+        values.getOrdinalBind().entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
+        values.getNamedBind().entrySet().forEach(p   -> query.setParameter(p.getKey(), p.getValue()));
     }
 
     private void applyHints(Query query) {
-        values.getIncludesValues().forEach(value   -> query.setHint("eclipselink.batch", value));
-        values.getEagerLoadsValues().forEach(value -> query.setHint("eclipselink.left-join-fetch", value));
+        values.getIncludes().forEach(value   -> query.setHint("eclipselink.batch", value));
+        values.getEagerLoads().forEach(value -> query.setHint("eclipselink.left-join-fetch", value));
     }
 
     private LockModeType buildLockMode() {
-        return values.isLockValue() ? PESSIMISTIC_READ : NONE;
+        return values.isLock() ? PESSIMISTIC_READ : NONE;
     }
 
     private boolean isValidRelationForUpdate() {
-        return values.isDistinctValue() == false
-                && values.getGroupValues().isEmpty()
-                && values.getHavingValues().isEmpty()
-                && values.getJoinsValues().isEmpty();
+        return values.isDistinct() == false
+                && values.getGroup().isEmpty()
+                && values.getHaving().isEmpty()
+                && values.getJoins().isEmpty();
     }
 
 }

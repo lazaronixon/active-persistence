@@ -29,7 +29,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.all();
         Relation<Post> relation2 = relation.select_("foo");
         assertEquals(relation, relation2);
-        assertEquals(asList("foo"), relation2.getValues().getSelectValues());
+        assertEquals(asList("foo"), relation2.getValues().getSelect());
     }
 
     @Test
@@ -37,7 +37,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.all();
         Relation<Post> relation2 = relation.joins_("foo");
         assertEquals(relation, relation2);
-        assertEquals(asList("foo"), relation2.getValues().getJoinsValues());
+        assertEquals(asList("foo"), relation2.getValues().getJoins());
     }
 
     @Test
@@ -45,7 +45,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.all();
         Relation<Post> relation2 = relation.where_("foo");
         assertEquals(relation, relation2);
-        assertEquals(asList("foo"), relation2.getValues().getWhereValues());
+        assertEquals(asList("foo"), relation2.getValues().getWhere());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.all();
         Relation<Post> relation2 = relation.group_("foo");
         assertEquals(relation, relation2);
-        assertEquals(asList("foo"), relation2.getValues().getGroupValues());
+        assertEquals(asList("foo"), relation2.getValues().getGroup());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.all();
         Relation<Post> relation2 = relation.having_("foo");
         assertEquals(relation, relation2);
-        assertEquals(asList("foo"), relation2.getValues().getHavingValues());
+        assertEquals(asList("foo"), relation2.getValues().getHaving());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.all();
         Relation<Post> relation2 = relation.order_("foo");
         assertEquals(relation, relation2);
-        assertEquals(asList("foo"), relation2.getValues().getOrderValues());
+        assertEquals(asList("foo"), relation2.getValues().getOrder());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.all();
         Relation<Post> relation2 = relation.limit_(999);
         assertEquals(relation, relation2);
-        assertEquals(999, relation2.getValues().getLimitValue());
+        assertEquals(999, relation2.getValues().getLimit());
     }
 
     @Test
@@ -85,7 +85,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.all();
         Relation<Post> relation2 = relation.distinct_(true);
         assertEquals(relation, relation2);
-        assertEquals(true, relation2.getValues().isDistinctValue());
+        assertEquals(true, relation2.getValues().isDistinct());
     }
 
     @Test
@@ -93,7 +93,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.all();
         Relation<Post> relation2 = relation.none_();
         assertEquals(relation, relation2);
-        assertEquals(asList("1=0"), relation2.getValues().getWhereValues());
+        assertEquals(asList("1=0"), relation2.getValues().getWhere());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.all();
         Relation<Post> relation2 = relation.includes_("foo");
         assertEquals(relation, relation2);
-        assertEquals(asList("foo"), relation2.getValues().getIncludesValues());
+        assertEquals(asList("foo"), relation2.getValues().getIncludes());
     }
 
     @Test
@@ -109,7 +109,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.all();
         Relation<Post> relation2 = relation.eagerLoads_("foo");
         assertEquals(relation, relation2);
-        assertEquals(asList("foo"), relation2.getValues().getEagerLoadsValues());
+        assertEquals(asList("foo"), relation2.getValues().getEagerLoads());
     }
 
     @Test
@@ -117,7 +117,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.all();
         Relation<Post> relation2 = relation.lock_(true);
         assertEquals(relation, relation2);
-        assertEquals(true, relation2.getValues().isLockValue());
+        assertEquals(true, relation2.getValues().isLock());
     }
 
     @Test
@@ -125,7 +125,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.all();
         Relation<Post> relation2 = relation.from_("foo");
         assertEquals(relation, relation2);
-        assertEquals("foo", relation2.getValues().getFromClause());
+        assertEquals("foo", relation2.getValues().getFrom());
     }
 
     @Test
@@ -133,7 +133,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.where("1=1");
         Relation<Post> relation2 = relation.merge_(postsService.where("1=2"));
         assertEquals(relation, relation2);
-        assertEquals(asList("1=1", "1=2"), relation2.getValues().getWhereValues());
+        assertEquals(asList("1=1", "1=2"), relation2.getValues().getWhere());
     }
 
     @Test
@@ -141,7 +141,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.where("1=1");
         Relation<Post> relation2 = relation.bind_(1, "foo");
         assertEquals(relation, relation2);
-        assertEquals(Map.of(1, "foo"), relation2.getValues().getOrdinalParameters());
+        assertEquals(Map.of(1, "foo"), relation2.getValues().getOrdinalBind());
     }
 
     @Test
@@ -149,7 +149,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.where("1=1");
         Relation<Post> relation2 = relation.bind_("foo", "foo");
         assertEquals(relation, relation2);
-        assertEquals(Map.of("foo", "foo"), relation2.getValues().getNamedParameters());
+        assertEquals(Map.of("foo", "foo"), relation2.getValues().getNamedBind());
     }
 
 }
