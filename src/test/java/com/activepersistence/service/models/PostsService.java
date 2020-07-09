@@ -19,8 +19,12 @@ public class PostsService extends Base<Post> {
         return entityManager;
     }
 
-    public Relation<Post> oneNeZero() {
+    public Relation<Post> oneEqZero() {
         return where("1=0");
+    }
+
+    public Relation<Post> twoEqZero() {
+        return where("2=0");
     }
 
 }

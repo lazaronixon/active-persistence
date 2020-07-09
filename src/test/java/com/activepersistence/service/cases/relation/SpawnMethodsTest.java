@@ -25,7 +25,7 @@ public class SpawnMethodsTest extends IntegrationTest {
     @Test
     public void testMerge() {
         assertEquals("SELECT this FROM Post this WHERE 1=0",
-                postsService.merge(postsService.oneNeZero()).toJpql());
+                postsService.merge(postsService.oneEqZero()).toJpql());
     }
 
     @Test

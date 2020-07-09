@@ -80,10 +80,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return buildQuery(toJpql()).getResultStream().findAny().isPresent();
     }
 
-    public Relation<T> scoping(Relation<T> scope) {
-        return scoping(() -> scope);
-    }
-
     public Relation<T> scoping(Supplier<Relation> yield) {
         Relation<T> previous = Scoping.getCurrentScope();
         try {

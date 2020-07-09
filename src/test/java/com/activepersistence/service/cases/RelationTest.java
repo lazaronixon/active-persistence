@@ -16,15 +16,15 @@ public class RelationTest extends IntegrationTest {
     private PostsService postsService;
 
     @Test
-    public void testScoping() {
+    public void testScopingBlock() {
         assertEquals("SELECT this FROM Post this WHERE 1=0",
-                postsService.all().scoping(postsService.oneNeZero()).toJpql());
+                postsService.all().scoping(() -> postsService.oneEqZero()).toJpql());
     }
 
     @Test
-    public void testScopingWithBlock() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0",
-                postsService.all().scoping(() -> postsService.oneNeZero()).toJpql());
+    public void testScopingBlockTwice() {
+        assertEquals("SELECT this FROM Post this WHERE 1=0 AND 2=0",
+                postsService.all().scoping(() -> postsService.oneEqZero()).scoping(() -> postsService.twoEqZero()).toJpql());
     }
 
     @Test
