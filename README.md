@@ -247,8 +247,6 @@ clientsService.unscoped().all(); // SELECT this FROM Client this
 
 ### Merging of scopes
 ```java
-usersService.scoping(usersService.active()).fetch();
-// OR
 usersService.merge(usersService.active()).fetch();
 ```
 

@@ -169,23 +169,34 @@ public interface QueryMethods<T> {
         getValues().getNamedBind().put(name, value); return thiz();
     }
 
-    public default void unscoping(String value) {
+    private void unscoping(String value) {
         switch (value) {
             case "from":       getValues().setFrom(null); break;
 
-            case "where":      getValues().getWhere().clear();  getValues().getNamedBind().clear(); getValues().getOrdinalBind().clear(); break;
-            case "having":     getValues().getHaving().clear(); getValues().getNamedBind().clear(); getValues().getOrdinalBind().clear(); break;
+            case "where":      getValues().getWhere().clear();
+                               getValues().getNamedBind().clear();
+                               getValues().getOrdinalBind().clear();
+                               break;
 
-            case "limit":      getValues().setLimit(0); break;
-            case "offset":     getValues().setOffset(0); break;
+            case "having":     getValues().getHaving().clear();
+                               getValues().getNamedBind().clear();
+                               getValues().getOrdinalBind().clear();
+                               break;
+
+            case "limit":      getValues().setLimit(0);    break;
+            case "offset":     getValues().setOffset(0);   break;
             case "lock":       getValues().setLock(false); break;
 
-            case "select":     getValues().getSelect().clear(); getValues().setConstructor(false); break;
+            case "select":     getValues().getSelect().clear();
+                               getValues().setConstructor(false);
+                               break;
+
             case "group":      getValues().getGroup().clear(); break;
             case "order":      getValues().getOrder().clear(); break;
             case "joins":      getValues().getJoins().clear(); break;
-            case "includes":   getValues().getIncludes().clear(); break;
+            case "includes":   getValues().getIncludes().clear();   break;
             case "eagerLoads": getValues().getEagerLoads().clear(); break;
+
             default: throw new RuntimeException("invalid unscoping value: " + value);
         }
     }

@@ -53,11 +53,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public Relation(Relation<T> other) {
-        this.entityManager       = other.entityManager;
-        this.entityClass         = other.entityClass;
-        this.service             = other.service;
-        this.entity              = other.entity;
-        this.values              = new Values(other.values);
+        this.entityManager = other.entityManager;
+        this.entityClass   = other.entityClass;
+        this.service       = other.service;
+        this.entity        = other.entity;
+        this.values        = new Values(other.values);
     }
 
     public T fetchOne() {
@@ -176,11 +176,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private SelectManager buildArel() {
         SelectManager result = new SelectManager(entity);
 
-        values.getJoins().forEach(join    -> result.join(join));
-        values.getWhere().forEach(where   -> result.where(where));
-        values.getHaving().forEach(having -> result.having(having));
-        values.getGroup().forEach(group   -> result.group(group));
-        values.getOrder().forEach(order   -> result.order(order));
+        values.getJoins().forEach(result::join);
+        values.getWhere().forEach(result::where);
+        values.getHaving().forEach(result::having);
+        values.getGroup().forEach(result::group);
+        values.getOrder().forEach(result::order);
 
         buildConstructor(result);
         buildDistinct(result);

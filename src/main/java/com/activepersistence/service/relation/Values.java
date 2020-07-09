@@ -168,22 +168,26 @@ public class Values {
         return new Values(this);
     }
 
+    private <T> Predicate<T> not(Predicate<T> t) {
+        return t.negate();
+    }
+
     public void reset(String value) {
         switch (value) {
             case "from": from = null; break;
 
-            case "limit": limit = 0; break;
+            case "limit":  limit  = 0; break;
             case "offset": offset = 0; break;
             case "lock": lock = false; break;
             case "distinct": distinct = false; break;
             case "constructor": constructor = false; break;
 
             case "select": select.clear(); break;
-            case "where": where.clear();  break;
-            case "group": group.clear();  break;
+            case "where": where.clear();   break;
+            case "group": group.clear();   break;
             case "having": having.clear(); break;
-            case "order": order.clear();  break;
-            case "joins": joins.clear();  break;
+            case "order": order.clear();   break;
+            case "joins": joins.clear();   break;
             case "includes": includes.clear(); break;
             case "eagerLoads": eagerLoads.clear(); break;
 
@@ -191,10 +195,6 @@ public class Values {
             case "namedBind": namedBind.clear(); break;
             default: throw new RuntimeException("invalid reset value: " + value);
         }
-    }
-
-    private <T> Predicate<T> not(Predicate<T> t) {
-        return t.negate();
     }
 
 }
