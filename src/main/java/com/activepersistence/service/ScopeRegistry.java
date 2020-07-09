@@ -1,6 +1,4 @@
-package com.activepersistence.service.relation;
-
-import com.activepersistence.service.Relation;
+package com.activepersistence.service;
 
 public class ScopeRegistry {
 

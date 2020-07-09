@@ -8,7 +8,6 @@ import com.activepersistence.service.arel.UpdateManager;
 import com.activepersistence.service.relation.Calculation;
 import com.activepersistence.service.relation.FinderMethods;
 import com.activepersistence.service.relation.QueryMethods;
-import com.activepersistence.service.relation.Scoping;
 import com.activepersistence.service.relation.SpawnMethods;
 import com.activepersistence.service.relation.Values;
 import java.util.List;
@@ -22,7 +21,7 @@ import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, SpawnMethods<T>, Scoping<T> {
+public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, SpawnMethods<T> {
 
     private final EntityManager entityManager;
 
@@ -78,6 +77,18 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public boolean fetchExists() {
         return buildQuery(toJpql()).getResultStream().findAny().isPresent();
+    }
+
+    public Relation<T> all() {
+        return this;
+    }
+
+    public Relation<T> unscoped() {
+        return service.unscoped();
+    }
+
+    public Relation<T> unscoped(Supplier<Relation> yield) {
+        return service.unscoped(yield);
     }
 
     public Relation<T> scoping(Supplier<Relation> yield) {

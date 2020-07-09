@@ -3,7 +3,6 @@ package com.activepersistence.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -15,21 +14,19 @@ public interface Querying<T> {
 
     public Relation<T> getRelation();
 
-    //<editor-fold defaultstate="collapsed" desc="Scoping">
-    public default Relation<T> all() {
-        return getRelation().all();
-    }
+    public Relation<T> all();
 
-    public default Relation<T> unscoped() {
-        return getRelation().unscoped();
-    }
-
-    public default Relation<T> unscoped(Supplier<Relation> yield) {
-        return getRelation().unscoped(yield);
-    }
-
+    //<editor-fold defaultstate="collapsed" desc="SpawnMethods">
     public default Relation<T> merge(Relation other) {
         return all().merge(other);
+    }
+
+    public default Relation<T> except(String... skips) {
+        return all().except(skips);
+    }
+
+    public default Relation<T> only(String... onlies) {
+        return all().only(onlies);
     }
     //</editor-fold>
 
@@ -200,14 +197,6 @@ public interface Querying<T> {
         return all().unscope(values);
     }
 
-    public default Relation<T> except(String ... values) {
-        return all().except(values);
-    }
-
-    public default Relation<T> only(String... values) {
-        return all().only(values);
-    }
-
     public default Relation<T> reselect(String... values) {
         return all().reselect(values);
     }
@@ -285,6 +274,7 @@ public interface Querying<T> {
     }
     //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Private">
     private Query parametize(Query query, Map<Integer, Object> binds) {
         applyParams(query, binds); return query;
     }
@@ -292,5 +282,6 @@ public interface Querying<T> {
     private void applyParams(Query query, Map<Integer, Object> binds) {
         binds.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
     }
+    //</editor-fold>
 
 }

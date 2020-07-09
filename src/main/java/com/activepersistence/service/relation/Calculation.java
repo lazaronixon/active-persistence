@@ -10,13 +10,13 @@ import static java.util.stream.Collectors.toMap;
 
 public interface Calculation<T> {
 
-    public Relation<T> spawn();
-
     public Values getValues();
 
     public String getAlias();
 
     public String getPrimaryKey();
+
+    public Relation<T> spawn();
 
     public default Object count() {
         return count(getAlias());

@@ -2,11 +2,9 @@ package com.activepersistence.service;
 
 import javax.persistence.EntityManager;
 
-public abstract class Base<T> implements Persistence<T>, Querying<T>  {
+public abstract class Base<T> implements Persistence<T>, Querying<T>, Scoping<T> {
 
     private final Class<T> entityClass;
-
-    private Relation<T> relation;
 
     public Base(Class<T> entityClass) {
         this.entityClass = entityClass;
@@ -22,15 +20,22 @@ public abstract class Base<T> implements Persistence<T>, Querying<T>  {
 
     @Override
     public Relation<T> getRelation() {
-        return relation != null ? relation : new Relation(this);
+        return new Relation(this);
     }
 
+    @Override
     public boolean useDefaultScope() {
         return false;
     }
 
+    @Override
     public Relation<T> defaultScope() {
         throw new UnsupportedOperationException("defaultScope() must be implemented when useDefaultScope() is true.");
+    }
+
+    @Override
+    public Relation<T> all() {
+        return Scoping.super.all();
     }
 
 }

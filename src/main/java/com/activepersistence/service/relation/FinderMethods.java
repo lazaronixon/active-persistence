@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface FinderMethods<T> {
 
-    public Relation<T> thiz();
-
     public String getPrimaryKey();
+
+    public Relation<T> thiz();
 
     public default T take() {
         return thiz().limit(1).fetchOne();

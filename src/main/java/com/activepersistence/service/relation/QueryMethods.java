@@ -5,11 +5,11 @@ import static java.util.Arrays.asList;
 
 public interface QueryMethods<T> {
 
-    public Relation<T> thiz();
+    public Values getValues();
 
     public Relation<T> spawn();
 
-    public Values getValues();
+    public Relation<T> thiz();
 
     public default Relation<T> select(String... fields) {
         return spawn().select_(fields);

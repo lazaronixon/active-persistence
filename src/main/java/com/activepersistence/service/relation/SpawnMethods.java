@@ -6,11 +6,11 @@ import static java.util.Arrays.asList;
 
 public interface SpawnMethods<T> {
 
-    public Relation<T> thiz();
+    public Base<T> getService();
 
     public Values getValues();
 
-    public Base<T> getService();
+    public Relation<T> thiz();
 
     public default Relation<T> spawn() {
         return new Relation(thiz());

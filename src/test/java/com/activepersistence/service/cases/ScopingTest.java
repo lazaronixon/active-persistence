@@ -1,5 +1,5 @@
 
-package com.activepersistence.service.cases.relation;
+package com.activepersistence.service.cases;
 
 import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.ClientsService;
@@ -24,7 +24,17 @@ public class ScopingTest extends IntegrationTest {
     }
 
     @Test
+    public void testWhereAll() {
+        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.where("1=0").all().toJpql());
+    }
+
+    @Test
     public void testUnscoped() {
+        assertEquals("SELECT this FROM Client this", clientsService.unscoped().toJpql());
+    }
+
+    @Test
+    public void testUnscopedAll() {
         assertEquals("SELECT this FROM Client this", clientsService.unscoped().all().toJpql());
     }
 
@@ -35,12 +45,17 @@ public class ScopingTest extends IntegrationTest {
 
     @Test
     public void testUnscopedBlock() {
-        assertEquals("SELECT this FROM Client this", clientsService.unscoped(() -> clientsService.all()).toJpql());
+        assertEquals("SELECT this FROM Client this WHERE 1=0", clientsService.unscoped(() -> clientsService.where("1=0")).toJpql());
     }
 
     @Test
     public void testDefaultScope() {
         assertEquals("SELECT this FROM Client this WHERE this.active = true", clientsService.all().toJpql());
+    }
+
+    @Test
+    public void testDefaultScopeWhere() {
+        assertEquals("SELECT this FROM Client this WHERE this.active = true AND 1=0", clientsService.where("1=0").toJpql());
     }
 
 }

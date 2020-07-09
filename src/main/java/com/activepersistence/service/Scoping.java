@@ -1,17 +1,17 @@
-package com.activepersistence.service.relation;
+package com.activepersistence.service;
 
-import com.activepersistence.service.Base;
-import com.activepersistence.service.Relation;
-import static com.activepersistence.service.relation.ScopeRegistry.ValidScopeTypes.CURRENT_SCOPE;
-import static com.activepersistence.service.relation.ScopeRegistry.ValidScopeTypes.IGNORE_DEFAULT_SCOPE;
+import static com.activepersistence.service.ScopeRegistry.ValidScopeTypes.CURRENT_SCOPE;
+import static com.activepersistence.service.ScopeRegistry.ValidScopeTypes.IGNORE_DEFAULT_SCOPE;
 import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
 
 public interface Scoping<T> {
 
-    public Base<T> getService();
+    public Relation<T> getRelation();
 
-    public Relation<T> thiz();
+    public boolean useDefaultScope();
+
+    public Relation<T> defaultScope();
 
     public default Relation<T> all() {
         if (getCurrentScope() != null) {
@@ -22,11 +22,11 @@ public interface Scoping<T> {
     }
 
     public default Relation<T> unscoped() {
-        Relation scope = new Relation(getService()); setCurrentScope(scope); return scope;
+        return getRelation();
     }
 
     public default Relation<T> unscoped(Supplier<Relation> yield) {
-        return thiz().scoping(yield);
+        return getRelation().scoping(yield);
     }
 
     public static Relation getCurrentScope() {
@@ -46,12 +46,12 @@ public interface Scoping<T> {
     }
 
     private Relation<T> defaultScoped() {
-        return ofNullable(buildDefaultScope()).orElse(thiz());
+        return ofNullable(buildDefaultScope()).orElse(getRelation());
     }
 
     private Relation<T> buildDefaultScope() {
-        if (getService().useDefaultScope()) {
-            return evaluateDefaultScope(() -> thiz().merge_(getService().defaultScope()));
+        if (useDefaultScope()) {
+            return evaluateDefaultScope(() -> getRelation().merge_(defaultScope()));
         } else {
             return null;
         }
