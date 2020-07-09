@@ -250,8 +250,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void applyParams(Query query) {
-        values.getOrdinalBind().entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
-        values.getNamedBind().entrySet().forEach(p   -> query.setParameter(p.getKey(), p.getValue()));
+        values.getBind().entrySet().forEach((bind) -> {
+            if (bind.getKey() instanceof Integer) query.setParameter((Integer) bind.getKey(), bind.getValue());
+            if (bind.getKey() instanceof String)  query.setParameter((String)  bind.getKey(), bind.getValue());
+        });
     }
 
     private void applyHints(Query query) {

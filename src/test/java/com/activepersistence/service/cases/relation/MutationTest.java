@@ -141,7 +141,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.where("1=1");
         Relation<Post> relation2 = relation.bind_(1, "foo");
         assertEquals(relation, relation2);
-        assertEquals(Map.of(1, "foo"), relation2.getValues().getOrdinalBind());
+        assertEquals(Map.of(1, "foo"), relation2.getValues().getBind());
     }
 
     @Test
@@ -149,7 +149,7 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.where("1=1");
         Relation<Post> relation2 = relation.bind_("foo", "foo");
         assertEquals(relation, relation2);
-        assertEquals(Map.of("foo", "foo"), relation2.getValues().getNamedBind());
+        assertEquals(Map.of("foo", "foo"), relation2.getValues().getBind());
     }
 
 }

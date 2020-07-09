@@ -157,16 +157,12 @@ public interface QueryMethods<T> {
         return spawn().bind_(position, value);
     }
 
-    public default Relation<T> bind_(int position, Object value) {
-        getValues().getOrdinalBind().put(position, value); return thiz();
-    }
-
     public default Relation<T> bind(String name, Object value) {
         return spawn().bind_(name, value);
     }
 
-    public default Relation<T> bind_(String name, Object value) {
-        getValues().getNamedBind().put(name, value); return thiz();
+    public default Relation<T> bind_(Object key, Object value) {
+        getValues().getBind().put(key, value); return thiz();
     }
 
     private void unscoping(String value) {
@@ -174,13 +170,11 @@ public interface QueryMethods<T> {
             case "from":       getValues().setFrom(null); break;
 
             case "where":      getValues().getWhere().clear();
-                               getValues().getNamedBind().clear();
-                               getValues().getOrdinalBind().clear();
+                               getValues().getBind().clear();
                                break;
 
             case "having":     getValues().getHaving().clear();
-                               getValues().getNamedBind().clear();
-                               getValues().getOrdinalBind().clear();
+                               getValues().getBind().clear();
                                break;
 
             case "limit":      getValues().setLimit(0);    break;

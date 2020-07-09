@@ -29,8 +29,7 @@ public class Merger {
         values.getJoins().forEach(relation::joins_);
         values.getIncludes().forEach(relation::includes_);
         values.getEagerLoads().forEach(relation::eagerLoads_);
-        values.getOrdinalBind().forEach(relation::bind_);
-        values.getNamedBind().forEach(relation::bind_);
+        values.getBind().forEach(relation::bind_);
 
         return relation;
     }

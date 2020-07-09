@@ -11,8 +11,7 @@ public class Values {
     private final static String[] VALUE_METHODS = new String[] {
         "from",
         "limit", "offset", "lock", "distinct", "constructor",
-        "select", "where", "group", "having", "order", "joins", "includes", "eagerLoads",
-        "ordinalBind", "namedBind"
+        "select", "where", "group", "having", "order", "joins", "includes", "eagerLoads", "bind"
     };
 
     private String from = null;
@@ -32,8 +31,7 @@ public class Values {
     private List<String> includes   = new ArrayList();
     private List<String> eagerLoads = new ArrayList();
 
-    private HashMap<Integer, Object> ordinalBind = new HashMap();
-    private HashMap<String, Object> namedBind    = new HashMap();
+    private HashMap<Object, Object> bind = new HashMap();
 
     public Values() {}
 
@@ -52,8 +50,7 @@ public class Values {
         joins        = new ArrayList(other.joins);
         includes     = new ArrayList(other.includes);
         eagerLoads   = new ArrayList(other.eagerLoads);
-        ordinalBind  = new HashMap(other.ordinalBind);
-        namedBind    = new HashMap(other.namedBind);
+        bind         = new HashMap(other.bind);
     }
 
     public String getFrom() {
@@ -92,12 +89,8 @@ public class Values {
         return eagerLoads;
     }
 
-    public HashMap<Integer, Object> getOrdinalBind() {
-        return ordinalBind;
-    }
-
-    public HashMap<String, Object> getNamedBind() {
-        return namedBind;
+    public HashMap<Object, Object> getBind() {
+        return bind;
     }
 
     public int getLimit() {
@@ -191,8 +184,8 @@ public class Values {
             case "includes": includes.clear(); break;
             case "eagerLoads": eagerLoads.clear(); break;
 
-            case "ordinalBind": ordinalBind.clear(); break;
-            case "namedBind": namedBind.clear(); break;
+            case "bind": bind.clear(); break;
+
             default: throw new RuntimeException("invalid reset value: " + value);
         }
     }
