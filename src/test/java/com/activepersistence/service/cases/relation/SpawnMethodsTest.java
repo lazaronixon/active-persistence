@@ -29,6 +29,12 @@ public class SpawnMethodsTest extends IntegrationTest {
     }
 
     @Test
+    public void testMergeTwice() {
+        assertEquals("SELECT this FROM Post this WHERE 1=0 AND 2=0",
+                postsService.all().merge(postsService.oneEqZero()).merge(postsService.twoEqZero()).toJpql());
+    }
+
+    @Test
     public void testOnly() {
         assertEquals("SELECT this FROM Post this ORDER BY this.id",
                 postsService.where("1=0").order("this.id").only("order").toJpql());

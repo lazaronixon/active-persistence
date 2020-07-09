@@ -31,7 +31,6 @@ public class Values {
     private List<String> joins      = new ArrayList();
     private List<String> includes   = new ArrayList();
     private List<String> eagerLoads = new ArrayList();
-    private List<String> unscope    = new ArrayList();
 
     private HashMap<Integer, Object> ordinalBind = new HashMap();
     private HashMap<String, Object> namedBind    = new HashMap();
@@ -53,7 +52,6 @@ public class Values {
         joins        = new ArrayList(other.joins);
         includes     = new ArrayList(other.includes);
         eagerLoads   = new ArrayList(other.eagerLoads);
-        unscope      = new ArrayList(other.unscope);
         ordinalBind  = new HashMap(other.ordinalBind);
         namedBind    = new HashMap(other.namedBind);
     }
@@ -108,10 +106,6 @@ public class Values {
 
     public int getOffset() {
         return offset;
-    }
-
-    public List<String> getUnscope() {
-        return unscope;
     }
 
     public boolean isLock() {
@@ -199,28 +193,7 @@ public class Values {
         }
     }
 
-    public void unscoping(String value) {
-        switch (value) {
-            case "from": from = null; break;
-
-            case "where":   where.clear(); namedBind.clear(); ordinalBind.clear(); break;
-            case "having": having.clear(); namedBind.clear(); ordinalBind.clear(); break;
-
-            case "limit":   limit = 0; break;
-            case "offset": offset = 0; break;
-            case "lock": lock = false; break;
-
-            case "select": select.clear(); constructor = false; break;
-            case "group": group.clear(); break;
-            case "order": order.clear(); break;
-            case "joins": joins.clear(); break;
-            case "includes": includes.clear(); break;
-            case "eagerLoads": eagerLoads.clear(); break;
-            default: throw new RuntimeException("invalid unscoping value: " + value);
-        }
-    }
-
-    private static <T> Predicate<T> not(Predicate<T> t) {
+    private <T> Predicate<T> not(Predicate<T> t) {
         return t.negate();
     }
 

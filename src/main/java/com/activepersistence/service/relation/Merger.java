@@ -14,14 +14,12 @@ public class Merger {
     }
 
     public Relation merge() {
-        relation.unscope_(values.getUnscope().toArray(String[]::new));
-
         if (shouldReplaceFromClause()) relation.from_(values.getFrom());
-        if (shouldReplaceLockValue()) relation.lock_(values.isLock());
+        if (shouldReplaceLockValue())  relation.lock_(values.isLock());
 
-        if (values.isDistinct()) relation.distinct_(values.isDistinct());
-        if (values.getLimit() != 0) relation.limit_(values.getLimit());
-        if (values.getOffset() != 0) relation.offset_(values.getOffset());
+        if (values.isDistinct() != false) relation.distinct_(values.isDistinct());
+        if (values.getLimit()   != 0)     relation.limit_(values.getLimit());
+        if (values.getOffset()  != 0)     relation.offset_(values.getOffset());
 
         values.getSelect().forEach(relation::select_);
         values.getWhere().forEach(relation::where_);
@@ -39,7 +37,7 @@ public class Merger {
 
     private boolean shouldReplaceLockValue() {
         return relation.getValues().isLock() == false && values.isLock();
-    }
+}
 
     private boolean shouldReplaceFromClause() {
         return relation.getValues().getFrom() == null && values.getFrom() != null;
