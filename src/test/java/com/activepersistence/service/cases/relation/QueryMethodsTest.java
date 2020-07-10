@@ -83,16 +83,6 @@ public class QueryMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testUnscopeWithMerge() {
-        assertEquals("SELECT this FROM Post this", postsService.order("this.id").merge(postsService.unscope("order")).toJpql());
-    }
-
-    @Test
-    public void testUnscopeWithScoping() {
-        assertEquals("SELECT this FROM Post this", postsService.order("this.id").scoping(() -> postsService.unscope("order")).toJpql());
-    }
-
-    @Test
     public void testReSelect() {
         assertEquals("SELECT NEW com.activepersistence.service.models.Post(this.title) FROM Post this", postsService.select("this.id").reselect("this.title").toJpql());
     }

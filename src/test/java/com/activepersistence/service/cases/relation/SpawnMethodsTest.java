@@ -41,6 +41,11 @@ public class SpawnMethodsTest extends IntegrationTest {
     }
 
     @Test
+    public void testMergeWithUnscope() {
+        assertEquals("SELECT this FROM Post this", postsService.order("this.id").merge(postsService.unscope("order")).toJpql());
+    }
+
+    @Test
     public void testOnly() {
         assertEquals("SELECT this FROM Post this ORDER BY this.id",
                 postsService.where("1=0").order("this.id").only("order").toJpql());
