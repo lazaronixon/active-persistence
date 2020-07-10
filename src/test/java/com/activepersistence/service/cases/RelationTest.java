@@ -28,6 +28,12 @@ public class RelationTest extends IntegrationTest {
     }
 
     @Test
+    public void testScopingWithExcept() {
+        assertEquals("SELECT this FROM Post this",
+                postsService.order("this.id").scoping(() -> postsService.except("order")).toJpql());
+    }
+
+    @Test
     public void testFetchOne() {
         assertNotNull(postsService.where("this.id = 1").fetchOne());
     }

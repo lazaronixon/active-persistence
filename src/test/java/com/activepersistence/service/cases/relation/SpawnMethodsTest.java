@@ -35,6 +35,12 @@ public class SpawnMethodsTest extends IntegrationTest {
     }
 
     @Test
+    public void testMergeWithExcept() {
+        assertEquals("SELECT this FROM Post this ORDER BY this.id",
+                postsService.order("this.id").merge(postsService.except("order")).toJpql());
+    }
+
+    @Test
     public void testOnly() {
         assertEquals("SELECT this FROM Post this ORDER BY this.id",
                 postsService.where("1=0").order("this.id").only("order").toJpql());
@@ -44,12 +50,6 @@ public class SpawnMethodsTest extends IntegrationTest {
     public void testExcept() {
         assertEquals("SELECT this FROM Post this WHERE 1=0",
                 postsService.where("1=0").order("this.id").except("order").toJpql());
-    }
-
-    @Test
-    public void testExceptWithMerge() {
-        assertEquals("SELECT this FROM Post this ORDER BY this.id",
-                postsService.order("this.id").merge(postsService.except("order")).toJpql());
     }
 
 }

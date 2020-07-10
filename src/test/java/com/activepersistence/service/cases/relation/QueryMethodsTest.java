@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 import org.junit.Test;
 
 @UsingDataSet({"posts.xml", "comments.xml"})
@@ -84,9 +83,13 @@ public class QueryMethodsTest extends IntegrationTest {
     }
 
     @Test
-    @Ignore("FIX IT")
     public void testUnscopeWithMerge() {
         assertEquals("SELECT this FROM Post this", postsService.order("this.id").merge(postsService.unscope("order")).toJpql());
+    }
+
+    @Test
+    public void testUnscopeWithScoping() {
+        assertEquals("SELECT this FROM Post this", postsService.order("this.id").scoping(() -> postsService.unscope("order")).toJpql());
     }
 
     @Test
