@@ -30,24 +30,6 @@ public interface Querying<T> {
     }
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Bindings">
-    public default Relation<T> bind(int position, Object value) {
-        return all().bind(position, value);
-    }
-
-    public default Relation<T> bind(String name, Object value) {
-        return all().bind(name, value);
-    }
-
-    public default Relation<T> bind(int position, com.activepersistence.model.Base model) {
-        return all().bind(position, model.getId());
-    }
-
-    public default Relation<T> bind(String name, com.activepersistence.model.Base model) {
-        return all().bind(name, model.getId());
-    }
-    //</editor-fold>
-
     //<editor-fold defaultstate="collapsed" desc="Calculation">
     public default Object count() {
         return all().count();
@@ -223,6 +205,14 @@ public interface Querying<T> {
 
     public default Relation<T> none() {
         return all().none();
+    }
+
+    public default Relation<T> bind(int position, Object value) {
+        return all().bind(position, value);
+    }
+
+    public default Relation<T> bind(String name, Object value) {
+        return all().bind(name, value);
     }
     //</editor-fold>
 
