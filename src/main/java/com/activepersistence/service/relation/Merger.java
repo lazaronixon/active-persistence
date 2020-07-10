@@ -14,22 +14,22 @@ public class Merger {
     }
 
     public Relation merge() {
-        if (shouldReplaceFromClause()) relation.from_(values.getFrom());
-        if (shouldReplaceLockValue())  relation.lock_(values.isLock());
+        if (shouldReplaceFromClause()) relation.from$(values.getFrom());
+        if (shouldReplaceLockValue())  relation.lock$(values.isLock());
 
-        if (values.isDistinct() != false) relation.distinct_(values.isDistinct());
-        if (values.getLimit()   != 0)     relation.limit_(values.getLimit());
-        if (values.getOffset()  != 0)     relation.offset_(values.getOffset());
+        if (values.isDistinct() != false) relation.distinct$(values.isDistinct());
+        if (values.getLimit()   != 0)     relation.limit$(values.getLimit());
+        if (values.getOffset()  != 0)     relation.offset$(values.getOffset());
 
-        values.getSelect().forEach(relation::select_);
-        values.getWhere().forEach(relation::where_);
-        values.getGroup().forEach(relation::group_);
-        values.getHaving().forEach(relation::having_);
-        values.getOrder().forEach(relation::order_);
-        values.getJoins().forEach(relation::joins_);
-        values.getIncludes().forEach(relation::includes_);
-        values.getEagerLoads().forEach(relation::eagerLoads_);
-        values.getBind().forEach(relation::bind_);
+        values.getSelect().forEach(relation::select$);
+        values.getWhere().forEach(relation::where$);
+        values.getGroup().forEach(relation::group$);
+        values.getHaving().forEach(relation::having$);
+        values.getOrder().forEach(relation::order$);
+        values.getJoins().forEach(relation::joins$);
+        values.getIncludes().forEach(relation::includes$);
+        values.getEagerLoads().forEach(relation::eagerLoads$);
+        values.getBind().forEach(relation::bind$);
 
         return relation;
     }

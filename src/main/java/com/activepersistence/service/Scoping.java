@@ -51,7 +51,7 @@ public interface Scoping<T> {
 
     private Relation<T> buildDefaultScope() {
         if (useDefaultScope()) {
-            return evaluateDefaultScope(() -> getRelation().merge_(defaultScope()));
+            return evaluateDefaultScope(() -> getRelation().merge$(defaultScope()));
         } else {
             return null;
         }

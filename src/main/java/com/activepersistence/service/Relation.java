@@ -71,8 +71,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return buildQuery(toJpql()).getResultList();
     }
 
-    public List fetch_() {
-        return buildQuery_(toJpql()).getResultList();
+    public List fetch$() {
+        return buildQuery$(toJpql()).getResultList();
     }
 
     public boolean fetchExists() {
@@ -205,7 +205,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
                 .setHint("eclipselink.batch.type", "IN");
     }
 
-    private Query buildQuery_(String query) {
+    private Query buildQuery$(String query) {
         return parametize(createQuery(query))
                 .setLockMode(buildLockMode())
                 .setMaxResults(values.getLimit())

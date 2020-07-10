@@ -25,129 +25,129 @@ public class MutationTest extends IntegrationTest {
     }
 
     @Test
-    public void testSelect_() {
+    public void testSelect$() {
         Relation<Post> relation  = postsService.all();
-        Relation<Post> relation2 = relation.select_("foo");
+        Relation<Post> relation2 = relation.select$("foo");
         assertEquals(relation, relation2);
         assertEquals(asList("foo"), relation2.getValues().getSelect());
     }
 
     @Test
-    public void testJoin_() {
+    public void testJoin$() {
         Relation<Post> relation  = postsService.all();
-        Relation<Post> relation2 = relation.joins_("foo");
+        Relation<Post> relation2 = relation.joins$("foo");
         assertEquals(relation, relation2);
         assertEquals(asList("foo"), relation2.getValues().getJoins());
     }
 
     @Test
-    public void testWhere_() {
+    public void testWhere$() {
         Relation<Post> relation  = postsService.all();
-        Relation<Post> relation2 = relation.where_("foo");
+        Relation<Post> relation2 = relation.where$("foo");
         assertEquals(relation, relation2);
         assertEquals(asList("foo"), relation2.getValues().getWhere());
     }
 
     @Test
-    public void testGroup_() {
+    public void testGroup$() {
         Relation<Post> relation  = postsService.all();
-        Relation<Post> relation2 = relation.group_("foo");
+        Relation<Post> relation2 = relation.group$("foo");
         assertEquals(relation, relation2);
         assertEquals(asList("foo"), relation2.getValues().getGroup());
     }
 
     @Test
-    public void testHaving_() {
+    public void testHaving$() {
         Relation<Post> relation  = postsService.all();
-        Relation<Post> relation2 = relation.having_("foo");
+        Relation<Post> relation2 = relation.having$("foo");
         assertEquals(relation, relation2);
         assertEquals(asList("foo"), relation2.getValues().getHaving());
     }
 
     @Test
-    public void testOrder_() {
+    public void testOrder$() {
         Relation<Post> relation  = postsService.all();
-        Relation<Post> relation2 = relation.order_("foo");
+        Relation<Post> relation2 = relation.order$("foo");
         assertEquals(relation, relation2);
         assertEquals(asList("foo"), relation2.getValues().getOrder());
     }
 
     @Test
-    public void testLimit_() {
+    public void testLimit$() {
         Relation<Post> relation  = postsService.all();
-        Relation<Post> relation2 = relation.limit_(999);
+        Relation<Post> relation2 = relation.limit$(999);
         assertEquals(relation, relation2);
         assertEquals(999, relation2.getValues().getLimit());
     }
 
     @Test
-    public void testDistinct_() {
+    public void testDistinct$() {
         Relation<Post> relation  = postsService.all();
-        Relation<Post> relation2 = relation.distinct_(true);
+        Relation<Post> relation2 = relation.distinct$(true);
         assertEquals(relation, relation2);
         assertEquals(true, relation2.getValues().isDistinct());
     }
 
     @Test
-    public void testNone_() {
+    public void testNone$() {
         Relation<Post> relation  = postsService.all();
-        Relation<Post> relation2 = relation.none_();
+        Relation<Post> relation2 = relation.none$();
         assertEquals(relation, relation2);
         assertEquals(asList("1=0"), relation2.getValues().getWhere());
     }
 
     @Test
-    public void testIncludes_() {
+    public void testIncludes$() {
         Relation<Post> relation  = postsService.all();
-        Relation<Post> relation2 = relation.includes_("foo");
+        Relation<Post> relation2 = relation.includes$("foo");
         assertEquals(relation, relation2);
         assertEquals(asList("foo"), relation2.getValues().getIncludes());
     }
 
     @Test
-    public void testEagerLoads_() {
+    public void testEagerLoads$() {
         Relation<Post> relation  = postsService.all();
-        Relation<Post> relation2 = relation.eagerLoads_("foo");
+        Relation<Post> relation2 = relation.eagerLoads$("foo");
         assertEquals(relation, relation2);
         assertEquals(asList("foo"), relation2.getValues().getEagerLoads());
     }
 
     @Test
-    public void testLock_() {
+    public void testLock$() {
         Relation<Post> relation  = postsService.all();
-        Relation<Post> relation2 = relation.lock_(true);
+        Relation<Post> relation2 = relation.lock$(true);
         assertEquals(relation, relation2);
         assertEquals(true, relation2.getValues().isLock());
     }
 
     @Test
-    public void testFrom_() {
+    public void testFrom$() {
         Relation<Post> relation  = postsService.all();
-        Relation<Post> relation2 = relation.from_("foo");
+        Relation<Post> relation2 = relation.from$("foo");
         assertEquals(relation, relation2);
         assertEquals("foo", relation2.getValues().getFrom());
     }
 
     @Test
-    public void testMerge_() {
+    public void testMerge$() {
         Relation<Post> relation  = postsService.where("1=1");
-        Relation<Post> relation2 = relation.merge_(postsService.where("1=2"));
+        Relation<Post> relation2 = relation.merge$(postsService.where("1=2"));
         assertEquals(relation, relation2);
         assertEquals(asList("1=1", "1=2"), relation2.getValues().getWhere());
     }
 
     @Test
-    public void testBindOrdinal_() {
+    public void testBindOrdinal$() {
         Relation<Post> relation  = postsService.where("1=1");
-        Relation<Post> relation2 = relation.bind_(1, "foo");
+        Relation<Post> relation2 = relation.bind$(1, "foo");
         assertEquals(relation, relation2);
         assertEquals(Map.of(1, "foo"), relation2.getValues().getBind());
     }
 
     @Test
-    public void testBindNamed_() {
+    public void testBindNamed$() {
         Relation<Post> relation  = postsService.where("1=1");
-        Relation<Post> relation2 = relation.bind_("foo", "foo");
+        Relation<Post> relation2 = relation.bind$("foo", "foo");
         assertEquals(relation, relation2);
         assertEquals(Map.of("foo", "foo"), relation2.getValues().getBind());
     }

@@ -142,18 +142,18 @@ public class Values {
     }
 
     public Values except(List<String> skips) {
-        return dup().except_(skips);
+        return dup().except$(skips);
     }
 
-    public Values except_(List<String> skips) {
+    public Values except$(List<String> skips) {
         skips.forEach(this::reset); return this;
     }
 
     public Values slice(List<String> onlies) {
-        return dup().slice_(onlies);
+        return dup().slice$(onlies);
     }
 
-    public Values slice_(List<String> onlies) {
+    public Values slice$(List<String> onlies) {
         asList(VALUE_METHODS).stream().filter(not(onlies::contains)).forEach(this::reset); return this;
     }
 

@@ -50,7 +50,7 @@ public interface Calculation<T> {
         Relation<T> relation = spawn();
         relation.getValues().setConstructor(false);
         relation.getValues().setSelect(asList(fields));
-        return relation.fetch_();
+        return relation.fetch$();
     }
 
     private Object calculate(String operation, String field) {
@@ -95,7 +95,7 @@ public interface Calculation<T> {
     }
 
     private Object fetchGroupedResult(Relation<T> relation, Values values) {
-        List<Object[]> results = relation.fetch_();
+        List<Object[]> results = relation.fetch$();
 
         if (values.getGroup().size() > 1) {
             return results.stream().collect(toMap(v -> copyOfRange(v, 1, v.length), v -> v[0]));

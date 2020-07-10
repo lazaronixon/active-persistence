@@ -12,132 +12,132 @@ public interface QueryMethods<T> {
     public Relation<T> thiz();
 
     public default Relation<T> select(String... fields) {
-        return spawn().select_(fields);
+        return spawn().select$(fields);
     }
 
-    public default Relation<T> select_(String... fields) {
+    public default Relation<T> select$(String... fields) {
         getValues().getSelect().addAll(asList(fields));
         getValues().setConstructor(true);
         return thiz();
     }
 
     public default Relation<T> joins(String value) {
-        return spawn().joins_(value);
+        return spawn().joins$(value);
     }
 
-    public default Relation<T> joins_(String value) {
+    public default Relation<T> joins$(String value) {
         getValues().getJoins().add(value); return thiz();
     }
 
     public default Relation<T> where(String conditions) {
-        return spawn().where_(conditions);
+        return spawn().where$(conditions);
     }
 
-    public default Relation<T> where_(String conditions) {
+    public default Relation<T> where$(String conditions) {
         getValues().getWhere().add(conditions); return thiz();
     }
 
     public default Relation<T> group(String... fields) {
-        return spawn().group_(fields);
+        return spawn().group$(fields);
     }
 
-    public default Relation<T> group_(String... fields) {
+    public default Relation<T> group$(String... fields) {
         getValues().getGroup().addAll(asList(fields)); return thiz();
     }
 
     public default Relation<T> having(String conditions) {
-        return spawn().having_(conditions);
+        return spawn().having$(conditions);
     }
 
-    public default Relation<T> having_(String conditions) {
+    public default Relation<T> having$(String conditions) {
         getValues().getHaving().add(conditions); return thiz();
     }
 
     public default Relation<T> order(String... fields) {
-        return spawn().order_(fields);
+        return spawn().order$(fields);
     }
 
-    public default Relation<T> order_(String... fields) {
+    public default Relation<T> order$(String... fields) {
         getValues().getOrder().addAll(asList(fields)); return thiz();
     }
 
     public default Relation<T> limit(int limit) {
-        return spawn().limit_(limit);
+        return spawn().limit$(limit);
     }
 
-    public default Relation<T> limit_(int limit) {
+    public default Relation<T> limit$(int limit) {
         getValues().setLimit(limit); return thiz();
     }
 
     public default Relation<T> offset(int offset) {
-        return spawn().offset_(offset);
+        return spawn().offset$(offset);
     }
 
-    public default Relation<T> offset_(int offset) {
+    public default Relation<T> offset$(int offset) {
         getValues().setOffset(offset); return thiz();
     }
 
     public default Relation<T> distinct() {
-        return spawn().distinct_(true);
+        return spawn().distinct$(true);
     }
 
     public default Relation<T> distinct(boolean value) {
-        return spawn().distinct_(value);
+        return spawn().distinct$(value);
     }
 
-    public default Relation<T> distinct_(boolean value) {
+    public default Relation<T> distinct$(boolean value) {
         getValues().setDistinct(value); return thiz();
     }
 
     public default Relation<T> none() {
-        return spawn().none_();
+        return spawn().none$();
     }
 
-    public default Relation<T> none_() {
-        where_("1=0"); return thiz();
+    public default Relation<T> none$() {
+        where$("1=0"); return thiz();
     }
 
     public default Relation<T> includes(String... includes) {
-        return spawn().includes_(includes);
+        return spawn().includes$(includes);
     }
 
-    public default Relation<T> includes_(String... includes) {
+    public default Relation<T> includes$(String... includes) {
         getValues().getIncludes().addAll(asList(includes)); return thiz();
     }
 
     public default Relation<T> eagerLoads(String... eagerLoads) {
-        return spawn().eagerLoads_(eagerLoads);
+        return spawn().eagerLoads$(eagerLoads);
     }
 
-    public default Relation<T> eagerLoads_(String... eagerLoads) {
+    public default Relation<T> eagerLoads$(String... eagerLoads) {
         getValues().getEagerLoads().addAll(asList(eagerLoads)); return thiz();
     }
 
     public default Relation<T> lock() {
-        return spawn().lock_(true);
+        return spawn().lock$(true);
     }
 
     public default Relation<T> lock(boolean value) {
-        return spawn().lock_(value);
+        return spawn().lock$(value);
     }
 
-    public default Relation<T> lock_(boolean value) {
+    public default Relation<T> lock$(boolean value) {
         getValues().setLock(value); return thiz();
     }
 
     public default Relation<T> from(String value) {
-        return spawn().from_(value);
+        return spawn().from$(value);
     }
 
-    public default Relation<T> from_(String value) {
+    public default Relation<T> from$(String value) {
         getValues().setFrom(value); return thiz();
     }
 
     public default Relation<T> unscope(String... values) {
-        return spawn().unscope_(values);
+        return spawn().unscope$(values);
     }
 
-    public default Relation<T> unscope_(String... args) {
+    public default Relation<T> unscope$(String... args) {
         asList(args).forEach(this::unscoping); return thiz();
     }
 
@@ -154,14 +154,14 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> bind(int position, Object value) {
-        return spawn().bind_(position, value);
+        return spawn().bind$(position, value);
     }
 
     public default Relation<T> bind(String name, Object value) {
-        return spawn().bind_(name, value);
+        return spawn().bind$(name, value);
     }
 
-    public default Relation<T> bind_(Object key, Object value) {
+    public default Relation<T> bind$(Object key, Object value) {
         getValues().getBind().put(key, value); return thiz();
     }
 
