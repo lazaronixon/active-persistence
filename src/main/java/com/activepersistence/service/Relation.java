@@ -79,10 +79,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return buildQuery(toJpql()).getResultStream().findAny().isPresent();
     }
 
-    public Relation<T> all() {
-        return this;
-    }
-
     public Relation<T> unscoped() {
         return service.unscoped();
     }
@@ -171,13 +167,13 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     @Override
-    public Relation<T> thiz() {
-        return this;
+    public Relation<T> spawn() {
+        return SpawnMethods.super.spawn();
     }
 
     @Override
-    public Relation<T> spawn() {
-        return SpawnMethods.super.spawn();
+    public Relation<T> thiz() {
+        return this;
     }
 
     private SelectManager getArel() {

@@ -24,18 +24,8 @@ public class ScopingTest extends IntegrationTest {
     }
 
     @Test
-    public void testWhereAll() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.where("1=0").all().toJpql());
-    }
-
-    @Test
     public void testUnscoped() {
         assertEquals("SELECT this FROM Client this", clientsService.unscoped().toJpql());
-    }
-
-    @Test
-    public void testUnscopedAll() {
-        assertEquals("SELECT this FROM Client this", clientsService.unscoped().all().toJpql());
     }
 
     @Test

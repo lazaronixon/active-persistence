@@ -157,7 +157,7 @@ public class Values {
         asList(VALUE_METHODS).stream().filter(not(onlies::contains)).forEach(this::reset); return this;
     }
 
-    public Values dup() {
+    private Values dup() {
         return new Values(this);
     }
 
@@ -165,7 +165,7 @@ public class Values {
         return t.negate();
     }
 
-    public void reset(String value) {
+    private void reset(String value) {
         switch (value) {
             case "from": from = null; break;
 
