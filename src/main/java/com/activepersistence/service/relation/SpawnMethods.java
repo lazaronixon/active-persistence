@@ -16,11 +16,11 @@ public interface SpawnMethods<T> {
         return new Relation(thiz());
     }
 
-    public default Relation<T> merge(Relation<T> other) {
+    public default Relation<T> merge(Relation other) {
         return spawn().merge$(other);
     }
 
-    public default Relation<T> merge$(Relation<T> other) {
+    public default Relation<T> merge$(Relation other) {
         return new Merger(thiz(), other).merge();
     }
 
