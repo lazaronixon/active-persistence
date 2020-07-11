@@ -11,7 +11,7 @@ public class Values {
     private final static String[] VALUE_METHODS = new String[] {
         "from",
         "limit", "offset", "lock", "distinct", "constructor",
-        "select", "where", "group", "having", "order", "joins", "includes", "eagerLoads", "bind"
+        "select", "where", "group", "having", "order", "joins", "includes", "eagerLoads", "unscope", "bind"
     };
 
     private String from = null;
@@ -30,6 +30,7 @@ public class Values {
     private List<String> joins      = new ArrayList();
     private List<String> includes   = new ArrayList();
     private List<String> eagerLoads = new ArrayList();
+    private List<String> unscope    = new ArrayList();
 
     private HashMap<Object, Object> bind = new HashMap();
 
@@ -50,6 +51,7 @@ public class Values {
         joins        = new ArrayList(other.joins);
         includes     = new ArrayList(other.includes);
         eagerLoads   = new ArrayList(other.eagerLoads);
+        unscope      = new ArrayList(other.unscope);
         bind         = new HashMap(other.bind);
     }
 
@@ -87,6 +89,10 @@ public class Values {
 
     public List<String> getEagerLoads() {
         return eagerLoads;
+    }
+
+    public List<String> getUnscope() {
+        return unscope;
     }
 
     public HashMap<Object, Object> getBind() {
@@ -183,6 +189,7 @@ public class Values {
             case "joins": joins.clear();   break;
             case "includes": includes.clear(); break;
             case "eagerLoads": eagerLoads.clear(); break;
+            case "unscope": unscope.clear(); break;
 
             case "bind": bind.clear(); break;
 

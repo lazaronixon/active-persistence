@@ -16,9 +16,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> select$(String... fields) {
-        getValues().getSelect().addAll(asList(fields));
-        getValues().setConstructor(true);
-        return thiz();
+        getValues().setConstructor(true); getValues().getSelect().addAll(asList(fields)); return thiz();
     }
 
     public default Relation<T> joins(String value) {
@@ -138,19 +136,19 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> unscope$(String... args) {
-        asList(args).forEach(this::unscoping); return thiz();
+        getValues().getUnscope().addAll(asList(args)); asList(args).forEach(this::unscoping); return thiz();
     }
 
     public default Relation<T> reselect(String... fields) {
-        return unscope("select").select(fields);
+        return spawn().except("select", "constructor").select(fields);
     }
 
     public default Relation<T> rewhere(String conditions) {
-        return unscope("where").where(conditions);
+        return spawn().except("where", "bind").where(conditions);
     }
 
     public default Relation<T> reorder(String... fields) {
-        return unscope("order").order(fields);
+        return spawn().except("order").order(fields);
     }
 
     public default Relation<T> bind(int position, Object value) {
@@ -165,8 +163,8 @@ public interface QueryMethods<T> {
         getValues().getBind().put(key, value); return thiz();
     }
 
-    private void unscoping(String value) {
-        switch (value) {
+    private void unscoping(String scope) {
+        switch (scope) {
             case "from":       getValues().setFrom(null); break;
 
             case "where":      getValues().getWhere().clear();
@@ -191,8 +189,7 @@ public interface QueryMethods<T> {
             case "includes":   getValues().getIncludes().clear();   break;
             case "eagerLoads": getValues().getEagerLoads().clear(); break;
 
-            default: throw new RuntimeException("invalid unscoping value: " + value);
+            default: throw new RuntimeException("invalid unscoping value: " + scope);
         }
     }
-
 }
