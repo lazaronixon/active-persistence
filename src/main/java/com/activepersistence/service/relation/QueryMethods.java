@@ -103,12 +103,12 @@ public interface QueryMethods<T> {
         getValues().getIncludes().addAll(asList(includes)); return thiz();
     }
 
-    public default Relation<T> eagerLoads(String... eagerLoads) {
-        return spawn().eagerLoads$(eagerLoads);
+    public default Relation<T> eagerLoad(String... eagerLoads) {
+        return spawn().eagerLoad$(eagerLoads);
     }
 
-    public default Relation<T> eagerLoads$(String... eagerLoads) {
-        getValues().getEagerLoads().addAll(asList(eagerLoads)); return thiz();
+    public default Relation<T> eagerLoad$(String... eagerLoads) {
+        getValues().getEagerLoad().addAll(asList(eagerLoads)); return thiz();
     }
 
     public default Relation<T> lock() {

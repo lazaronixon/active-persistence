@@ -23,7 +23,7 @@ public class Values {
     private List<String> order         = new ArrayList();
     private List<String> joins         = new ArrayList();
     private List<String> includes      = new ArrayList();
-    private List<String> eagerLoads    = new ArrayList();
+    private List<String> eagerLoad     = new ArrayList();
     private List<ValueMethods> unscope = new ArrayList();
 
     private HashMap<Object, Object> bind = new HashMap();
@@ -44,7 +44,7 @@ public class Values {
         order        = new ArrayList(other.order);
         joins        = new ArrayList(other.joins);
         includes     = new ArrayList(other.includes);
-        eagerLoads   = new ArrayList(other.eagerLoads);
+        eagerLoad    = new ArrayList(other.eagerLoad);
         unscope      = new ArrayList(other.unscope);
         bind         = new HashMap(other.bind);
     }
@@ -81,8 +81,8 @@ public class Values {
         return includes;
     }
 
-    public List<String> getEagerLoads() {
-        return eagerLoads;
+    public List<String> getEagerLoad() {
+        return eagerLoad;
     }
 
     public List<ValueMethods> getUnscope() {
@@ -182,7 +182,7 @@ public class Values {
             case ORDER:       order.clear();      break;
             case JOINS:       joins.clear();      break;
             case INCLUDES:    includes.clear();   break;
-            case EAGER_LOAD:  eagerLoads.clear(); break;
+            case EAGER_LOAD:  eagerLoad.clear();  break;
             case UNSCOPE:     unscope.clear();    break;
             case BIND:        bind.clear();       break;
         }

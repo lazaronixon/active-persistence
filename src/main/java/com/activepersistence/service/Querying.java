@@ -172,8 +172,8 @@ public interface Querying<T> {
         return all().includes(values);
     }
 
-    public default Relation<T> eagerLoads(String... values) {
-        return all().eagerLoads(values);
+    public default Relation<T> eagerLoad(String... values) {
+        return all().eagerLoad(values);
     }
 
     public default Relation<T> unscope(ValueMethods... values) {

@@ -118,7 +118,7 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testEagerLoads() {
-        List<Post> posts = postsService.eagerLoads("this.comments").fetch();
+        List<Post> posts = postsService.eagerLoad("this.comments").fetch();
         Stream<Comment> comments = posts.stream().flatMap(p -> p.getComments().stream());
         assertTrue(comments.findAny().isPresent());
     }

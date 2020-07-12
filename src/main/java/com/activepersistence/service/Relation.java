@@ -265,7 +265,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private void applyHints(Query query) {
         values.getIncludes().forEach(value   -> query.setHint("eclipselink.batch", value));
-        values.getEagerLoads().forEach(value -> query.setHint("eclipselink.left-join-fetch", value));
+        values.getEagerLoad().forEach(value -> query.setHint("eclipselink.left-join-fetch", value));
     }
 
     private LockModeType buildLockMode() {

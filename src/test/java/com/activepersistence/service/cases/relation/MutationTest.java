@@ -107,9 +107,9 @@ public class MutationTest extends IntegrationTest {
     @Test
     public void testEagerLoads$() {
         Relation<Post> relation  = postsService.all();
-        Relation<Post> relation2 = relation.eagerLoads$("foo");
+        Relation<Post> relation2 = relation.eagerLoad$("foo");
         assertEquals(relation, relation2);
-        assertEquals(asList("foo"), relation2.getValues().getEagerLoads());
+        assertEquals(asList("foo"), relation2.getValues().getEagerLoad());
     }
 
     @Test
