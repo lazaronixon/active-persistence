@@ -25,78 +25,78 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testSelect() {
-        assertEquals("SELECT NEW com.activepersistence.service.models.Post(this.id, this.title) FROM Post this",
-                postsService.select("this.id", "this.title").toJpql());
+        assertEquals("SELECT NEW com.activepersistence.service.models.Post(post.id, post.title) FROM Post post",
+                postsService.select("post.id", "post.title").toJpql());
     }
 
     @Test
     public void testDistinct() {
-        assertEquals("SELECT DISTINCT NEW com.activepersistence.service.models.Post(this.id, this.title) FROM Post this",
-                postsService.select("this.id", "this.title").distinct().toJpql());
+        assertEquals("SELECT DISTINCT NEW com.activepersistence.service.models.Post(post.id, post.title) FROM Post post",
+                postsService.select("post.id", "post.title").distinct().toJpql());
     }
 
     @Test
     public void testJoins() {
-        assertEquals("SELECT this FROM Post this JOIN this.comments c",
-                postsService.joins("JOIN this.comments c").toJpql());
+        assertEquals("SELECT post FROM Post post JOIN post.comments c",
+                postsService.joins("JOIN post.comments c").toJpql());
     }
 
     @Test
     public void testWhere() {
-        assertEquals("SELECT this FROM Post this WHERE this.title = 'nixon'",
-                postsService.where("this.title = 'nixon'").toJpql());
+        assertEquals("SELECT post FROM Post post WHERE post.title = 'nixon'",
+                postsService.where("post.title = 'nixon'").toJpql());
     }
 
     @Test
     public void testGroup() {
-        assertEquals("SELECT NEW com.activepersistence.service.models.Post(this.id, this.title) FROM Post this GROUP BY this.id, this.title",
-                postsService.select("this.id, this.title").group("this.id, this.title").toJpql());
+        assertEquals("SELECT NEW com.activepersistence.service.models.Post(post.id, post.title) FROM Post post GROUP BY post.id, post.title",
+                postsService.select("post.id, post.title").group("post.id, post.title").toJpql());
     }
 
     @Test
     public void testHaving() {
-        assertEquals("SELECT NEW com.activepersistence.service.models.Post(this.id) FROM Post this GROUP BY this.id HAVING COUNT(this.title) > 0",
-                postsService.select("this.id").group("this.id").having("COUNT(this.title) > 0").toJpql());
+        assertEquals("SELECT NEW com.activepersistence.service.models.Post(post.id) FROM Post post GROUP BY post.id HAVING COUNT(post.title) > 0",
+                postsService.select("post.id").group("post.id").having("COUNT(post.title) > 0").toJpql());
     }
 
     @Test
     public void testOrder() {
-        assertEquals("SELECT this FROM Post this ORDER BY this.id", postsService.order("this.id").toJpql());
+        assertEquals("SELECT post FROM Post post ORDER BY post.id", postsService.order("post.id").toJpql());
     }
 
     @Test
     public void testNone() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.none().toJpql());
+        assertEquals("SELECT post FROM Post post WHERE 1=0", postsService.none().toJpql());
     }
 
     @Test
     public void testFrom() {
-        assertEquals("SELECT this FROM Topic this", postsService.from("Topic this").toJpql());
+        assertEquals("SELECT post FROM Topic post", postsService.from("Topic post").toJpql());
     }
 
     @Test
     public void testUnscope() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.where("1=0").order("this.id").unscope(ORDER).toJpql());
+        assertEquals("SELECT post FROM Post post WHERE 1=0", postsService.where("1=0").order("post.id").unscope(ORDER).toJpql());
     }
 
     @Test
     public void testUnscopeFrom() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.where("1=0").from("Teste this").unscope(FROM).toJpql());
+        assertEquals("SELECT post FROM Post post WHERE 1=0", postsService.where("1=0").from("Teste teste").unscope(FROM).toJpql());
     }
 
     @Test
     public void testReSelect() {
-        assertEquals("SELECT NEW com.activepersistence.service.models.Post(this.title) FROM Post this", postsService.select("this.id").reselect("this.title").toJpql());
+        assertEquals("SELECT NEW com.activepersistence.service.models.Post(post.title) FROM Post post", postsService.select("post.id").reselect("post.title").toJpql());
     }
 
     @Test
     public void testReWhere() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.where("1=0").rewhere("1=0").toJpql());
+        assertEquals("SELECT post FROM Post post WHERE 1=0", postsService.where("1=0").rewhere("1=0").toJpql());
     }
 
     @Test
     public void testReOrder() {
-        assertEquals("SELECT this FROM Post this ORDER BY this.id", postsService.order("this.title").reorder("this.id").toJpql());
+        assertEquals("SELECT post FROM Post post ORDER BY post.id", postsService.order("post.title").reorder("post.id").toJpql());
     }
 
     @Test
@@ -106,19 +106,19 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testOffset() {
-        assertEquals(1, postsService.where("this.id IN (1, 2, 3)").limit(2).offset(2).fetch().size());
+        assertEquals(1, postsService.where("post.id IN (1, 2, 3)").limit(2).offset(2).fetch().size());
     }
 
     @Test
     public void testIncludes() {
-        List<Post> posts = postsService.includes("this.comments").fetch();
+        List<Post> posts = postsService.includes("post.comments").fetch();
         Stream<Comment> comments = posts.stream().flatMap(p -> p.getComments().stream());
         assertTrue(comments.findAny().isPresent());
     }
 
     @Test
     public void testEagerLoads() {
-        List<Post> posts = postsService.eagerLoad("this.comments").fetch();
+        List<Post> posts = postsService.eagerLoad("post.comments").fetch();
         Stream<Comment> comments = posts.stream().flatMap(p -> p.getComments().stream());
         assertTrue(comments.findAny().isPresent());
     }
@@ -130,24 +130,24 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testOrdinalBind() {
-        assertNotNull(postsService.where("this.id = ?1").bind(1, 1));
+        assertNotNull(postsService.where("post.id = ?1").bind(1, 1));
     }
 
     @Test
     public void testPlaceholderBind() {
-        assertNotNull(postsService.where("this.id = :id").bind("id", 1));
+        assertNotNull(postsService.where("post.id = :id").bind("id", 1));
     }
 
     @Test
     public void testOrdinalBindWithModel() {
         Post postOne = postsService.find(1);
-        assertNotNull(postsService.where("this.id = ?1").bind(1, postOne));
+        assertNotNull(postsService.where("post.id = ?1").bind(1, postOne));
     }
 
     @Test
     public void testPlaceholderBindWithModel() {
         Post postOne = postsService.find(1);
-        assertNotNull(postsService.where("this.id = :id").bind("id", postOne));
+        assertNotNull(postsService.where("post.id = :id").bind("id", postOne));
     }
 
 }

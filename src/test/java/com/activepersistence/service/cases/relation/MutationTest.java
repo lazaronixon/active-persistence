@@ -20,8 +20,8 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.where("1=1");
         Relation<Post> relation2 = relation.where("2=2");
 
-        assertEquals("SELECT this FROM Post this WHERE 1=1", relation.toJpql());
-        assertEquals("SELECT this FROM Post this WHERE 1=1 AND 2=2", relation2.toJpql());
+        assertEquals("SELECT post FROM Post post WHERE 1=1", relation.toJpql());
+        assertEquals("SELECT post FROM Post post WHERE 1=1 AND 2=2", relation2.toJpql());
     }
 
     @Test

@@ -19,55 +19,55 @@ public class CalculationTest extends IntegrationTest {
 
     @Test
     public void testCount() {
-        assertEquals(2L, postsService.where("this.id IN (1, 2)").count());
+        assertEquals(2L, postsService.where("post.id IN (1, 2)").count());
     }
 
     @Test
     public void testCountAllDistinct() {
-        assertEquals(2L, postsService.where("this.id IN (4, 5)").distinct().count());
+        assertEquals(2L, postsService.where("post.id IN (4, 5)").distinct().count());
     }
 
     @Test
     public void testCountDistinct() {
-        assertEquals(1L, postsService.where("this.id IN (4, 5)").distinct().count("this.title"));
+        assertEquals(1L, postsService.where("post.id IN (4, 5)").distinct().count("post.title"));
     }
 
     @Test
     public void testMinimum() {
-        assertEquals(1, postsService.minimum("this.likesCount"));
+        assertEquals(1, postsService.minimum("post.likesCount"));
     }
 
     @Test
     public void testMaximum() {
-        assertEquals(9999, postsService.maximum("this.likesCount"));
+        assertEquals(9999, postsService.maximum("post.likesCount"));
     }
 
     @Test
     public void testSum() {
-        assertEquals(8L, postsService.where("this.id IN (1, 2)").distinct().sum("this.likesCount"));
+        assertEquals(8L, postsService.where("post.id IN (1, 2)").distinct().sum("post.likesCount"));
     }
 
     @Test
     public void testPluck() {
-        List<Object> results = postsService.where("this.id IN (4, 5)").pluck("this.title");
+        List<Object> results = postsService.where("post.id IN (4, 5)").pluck("post.title");
         assertEquals(asList("flood", "flood"), results);
     }
 
     @Test
     public void testPluckMultiple() {
-        List<Object[]> results = postsService.where("this.id IN (4, 5)").pluck("this.id", "this.title");
+        List<Object[]> results = postsService.where("post.id IN (4, 5)").pluck("post.id", "post.title");
         assertArrayEquals(new Object[] {4, "flood"}, results.get(0));
         assertArrayEquals(new Object[] {5, "flood"}, results.get(1));
     }
 
     @Test
     public void testIds() {
-        assertEquals(asList(1, 2), postsService.where("this.id IN (1, 2)").ids());
+        assertEquals(asList(1, 2), postsService.where("post.id IN (1, 2)").ids());
     }
 
     @Test
     public void testCountGrouped() {
-        HashMap<String, Long> result = (HashMap) postsService.where("this.id IN (3, 4, 5)").group("this.title").count();
+        HashMap<String, Long> result = (HashMap) postsService.where("post.id IN (3, 4, 5)").group("post.title").count();
         assertEquals(Long.valueOf(1), result.get("beautiful night"));
         assertEquals(Long.valueOf(2), result.get("flood"));
         assertEquals(2, result.size());

@@ -15,27 +15,27 @@ public class DeleteManagerTest {
     @Before
     public void setup() {
         manager = new DeleteManager();
-        manager.from(new Entity(Post.class, "this"));
+        manager.from(new Entity(Post.class, "post"));
     }
 
     @Test
     public void testAll() {
-        assertEquals("DELETE FROM Post this", manager.toJpql());
+        assertEquals("DELETE FROM Post post", manager.toJpql());
     }
 
     @Test
     public void testWhere() {
-        assertEquals("DELETE FROM Post this WHERE 1=0", manager.where("1=0").toJpql());
+        assertEquals("DELETE FROM Post post WHERE 1=0", manager.where("1=0").toJpql());
     }
 
     @Test
     public void testOrder() {
-        assertEquals("DELETE FROM Post this ORDER BY this.id", manager.order("this.id").toJpql());
+        assertEquals("DELETE FROM Post post ORDER BY post.id", manager.order("post.id").toJpql());
     }
 
     @Test
     public void testWhereAnd() {
-        assertEquals("DELETE FROM Post this WHERE 1=0 AND 1=2", manager.where("1=0").where("1=2").toJpql());
+        assertEquals("DELETE FROM Post post WHERE 1=0 AND 1=2", manager.where("1=0").where("1=2").toJpql());
     }
 
 }

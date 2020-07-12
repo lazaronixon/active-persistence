@@ -21,95 +21,95 @@ public class ToJpqlTest {
 
     @Test
     public void testVisitDeleteStatement() {
-        Entity entity = new Entity(Post.class, "this");
+        Entity entity = new Entity(Post.class, "post");
         DeleteStatement statement = new DeleteStatement();
         statement.setRelation(entity);
-        assertEquals("DELETE FROM Post this", compile(statement));
+        assertEquals("DELETE FROM Post post", compile(statement));
     }
 
     @Test
     public void testVisitUpdateStatement() {
-        Entity entity = new Entity(Post.class, "this");
+        Entity entity = new Entity(Post.class, "post");
         UpdateStatement statement = new UpdateStatement();
         statement.setRelation(entity);
-        statement.setValues(asList(jpql("this.name = 'test'")));
-        assertEquals("UPDATE Post this SET this.name = 'test'", compile(statement));
+        statement.setValues(asList(jpql("post.name = 'test'")));
+        assertEquals("UPDATE Post post SET post.name = 'test'", compile(statement));
     }
 
     @Test
     public void testVisitSelectStatement() {
-        Entity entity = new Entity(Post.class, "this");
+        Entity entity = new Entity(Post.class, "post");
         SelectStatement statement = new SelectStatement(entity);
-        assertEquals("SELECT FROM Post this", compile(statement));
+        assertEquals("SELECT FROM Post post", compile(statement));
     }
 
     @Test
     public void testVisitSelectCore() {
-        Entity entity = new Entity(Post.class, "this");
+        Entity entity = new Entity(Post.class, "post");
         SelectCore core = new SelectCore(entity);
-        assertEquals("SELECT FROM Post this", compile(core));
+        assertEquals("SELECT FROM Post post", compile(core));
     }
 
     @Test
     public void testVisitDistinct() {
-        Entity entity = new Entity(Post.class, "this");
+        Entity entity = new Entity(Post.class, "post");
         SelectCore core = new SelectCore(entity);
         core.setDistinct(true);
-        core.getProjections().addAll(asList(jpql("this")));
-        assertEquals("SELECT DISTINCT this FROM Post this", compile(core));
+        core.getProjections().addAll(asList(jpql("post")));
+        assertEquals("SELECT DISTINCT post FROM Post post", compile(core));
     }
 
     @Test
     public void testVisitConstructor() {
-        Constructor constructor = new Constructor(Object.class, asList(jpql("this.id, this.title")));
-        assertEquals(" NEW java.lang.Object(this.id, this.title)", compile(constructor));
+        Constructor constructor = new Constructor(Object.class, asList(jpql("post.id, post.title")));
+        assertEquals(" NEW java.lang.Object(post.id, post.title)", compile(constructor));
     }
 
     @Test
     public void testVisitEntity() {
-        assertEquals("Post this", compile(new Entity(Post.class, "this")));
+        assertEquals("Post post", compile(new Entity(Post.class, "post")));
     }
 
     @Test
     public void testVisitJoinSource() {
-        JoinSource joinsource = new JoinSource(new Entity(Post.class, "this"));
+        JoinSource joinsource = new JoinSource(new Entity(Post.class, "post"));
         joinsource.getRight().add(jpql("JOIN Client c"));
-        assertEquals("Post this JOIN Client c", compile(joinsource));
+        assertEquals("Post post JOIN Client c", compile(joinsource));
     }
 
     @Test
     public void testVisitCount() {
-        assertEquals("COUNT(this)", compile(jpql("this").count()));
+        assertEquals("COUNT(post)", compile(jpql("post").count()));
     }
 
     @Test
     public void testVisitCountDistinct() {
-        assertEquals("COUNT(DISTINCT this)", compile(jpql("this").count(true)));
+        assertEquals("COUNT(DISTINCT post)", compile(jpql("post").count(true)));
     }
 
     @Test
     public void testVisitCountAlias() {
-        assertEquals("COUNT(this) AS count_this", compile(jpql("this").count().as("count_this")));
+        assertEquals("COUNT(post) AS count_post", compile(jpql("post").count().as("count_post")));
     }
 
     @Test
     public void testVisitSum() {
-        assertEquals("SUM(this.likesCount)", compile(jpql("this.likesCount").sum()));
+        assertEquals("SUM(post.likesCount)", compile(jpql("post.likesCount").sum()));
     }
 
     @Test
     public void testVisitMaximum() {
-        assertEquals("MAX(this.id)", compile(jpql("this.id").maximum()));
+        assertEquals("MAX(post.id)", compile(jpql("post.id").maximum()));
     }
 
     @Test
     public void testVisitMinimum() {
-        assertEquals("MIN(this.id)", compile(jpql("this.id").minimum()));
+        assertEquals("MIN(post.id)", compile(jpql("post.id").minimum()));
     }
 
     @Test
     public void testVisitAverage() {
-        assertEquals("AVG(this.id)", compile(jpql("this.id").average()));
+        assertEquals("AVG(post.id)", compile(jpql("post.id").average()));
     }
 
     private String compile(Visitable node) {

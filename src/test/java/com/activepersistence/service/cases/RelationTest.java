@@ -18,31 +18,31 @@ public class RelationTest extends IntegrationTest {
 
     @Test
     public void testScopingBlock() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0",
+        assertEquals("SELECT post FROM Post post WHERE 1=0",
                 postsService.all().scoping(() -> postsService.oneEqZero()).toJpql());
     }
 
     @Test
     public void testScopingBlockTwice() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0 AND 2=0",
+        assertEquals("SELECT post FROM Post post WHERE 1=0 AND 2=0",
                 postsService.all().scoping(() -> postsService.oneEqZero()).scoping(() -> postsService.twoEqZero()).toJpql());
     }
 
     @Test
     public void testScopingWithExcept() {
-        assertEquals("SELECT this FROM Post this",
-                postsService.order("this.id").scoping(() -> postsService.except(ORDER)).toJpql());
+        assertEquals("SELECT post FROM Post post",
+                postsService.order("post.id").scoping(() -> postsService.except(ORDER)).toJpql());
     }
 
     @Test
     public void testScopingWithUnscope() {
-        assertEquals("SELECT this FROM Post this",
-                postsService.order("this.id").scoping(() -> postsService.unscope(ORDER)).toJpql());
+        assertEquals("SELECT post FROM Post post",
+                postsService.order("post.id").scoping(() -> postsService.unscope(ORDER)).toJpql());
     }
 
     @Test
     public void testFetchOne() {
-        assertNotNull(postsService.where("this.id = 1").fetchOne());
+        assertNotNull(postsService.where("post.id = 1").fetchOne());
     }
 
     @Test
@@ -52,7 +52,7 @@ public class RelationTest extends IntegrationTest {
 
     @Test
     public void testFetchExists() {
-        assertTrue(postsService.where("this.id = 1").fetchExists());
+        assertTrue(postsService.where("post.id = 1").fetchExists());
     }
 
     @Test
@@ -68,21 +68,21 @@ public class RelationTest extends IntegrationTest {
     @Test
     public void testDestroyAll() {
         long count = (long) postsService.count();
-        postsService.where("this.id IN (1,2,3)").destroyAll();
+        postsService.where("post.id IN (1,2,3)").destroyAll();
         assertEquals(count - 3, postsService.count());
     }
 
     @Test
     public void testDestroyBy() {
         long count = (long) postsService.count();
-        postsService.destroyBy("this.id IN (1,2,3)");
+        postsService.destroyBy("post.id IN (1,2,3)");
         assertEquals(count - 3, postsService.count());
     }
 
     @Test
     public void testDeleteAll() {
         long count = (long) postsService.count();
-        assertEquals(3, postsService.where("this.id IN (1,2,3)").deleteAll());
+        assertEquals(3, postsService.where("post.id IN (1,2,3)").deleteAll());
         assertEquals(count - 3, postsService.count());
     }
 
@@ -100,19 +100,19 @@ public class RelationTest extends IntegrationTest {
     @Test
     public void testDeleteBy() {
         long count = (long) postsService.count();
-        assertEquals(3, postsService.deleteBy("this.id IN (1,2,3)"));
+        assertEquals(3, postsService.deleteBy("post.id IN (1,2,3)"));
         assertEquals(count - 3, postsService.count());
     }
 
     @Test
     public void testUpdateAll() {
-        assertEquals(3, postsService.where("this.id IN (1,2,3)").updateAll("this.title = 'testing'"));
+        assertEquals(3, postsService.where("post.id IN (1,2,3)").updateAll("post.title = 'testing'"));
         assertEquals("testing", postsService.find(1).getTitle());
     }
 
     @Test
     public void testUpdateAllWithDistinct() {
-        assertThrows(ActivePersistenceError.class, () -> postsService.distinct().updateAll("this.name = 'testing'"));
+        assertThrows(ActivePersistenceError.class, () -> postsService.distinct().updateAll("post.name = 'testing'"));
     }
 
 }

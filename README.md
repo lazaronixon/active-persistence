@@ -75,32 +75,32 @@ List<User> users = usersService.all().fetch();
 User user = usersService.first();
 
 // return the first user named David
-User david = usersService.bind(1, "David").findBy("this.name = ?1");
+User david = usersService.bind(1, "David").findBy("user.name = ?1");
 
 // find all users named David who are Code Artists and sort by createdAt in reverse chronological order
-List<User> users = usersService.where("this.name = ?1 AND this.occupation = ?2").order("this.createdAt DESC").bind(1, "David").bind(2, "Code Artist").fetch();
+List<User> users = usersService.where("user.name = ?1 AND user.occupation = ?2").order("user.createdAt DESC").bind(1, "David").bind(2, "Code Artist").fetch();
 ```
 
 ### Update
 ```java
-User user = userService.bind(1, "David").findBy("this.name = ?1");
+User user = userService.bind(1, "David").findBy("user.name = ?1");
 user.name = "Dave";
 usersService.save(user);
 //OR
 usersService.update(user);
 //OR
-usersService.updateAll("this.maxLoginAttempts = 3, this.mustChangePassword = 'true'");
+usersService.updateAll("user.maxLoginAttempts = 3, user.mustChangePassword = 'true'");
 ```
 
 ### Delete
 ```java
-User user = usersService.bind(1, "David").findBy("this.name = ?1");
+User user = usersService.bind(1, "David").findBy("user.name = ?1");
 usersService.destroy(user);
 //OR
-usersService.destroyBy("this.name = 'David'");
+usersService.destroyBy("user.name = 'David'");
 usersService.destroyAll()
 //OR
-usersService.deleteBy("this.name = 'David'");
+usersService.deleteBy("user.name = 'David'");
 usersService.deleteAll()
 ```
 
@@ -117,44 +117,44 @@ List<Client> clients = clientsService.take(2);
 
 // The first method finds the first record ordered by primary key (default)
 Client client = clientsService.first();
-Client client = clientsService.order("this.firstName").first();
+Client client = clientsService.order("client.firstName").first();
 List<Client> clients = clientsService.first(3);
 
 // The last method finds the last record ordered by primary key (default)
 Client client = clientsService.last();
-Client client = clientsService.order("this.firstName").last();
+Client client = clientsService.order("client.firstName").last();
 List<Client> clients = clientsService.last(3);
 
 // The findBy method finds the first record matching some conditions
-Client client = clientsService.bind(1, "Lifo").findBy("this.firstName = ?1"); // #<Client id: 1, firstName: "Lifo">
-Client client = clientsService.bind(1, "Jon").findBy("this.firstName = ?1"); // null
+Client client = clientsService.bind(1, "Lifo").findBy("client.firstName = ?1"); // #<Client id: 1, firstName: "Lifo">
+Client client = clientsService.bind(1, "Jon").findBy("client.firstName = ?1"); // null
 
-Client client = clientsService.bind(1, "does not exist").findByOrFail("this.firstName = ?1"); // NoResultException
+Client client = clientsService.bind(1, "does not exist").findByOrFail("client.firstName = ?1"); // NoResultException
 ```
 
 ### Conditions
 ```java
 //Ordinal Conditions
-clientsService.where("this.ordersCount = ?1").bind(1, 10).fetch();
-clientsService.where("this.ordersCount = ?1 AND this.locked = ?2").bind(1, 10).bind(2, false).fetch();
+clientsService.where("client.ordersCount = ?1").bind(1, 10).fetch();
+clientsService.where("client.ordersCount = ?1 AND client.locked = ?2").bind(1, 10).bind(2, false).fetch();
 
 //Placeholder Conditions
-clientsService.where("this.ordersCount = :count").bind("count", 10).fetch();
-clientsService.where("this.ordersCount = :count AND this.locked = :locked").bind("count", 10).bind("locked", false).fetch();
+clientsService.where("client.ordersCount = :count").bind("count", 10).fetch();
+clientsService.where("client.ordersCount = :count AND client.locked = :locked").bind("count", 10).bind("locked", false).fetch();
 
 ```
 
 ### Ordering
 ```java
-clientsService.order("this.createdAt").fetch();
-clientsService.order("this.createdAt DESC").fetch();
-clientsService.order("this.createdAt ASC").fetch();
+clientsService.order("client.createdAt").fetch();
+clientsService.order("client.createdAt DESC").fetch();
+clientsService.order("client.createdAt ASC").fetch();
 ```
 
 ### Selecting Specific Fields
 ```java
-Client client = clientsService.select("this.viewableBy", "this.locked").fetch();
-Client client = clientsService.select("this.name").distinct().fetch();
+Client client = clientsService.select("client.viewableBy", "client.locked").fetch();
+Client client = clientsService.select("client.name").distinct().fetch();
 ```
 
 ### Limit and Offset
@@ -165,45 +165,45 @@ clientsService.limit(5).offset(30).fetch();
 
 ### Group
 ```java
-List<Order> orders = ordersService.select("date(this.createdAt)", "sum(this.price)").group("date(this.createdAt)").fetch();
+List<Order> orders = ordersService.select("date(order.createdAt)", "sum(order.price)").group("date(order.createdAt)").fetch();
 ```
 
 ### Total of grouped items
 ```java
-HashMap<String, Long> result = (HashMap) ordersService.group("this.status").count
+HashMap<String, Long> result = (HashMap) ordersService.group("order.status").count
 // => { 'awaiting_approval' => 7, 'paid' => 12 }
 ```
 
 ### Having
 ```java
-List<Order> orders = ordersService.select("date(this.createdAt)", "sum(this.price)").group("date(this.createdAt)").having("sum(this.price) > 100").fetch();
+List<Order> orders = ordersService.select("date(order.createdAt)", "sum(order.price)").group("date(order.createdAt)").having("sum(order.price) > 100").fetch();
 ```
 
 ## Overriding Conditions
 
 ### Unscope
 ```java
-ordersService.where("this.id > 10").limit(20).order("this.id asc").unscope("order").fetch();
+ordersService.where("order.id > 10").limit(20).order("order.id asc").unscope("order").fetch();
 ```
 
 ### Only
 ```java
-ordersService.where("this.id > 10").limit(20).order("this.id asc").only("order").fetch();
+ordersService.where("order.id > 10").limit(20).order("order.id asc").only("order").fetch();
 ```
 
 ### Reselect
 ```java
-postsService.select("this.title", "this.body").reselect("this.createdAt").fetch();
+postsService.select("post.title", "post.body").reselect("post.createdAt").fetch();
 ```
 
 ### Reorder
 ```java
-postsService.order("this.title").reorder("this.createdAt").fetch();
+postsService.order("post.title").reorder("post.createdAt").fetch();
 ```
 
 ### Rewhere
 ```java
-articlesService.where("this.trashed = true").rewhere("this.trashed = false").fetch();
+articlesService.where("article.trashed = true").rewhere("article.trashed = false").fetch();
 ```
 
 ## Null Relation
@@ -229,20 +229,20 @@ clientsService.eagerLoads("client.address").limit(10).fetch();
 
 ## Applying a default scope
 ```java
-public class StudentsService extends ApplicationService<Student> {
+public class ClientsService extends ApplicationService<Client> {
     @Override
     public boolean useDefaultScope() {
         return true;
     }
 
     @Override
-    public Relation<Student> defaultScope() {
-        return where("this.name = 'nixon'");
+    public Relation<Client> defaultScope() {
+        return where("client.name = 'nixon'");
     }
 }
 
-clientsService.all(); // SELECT this FROM Client this WHERE this.name = 'nixon'
-clientsService.unscoped().all(); // SELECT this FROM Client this
+clientsService.all(); // SELECT client FROM Client client WHERE client.name = 'nixon'
+clientsService.unscoped().all(); // SELECT client FROM Client client
 ```
 
 ### Merging of scopes
@@ -253,13 +253,13 @@ usersService.merge(usersService.active()).fetch();
 ### Removing All Scoping
 ```java
 clientsService.unscoped().fetch();
-clientsService.where("this.published = false").unscoped().fetch();
+clientsService.where("client.published = false").unscoped().fetch();
 ```
 
 ### Find or Build a New Object
 ```java
-Post createdPost = postsService.findOrCreateBy("this.title = 'awesome title'", new Post("awesome title", "body", 0));
-Post newPost     = postsService.findOrInitializeBy("this.title = 'awesome title'", new Post("awesome title", "body", 0));
+Post createdPost = postsService.findOrCreateBy("post.title = 'awesome title'", new Post("awesome title", "body", 0));
+Post newPost     = postsService.findOrInitializeBy("post.title = 'awesome title'", new Post("awesome title", "body", 0));
 ```
 
 ## Finding by SQL
@@ -273,25 +273,25 @@ List<Object[]> posts = postsService.selectAll("SELECT id, title FROM Post WHERE 
 
 ### Existence of Objects
 ```java
-boolean exists = studentsService.exists("this.name = 'Lifo'");
-boolean exists = studentsService.where("this.name = 'Lifo'").exists();
+boolean exists = studentsService.exists("student.name = 'Lifo'");
+boolean exists = studentsService.where("student.name = 'Lifo'").exists();
 ```
 
 ### Pluck
 ```java
-List<Integer> ids = clientsService.where("this.active = true").pluck("this.id"); //[1, 2, 3]
-List<Integer> ids = clientsService.where("this.active = true").ids; //[1, 2, 3]
+List<Integer> ids = clientsService.where("client.active = true").pluck("client.id"); //[1, 2, 3]
+List<Integer> ids = clientsService.where("client.active = true").ids; //[1, 2, 3]
 
 ```
 
 ### Calculations
 ```java
 long   count   = (long)   clientsService.count();
-long   count   = (long)   clientsService.count("this.age");
-int    minimum = (int)    clientsService.minimum("this.age");
-int    maximum = (int)    clientsService.maximum("this.age");
-long   total   = (long)   clientsService.sum("this.ordersCount");
-double average = (double) clientsService.average("this.ordersCount");
+long   count   = (long)   clientsService.count("client.age");
+int    minimum = (int)    clientsService.minimum("client.age");
+int    maximum = (int)    clientsService.maximum("client.age");
+long   total   = (long)   clientsService.sum("client.ordersCount");
+double average = (double) clientsService.average("client.ordersCount");
 ```
 
 ## Recommended Environment

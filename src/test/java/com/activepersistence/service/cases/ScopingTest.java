@@ -20,32 +20,32 @@ public class ScopingTest extends IntegrationTest {
 
     @Test
     public void testAll() {
-        assertEquals("SELECT this FROM Post this", postsService.all().toJpql());
+        assertEquals("SELECT post FROM Post post", postsService.all().toJpql());
     }
 
     @Test
     public void testUnscoped() {
-        assertEquals("SELECT this FROM Client this", clientsService.unscoped().toJpql());
+        assertEquals("SELECT client FROM Client client", clientsService.unscoped().toJpql());
     }
 
     @Test
     public void testUnscopedAfter() {
-        assertEquals("SELECT this FROM Client this", clientsService.where("1=0").unscoped().toJpql());
+        assertEquals("SELECT client FROM Client client", clientsService.where("1=0").unscoped().toJpql());
     }
 
     @Test
     public void testUnscopedBlock() {
-        assertEquals("SELECT this FROM Client this WHERE 1=0", clientsService.unscoped(() -> clientsService.where("1=0")).toJpql());
+        assertEquals("SELECT client FROM Client client WHERE 1=0", clientsService.unscoped(() -> clientsService.where("1=0")).toJpql());
     }
 
     @Test
     public void testDefaultScope() {
-        assertEquals("SELECT this FROM Client this WHERE this.active = true", clientsService.all().toJpql());
+        assertEquals("SELECT client FROM Client client WHERE client.active = true", clientsService.all().toJpql());
     }
 
     @Test
     public void testDefaultScopeWhere() {
-        assertEquals("SELECT this FROM Client this WHERE this.active = true AND 1=0", clientsService.where("1=0").toJpql());
+        assertEquals("SELECT client FROM Client client WHERE client.active = true AND 1=0", clientsService.where("1=0").toJpql());
     }
 
 }

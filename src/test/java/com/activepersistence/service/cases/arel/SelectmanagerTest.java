@@ -15,53 +15,53 @@ public class SelectmanagerTest {
 
     @Before
     public void setup() {
-        manager  = new SelectManager(new Entity(Post.class, "this"));
-        manager2 = new SelectManager(new Entity(Client.class, "this"));
+        manager  = new SelectManager(new Entity(Post.class, "post"));
+        manager2 = new SelectManager(new Entity(Client.class, "post"));
     }
 
     @Test
     public void testProject() {
-        assertEquals("SELECT FROM Post this", manager.toJpql());
+        assertEquals("SELECT FROM Post post", manager.toJpql());
     }
 
     @Test
     public void testConstruct() {
-        assertEquals("SELECT NEW com.activepersistence.service.models.Post() FROM Post this",
+        assertEquals("SELECT NEW com.activepersistence.service.models.Post() FROM Post post",
                 manager.constructor(Post.class).toJpql());
     }
 
     @Test
     public void testDistinct() {
-        assertEquals("SELECT DISTINCT FROM Post this", manager.distinct(true).toJpql());
+        assertEquals("SELECT DISTINCT FROM Post post", manager.distinct(true).toJpql());
     }
 
     @Test
     public void testFrom() {
-        assertEquals("SELECT FROM Another this", manager.from("Another this").toJpql());
+        assertEquals("SELECT FROM Another post", manager.from("Another post").toJpql());
     }
 
     @Test
     public void testJoin() {
-        assertEquals("SELECT FROM Post this JOIN this.comments c", manager.join("JOIN this.comments c").toJpql());
+        assertEquals("SELECT FROM Post post JOIN post.comments c", manager.join("JOIN post.comments c").toJpql());
     }
 
     @Test
     public void testWhere() {
-        assertEquals("SELECT FROM Post this WHERE this.id = 1", manager.where("this.id = 1").toJpql());
+        assertEquals("SELECT FROM Post post WHERE post.id = 1", manager.where("post.id = 1").toJpql());
     }
 
     @Test
     public void testGroup() {
-        assertEquals("SELECT FROM Post this GROUP BY this.id, this.title", manager.group("this.id, this.title").toJpql());
+        assertEquals("SELECT FROM Post post GROUP BY post.id, post.title", manager.group("post.id, post.title").toJpql());
     }
 
     @Test
     public void testHaving() {
-        assertEquals("SELECT FROM Post this HAVING SUM(this.commentsCount) > 1", manager.having("SUM(this.commentsCount) > 1").toJpql());
+        assertEquals("SELECT FROM Post post HAVING SUM(post.commentsCount) > 1", manager.having("SUM(post.commentsCount) > 1").toJpql());
     }
 
     @Test
     public void testOrder() {
-        assertEquals("SELECT FROM Post this ORDER BY this.title", manager.order("this.title").toJpql());
+        assertEquals("SELECT FROM Post post ORDER BY post.title", manager.order("post.title").toJpql());
     }
 }

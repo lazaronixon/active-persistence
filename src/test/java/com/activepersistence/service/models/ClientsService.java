@@ -21,7 +21,7 @@ public class ClientsService extends Base<Client> {
 
     @Override
     public Relation<Client> defaultScope() {
-        return where("this.active = true");
+        return where("client.active = true");
     }
 
     @Override

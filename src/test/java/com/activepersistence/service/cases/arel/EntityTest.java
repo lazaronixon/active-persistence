@@ -13,66 +13,66 @@ public class EntityTest {
 
     @Before
     public void setup() {
-        relation = new Entity(Post.class, "this");
+        relation = new Entity(Post.class, "post");
     }
 
     @Test
     public void testProject() {
-        assertEquals("SELECT this FROM Post this",
-                relation.project("this").toJpql());
+        assertEquals("SELECT post FROM Post post",
+                relation.project("post").toJpql());
     }
 
     @Test
     public void testProjectNodes() {
-        assertEquals("SELECT this FROM Post this",
-                relation.project(jpql("this")).toJpql());
+        assertEquals("SELECT post FROM Post post",
+                relation.project(jpql("post")).toJpql());
     }
 
     @Test
     public void testConstructor() {
-        assertEquals("SELECT NEW com.activepersistence.service.models.Post(this.id, this.title) FROM Post this",
-                relation.project("this.id", "this.title").constructor(Post.class).toJpql());
+        assertEquals("SELECT NEW com.activepersistence.service.models.Post(post.id, post.title) FROM Post post",
+                relation.project("post.id", "post.title").constructor(Post.class).toJpql());
     }
 
     @Test
     public void testDistinct() {
-        assertEquals("SELECT DISTINCT this FROM Post this",
-                relation.project("this").distinct(true).toJpql());
+        assertEquals("SELECT DISTINCT post FROM Post post",
+                relation.project("post").distinct(true).toJpql());
     }
 
     @Test
     public void testJoin() {
-        assertEquals("SELECT this FROM Post this JOIN this.comments c",
-                relation.project("this").join("JOIN this.comments c").toJpql());
+        assertEquals("SELECT post FROM Post post JOIN post.comments c",
+                relation.project("post").join("JOIN post.comments c").toJpql());
     }
 
     @Test
     public void testWhere() {
-        assertEquals("SELECT this FROM Post this WHERE this.id = 1",
-                relation.project("this").where("this.id = 1").toJpql());
+        assertEquals("SELECT post FROM Post post WHERE post.id = 1",
+                relation.project("post").where("post.id = 1").toJpql());
     }
 
     @Test
     public void testGroup() {
-        assertEquals("SELECT this.title, SUM(this.commentsCount) FROM Post this GROUP BY this.title",
-                relation.project("this.title, SUM(this.commentsCount)").group("this.title").toJpql());
+        assertEquals("SELECT post.title, SUM(post.commentsCount) FROM Post post GROUP BY post.title",
+                relation.project("post.title, SUM(post.commentsCount)").group("post.title").toJpql());
     }
 
     @Test
     public void testHaving() {
-        assertEquals("SELECT this.title, SUM(this.commentsCount) FROM Post this GROUP BY this.title HAVING SUM(this.commentsCount) > 10",
-                relation.project("this.title, SUM(this.commentsCount)").group("this.title").having("SUM(this.commentsCount) > 10").toJpql());
+        assertEquals("SELECT post.title, SUM(post.commentsCount) FROM Post post GROUP BY post.title HAVING SUM(post.commentsCount) > 10",
+                relation.project("post.title, SUM(post.commentsCount)").group("post.title").having("SUM(post.commentsCount) > 10").toJpql());
     }
 
     @Test
     public void testOrder() {
-        assertEquals("SELECT this FROM Post this ORDER BY this.id",
-                relation.project("this").order("this.id").toJpql());
+        assertEquals("SELECT post FROM Post post ORDER BY post.id",
+                relation.project("post").order("post.id").toJpql());
     }
 
     @Test
     public void testFromSubQuery() {
-        assertEquals("SELECT subquery FROM (SELECT this.id, this.title FROM Post this) subquery",
-                relation.project("subquery").from("(SELECT this.id, this.title FROM Post this) subquery").toJpql());
+        assertEquals("SELECT subquery FROM (SELECT post.id, post.title FROM Post post) subquery",
+                relation.project("subquery").from("(SELECT post.id, post.title FROM Post post) subquery").toJpql());
     }
 }

@@ -36,7 +36,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private SelectManager arel;
 
     public Relation(Base service) {
-        this.entity        = new Entity(service.getEntityClass(), "this");
+        this.entity        = buildEntity(service.getEntityClass());
         this.entityManager = service.getEntityManager();
         this.entityClass   = service.getEntityClass();
         this.service       = service;
@@ -44,7 +44,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public Relation(Base service, Values values) {
-        this.entity        = new Entity(service.getEntityClass(), "this");
+        this.entity        = buildEntity(service.getEntityClass());
         this.entityManager = service.getEntityManager();
         this.entityClass   = service.getEntityClass();
         this.service       = service;
@@ -277,6 +277,14 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
                 && values.getGroup().isEmpty()
                 && values.getHaving().isEmpty()
                 && values.getJoins().isEmpty();
+    }
+
+    private Entity buildEntity(Class entityClass) {
+        return new Entity(entityClass, uncapitalize(entityClass.getSimpleName()));
+    }
+
+    private static String uncapitalize(String word) {
+        return Character.toLowerCase(word.charAt(0)) + word.substring(1);
     }
 
 }
