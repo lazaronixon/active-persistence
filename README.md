@@ -183,12 +183,12 @@ List<Order> orders = ordersService.select("date(order.createdAt)", "sum(order.pr
 
 ### Unscope
 ```java
-ordersService.where("order.id > 10").limit(20).order("order.id asc").unscope("order").fetch();
+ordersService.where("order.id > 10").limit(20).order("order.id asc").unscope(ORDER).fetch();
 ```
 
 ### Only
 ```java
-ordersService.where("order.id > 10").limit(20).order("order.id asc").only("order").fetch();
+ordersService.where("order.id > 10").limit(20).order("order.id asc").only(ORDER).fetch();
 ```
 
 ### Reselect
