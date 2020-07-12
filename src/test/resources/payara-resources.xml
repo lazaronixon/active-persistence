@@ -2,6 +2,6 @@
 <resources>
     <jdbc-resource pool-name="ArquillianH2Pool" jndi-name="jdbc/arquillian"/>
     <jdbc-connection-pool name="ArquillianH2Pool" res-type="javax.sql.DataSource" datasource-classname="org.h2.jdbcx.JdbcDataSource">
-        <property name="URL" value="jdbc:h2:mem:arquillian"/>
+        <property name="URL" value="jdbc:h2:${com.sun.aas.instanceRoot}/lib/databases/arquillian;AUTO_SERVER=TRUE"/>
     </jdbc-connection-pool>
 </resources>
