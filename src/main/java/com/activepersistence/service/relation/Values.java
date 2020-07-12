@@ -8,12 +8,6 @@ import java.util.function.Predicate;
 
 public class Values {
 
-    private final static String[] VALUE_METHODS = new String[] {
-        "from",
-        "limit", "offset", "lock", "distinct", "constructor",
-        "select", "where", "group", "having", "order", "joins", "includes", "eagerLoads", "unscope", "bind"
-    };
-
     private String from = null;
 
     private int limit           = 0;
@@ -22,15 +16,15 @@ public class Values {
     private boolean distinct    = false;
     private boolean constructor = false;
 
-    private List<String> select     = new ArrayList();
-    private List<String> where      = new ArrayList();
-    private List<String> group      = new ArrayList();
-    private List<String> having     = new ArrayList();
-    private List<String> order      = new ArrayList();
-    private List<String> joins      = new ArrayList();
-    private List<String> includes   = new ArrayList();
-    private List<String> eagerLoads = new ArrayList();
-    private List<String> unscope    = new ArrayList();
+    private List<String> select        = new ArrayList();
+    private List<String> where         = new ArrayList();
+    private List<String> group         = new ArrayList();
+    private List<String> having        = new ArrayList();
+    private List<String> order         = new ArrayList();
+    private List<String> joins         = new ArrayList();
+    private List<String> includes      = new ArrayList();
+    private List<String> eagerLoads    = new ArrayList();
+    private List<ValueMethods> unscope = new ArrayList();
 
     private HashMap<Object, Object> bind = new HashMap();
 
@@ -91,7 +85,7 @@ public class Values {
         return eagerLoads;
     }
 
-    public List<String> getUnscope() {
+    public List<ValueMethods> getUnscope() {
         return unscope;
     }
 
@@ -147,20 +141,20 @@ public class Values {
         this.constructor = constructor;
     }
 
-    public Values except(List<String> skips) {
+    public Values except(List<ValueMethods> skips) {
         return dup().except$(skips);
     }
 
-    public Values except$(List<String> skips) {
+    public Values except$(List<ValueMethods> skips) {
         skips.forEach(this::reset); return this;
     }
 
-    public Values slice(List<String> onlies) {
+    public Values slice(List<ValueMethods> onlies) {
         return dup().slice$(onlies);
     }
 
-    public Values slice$(List<String> onlies) {
-        asList(VALUE_METHODS).stream().filter(not(onlies::contains)).forEach(this::reset); return this;
+    public Values slice$(List<ValueMethods> onlies) {
+        asList(ValueMethods.values()).stream().filter(not(onlies::contains)).forEach(this::reset); return this;
     }
 
     private Values dup() {
@@ -171,29 +165,26 @@ public class Values {
         return t.negate();
     }
 
-    private void reset(String value) {
+    private void reset(ValueMethods value) {
         switch (value) {
-            case "from": from = null; break;
+            case FROM:        from = null;         break;
+            case WHERE:       where.clear();       break;
+            case HAVING:      having.clear();      break;
 
-            case "limit":  limit  = 0; break;
-            case "offset": offset = 0; break;
-            case "lock": lock = false; break;
-            case "distinct": distinct = false; break;
-            case "constructor": constructor = false; break;
+            case LIMIT:       limit  = 0;          break;
+            case OFFSET:      offset = 0;          break;
+            case LOCK:        lock = false;        break;
+            case DISTINCT:    distinct = false;    break;
+            case CONSTRUCTOR: constructor = false; break;
 
-            case "select": select.clear(); break;
-            case "where": where.clear();   break;
-            case "group": group.clear();   break;
-            case "having": having.clear(); break;
-            case "order": order.clear();   break;
-            case "joins": joins.clear();   break;
-            case "includes": includes.clear(); break;
-            case "eagerLoads": eagerLoads.clear(); break;
-            case "unscope": unscope.clear(); break;
-
-            case "bind": bind.clear(); break;
-
-            default: throw new RuntimeException("invalid reset value: " + value);
+            case SELECT:      select.clear();     break;
+            case GROUP:       group.clear();      break;
+            case ORDER:       order.clear();      break;
+            case JOINS:       joins.clear();      break;
+            case INCLUDES:    includes.clear();   break;
+            case EAGER_LOAD:  eagerLoads.clear(); break;
+            case UNSCOPE:     unscope.clear();    break;
+            case BIND:        bind.clear();       break;
         }
     }
 

@@ -1,5 +1,6 @@
 package com.activepersistence.service;
 
+import com.activepersistence.service.relation.ValueMethods;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +22,11 @@ public interface Querying<T> {
         return all().merge(other);
     }
 
-    public default Relation<T> except(String... skips) {
+    public default Relation<T> except(ValueMethods... skips) {
         return all().except(skips);
     }
 
-    public default Relation<T> only(String... onlies) {
+    public default Relation<T> only(ValueMethods... onlies) {
         return all().only(onlies);
     }
     //</editor-fold>
@@ -175,7 +176,7 @@ public interface Querying<T> {
         return all().eagerLoads(values);
     }
 
-    public default Relation<T> unscope(String... values) {
+    public default Relation<T> unscope(ValueMethods... values) {
         return all().unscope(values);
     }
 

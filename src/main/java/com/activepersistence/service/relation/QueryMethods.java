@@ -131,24 +131,24 @@ public interface QueryMethods<T> {
         getValues().setFrom(value); return thiz();
     }
 
-    public default Relation<T> unscope(String... values) {
+    public default Relation<T> unscope(ValueMethods... values) {
         return spawn().unscope$(values);
     }
 
-    public default Relation<T> unscope$(String... args) {
+    public default Relation<T> unscope$(ValueMethods... args) {
         getValues().getUnscope().addAll(asList(args)); asList(args).forEach(this::unscoping); return thiz();
     }
 
     public default Relation<T> reselect(String... fields) {
-        return spawn().except("select", "constructor").select(fields);
+        return spawn().except(ValueMethods.SELECT, ValueMethods.CONSTRUCTOR).select(fields);
     }
 
     public default Relation<T> rewhere(String conditions) {
-        return spawn().except("where", "bind").where(conditions);
+        return spawn().except(ValueMethods.WHERE, ValueMethods.BIND).where(conditions);
     }
 
     public default Relation<T> reorder(String... fields) {
-        return spawn().except("order").order(fields);
+        return spawn().except(ValueMethods.ORDER).order(fields);
     }
 
     public default Relation<T> bind(int position, Object value) {
@@ -163,31 +163,29 @@ public interface QueryMethods<T> {
         getValues().getBind().put(key, value); return thiz();
     }
 
-    private void unscoping(String scope) {
+    private void unscoping(ValueMethods scope) {
         switch (scope) {
-            case "from":       getValues().setFrom(null); break;
+            case WHERE:      getValues().getWhere().clear();
+                             getValues().getBind().clear();
+                             break;
 
-            case "where":      getValues().getWhere().clear();
-                               getValues().getBind().clear();
-                               break;
+            case SELECT:     getValues().getSelect().clear();
+                             getValues().setConstructor(false);
+                             break;
 
-            case "having":     getValues().getHaving().clear();
-                               getValues().getBind().clear();
-                               break;
+            case GROUP:      getValues().getGroup().clear();    break;
+            case ORDER:      getValues().getOrder().clear();    break;
+            case LOCK:       getValues().setLock(false);        break;
+            case LIMIT:      getValues().setLimit(0);           break;
+            case OFFSET:     getValues().setOffset(0);          break;
+            case JOINS:      getValues().getJoins().clear();    break;
+            case INCLUDES:   getValues().getIncludes().clear(); break;
 
-            case "limit":      getValues().setLimit(0);    break;
-            case "offset":     getValues().setOffset(0);   break;
-            case "lock":       getValues().setLock(false); break;
+            case FROM:       getValues().setFrom(null);         break;
 
-            case "select":     getValues().getSelect().clear();
-                               getValues().setConstructor(false);
-                               break;
-
-            case "group":      getValues().getGroup().clear(); break;
-            case "order":      getValues().getOrder().clear(); break;
-            case "joins":      getValues().getJoins().clear(); break;
-            case "includes":   getValues().getIncludes().clear();   break;
-            case "eagerLoads": getValues().getEagerLoads().clear(); break;
+            case HAVING:     getValues().getHaving().clear();
+                             getValues().getBind().clear();
+                             break;
 
             default: throw new RuntimeException("invalid unscoping value: " + scope);
         }

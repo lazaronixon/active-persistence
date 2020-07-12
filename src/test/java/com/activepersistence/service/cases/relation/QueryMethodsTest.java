@@ -5,6 +5,8 @@ import com.activepersistence.service.models.ClientsService;
 import com.activepersistence.service.models.Comment;
 import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
+import static com.activepersistence.service.relation.ValueMethods.FROM;
+import static com.activepersistence.service.relation.ValueMethods.ORDER;
 import java.util.List;
 import java.util.stream.Stream;
 import javax.inject.Inject;
@@ -74,12 +76,12 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testUnscope() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.where("1=0").order("this.id").unscope("order").toJpql());
+        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.where("1=0").order("this.id").unscope(ORDER).toJpql());
     }
 
     @Test
     public void testUnscopeFrom() {
-        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.where("1=0").from("Teste this").unscope("from").toJpql());
+        assertEquals("SELECT this FROM Post this WHERE 1=0", postsService.where("1=0").from("Teste this").unscope(FROM).toJpql());
     }
 
     @Test

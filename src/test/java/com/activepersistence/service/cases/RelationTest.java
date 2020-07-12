@@ -3,6 +3,7 @@ package com.activepersistence.service.cases;
 import com.activepersistence.ActivePersistenceError;
 import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.PostsService;
+import static com.activepersistence.service.relation.ValueMethods.ORDER;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import org.jboss.arquillian.persistence.UsingDataSet;
@@ -30,13 +31,13 @@ public class RelationTest extends IntegrationTest {
     @Test
     public void testScopingWithExcept() {
         assertEquals("SELECT this FROM Post this",
-                postsService.order("this.id").scoping(() -> postsService.except("order")).toJpql());
+                postsService.order("this.id").scoping(() -> postsService.except(ORDER)).toJpql());
     }
 
     @Test
     public void testScopingWithUnscope() {
         assertEquals("SELECT this FROM Post this",
-                postsService.order("this.id").scoping(() -> postsService.unscope("order")).toJpql());
+                postsService.order("this.id").scoping(() -> postsService.unscope(ORDER)).toJpql());
     }
 
     @Test
