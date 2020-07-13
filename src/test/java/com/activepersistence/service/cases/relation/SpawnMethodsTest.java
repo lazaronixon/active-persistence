@@ -69,4 +69,10 @@ public class SpawnMethodsTest extends IntegrationTest {
                 commentsService.joins("INNER JOIN comment.post post").merge(postsService.where("post.id = 1")).toJpql());
     }
 
+    @Test
+    public void testMergeFromAnotherRelation() {
+        assertEquals("SELECT comment FROM Comment comment INNER JOIN comment.post post WHERE post.id = 1",
+                commentsService.joins("INNER JOIN comment.post post").merge(postsService.from("Post post").where("post.id = 1")).toJpql());
+    }
+
 }

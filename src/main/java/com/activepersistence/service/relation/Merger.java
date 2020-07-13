@@ -6,10 +6,13 @@ public class Merger {
 
     private final Relation relation;
 
+    private final Relation other;
+
     private final Values values;
 
     public Merger(Relation relation, Relation other) {
         this.relation = relation;
+        this.other    = other;
         this.values   = other.getValues();
     }
 
@@ -40,7 +43,8 @@ public class Merger {
 }
 
     private boolean shouldReplaceFromClause() {
-        return relation.getValues().getFrom() == null && values.getFrom() != null;
+        return relation.getValues().getFrom() == null && values.getFrom() != null
+                && relation.getEntityClass() == other.getEntityClass();
     }
 
 }

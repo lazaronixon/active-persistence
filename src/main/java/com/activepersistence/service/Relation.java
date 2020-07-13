@@ -25,9 +25,9 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private final EntityManager entityManager;
 
-    private final Class<T> entityClass;
-
     private final Base<T> service;
+
+    private final Class entityClass;
 
     private final Entity entity;
 
@@ -144,6 +144,14 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public String toJpql() {
         return getArel().toJpql();
+    }
+
+    public Class getEntityClass() {
+        return entityClass;
+    }
+
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 
     @Override
