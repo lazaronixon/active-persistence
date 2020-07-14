@@ -77,7 +77,7 @@ public class WhereClauseFactory {
 
     private String literalizeBoundValue(Object value) {
         if (value instanceof List) {
-            Supplier<Stream<String>> literalized = () -> ((List)value).stream().map(this::literalize);
+            Supplier<Stream<String>> literalized = () -> ((List) value).stream().map(this::literalize);
             if (literalized.get().findAny().isEmpty()) {
                 return literalize((Object) null);
             } else {

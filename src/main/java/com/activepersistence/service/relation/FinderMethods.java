@@ -1,6 +1,7 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
+import static java.util.Arrays.asList;
 import java.util.List;
 
 public interface FinderMethods<T> {
@@ -47,10 +48,10 @@ public interface FinderMethods<T> {
 
     public default T find(Object id) {
         return thiz().where(getPrimaryKey() + " = ?", id).takeOrFail();
-    }
+        }
 
-    public default List<T> find(List<Object> ids) {
-        return thiz().where(getPrimaryKey() + " IN (?)", ids).fetch();
+    public default List<T> find(Object... ids) {
+        return thiz().where(getPrimaryKey() + " IN (?)", asList(ids)).fetch();
     }
 
     public default T findBy(String conditions) {

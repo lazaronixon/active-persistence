@@ -106,7 +106,7 @@ public interface Querying<T> {
         return all().find(id);
     }
 
-    public default List<T> find(List<Object> ids) {
+    public default List<T> find(Object... ids) {
         return all().find(ids);
     }
 
