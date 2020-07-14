@@ -32,7 +32,6 @@ public class Merger {
         values.getJoins().forEach(relation::joins$);
         values.getIncludes().forEach(relation::includes$);
         values.getEagerLoad().forEach(relation::eagerLoad$);
-        values.getBind().forEach(relation::bind$);
         values.getUnscope().forEach(relation::unscope$);
 
         return relation;

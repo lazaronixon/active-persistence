@@ -46,11 +46,11 @@ public interface FinderMethods<T> {
     }
 
     public default T find(Object id) {
-        return thiz().where(getPrimaryKey() + " = :id$").bind("id$", id).takeOrFail();
+        return thiz().where(getPrimaryKey() + " = ?", id).takeOrFail();
     }
 
     public default List<T> find(List<Object> ids) {
-        return thiz().where(getPrimaryKey() + " IN :ids$").bind("ids$", ids).fetch();
+        return thiz().where(getPrimaryKey() + " IN (?)", ids).fetch();
     }
 
     public default T findBy(String conditions) {

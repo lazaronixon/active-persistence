@@ -1,6 +1,7 @@
 package com.activepersistence.service.cases.relation;
 
 import com.activepersistence.IntegrationTest;
+import com.activepersistence.PreparedStatementInvalid;
 import com.activepersistence.service.models.ClientsService;
 import com.activepersistence.service.models.Comment;
 import com.activepersistence.service.models.Post;
@@ -8,6 +9,7 @@ import com.activepersistence.service.models.PostsService;
 import static com.activepersistence.service.relation.ValueMethods.FROM;
 import static com.activepersistence.service.relation.ValueMethods.ORDER;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import org.jboss.arquillian.persistence.UsingDataSet;
@@ -129,25 +131,28 @@ public class QueryMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testOrdinalBind() {
-        assertNotNull(postsService.where("post.id = ?1").bind(1, 1));
+    public void testBindDollarSign() {
+        assertEquals("SELECT post FROM Post post WHERE post.title LIKE '$45,65'", postsService.where("post.title LIKE ?", "$45,65").toJpql());
     }
 
     @Test
-    public void testPlaceholderBind() {
-        assertNotNull(postsService.where("post.id = :id").bind("id", 1));
+    public void testBind() {
+        assertEquals("SELECT post FROM Post post WHERE post.id = 1", postsService.where("post.id = ?", 1).toJpql());
     }
 
     @Test
-    public void testOrdinalBindWithModel() {
-        Post postOne = postsService.find(1);
-        assertNotNull(postsService.where("post.id = ?1").bind(1, postOne));
+    public void testBindNamed() {
+        assertEquals("SELECT post FROM Post post WHERE post.id = 1", postsService.where("post.id = :id", Map.of("id", 1)).toJpql());
     }
 
     @Test
-    public void testPlaceholderBindWithModel() {
-        Post postOne = postsService.find(1);
-        assertNotNull(postsService.where("post.id = :id").bind("id", postOne));
+    public void testBindFormat() {
+        assertEquals("SELECT post FROM Post post WHERE post.id = 1", postsService.where("post.id = %s", 1).toJpql());
+    }
+
+    @Test
+    public void testBindWrongNumberVariables() {
+        assertThrows(PreparedStatementInvalid.class,() -> postsService.where("post.id = ? AND post.id = ?", 1));
     }
 
 }

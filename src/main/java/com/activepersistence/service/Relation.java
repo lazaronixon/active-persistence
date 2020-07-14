@@ -121,7 +121,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
             stmt.setOrders(getArel().getOrders());
             return executeUpdate(stmt.toJpql());
         } else {
-            throw new ActivePersistenceError("delete_all doesn't support this relation");
+            throw new ActivePersistenceError("deleteAll doesn't support this relation");
         }
     }
 
@@ -134,7 +134,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
             stmt.setOrders(getArel().getOrders());
             return executeUpdate(stmt.toJpql());
         } else {
-            throw new ActivePersistenceError("update_all doesn't support this relation");
+            throw new ActivePersistenceError("updateAll doesn't support this relation");
         }
     }
 
@@ -257,22 +257,15 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {
-        applyParams(query); applyHints(query); return query;
+        applyHints(query); return query;
     }
 
     private Query parametize(Query query) {
-        applyParams(query); applyHints(query); return query;
-    }
-
-    private void applyParams(Query query) {
-        values.getBind().entrySet().forEach((bind) -> {
-            if (bind.getKey() instanceof Integer) query.setParameter((Integer) bind.getKey(), bind.getValue());
-            if (bind.getKey() instanceof String)  query.setParameter((String)  bind.getKey(), bind.getValue());
-        });
+        applyHints(query); return query;
     }
 
     private void applyHints(Query query) {
-        values.getIncludes().forEach(value   -> query.setHint("eclipselink.batch", value));
+        values.getIncludes().forEach(value  -> query.setHint("eclipselink.batch", value));
         values.getEagerLoad().forEach(value -> query.setHint("eclipselink.left-join-fetch", value));
     }
 

@@ -2,7 +2,6 @@ package com.activepersistence.service.relation;
 
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -26,8 +25,6 @@ public class Values {
     private List<String> eagerLoad     = new ArrayList();
     private List<ValueMethods> unscope = new ArrayList();
 
-    private HashMap<Object, Object> bind = new HashMap();
-
     public Values() {}
 
     public Values(Values other) {
@@ -46,7 +43,6 @@ public class Values {
         includes     = new ArrayList(other.includes);
         eagerLoad    = new ArrayList(other.eagerLoad);
         unscope      = new ArrayList(other.unscope);
-        bind         = new HashMap(other.bind);
     }
 
     public String getFrom() {
@@ -87,10 +83,6 @@ public class Values {
 
     public List<ValueMethods> getUnscope() {
         return unscope;
-    }
-
-    public HashMap<Object, Object> getBind() {
-        return bind;
     }
 
     public int getLimit() {
@@ -141,20 +133,20 @@ public class Values {
         this.constructor = constructor;
     }
 
-    public Values except(List<ValueMethods> skips) {
+    public Values except(ValueMethods... skips) {
         return dup().except$(skips);
     }
 
-    public Values except$(List<ValueMethods> skips) {
-        skips.forEach(this::reset); return this;
+    public Values except$(ValueMethods... skips) {
+        asList(skips).forEach(this::reset); return this;
     }
 
-    public Values slice(List<ValueMethods> onlies) {
+    public Values slice(ValueMethods... onlies) {
         return dup().slice$(onlies);
     }
 
-    public Values slice$(List<ValueMethods> onlies) {
-        asList(ValueMethods.values()).stream().filter(not(onlies::contains)).forEach(this::reset); return this;
+    public Values slice$(ValueMethods... onlies) {
+        asList(ValueMethods.values()).stream().filter(not(asList(onlies)::contains)).forEach(this::reset); return this;
     }
 
     private Values dup() {
@@ -171,10 +163,10 @@ public class Values {
             case WHERE:       where.clear();       break;
             case HAVING:      having.clear();      break;
 
-            case LIMIT:       limit  = 0;          break;
-            case OFFSET:      offset = 0;          break;
-            case LOCK:        lock = false;        break;
-            case DISTINCT:    distinct = false;    break;
+            case LIMIT:       limit       = 0;     break;
+            case OFFSET:      offset      = 0;     break;
+            case LOCK:        lock        = false; break;
+            case DISTINCT:    distinct    = false; break;
             case CONSTRUCTOR: constructor = false; break;
 
             case SELECT:      select.clear();     break;
@@ -184,7 +176,6 @@ public class Values {
             case INCLUDES:    includes.clear();   break;
             case EAGER_LOAD:  eagerLoad.clear();  break;
             case UNSCOPE:     unscope.clear();    break;
-            case BIND:        bind.clear();       break;
         }
     }
 

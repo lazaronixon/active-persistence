@@ -2,7 +2,6 @@ package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Base;
 import com.activepersistence.service.Relation;
-import static java.util.Arrays.asList;
 
 public interface SpawnMethods<T> {
 
@@ -25,11 +24,11 @@ public interface SpawnMethods<T> {
     }
 
     public default Relation<T> except(ValueMethods... skips) {
-        return relationWith(getValues().except(asList(skips)));
+        return relationWith(getValues().except(skips));
     }
 
     public default Relation<T> only(ValueMethods... onlies) {
-        return relationWith(getValues().slice(asList(onlies)));
+        return relationWith(getValues().slice(onlies));
     }
 
     private Relation<T> relationWith(Values values) {

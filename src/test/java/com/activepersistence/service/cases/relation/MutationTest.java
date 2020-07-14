@@ -5,7 +5,6 @@ import com.activepersistence.service.Relation;
 import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
 import static java.util.Arrays.asList;
-import java.util.Map;
 import javax.inject.Inject;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -134,22 +133,6 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation2 = relation.merge$(postsService.where("1=2"));
         assertEquals(relation, relation2);
         assertEquals(asList("1=1", "1=2"), relation2.getValues().getWhere());
-    }
-
-    @Test
-    public void testBindOrdinal$() {
-        Relation<Post> relation  = postsService.where("1=1");
-        Relation<Post> relation2 = relation.bind$(1, "foo");
-        assertEquals(relation, relation2);
-        assertEquals(Map.of(1, "foo"), relation2.getValues().getBind());
-    }
-
-    @Test
-    public void testBindNamed$() {
-        Relation<Post> relation  = postsService.where("1=1");
-        Relation<Post> relation2 = relation.bind$("foo", "foo");
-        assertEquals(relation, relation2);
-        assertEquals(Map.of("foo", "foo"), relation2.getValues().getBind());
     }
 
 }

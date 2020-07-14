@@ -128,8 +128,8 @@ public interface Querying<T> {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="QueryMethods">
-    public default Relation<T> where(String conditions) {
-        return all().where(conditions);
+    public default Relation<T> where(String conditions, Object... params) {
+        return all().where(conditions, params);
     }
 
     public default Relation<T> order(String... values) {
@@ -156,8 +156,8 @@ public interface Querying<T> {
         return all().group(values);
     }
 
-    public default Relation<T> having(String conditions) {
-        return all().having(conditions);
+    public default Relation<T> having(String conditions, Object... params) {
+        return all().having(conditions, params);
     }
 
     public default Relation<T> distinct() {
@@ -206,14 +206,6 @@ public interface Querying<T> {
 
     public default Relation<T> none() {
         return all().none();
-    }
-
-    public default Relation<T> bind(int position, Object value) {
-        return all().bind(position, value);
-    }
-
-    public default Relation<T> bind(String name, Object value) {
-        return all().bind(name, value);
     }
     //</editor-fold>
 

@@ -1,6 +1,7 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
+import static com.activepersistence.service.relation.ValueMethods.*;
 import static java.util.Arrays.asList;
 
 public interface QueryMethods<T> {
@@ -27,12 +28,12 @@ public interface QueryMethods<T> {
         getValues().getJoins().add(value); return thiz();
     }
 
-    public default Relation<T> where(String conditions) {
-        return spawn().where$(conditions);
+    public default Relation<T> where(String conditions, Object... params) {
+        return spawn().where$(conditions, params);
     }
 
-    public default Relation<T> where$(String conditions) {
-        getValues().getWhere().add(conditions); return thiz();
+    public default Relation<T> where$(String conditions, Object... params) {
+        getValues().getWhere().add(new WhereClauseFactory(conditions, params).build()); return thiz();
     }
 
     public default Relation<T> group(String... fields) {
@@ -43,12 +44,12 @@ public interface QueryMethods<T> {
         getValues().getGroup().addAll(asList(fields)); return thiz();
     }
 
-    public default Relation<T> having(String conditions) {
-        return spawn().having$(conditions);
+    public default Relation<T> having(String conditions, Object... params) {
+        return spawn().having$(conditions, params);
     }
 
-    public default Relation<T> having$(String conditions) {
-        getValues().getHaving().add(conditions); return thiz();
+    public default Relation<T> having$(String conditions, Object... params) {
+        getValues().getHaving().add(new WhereClauseFactory(conditions, params).build()); return thiz();
     }
 
     public default Relation<T> order(String... fields) {
@@ -151,41 +152,21 @@ public interface QueryMethods<T> {
         return spawn().except(ValueMethods.ORDER).order(fields);
     }
 
-    public default Relation<T> bind(int position, Object value) {
-        return spawn().bind$(position, value);
-    }
-
-    public default Relation<T> bind(String name, Object value) {
-        return spawn().bind$(name, value);
-    }
-
-    public default Relation<T> bind$(Object key, Object value) {
-        getValues().getBind().put(key, value); return thiz();
-    }
-
     private void unscoping(ValueMethods scope) {
         switch (scope) {
-            case WHERE:      getValues().getWhere().clear();
-                             getValues().getBind().clear();
-                             break;
+            case FROM:       getValues().except$(FROM);   break;
+            case WHERE:      getValues().except$(WHERE);  break;
+            case HAVING:     getValues().except$(HAVING); break;
 
-            case SELECT:     getValues().getSelect().clear();
-                             getValues().setConstructor(false);
-                             break;
+            case SELECT:     getValues().except$(SELECT, CONSTRUCTOR); break;
 
-            case GROUP:      getValues().getGroup().clear();    break;
-            case ORDER:      getValues().getOrder().clear();    break;
-            case LOCK:       getValues().setLock(false);        break;
-            case LIMIT:      getValues().setLimit(0);           break;
-            case OFFSET:     getValues().setOffset(0);          break;
-            case JOINS:      getValues().getJoins().clear();    break;
-            case INCLUDES:   getValues().getIncludes().clear(); break;
-
-            case FROM:       getValues().setFrom(null);         break;
-
-            case HAVING:     getValues().getHaving().clear();
-                             getValues().getBind().clear();
-                             break;
+            case GROUP:      getValues().except$(GROUP);    break;
+            case ORDER:      getValues().except$(ORDER);    break;
+            case LOCK:       getValues().except$(LOCK);     break;
+            case LIMIT:      getValues().except$(LIMIT);    break;
+            case OFFSET:     getValues().except$(OFFSET);   break;
+            case JOINS:      getValues().except$(JOINS);    break;
+            case INCLUDES:   getValues().except$(INCLUDES); break;
 
             default: throw new RuntimeException("invalid unscoping value: " + scope);
         }
