@@ -3,6 +3,7 @@ package com.activepersistence.service.relation;
 import com.activepersistence.PreparedStatementInvalid;
 import com.activepersistence.service.Relation;
 import static com.activepersistence.service.relation.Literalizing.literal;
+import static com.activepersistence.service.relation.ValueMethods.CONSTRUCTOR;
 import static java.lang.String.format;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
@@ -67,7 +68,7 @@ public class WhereClauseFactory {
 
     private String replaceBindVariable(Object value) {
         if (value instanceof Relation) {
-            return ((Relation) value).toJpql();
+            return ((Relation) value).except(CONSTRUCTOR).toJpql();
         } else {
             return literalBoundValue(value);
         }

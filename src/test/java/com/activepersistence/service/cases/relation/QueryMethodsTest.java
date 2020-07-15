@@ -2,6 +2,7 @@ package com.activepersistence.service.cases.relation;
 
 import com.activepersistence.IntegrationTest;
 import com.activepersistence.PreparedStatementInvalid;
+import com.activepersistence.service.Relation;
 import com.activepersistence.service.models.ClientsService;
 import com.activepersistence.service.models.Comment;
 import com.activepersistence.service.models.Gender;
@@ -135,11 +136,6 @@ public class QueryMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testBindDollarSign() {
-        assertEquals("SELECT post FROM Post post WHERE post.title LIKE '$45,65'", postsService.where("post.title LIKE ?", "$45,65").toJpql());
-    }
-
-    @Test
     public void testBind() {
         assertEquals("SELECT post FROM Post post WHERE post.id = 1", postsService.where("post.id = ?", 1).toJpql());
     }
@@ -157,6 +153,13 @@ public class QueryMethodsTest extends IntegrationTest {
     @Test
     public void testBindWrongNumberVariables() {
         assertThrows(PreparedStatementInvalid.class,() -> postsService.where("post.id = ? AND post.id = ?", 1));
+    }
+
+    @Test
+    public void testBindSubQuery() {
+        Relation<Post> subquery = postsService.where("post.title = 'flood'").select("post.id");
+        assertEquals("SELECT post FROM Post post WHERE post.id IN (SELECT post.id FROM Post post WHERE post.title = 'flood')", postsService.where("post.id IN (?)", subquery).toJpql());
+        assertTrue(postsService.where("post.id IN (?)", subquery).exists());
     }
 
     @Test
