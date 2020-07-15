@@ -2,6 +2,7 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.model.Base;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -29,12 +30,10 @@ public class Literalizing {
     private static String _literal(Object value) {
         if (value == null) {
             return "NULL";
-        } else if (value instanceof Class) {
-            return _literal((Class) value);
-        } else if (value instanceof Enum) {
-            return _literal((Enum) value);
         } else if (value instanceof String) {
             return _literal((String) value);
+        } else if (value instanceof Character) {
+            return _literal((Character) value);
         } else if (value instanceof Integer) {
             return _literal((Integer) value);
         } else if (value instanceof Long) {
@@ -43,6 +42,8 @@ public class Literalizing {
             return _literal((Float) value);
         } else if (value instanceof Double) {
             return _literal((Double) value);
+        } else if (value instanceof BigDecimal) {
+            return _literal((BigDecimal) value);
         } else if (value instanceof Boolean) {
             return _literal((Boolean) value);
         } else if (value instanceof LocalDate) {
@@ -51,6 +52,10 @@ public class Literalizing {
             return _literal((LocalTime) value);
         } else if (value instanceof LocalDateTime) {
             return _literal((LocalDateTime) value);
+        } else if (value instanceof Enum) {
+            return _literal((Enum) value);
+        } else if (value instanceof Class) {
+            return _literal((Class) value);
         } else {
             throw new RuntimeException("can't literalize: " + value.getClass().getName());
         }
@@ -68,6 +73,10 @@ public class Literalizing {
         return "'" + value.replace("'", "''") + "'";
     }
 
+    private static String _literal(Character value) {
+        return "'" + value + "'";
+    }
+
     private static String _literal(Integer value) {
         return value.toString();
     }
@@ -81,6 +90,10 @@ public class Literalizing {
     }
 
     private static String _literal(Double value) {
+        return value + "D";
+    }
+
+    private static String _literal(BigDecimal value) {
         return value + "D";
     }
 

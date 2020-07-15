@@ -2,6 +2,9 @@ package com.activepersistence.service.models;
 
 import com.activepersistence.model.Base;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -26,8 +29,13 @@ public class Client extends Base<Integer> implements Serializable {
 
     private Double ratio;
 
+    @Column(precision= 10, scale=2)
+    private BigDecimal salary;
+
     @Enumerated
     private Gender gender;
+
+    private BigInteger sequence;
 
     public Client() {
     }
@@ -81,12 +89,28 @@ public class Client extends Base<Integer> implements Serializable {
         this.ratio = ratio;
     }
 
+    public BigDecimal getSalary() {
+        return salary;
+    }
+
+    public void setSalary(BigDecimal salary) {
+        this.salary = salary;
+    }
+
     public boolean isActive() {
         return active;
     }
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public BigInteger getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(BigInteger sequence) {
+        this.sequence = sequence;
     }
 
 }

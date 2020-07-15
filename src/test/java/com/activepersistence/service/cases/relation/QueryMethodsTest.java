@@ -10,6 +10,7 @@ import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
 import static com.activepersistence.service.relation.ValueMethods.FROM;
 import static com.activepersistence.service.relation.ValueMethods.ORDER;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -242,6 +243,17 @@ public class QueryMethodsTest extends IntegrationTest {
     public void testLiteralRecord() {
         assertEquals("SELECT client FROM Client client WHERE client.id = 1", clientsService.unscoped().where("client.id = ?", clientsService.first()).toJpql());
         assertTrue(clientsService.unscoped().where("client.id = ?", clientsService.first()).exists());
+    }
+
+    @Test
+    public void testLiteralChar() {
+        assertEquals("SELECT client FROM Client client WHERE client.active = 'S'", clientsService.unscoped().where("client.active = ?", 'S').toJpql());
+    }
+
+    @Test
+    public void testLiteralBigDecimal() {
+        assertEquals("SELECT client FROM Client client WHERE client.salary = 8500.25D", clientsService.unscoped().where("client.salary = ?", BigDecimal.valueOf(8500.25)).toJpql());
+        assertTrue(clientsService.unscoped().where("client.salary = ?", BigDecimal.valueOf(8500.25)).exists());
     }
 
 }
