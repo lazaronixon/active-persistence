@@ -1,6 +1,6 @@
 <dataset>
-    <client id="1" name="Nixon" age="32" active="true" />
-    <client id="2" name="Sebastiao" age="25" active="true" />
-    <client id="3" name="Marco Polo" age="20" active="false" />
-</dataset> 
-    
+    <client id="1" name="Nixon" age="32" gender="0" weight="70" ratio="3.24" active="true" />
+    <client id="2" name="Sebastiao" age="25" gender="0" weight="74" ratio="3.64" active="true" />
+    <client id="3" name="Marco Polo" age="20" gender="0" weight="80.5" ratio="3.44" active="false" />
+    <client id="4" name="Lucia" age="22" gender="1" weight="64.14" ratio="3.14" active="true" />
+</dataset>

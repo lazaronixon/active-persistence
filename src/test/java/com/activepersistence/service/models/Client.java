@@ -3,6 +3,7 @@ package com.activepersistence.service.models;
 import com.activepersistence.model.Base;
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,6 +21,13 @@ public class Client extends Base<Integer> implements Serializable {
     private Integer age;
 
     private boolean active;
+
+    private Float weight;
+
+    private Double ratio;
+
+    @Enumerated
+    private Gender gender;
 
     public Client() {
     }
@@ -47,6 +55,30 @@ public class Client extends Base<Integer> implements Serializable {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public Float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Float weight) {
+        this.weight = weight;
+    }
+
+    public Double getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(Double ratio) {
+        this.ratio = ratio;
     }
 
     public boolean isActive() {
