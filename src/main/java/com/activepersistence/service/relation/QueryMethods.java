@@ -144,8 +144,8 @@ public interface QueryMethods<T> {
         return spawn().except(ValueMethods.SELECT, ValueMethods.CONSTRUCTOR).select(fields);
     }
 
-    public default Relation<T> rewhere(String conditions) {
-        return spawn().except(ValueMethods.WHERE, ValueMethods.BIND).where(conditions);
+    public default Relation<T> rewhere(String conditions, Object... params) {
+        return spawn().except(ValueMethods.WHERE, ValueMethods.BIND).where(conditions, params);
     }
 
     public default Relation<T> reorder(String... fields) {

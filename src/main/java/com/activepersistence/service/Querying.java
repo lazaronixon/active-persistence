@@ -110,20 +110,20 @@ public interface Querying<T> {
         return all().find(ids);
     }
 
-    public default T findBy(String conditions) {
-        return all().findBy(conditions);
+    public default T findBy(String conditions, Object... params) {
+        return all().findBy(conditions, params);
     }
 
-    public default T findByOrFail(String conditions) {
-        return all().findByOrFail(conditions);
+    public default T findByOrFail(String conditions, Object... params) {
+        return all().findByOrFail(conditions, params);
     }
 
     public default boolean exists() {
         return all().exists();
     }
 
-    public default boolean exists(String conditions) {
-        return all().exists(conditions);
+    public default boolean exists(String conditions, Object... params) {
+        return all().exists(conditions, params);
     }
     //</editor-fold>
 
@@ -184,8 +184,8 @@ public interface Querying<T> {
         return all().reselect(values);
     }
 
-    public default Relation<T> rewhere(String condition) {
-        return all().rewhere(condition);
+    public default Relation<T> rewhere(String conditions, Object... params) {
+        return all().rewhere(conditions, params);
     }
 
     public default Relation<T> reorder(String... fields) {
@@ -210,28 +210,28 @@ public interface Querying<T> {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Relation">
-    public default T findOrCreateBy(String conditions, T resource) {
-        return all().findOrCreateBy(conditions, resource);
+    public default T findOrCreateBy(T resource, String conditions, Object... params) {
+        return all().findOrCreateBy(resource, conditions, params);
     }
 
-    public default T findOrInitializeBy(String conditions, T resource) {
-        return all().findOrInitializeBy(conditions, resource);
+    public default T findOrInitializeBy(T resource, String conditions, Object... params) {
+        return all().findOrInitializeBy(resource, conditions, params);
     }
 
     public default List<T> destroyAll() {
         return all().destroyAll();
     }
 
-    public default List<T> destroyBy(String conditions) {
-        return all().destroyBy(conditions);
+    public default List<T> destroyBy(String conditions, Object... params) {
+        return all().destroyBy(conditions, params);
     }
 
     public default int deleteAll() {
         return all().deleteAll();
     }
 
-    public default int deleteBy(String conditions) {
-        return all().deleteBy(conditions);
+    public default int deleteBy(String conditions, Object... params) {
+        return all().deleteBy(conditions, params);
     }
 
     public default int updateAll(String updates) {

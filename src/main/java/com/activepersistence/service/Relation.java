@@ -97,20 +97,20 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         }
     }
 
-    public T findOrCreateBy(String conditions, T resource) {
-        return ofNullable(findBy(conditions)).orElseGet(() -> service.create(resource));
+    public T findOrCreateBy(T resource, String conditions, Object... params) {
+        return ofNullable(findBy(conditions, params)).orElseGet(() -> service.create(resource));
     }
 
-    public T findOrInitializeBy(String conditions, T resource) {
-        return ofNullable(findBy(conditions)).orElseGet(() -> resource);
+    public T findOrInitializeBy(T resource, String conditions, Object... params) {
+        return ofNullable(findBy(conditions, params)).orElseGet(() -> resource);
     }
 
     public List<T> destroyAll() {
         return fetch().stream().map((r) -> { service.destroy(r); return r; }).collect(toList());
     }
 
-    public List<T> destroyBy(String conditions) {
-        return where(conditions).destroyAll();
+    public List<T> destroyBy(String conditions, Object... params) {
+        return where(conditions, params).destroyAll();
     }
 
     public int deleteAll() {
@@ -138,8 +138,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         }
     }
 
-    public int deleteBy(String conditions) {
-        return where(conditions).deleteAll();
+    public int deleteBy(String conditions, Object... params) {
+        return where(conditions, params).deleteAll();
     }
 
     public String toJpql() {

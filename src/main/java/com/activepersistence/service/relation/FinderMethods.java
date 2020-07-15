@@ -54,16 +54,16 @@ public interface FinderMethods<T> {
         return thiz().where(getPrimaryKey() + " IN (?)", asList(ids)).fetch();
     }
 
-    public default T findBy(String conditions) {
-        return thiz().where(conditions).take();
+    public default T findBy(String conditions, Object... params) {
+        return thiz().where(conditions, params).take();
     }
 
     public default T findByOrFail(String conditions, Object... params) {
-        return thiz().where(conditions).takeOrFail();
+        return thiz().where(conditions, params).takeOrFail();
     }
 
-    public default boolean exists(String conditions) {
-        return thiz().where(conditions).exists();
+    public default boolean exists(String conditions, Object... params) {
+        return thiz().where(conditions, params).exists();
     }
 
     public default boolean exists() {
