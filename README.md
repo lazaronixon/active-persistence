@@ -153,8 +153,8 @@ clientsService.order("client.createdAt ASC").fetch();
 
 ### Selecting Specific Fields
 ```java
-Client client = clientsService.select("client.viewableBy", "client.locked").fetch();
-Client client = clientsService.select("client.name").distinct().fetch();
+List<Client> client = clientsService.select("client.viewableBy", "client.locked").fetch();
+List<Client> client = clientsService.select("client.name").distinct().fetch();
 ```
 
 ### Limit and Offset
