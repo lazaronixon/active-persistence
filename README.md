@@ -258,8 +258,8 @@ clientsService.where("client.published = false").unscoped().fetch();
 
 ### Find or Build a New Object
 ```java
-Post createdPost = postsService.findOrCreateBy(new Post("awesome title", "body", 0), "post.title = 'awesome title'");
-Post newPost     = postsService.findOrInitializeBy(new Post("awesome title", "body", 0), "post.title = 'awesome title'");
+Post createdPost = postsService.findOrCreateBy("post.title = 'awesome title'", new Post("awesome title", "body", 0));
+Post newPost     = postsService.findOrInitializeBy("post.title = 'awesome title'", new Post("awesome title", "body", 0));
 ```
 
 ## Finding by SQL

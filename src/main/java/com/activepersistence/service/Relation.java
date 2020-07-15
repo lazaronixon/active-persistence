@@ -97,12 +97,20 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         }
     }
 
-    public T findOrCreateBy(T resource, String conditions, Object... params) {
+    public T findOrCreateBy(String conditions, Object[] params, T resource) {
         return ofNullable(findBy(conditions, params)).orElseGet(() -> service.create(resource));
     }
 
-    public T findOrInitializeBy(T resource, String conditions, Object... params) {
+    public T findOrCreateBy(String conditions, T resource) {
+        return findOrCreateBy(conditions, new Object[] {}, resource);
+    }
+
+    public T findOrInitializeBy(String conditions, Object[] params, T resource) {
         return ofNullable(findBy(conditions, params)).orElseGet(() -> resource);
+    }
+
+    public T findOrInitializeBy(String conditions, T resource) {
+        return findOrInitializeBy(conditions, new Object[] {}, resource);
     }
 
     public List<T> destroyAll() {

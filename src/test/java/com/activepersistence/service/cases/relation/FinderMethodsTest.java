@@ -88,7 +88,7 @@ public class FinderMethodsTest extends IntegrationTest {
     @Test
     public void testFindOrCreateBy() {
         long postsCount = (long) postsService.count();
-        Post createdPost = postsService.findOrCreateBy(new Post("awesome title", "body", 0), "post.title = 'awesome title'");
+        Post createdPost = postsService.findOrCreateBy("post.title = 'awesome title'", new Post("awesome title", "body", 0));
         assertEquals(postsCount + 1, postsService.count());
         assertEquals("body", createdPost.getBody());
         assertTrue(createdPost.isPersisted());
@@ -97,7 +97,7 @@ public class FinderMethodsTest extends IntegrationTest {
     @Test
     public void testFindOrCreateByNotCreate() {
         long postsCount   = (long) postsService.count();
-        Post existentPost = postsService.findOrCreateBy(new Post("hello world", "body", 0), "post.title = 'hello world'");
+        Post existentPost = postsService.findOrCreateBy("post.title = 'hello world'", new Post("hello world", "body", 0));
         assertEquals(postsCount, postsService.count());
         assertEquals("My first post", existentPost.getBody());
         assertTrue(existentPost.isPersisted());
@@ -105,14 +105,14 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFindOrInitializeBy() {
-        Post newPost = postsService.findOrInitializeBy(new Post("awesome title", "body", 0), "post.title = 'not found'");
+        Post newPost = postsService.findOrInitializeBy("post.title = 'not found'", new Post("awesome title", "body", 0));
         assertEquals("body", newPost.getBody());
         assertTrue(newPost.isNewRecord());
     }
 
     @Test
     public void testFindOrInitializeByNotInitialize() {
-        Post newPost = postsService.findOrInitializeBy(new Post("hello world", "body", 0), "post.title = 'hello world'");
+        Post newPost = postsService.findOrInitializeBy("post.title = 'hello world'", new Post("hello world", "body", 0));
         assertEquals("My first post", newPost.getBody());
         assertTrue(newPost.isPersisted());
     }

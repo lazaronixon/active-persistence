@@ -210,12 +210,20 @@ public interface Querying<T> {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Relation">
-    public default T findOrCreateBy(T resource, String conditions, Object... params) {
-        return all().findOrCreateBy(resource, conditions, params);
+    public default T findOrCreateBy(String conditions, Object[] params, T resource) {
+        return all().findOrCreateBy(conditions, params, resource);
     }
 
-    public default T findOrInitializeBy(T resource, String conditions, Object... params) {
-        return all().findOrInitializeBy(resource, conditions, params);
+    public default T findOrCreateBy(String conditions, T resource) {
+        return findOrCreateBy(conditions, new Object[] {}, resource);
+    }
+
+    public default T findOrInitializeBy(String conditions, Object[] params, T resource) {
+        return all().findOrInitializeBy(conditions, params, resource);
+    }
+
+    public default T findOrInitializeBy(String conditions, T resource) {
+        return findOrInitializeBy(conditions, new Object[] {}, resource);
     }
 
     public default List<T> destroyAll() {
