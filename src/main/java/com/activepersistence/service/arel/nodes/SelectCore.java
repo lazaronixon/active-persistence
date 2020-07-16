@@ -6,15 +6,21 @@ import java.util.List;
 
 public class SelectCore extends Node {
 
+    private final Entity entity;
+
     private JoinSource source;
+
     private Distinct setQuantifier;
+
     private Constructor constructor;
+
     private final List<Node> projections  = new ArrayList();
     private final List<Node> wheres       = new ArrayList();
     private final List<Node> groups       = new ArrayList();
     private final List<Node> havings      = new ArrayList();
 
     public SelectCore(Entity entity) {
+        this.entity = entity;
         this.source = new JoinSource(entity);
     }
 
@@ -46,8 +52,8 @@ public class SelectCore extends Node {
         this.setQuantifier = value ? new Distinct() : null;
     }
 
-    public void setConstructor(Class klass) {
-        this.constructor = (klass != null ? new Constructor(klass, this.getProjections()) : null);
+    public void setConstructor(boolean value) {
+        this.constructor = value ? new Constructor(entity.getName(), projections) : null;
     }
 
     public List<Node> getProjections() {

@@ -30,8 +30,8 @@ public class SelectManager extends TreeManager {
         ctx.getProjections().addAll(asList(projections)); return this;
     }
 
-    public SelectManager constructor(Class klass) {
-        ctx.setConstructor(klass); return this;
+    public SelectManager constructor(boolean value) {
+        ctx.setConstructor(value); return this;
     }
 
     public SelectManager distinct(boolean value) {

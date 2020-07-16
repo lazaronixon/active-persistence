@@ -1,7 +1,5 @@
 package com.activepersistence.service.relation;
 
-import java.util.Objects;
-
 public class JoinClause {
 
     private final String path;

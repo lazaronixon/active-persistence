@@ -64,7 +64,7 @@ public class ToJpqlTest {
 
     @Test
     public void testVisitConstructor() {
-        Constructor constructor = new Constructor(Object.class, asList(jpql("post.id, post.title")));
+        Constructor constructor = new Constructor("java.lang.Object", asList(jpql("post.id, post.title")));
         assertEquals(" NEW java.lang.Object(post.id, post.title)", compile(constructor));
     }
 

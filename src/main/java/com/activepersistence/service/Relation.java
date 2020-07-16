@@ -249,7 +249,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void buildConstructor(SelectManager arel) {
-        if (values.isConstructor()) arel.constructor(entityClass);
+        arel.constructor(values.isConstructor());
     }
 
     private void buildSelect(SelectManager arel) {
@@ -272,7 +272,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
                 result.join(join.getPath(), join.getAlias());
             }
         });
-        
+
         values.getLeftOuterJoins().forEach(leftOuterJoin -> {
             result.outerJoin(leftOuterJoin.getPath(), leftOuterJoin.getAlias());
         });
@@ -299,7 +299,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return values.isDistinct() == false
                 && values.getGroup().isEmpty()
                 && values.getHaving().isEmpty()
-                && values.getJoins().isEmpty();
+                && values.getJoins().isEmpty()
+                && values.getLeftOuterJoins().isEmpty();
     }
 
     private Entity buildEntity(Class entityClass) {

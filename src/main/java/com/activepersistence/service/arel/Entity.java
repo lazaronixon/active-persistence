@@ -49,6 +49,10 @@ public class Entity implements Source {
         return klass.getSimpleName();
     }
 
+    public String getName() {
+        return klass.getName();
+    }
+
     public String getAlias() {
         return alias;
     }
