@@ -24,6 +24,14 @@ public interface QueryMethods<T> {
         return spawn().joins$(value);
     }
 
+    public default Relation<T> joins(String path, String alias) {
+        return joins("INNER JOIN " + path + " " + alias);
+    }
+
+    public default Relation<T> leftOuterJoins(String path, String alias) {
+        return joins("LEFT OUTER JOIN " + path + " " + alias);
+    }
+
     public default Relation<T> joins$(String value) {
         getValues().getJoins().add(value); return thiz();
     }

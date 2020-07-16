@@ -152,6 +152,14 @@ public interface Querying<T> {
         return all().joins(value);
     }
 
+    public default Relation<T> joins(String path, String alias) {
+        return all().joins(path, alias);
+    }
+
+    public default Relation<T> leftOuterJoins(String path, String alias) {
+        return all().leftOuterJoins(path, alias);
+    }
+
     public default Relation<T> group(String... values) {
         return all().group(values);
     }
