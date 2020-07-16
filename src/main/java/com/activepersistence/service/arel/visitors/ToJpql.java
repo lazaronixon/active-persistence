@@ -17,6 +17,7 @@ import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.StringJoin;
 import com.activepersistence.service.arel.nodes.Sum;
+import com.activepersistence.service.arel.nodes.TableAlias;
 import com.activepersistence.service.arel.nodes.UpdateStatement;
 import java.util.List;
 
@@ -84,14 +85,26 @@ public class ToJpql extends Visitor {
         return collector.append(o.getSimpleName()).append(" ").append(o.getAlias());
     }
 
+    public StringBuilder visitTableAlias(TableAlias o, StringBuilder collector) {
+        collector.append("(");
+        collector = visitSelectStatement(o.getRelation(), collector).append(")");
+        collector.append(" ").append(o.getName());
+        return collector;
+    }
+
     public StringBuilder visitJoinSource(JoinSource o, StringBuilder collector) {
-        if (o.getSource()!= null) {
-            collector = visit(o.getSource(), collector);
+        collector = visit(o.getSource(), collector);
+
+        if (o.getTableAlias() != null) {
+            collector.append(", ");
+            collector = visit(o.getTableAlias(), collector);
         }
+
         if (!o.getJoins().isEmpty()) {
-            if (o.getSource()!= null) collector.append(" ");
+            collector.append(" ");
             injectJoin(o.getJoins(), collector, " ");
         }
+
         return collector;
     }
 

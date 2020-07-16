@@ -9,6 +9,7 @@ import com.activepersistence.service.relation.Calculation;
 import com.activepersistence.service.relation.FinderMethods;
 import com.activepersistence.service.relation.QueryMethods;
 import com.activepersistence.service.relation.SpawnMethods;
+import static com.activepersistence.service.relation.ValueMethods.CONSTRUCTOR;
 import com.activepersistence.service.relation.Values;
 import java.util.List;
 import static java.util.Optional.ofNullable;
@@ -261,7 +262,15 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private void buildFrom(SelectManager arel) {
-        if (values.getFrom() != null) arel.from(values.getFrom());
+        if (!values.getFrom().isEmpty()) {
+            Object opts = values.getFrom().getValue();
+            String name = values.getFrom().getName();
+            if (opts instanceof Relation) {
+                arel.from(((Relation) opts).except(CONSTRUCTOR).getArel().as(name));
+            } else {
+                arel.from((String) opts);
+            }
+        }
     }
 
     private void buildJoins(SelectManager result) {

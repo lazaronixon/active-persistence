@@ -145,7 +145,15 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> from$(String value) {
-        getValues().setFrom(value); return thiz();
+        getValues().setFrom(new FromClause(value)); return thiz();
+    }
+
+    public default Relation<T> from(Relation relation) {
+        return spawn().from$(relation);
+    }
+
+    public default Relation<T> from$(Relation relation) {
+        getValues().setFrom(new FromClause(relation, "subquery")); return thiz();
     }
 
     public default Relation<T> unscope(ValueMethods... values) {

@@ -1,7 +1,9 @@
 package com.activepersistence.service.cases.arel;
 
+import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.SelectManager;
+import com.activepersistence.service.arel.nodes.TableAlias;
 import com.activepersistence.service.models.Client;
 import com.activepersistence.service.models.Post;
 import static org.junit.Assert.assertEquals;
@@ -70,5 +72,16 @@ public class SelectmanagerTest {
     @Test
     public void testOrder() {
         assertEquals("SELECT FROM Post post ORDER BY post.title", manager.order("post.title").toJpql());
+    }
+
+    @Test
+    public void testFromTableAlias() {
+        SelectManager subquery = new SelectManager(new Entity(Client.class, "client"));
+        assertEquals("SELECT FROM Post post, (SELECT FROM Client client) subquery", manager.from(new TableAlias(subquery.getAst(), jpql("subquery"))).toJpql());
+    }
+
+    @Test
+    public void testAs() {
+        assertEquals("(SELECT FROM Post post) subquery", manager.as("subquery").toJpql());
     }
 }

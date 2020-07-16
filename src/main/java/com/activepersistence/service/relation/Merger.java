@@ -17,7 +17,7 @@ public class Merger {
     }
 
     public Relation merge() {
-        if (shouldReplaceFromClause()) relation.from$(values.getFrom());
+        if (shouldReplaceFromClause()) relation.getValues().setFrom(values.getFrom());
         if (shouldReplaceLockValue())  relation.lock$(values.isLock());
 
         if (values.isDistinct() != false) relation.distinct$(values.isDistinct());

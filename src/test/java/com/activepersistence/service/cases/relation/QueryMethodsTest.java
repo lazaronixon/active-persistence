@@ -3,6 +3,7 @@ package com.activepersistence.service.cases.relation;
 import com.activepersistence.IntegrationTest;
 import com.activepersistence.PreparedStatementInvalid;
 import com.activepersistence.service.Relation;
+import com.activepersistence.service.models.Client;
 import com.activepersistence.service.models.ClientsService;
 import com.activepersistence.service.models.Comment;
 import com.activepersistence.service.models.Gender;
@@ -94,6 +95,12 @@ public class QueryMethodsTest extends IntegrationTest {
     @Test
     public void testFrom() {
         assertEquals("SELECT post FROM Topic post", postsService.from("Topic post").toJpql());
+    }
+
+    @Test
+    public void testFromSubquery() {
+        Relation<Client> subquery = clientsService.unscoped().select("client.postId");
+        assertEquals("SELECT post FROM Post post, (SELECT client.postId FROM Client client) subquery", postsService.from(subquery).toJpql());
     }
 
     @Test

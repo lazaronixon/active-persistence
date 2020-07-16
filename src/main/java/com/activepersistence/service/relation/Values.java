@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 
 public class Values {
 
-    private String from = null;
+    private FromClause from = new FromClause();
 
     private int limit           = 0;
     private int offset          = 0;
@@ -47,7 +47,7 @@ public class Values {
         unscope        = new ArrayList(other.unscope);
     }
 
-    public String getFrom() {
+    public FromClause getFrom() {
         return from;
     }
 
@@ -115,7 +115,7 @@ public class Values {
         this.select = select;
     }
 
-    public void setFrom(String from) {
+    public void setFrom(FromClause from) {
         this.from = from;
     }
 
@@ -165,15 +165,15 @@ public class Values {
 
     private void reset(ValueMethods value) {
         switch (value) {
-            case FROM:        from = null;         break;
-            case WHERE:       where.clear();       break;
-            case HAVING:      having.clear();      break;
+            case FROM:        from = new FromClause(); break;
+            case WHERE:       where.clear();           break;
+            case HAVING:      having.clear();          break;
 
-            case LIMIT:       limit       = 0;     break;
-            case OFFSET:      offset      = 0;     break;
-            case LOCK:        lock        = false; break;
-            case DISTINCT:    distinct    = false; break;
-            case CONSTRUCTOR: constructor = false; break;
+            case LIMIT:       limit       = 0;         break;
+            case OFFSET:      offset      = 0;         break;
+            case LOCK:        lock        = false;     break;
+            case DISTINCT:    distinct    = false;     break;
+            case CONSTRUCTOR: constructor = false;     break;
 
             case SELECT:           select.clear();         break;
             case GROUP:            group.clear();          break;
