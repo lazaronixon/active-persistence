@@ -6,23 +6,24 @@ import java.util.List;
 
 public class JoinSource extends Node {
 
-    private Source left;
-    private final List<JpqlLiteral> right = new ArrayList();
+    private Source source;
+    private List<Join> joins;
 
-    public JoinSource(Source left) {
-        this.left = left;
+    public JoinSource(Source source) {
+        this.source  = source;
+        this.joins   = new ArrayList();
     }
 
-    public Source getLeft() {
-        return left;
+    public Source getSource() {
+        return source;
     }
 
-    public void setLeft(Source left) {
-        this.left = left;
+    public void setSource(Source source) {
+        this.source = source;
     }
 
-    public List<JpqlLiteral> getRight() {
-        return right;
+    public List<Join> getJoins() {
+        return joins;
     }
 
 }

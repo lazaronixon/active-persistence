@@ -1,6 +1,10 @@
 package com.activepersistence.service.arel;
 
+import static com.activepersistence.service.Arel.createInnerJoin;
+import static com.activepersistence.service.Arel.createOuterJoin;
+import static com.activepersistence.service.Arel.createStringJoin;
 import static com.activepersistence.service.Arel.jpql;
+import com.activepersistence.service.arel.nodes.Join;
 import com.activepersistence.service.arel.nodes.JpqlLiteral;
 import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.SelectCore;
@@ -35,11 +39,19 @@ public class SelectManager extends TreeManager {
     }
 
     public SelectManager from(String from) {
-        ctx.getSource().setLeft(jpql(from)); return this;
+        ctx.getSource().setSource(jpql(from)); return this;
     }
 
     public SelectManager join(String join) {
-        ctx.getSource().getRight().add(jpql(join)); return this;
+        ctx.getSource().getJoins().add(createStringJoin(join)); return this;
+    }
+
+    public SelectManager join(String path, String alias) {
+        ctx.getSource().getJoins().add(createInnerJoin(path, alias)); return this;
+    }
+
+    public SelectManager outerJoin(String path, String alias) {
+        ctx.getSource().getJoins().add(createOuterJoin(path, alias)); return this;
     }
 
     public SelectManager where(String condition) {
@@ -66,8 +78,8 @@ public class SelectManager extends TreeManager {
         return ast.getOrders();
     }
 
-    public List<JpqlLiteral> getJoinSources() {
-        return ctx.getSource().getRight();
+    public List<Join> getJoinSources() {
+        return ctx.getSource().getJoins();
     }
 
     @Override

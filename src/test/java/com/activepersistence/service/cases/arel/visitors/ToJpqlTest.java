@@ -1,5 +1,8 @@
 package com.activepersistence.service.cases.arel.visitors;
 
+import static com.activepersistence.service.Arel.createInnerJoin;
+import static com.activepersistence.service.Arel.createOuterJoin;
+import static com.activepersistence.service.Arel.createStringJoin;
 import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.nodes.Constructor;
@@ -72,9 +75,26 @@ public class ToJpqlTest {
 
     @Test
     public void testVisitJoinSource() {
-        JoinSource joinsource = new JoinSource(new Entity(Post.class, "post"));
-        joinsource.getRight().add(jpql("JOIN Client c"));
-        assertEquals("Post post JOIN Client c", compile(joinsource));
+        Entity entity = new Entity(Post.class, "post");
+        JoinSource joinsource = new JoinSource(entity);
+        joinsource.getJoins().add(createStringJoin("JOIN post.client client"));
+        assertEquals("Post post JOIN post.client client", compile(joinsource));
+    }
+
+    @Test
+    public void testVisitStringJoin() {
+        assertEquals("JOIN Client c", compile(createStringJoin("JOIN Client c")));
+    }
+
+    @Test
+    public void testVisitInnerJoin() {
+        assertEquals("INNER JOIN post.comments comment", compile(createInnerJoin("post.comments", "comment")));
+    }
+
+    @Test
+    public void testVisitOuterJoin() {
+        Entity entity = new Entity(Post.class, "post");
+        assertEquals("LEFT OUTER JOIN post.comments comment", compile(createOuterJoin("post.comments", "comment")));
     }
 
     @Test

@@ -11,12 +11,10 @@ import org.junit.Test;
 public class SelectmanagerTest {
 
     private SelectManager manager;
-    private SelectManager manager2;
 
     @Before
     public void setup() {
         manager  = new SelectManager(new Entity(Post.class, "post"));
-        manager2 = new SelectManager(new Entity(Client.class, "post"));
     }
 
     @Test
@@ -43,6 +41,16 @@ public class SelectmanagerTest {
     @Test
     public void testJoin() {
         assertEquals("SELECT FROM Post post JOIN post.comments c", manager.join("JOIN post.comments c").toJpql());
+    }
+
+    @Test
+    public void testInnerJoin() {
+        assertEquals("SELECT FROM Post post INNER JOIN post.comments c", manager.join("post.comments", "c").toJpql());
+    }
+
+    @Test
+    public void testOuterJoin() {
+        assertEquals("SELECT FROM Post post LEFT OUTER JOIN post.comments c", manager.outerJoin("post.comments", "c").toJpql());
     }
 
     @Test
