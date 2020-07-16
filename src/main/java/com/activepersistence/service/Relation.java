@@ -199,16 +199,16 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private SelectManager buildArel() {
         SelectManager result = new SelectManager(entity);
 
-        values.getJoins().forEach(result::join);
-        values.getWhere().forEach(result::where);
-        values.getHaving().forEach(result::having);
-        values.getGroup().forEach(result::group);
-        values.getOrder().forEach(result::order);
-
         buildConstructor(result);
         buildDistinct(result);
         buildSelect(result);
         buildFrom(result);
+        buildJoins(result);
+
+        values.getWhere().forEach(result::where);
+        values.getHaving().forEach(result::having);
+        values.getGroup().forEach(result::group);
+        values.getOrder().forEach(result::order);
 
         return result;
     }
@@ -262,6 +262,20 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private void buildFrom(SelectManager arel) {
         if (values.getFrom() != null) arel.from(values.getFrom());
+    }
+
+    private void buildJoins(SelectManager result) {
+        values.getJoins().forEach(join -> {
+            if (join.getAlias() == null) {
+                result.join(join.getPath());
+            } else {
+                result.join(join.getPath(), join.getAlias());
+            }
+        });
+        
+        values.getLeftOuterJoins().forEach(leftOuterJoin -> {
+            result.outerJoin(leftOuterJoin.getPath(), leftOuterJoin.getAlias());
+        });
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {

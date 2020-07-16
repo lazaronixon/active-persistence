@@ -15,34 +15,36 @@ public class Values {
     private boolean distinct    = false;
     private boolean constructor = false;
 
-    private List<String> select        = new ArrayList();
-    private List<String> where         = new ArrayList();
-    private List<String> group         = new ArrayList();
-    private List<String> having        = new ArrayList();
-    private List<String> order         = new ArrayList();
-    private List<String> joins         = new ArrayList();
-    private List<String> includes      = new ArrayList();
-    private List<String> eagerLoad     = new ArrayList();
-    private List<ValueMethods> unscope = new ArrayList();
+    private List<String> select             = new ArrayList();
+    private List<String> where              = new ArrayList();
+    private List<String> group              = new ArrayList();
+    private List<String> having             = new ArrayList();
+    private List<String> order              = new ArrayList();
+    private List<JoinClause> joins          = new ArrayList();
+    private List<JoinClause> leftOuterJoins = new ArrayList();
+    private List<String> includes           = new ArrayList();
+    private List<String> eagerLoad          = new ArrayList();
+    private List<ValueMethods> unscope      = new ArrayList();
 
     public Values() {}
 
     public Values(Values other) {
-        constructor  = other.constructor;
-        from         = other.from;
-        limit        = other.limit;
-        offset       = other.offset;
-        lock         = other.lock;
-        distinct     = other.distinct;
-        select       = new ArrayList(other.select);
-        where        = new ArrayList(other.where);
-        group        = new ArrayList(other.group);
-        having       = new ArrayList(other.having);
-        order        = new ArrayList(other.order);
-        joins        = new ArrayList(other.joins);
-        includes     = new ArrayList(other.includes);
-        eagerLoad    = new ArrayList(other.eagerLoad);
-        unscope      = new ArrayList(other.unscope);
+        constructor    = other.constructor;
+        from           = other.from;
+        limit          = other.limit;
+        offset         = other.offset;
+        lock           = other.lock;
+        distinct       = other.distinct;
+        select         = new ArrayList(other.select);
+        where          = new ArrayList(other.where);
+        group          = new ArrayList(other.group);
+        having         = new ArrayList(other.having);
+        order          = new ArrayList(other.order);
+        joins          = new ArrayList(other.joins);
+        leftOuterJoins = new ArrayList(other.leftOuterJoins);
+        includes       = new ArrayList(other.includes);
+        eagerLoad      = new ArrayList(other.eagerLoad);
+        unscope        = new ArrayList(other.unscope);
     }
 
     public String getFrom() {
@@ -69,8 +71,12 @@ public class Values {
         return order;
     }
 
-    public List<String> getJoins() {
+    public List<JoinClause> getJoins() {
         return joins;
+    }
+
+    public List<JoinClause> getLeftOuterJoins() {
+        return leftOuterJoins;
     }
 
     public List<String> getIncludes() {
@@ -169,13 +175,14 @@ public class Values {
             case DISTINCT:    distinct    = false; break;
             case CONSTRUCTOR: constructor = false; break;
 
-            case SELECT:      select.clear();     break;
-            case GROUP:       group.clear();      break;
-            case ORDER:       order.clear();      break;
-            case JOINS:       joins.clear();      break;
-            case INCLUDES:    includes.clear();   break;
-            case EAGER_LOAD:  eagerLoad.clear();  break;
-            case UNSCOPE:     unscope.clear();    break;
+            case SELECT:           select.clear();         break;
+            case GROUP:            group.clear();          break;
+            case ORDER:            order.clear();          break;
+            case JOINS:            joins.clear();          break;
+            case LEFT_OUTER_JOINS: leftOuterJoins.clear(); break;
+            case INCLUDES:         includes.clear();       break;
+            case EAGER_LOAD:       eagerLoad.clear();      break;
+            case UNSCOPE:          unscope.clear();        break;
         }
     }
 

@@ -4,6 +4,7 @@ import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.Relation;
 import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
+import com.activepersistence.service.relation.JoinClause;
 import static java.util.Arrays.asList;
 import javax.inject.Inject;
 import static org.junit.Assert.assertEquals;
@@ -36,7 +37,20 @@ public class MutationTest extends IntegrationTest {
         Relation<Post> relation  = postsService.all();
         Relation<Post> relation2 = relation.joins$("foo");
         assertEquals(relation, relation2);
-        assertEquals(asList("foo"), relation2.getValues().getJoins());
+    }
+
+    @Test
+    public void testJoin2$() {
+        Relation<Post> relation  = postsService.all();
+        Relation<Post> relation2 = relation.joins$("foo", "foo");
+        assertEquals(relation, relation2);
+    }
+
+    @Test
+    public void testLeftOuterJoin$() {
+        Relation<Post> relation  = postsService.all();
+        Relation<Post> relation2 = relation.leftOuterJoins$("foo", "foo");
+        assertEquals(relation, relation2);
     }
 
     @Test

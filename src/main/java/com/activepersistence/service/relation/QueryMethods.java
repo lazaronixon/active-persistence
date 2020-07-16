@@ -24,16 +24,24 @@ public interface QueryMethods<T> {
         return spawn().joins$(value);
     }
 
+    public default Relation<T> joins$(String value) {
+        getValues().getJoins().add(new JoinClause(value)); return thiz();
+    }
+
     public default Relation<T> joins(String path, String alias) {
-        return joins("INNER JOIN " + path + " " + alias);
+        return spawn().joins$(path, alias);
+    }
+
+    public default Relation<T> joins$(String path, String alias) {
+        getValues().getJoins().add(new JoinClause(path, alias)); return thiz();
     }
 
     public default Relation<T> leftOuterJoins(String path, String alias) {
-        return joins("LEFT OUTER JOIN " + path + " " + alias);
+        return spawn().leftOuterJoins$(path, alias);
     }
 
-    public default Relation<T> joins$(String value) {
-        getValues().getJoins().add(value); return thiz();
+    public default Relation<T> leftOuterJoins$(String path, String alias) {
+        getValues().getLeftOuterJoins().add(new JoinClause(path, alias)); return thiz();
     }
 
     public default Relation<T> where(String conditions, Object... params) {
@@ -168,13 +176,14 @@ public interface QueryMethods<T> {
 
             case SELECT:     getValues().except$(SELECT, CONSTRUCTOR); break;
 
-            case GROUP:      getValues().except$(GROUP);    break;
-            case ORDER:      getValues().except$(ORDER);    break;
-            case LOCK:       getValues().except$(LOCK);     break;
-            case LIMIT:      getValues().except$(LIMIT);    break;
-            case OFFSET:     getValues().except$(OFFSET);   break;
-            case JOINS:      getValues().except$(JOINS);    break;
-            case INCLUDES:   getValues().except$(INCLUDES); break;
+            case GROUP:            getValues().except$(GROUP);            break;
+            case ORDER:            getValues().except$(ORDER);            break;
+            case LOCK:             getValues().except$(LOCK);             break;
+            case LIMIT:            getValues().except$(LIMIT);            break;
+            case OFFSET:           getValues().except$(OFFSET);           break;
+            case JOINS:            getValues().except$(JOINS);            break;
+            case LEFT_OUTER_JOINS: getValues().except$(LEFT_OUTER_JOINS); break;
+            case INCLUDES:         getValues().except$(INCLUDES);         break;
 
             default: throw new RuntimeException("invalid unscoping value: " + scope);
         }
