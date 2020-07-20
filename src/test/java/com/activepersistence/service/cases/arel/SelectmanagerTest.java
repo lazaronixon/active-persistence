@@ -76,7 +76,7 @@ public class SelectmanagerTest {
 
     @Test
     public void testFromTableAlias() {
-        SelectManager subquery = new SelectManager(new Entity(Client.class, "client"));
+        var subquery = new SelectManager(new Entity(Client.class, "client"));
         assertEquals("SELECT FROM Post post, (SELECT FROM Client client) subquery", manager.from(new TableAlias(subquery.getAst(), jpql("subquery"))).toJpql());
     }
 

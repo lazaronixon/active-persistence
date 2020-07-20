@@ -1,5 +1,6 @@
 package com.activepersistence.service.relation;
 
+import static com.activepersistence.service.relation.ValueMethods.values;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import java.util.List;
@@ -152,7 +153,7 @@ public class Values {
     }
 
     public Values slice$(ValueMethods... onlies) {
-        asList(ValueMethods.values()).stream().filter(not(asList(onlies)::contains)).forEach(this::reset); return this;
+        asList(values()).stream().filter(not(asList(onlies)::contains)).forEach(this::reset); return this;
     }
 
     private Values dup() {

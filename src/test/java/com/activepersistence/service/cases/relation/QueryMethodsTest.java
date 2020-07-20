@@ -2,11 +2,8 @@ package com.activepersistence.service.cases.relation;
 
 import com.activepersistence.IntegrationTest;
 import com.activepersistence.PreparedStatementInvalid;
-import com.activepersistence.service.Relation;
-import com.activepersistence.service.models.Client;
 import com.activepersistence.service.models.ClientsService;
-import com.activepersistence.service.models.Comment;
-import com.activepersistence.service.models.Gender;
+import static com.activepersistence.service.models.Gender.MALE;
 import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
 import static com.activepersistence.service.relation.ValueMethods.FROM;
@@ -15,9 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 import javax.inject.Inject;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.*;
@@ -99,7 +94,7 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testFromSubquery() {
-        Relation<Client> subquery = clientsService.unscoped().select("client.postId");
+        var subquery = clientsService.unscoped().select("client.postId");
         assertEquals("SELECT post FROM Post post, (SELECT client.postId FROM Client client) subquery", postsService.from(subquery).toJpql());
     }
 
@@ -140,15 +135,15 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testIncludes() {
-        List<Post> posts = postsService.includes("post.comments").fetch();
-        Stream<Comment> comments = posts.stream().flatMap(p -> p.getComments().stream());
+        var posts = postsService.includes("post.comments").fetch();
+        var comments = posts.stream().flatMap(p -> p.getComments().stream());
         assertTrue(comments.findAny().isPresent());
     }
 
     @Test
     public void testEagerLoads() {
-        List<Post> posts = postsService.eagerLoad("post.comments").fetch();
-        Stream<Comment> comments = posts.stream().flatMap(p -> p.getComments().stream());
+        var posts = postsService.eagerLoad("post.comments").fetch();
+        var comments = posts.stream().flatMap(p -> p.getComments().stream());
         assertTrue(comments.findAny().isPresent());
     }
 
@@ -179,7 +174,7 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testBindSubQuery() {
-        Relation<Post> subquery = postsService.where("post.title = 'flood'").select("post.id");
+        var subquery = postsService.where("post.title = 'flood'").select("post.id");
         assertEquals("SELECT post FROM Post post WHERE post.id IN (SELECT post.id FROM Post post WHERE post.title = 'flood')", postsService.where("post.id IN (?)", subquery).toJpql());
         assertTrue(postsService.where("post.id IN (?)", subquery).exists());
     }
@@ -196,8 +191,8 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testLiteralEnum() {
-        assertEquals("SELECT client FROM Client client WHERE client.gender = com.activepersistence.service.models.Gender.MALE", clientsService.unscoped().where("client.gender = ?", Gender.MALE).toJpql());
-        assertTrue(clientsService.unscoped().where("client.gender = ?", Gender.MALE).exists());
+        assertEquals("SELECT client FROM Client client WHERE client.gender = com.activepersistence.service.models.Gender.MALE", clientsService.unscoped().where("client.gender = ?", MALE).toJpql());
+        assertTrue(clientsService.unscoped().where("client.gender = ?", MALE).exists());
     }
 
     @Test

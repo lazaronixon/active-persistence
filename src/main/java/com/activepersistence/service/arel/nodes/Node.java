@@ -6,7 +6,7 @@ import com.activepersistence.service.arel.visitors.Visitable;
 public abstract class Node implements Visitable {
 
     public String toJpql() {
-        StringBuilder collector = new StringBuilder();
+        var collector = new StringBuilder();
         collector = Entity.visitor.accept(this, collector);
         return collector.toString();
     }

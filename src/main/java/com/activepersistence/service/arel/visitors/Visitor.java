@@ -10,7 +10,7 @@ public abstract class Visitor {
     }
 
     public StringBuilder visit(Visitable o, StringBuilder collector) {
-        Method dispatchMethod = getMethodFor(o.getClass());
+        var dispatchMethod = getMethodFor(o.getClass());
         if (collector != null) {
             return send(dispatchMethod, o, collector);
         } else {

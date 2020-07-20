@@ -11,6 +11,7 @@ import com.activepersistence.service.relation.QueryMethods;
 import com.activepersistence.service.relation.SpawnMethods;
 import static com.activepersistence.service.relation.ValueMethods.CONSTRUCTOR;
 import com.activepersistence.service.relation.Values;
+import static java.lang.Character.toLowerCase;
 import java.util.List;
 import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
@@ -89,7 +90,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public Relation<T> scoping(Supplier<Relation> yield) {
-        Relation<T> previous = Scoping.getCurrentScope();
+        var previous = Scoping.getCurrentScope();
         try {
             Scoping.setCurrentScope(thiz());
             return yield.get();
@@ -124,7 +125,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public int deleteAll() {
         if (isValidRelationForUpdate()) {
-            DeleteManager stmt = new DeleteManager();
+            var stmt = new DeleteManager();
             stmt.from(entity);
             stmt.setWheres(getArel().getConstraints());
             stmt.setOrders(getArel().getOrders());
@@ -136,7 +137,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public int updateAll(String updates) {
         if (isValidRelationForUpdate()) {
-            UpdateManager stmt = new UpdateManager();
+            var stmt = new UpdateManager();
             stmt.entity(entity);
             stmt.set(updates);
             stmt.setWheres(getArel().getConstraints());
@@ -198,7 +199,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private SelectManager buildArel() {
-        SelectManager result = new SelectManager(entity);
+        var result = new SelectManager(entity);
 
         buildConstructor(result);
         buildDistinct(result);
@@ -263,8 +264,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private void buildFrom(SelectManager arel) {
         if (!values.getFrom().isEmpty()) {
-            Object opts = values.getFrom().getValue();
-            String name = values.getFrom().getName();
+            var opts = values.getFrom().getValue();
+            var name = values.getFrom().getName();
             if (opts instanceof Relation) {
                 arel.from(((Relation) opts).except(CONSTRUCTOR).getArel().as(name));
             } else {
@@ -317,7 +318,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private static String uncapitalize(String word) {
-        return Character.toLowerCase(word.charAt(0)) + word.substring(1);
+        return toLowerCase(word.charAt(0)) + word.substring(1);
     }
 
 }

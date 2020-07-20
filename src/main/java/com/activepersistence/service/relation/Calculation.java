@@ -52,7 +52,7 @@ public interface Calculation<T> {
     }
 
     public default List pluck(String... fields) {
-        Relation<T> relation = spawn();
+        var relation = spawn();
 
         relation.getValues().setConstructor(false);
         relation.getValues().setSelect(asList(fields));
@@ -60,7 +60,7 @@ public interface Calculation<T> {
     }
 
     private Object calculate(Operations operation, String field) {
-        Relation relation = spawn().except(CONSTRUCTOR, DISTINCT);
+        var relation = spawn().except(CONSTRUCTOR, DISTINCT);
 
         if (relation.getValues().getGroup().isEmpty()) {
             return executeSimpleCalculation(relation, operation, field);
@@ -74,7 +74,8 @@ public interface Calculation<T> {
     }
 
     private Object executeGroupedCalculation(Relation<T> relation, Operations operation, String field) {
-        Values values = relation.getValues();
+        var values = relation.getValues();
+        
         values.getSelect().clear();
         values.getSelect().add(operationOverAggregateColumn(operation, field).toJpql());
         values.getSelect().addAll(values.getGroup());

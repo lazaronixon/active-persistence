@@ -37,7 +37,7 @@ public interface Persistence<T> {
     }
 
     private T flush(Supplier<T> yield) {
-        T result = yield.get(); getEntityManager().flush(); return result;
+        var result = yield.get(); getEntityManager().flush(); return result;
     }
 
     private void flush(Runnable yield) {

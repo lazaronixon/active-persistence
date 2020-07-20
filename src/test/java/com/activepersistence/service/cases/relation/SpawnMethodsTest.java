@@ -1,9 +1,7 @@
 package com.activepersistence.service.cases.relation;
 
 import com.activepersistence.IntegrationTest;
-import com.activepersistence.service.Relation;
 import com.activepersistence.service.models.CommentsService;
-import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
 import static com.activepersistence.service.relation.ValueMethods.ORDER;
 import javax.inject.Inject;
@@ -23,7 +21,7 @@ public class SpawnMethodsTest extends IntegrationTest {
 
     @Test
     public void testSpawn() {
-        Relation<Post> relation = postsService.all();
+        var relation = postsService.all();
         assertNotEquals(relation, relation.spawn());
     }
 

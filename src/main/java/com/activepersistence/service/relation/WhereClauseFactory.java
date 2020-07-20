@@ -55,8 +55,8 @@ public class WhereClauseFactory {
     };
 
     private String replaceBindVariables(String statement, Object[] values) {
-        int bindCount    = (int) statement.chars().filter(ch -> ch == '?').count();
-        int valuesCount  = (int) values.length;
+        var bindCount    = (int) statement.chars().filter(ch -> ch == '?').count();
+        var valuesCount  = (int) values.length;
 
         if (bindCount == valuesCount) {
             List<Object> bound = new ArrayList(asList(values));

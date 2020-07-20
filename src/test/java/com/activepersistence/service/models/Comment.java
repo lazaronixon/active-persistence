@@ -2,9 +2,9 @@ package com.activepersistence.service.models;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import static javax.persistence.FetchType.LAZY;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
@@ -14,13 +14,13 @@ public class Comment implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
     @Lob
     private String body;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     private Post post;
 
     public Comment() {

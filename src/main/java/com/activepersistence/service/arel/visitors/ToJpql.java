@@ -175,7 +175,7 @@ public class ToJpql extends Visitor {
     }
 
     private void injectJoin(List<? extends Visitable> list, StringBuilder collector, String joinStr) {
-        for(int i = 0; i < list.size(); i++) { if (i != 0) collector.append(joinStr); collector = visit(list.get(i), collector); }
+        for(var i = 0; i < list.size(); i++) { if (i != 0) collector.append(joinStr); collector = visit(list.get(i), collector); }
     }
 
     private StringBuilder aggregate(String name, Function o, StringBuilder collector) {

@@ -5,10 +5,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REMOVE;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
@@ -19,7 +20,7 @@ public class Post extends Base<Integer> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
     private String title;
@@ -29,7 +30,7 @@ public class Post extends Base<Integer> implements Serializable {
 
     private Integer likesCount;
 
-    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "post", cascade = {PERSIST, REMOVE})
     private List<Comment> comments = new ArrayList();
 
     private LocalDateTime createdAt;
@@ -51,7 +52,7 @@ public class Post extends Base<Integer> implements Serializable {
     }
 
     public Comment commentsBuild(String body) {
-        Comment comment = new Comment(body, this);
+        var comment = new Comment(body, this);
         comments.add(comment);
         return comment;
     }

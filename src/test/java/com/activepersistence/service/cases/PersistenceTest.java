@@ -16,9 +16,8 @@ public class PersistenceTest extends IntegrationTest {
 
     @Test
     public void testCreate() {
-        Post post  = new Post("new post", "body", 0);
-
-        long count = (long) postsService.count();
+        var post  = new Post("new post", "body", 0);
+        var count = (long) postsService.count();
         postsService.create(post);
         assertEquals(count + 1, postsService.count());
         assertTrue(post.isPersisted());
@@ -26,10 +25,10 @@ public class PersistenceTest extends IntegrationTest {
 
     @Test
     public void testUpdate() {
-        Post post = postsService.find(1);
+        var post = postsService.find(1);
         post.setTitle("changed");
 
-        long count = (long) postsService.count();
+        var count = (long) postsService.count();
         postsService.update(post);
         assertEquals(count, postsService.count());
         assertEquals("changed", post.getTitle());
@@ -37,17 +36,15 @@ public class PersistenceTest extends IntegrationTest {
 
     @Test
     public void testDestroy() {
-        Post post = postsService.find(1);
-
-        long count = (long) postsService.count();
+        var post = postsService.find(1);
+        var count = (long) postsService.count();
         postsService.destroy(post);
         assertEquals(count -1, postsService.count());
     }
 
     public void testSaveCreate() {
-        Post post  = new Post("new post", "body", 0);
-
-        long count = (long) postsService.count();
+        var post  = new Post("new post", "body", 0);
+        var count = (long) postsService.count();
         postsService.save(post);
         assertEquals(count + 1, postsService.count());
         assertTrue(post.isPersisted());
@@ -55,10 +52,10 @@ public class PersistenceTest extends IntegrationTest {
 
     @Test
     public void testSaveUpdate() {
-        Post post = postsService.find(1);
+        var post = postsService.find(1);
         post.setTitle("changed");
 
-        long count = (long) postsService.count();
+        var count = (long) postsService.count();
         postsService.update(post);
         assertEquals(count, postsService.count());
         assertEquals("changed", post.getTitle());

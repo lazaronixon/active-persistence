@@ -2,7 +2,7 @@ package com.activepersistence.service.arel.nodes;
 
 import com.activepersistence.service.Arel;
 import com.activepersistence.service.arel.Source;
-import java.util.Arrays;
+import static java.util.Arrays.asList;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
 
@@ -39,7 +39,7 @@ public class JpqlLiteral extends Node implements Source {
     }
 
     public static List<Node> fromArray(String[] values) {
-        return Arrays.asList(values).stream().map(Arel::jpql).collect(toList());
+        return asList(values).stream().map(Arel::jpql).collect(toList());
     }
 
     @Override

@@ -25,16 +25,16 @@ public class ToJpqlTest {
 
     @Test
     public void testVisitDeleteStatement() {
-        Entity entity = new Entity(Post.class, "post");
-        DeleteStatement statement = new DeleteStatement();
+        var entity = new Entity(Post.class, "post");
+        var statement = new DeleteStatement();
         statement.setRelation(entity);
         assertEquals("DELETE FROM Post post", compile(statement));
     }
 
     @Test
     public void testVisitUpdateStatement() {
-        Entity entity = new Entity(Post.class, "post");
-        UpdateStatement statement = new UpdateStatement();
+        var entity = new Entity(Post.class, "post");
+        var statement = new UpdateStatement();
         statement.setRelation(entity);
         statement.setValues(asList(jpql("post.name = 'test'")));
         assertEquals("UPDATE Post post SET post.name = 'test'", compile(statement));
@@ -42,22 +42,22 @@ public class ToJpqlTest {
 
     @Test
     public void testVisitSelectStatement() {
-        Entity entity = new Entity(Post.class, "post");
-        SelectStatement statement = new SelectStatement(entity);
+        var entity = new Entity(Post.class, "post");
+        var statement = new SelectStatement(entity);
         assertEquals("SELECT FROM Post post", compile(statement));
     }
 
     @Test
     public void testVisitSelectCore() {
-        Entity entity = new Entity(Post.class, "post");
-        SelectCore core = new SelectCore(entity);
+        var entity = new Entity(Post.class, "post");
+        var core = new SelectCore(entity);
         assertEquals("SELECT FROM Post post", compile(core));
     }
 
     @Test
     public void testVisitDistinct() {
-        Entity entity = new Entity(Post.class, "post");
-        SelectCore core = new SelectCore(entity);
+        var entity = new Entity(Post.class, "post");
+        var core = new SelectCore(entity);
         core.setDistinct(true);
         core.getProjections().addAll(asList(jpql("post")));
         assertEquals("SELECT DISTINCT post FROM Post post", compile(core));
@@ -65,7 +65,7 @@ public class ToJpqlTest {
 
     @Test
     public void testVisitConstructor() {
-        Constructor constructor = new Constructor("java.lang.Object", asList(jpql("post.id, post.title")));
+        var constructor = new Constructor("java.lang.Object", asList(jpql("post.id, post.title")));
         assertEquals(" NEW java.lang.Object(post.id, post.title)", compile(constructor));
     }
 
@@ -76,14 +76,14 @@ public class ToJpqlTest {
 
     @Test
     public void testVisitTableAlias() {
-        SelectStatement subquery = new SelectStatement(new Entity(Post.class, "post"));
+        var subquery = new SelectStatement(new Entity(Post.class, "post"));
         assertEquals("(SELECT FROM Post post) subquery", compile(new TableAlias(subquery, jpql("subquery"))));
     }
 
     @Test
     public void testVisitJoinSource() {
-        Entity entity = new Entity(Post.class, "post");
-        JoinSource joinsource = new JoinSource(entity);
+        var entity = new Entity(Post.class, "post");
+        var joinsource = new JoinSource(entity);
         joinsource.getJoins().add(createStringJoin("JOIN post.client client"));
         assertEquals("Post post JOIN post.client client", compile(joinsource));
     }
@@ -100,7 +100,6 @@ public class ToJpqlTest {
 
     @Test
     public void testVisitOuterJoin() {
-        Entity entity = new Entity(Post.class, "post");
         assertEquals("LEFT OUTER JOIN post.comments comment", compile(createOuterJoin("post.comments", "comment")));
     }
 
