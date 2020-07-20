@@ -271,8 +271,8 @@ Post newPost     = postsService.findOrInitializeBy("post.title = 'awesome title'
 List<Post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = 5");
 List<Post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
 // OR
-List<Object[]> posts = postsService.selectAll("SELECT id, title FROM Post WHERE id = 5");
-List<Object[]> posts = postsService.selectAll("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
+List<Map> posts = postsService.selectAll("SELECT id, title FROM Post WHERE id = 5");
+List<Map> posts = postsService.selectAll("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
 ```
 
 ### Existence of Objects

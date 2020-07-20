@@ -26,12 +26,16 @@ public class QueryingTest extends IntegrationTest {
 
     @Test
     public void testSelectAll() {
-        assertArrayEquals(new Object[]{ 5, "flood" }, (Object[]) postsService.selectAll("SELECT id, title FROM Post WHERE id = 5").get(0));
+        var result = postsService.selectAll("SELECT id, title FROM Post WHERE id = 5").get(0);
+        assertEquals(5 , result.get("ID"));
+        assertEquals("flood" , result.get("TITLE"));
     }
 
     @Test
     public void testSelectAllWithBind() {
-        assertArrayEquals(new Object[]{ 5, "flood" }, (Object[]) postsService.selectAll("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5)).get(0));
+        var result = postsService.selectAll("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5)).get(0);
+        assertEquals(5 , result.get("ID"));
+        assertEquals("flood" , result.get("TITLE"));
     }
 
 }

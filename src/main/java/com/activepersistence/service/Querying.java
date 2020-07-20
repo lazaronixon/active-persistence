@@ -268,18 +268,22 @@ public interface Querying<T> {
         return parametize(getEntityManager().createNativeQuery(sql, getEntityClass()), binds).getResultList();
     }
 
-    public default List selectAll(String sql) {
+    public default List<Map> selectAll(String sql) {
         return selectAll(sql, new HashMap());
     }
 
-    public default List selectAll(String sql, Map<Integer, Object> binds) {
-        return parametize(getEntityManager().createNativeQuery(sql), binds).getResultList();
+    public default List<Map> selectAll(String sql, Map<Integer, Object> binds) {
+        return parametizeMap(getEntityManager().createNativeQuery(sql), binds).getResultList();
     }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Private">
     private Query parametize(Query query, Map<Integer, Object> binds) {
         applyParams(query, binds); return query;
+    }
+
+    private Query parametizeMap(Query query, Map<Integer, Object> binds) {
+        parametize(query, binds); query.setHint("eclipselink.result-type", "Map"); return query;
     }
 
     private void applyParams(Query query, Map<Integer, Object> binds) {
