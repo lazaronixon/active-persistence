@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 import static java.util.regex.Matcher.quoteReplacement;
 import static java.util.regex.Pattern.compile;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 import java.util.stream.Stream;
 
 public class WhereClauseFactory {
@@ -76,11 +77,11 @@ public class WhereClauseFactory {
 
     private String literalBoundValue(Object value) {
         if (value instanceof List) {
-            Supplier<Stream<String>> literald = () -> ((List) value).stream().map(Literalizing::literal);
-            if (literald.get().findAny().isEmpty()) {
+            Supplier<Stream<String>> literalized = () -> ((List) value).stream().map(Literalizing::literal);
+            if (literalized.get().findAny().isEmpty()) {
                 return literal(null);
             } else {
-                return literald.get().collect(joining(","));
+                return literalized.get().collect(joining(","));
             }
         } else {
             return literal(value);
