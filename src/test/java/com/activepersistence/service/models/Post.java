@@ -62,6 +62,7 @@ public class Post extends Base<Integer> implements Serializable {
         return id;
     }
 
+    @Override
     public void setId(Integer id) {
         this.id = id;
     }

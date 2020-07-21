@@ -1,5 +1,6 @@
 package com.activepersistence.service.models;
 
+import com.activepersistence.model.Base;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import static javax.persistence.FetchType.LAZY;
@@ -10,7 +11,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Comment implements Serializable {
+public class Comment extends Base<Integer> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,10 +32,12 @@ public class Comment implements Serializable {
         this.post = post;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
 
+    @Override
     public void setId(Integer id) {
         this.id = id;
     }

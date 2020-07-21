@@ -11,6 +11,8 @@ public abstract class Base<ID> {
 
     public abstract ID getId();
 
+    public abstract void setId(ID value);
+
     public boolean isNewRecord() {
         return getId() == null;
     }

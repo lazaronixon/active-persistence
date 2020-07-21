@@ -175,7 +175,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     @Override
     public String getPrimaryKey() {
-        return getAlias() + ".id";
+        return getAlias() + "." + "id";
     }
 
     @Override

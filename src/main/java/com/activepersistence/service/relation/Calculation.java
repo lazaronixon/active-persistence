@@ -75,7 +75,7 @@ public interface Calculation<T> {
 
     private Object executeGroupedCalculation(Relation<T> relation, Operations operation, String field) {
         var values = relation.getValues();
-        
+
         values.getSelect().clear();
         values.getSelect().add(operationOverAggregateColumn(operation, field).toJpql());
         values.getSelect().addAll(values.getGroup());
