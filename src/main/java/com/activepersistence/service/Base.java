@@ -33,4 +33,9 @@ public abstract class Base<T> implements Persistence<T>, Querying<T>, Scoping<T>
         return Scoping.super.all();
     }
 
+    @Override
+    public Class getRealClass() {
+        return getClass().getSimpleName().contains("$Proxy$_$$_WeldSubclass") ? getClass().getSuperclass() : getClass();
+    }
+
 }

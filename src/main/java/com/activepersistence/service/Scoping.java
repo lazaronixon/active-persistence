@@ -11,6 +11,8 @@ public interface Scoping<T> {
 
     public Relation<T> defaultScope();
 
+    public Class getRealClass();
+
     public default Relation<T> all() {
         if (getCurrentScope() != null) {
             return new Relation(getCurrentScope());
@@ -67,7 +69,7 @@ public interface Scoping<T> {
 
     private boolean defaultScopeOverride() {
         try {
-            return Base.class != getClass().getSuperclass().getMethod("defaultScope").getDeclaringClass();
+            return Base.class != getRealClass().getMethod("defaultScope").getDeclaringClass();
         } catch (NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex.getMessage());
         }
