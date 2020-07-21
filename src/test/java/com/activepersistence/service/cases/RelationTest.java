@@ -4,6 +4,7 @@ import com.activepersistence.ActivePersistenceError;
 import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.PostsService;
 import static com.activepersistence.service.relation.ValueMethods.ORDER;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import org.jboss.arquillian.persistence.UsingDataSet;
@@ -107,6 +108,12 @@ public class RelationTest extends IntegrationTest {
     @Test
     public void testUpdateAll() {
         assertEquals(3, postsService.where("post.id IN (1,2,3)").updateAll("post.title = 'testing'"));
+        assertEquals("testing", postsService.find(1).getTitle());
+    }
+
+    @Test
+    public void testUpdateAllMap() {
+        assertEquals(3, postsService.where("post.id IN (1,2,3)").updateAll(Map.of("post.title", "testing")));
         assertEquals("testing", postsService.find(1).getTitle());
     }
 

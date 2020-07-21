@@ -5,6 +5,7 @@ import static com.activepersistence.service.Arel.createOuterJoin;
 import static com.activepersistence.service.Arel.createStringJoin;
 import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.arel.Entity;
+import com.activepersistence.service.arel.nodes.Assignment;
 import com.activepersistence.service.arel.nodes.Constructor;
 import com.activepersistence.service.arel.nodes.DeleteStatement;
 import com.activepersistence.service.arel.nodes.JoinSource;
@@ -136,6 +137,11 @@ public class ToJpqlTest {
     @Test
     public void testVisitAverage() {
         assertEquals("AVG(post.id)", compile(jpql("post.id").average()));
+    }
+
+    @Test
+    public void testVisitAssignment() {
+        assertEquals("column = value", compile(new Assignment("column", "value")));
     }
 
     private String compile(Visitable node) {

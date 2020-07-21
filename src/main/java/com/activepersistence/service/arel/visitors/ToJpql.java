@@ -1,6 +1,7 @@
 package com.activepersistence.service.arel.visitors;
 
 import com.activepersistence.service.arel.Entity;
+import com.activepersistence.service.arel.nodes.Assignment;
 import com.activepersistence.service.arel.nodes.Avg;
 import com.activepersistence.service.arel.nodes.Constructor;
 import com.activepersistence.service.arel.nodes.Count;
@@ -160,6 +161,13 @@ public class ToJpql extends Visitor {
 
     public StringBuilder visitAvg(Avg o, StringBuilder collector) {
         return aggregate("AVG", o, collector);
+    }
+
+    public StringBuilder visitAssignment(Assignment o, StringBuilder collector) {
+        collector = visit(o.getColumn(), collector);
+        collector.append(" = ");
+        visit(o.getValue(), collector);
+        return collector;
     }
 
     private StringBuilder maybeVisit(Visitable thing, StringBuilder collector) {

@@ -257,6 +257,10 @@ public interface Querying<T> {
     public default int updateAll(String updates) {
         return all().updateAll(updates);
     }
+
+    public default int updateAll(Map<String, Object> updates) {
+        return all().updateAll(updates);
+    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Querying">

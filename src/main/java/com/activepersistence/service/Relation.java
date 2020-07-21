@@ -7,15 +7,18 @@ import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.UpdateManager;
 import com.activepersistence.service.relation.Calculation;
 import com.activepersistence.service.relation.FinderMethods;
+import static com.activepersistence.service.relation.Literalizing.literal;
 import com.activepersistence.service.relation.QueryMethods;
 import com.activepersistence.service.relation.SpawnMethods;
 import static com.activepersistence.service.relation.ValueMethods.CONSTRUCTOR;
 import com.activepersistence.service.relation.Values;
 import static java.lang.Character.toLowerCase;
 import java.util.List;
+import java.util.Map;
 import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import static javax.persistence.LockModeType.NONE;
@@ -136,16 +139,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public int updateAll(String updates) {
-        if (isValidRelationForUpdate()) {
-            var stmt = new UpdateManager();
-            stmt.entity(entity);
-            stmt.set(updates);
-            stmt.setWheres(getArel().getConstraints());
-            stmt.setOrders(getArel().getOrders());
-            return executeUpdate(stmt.toJpql());
-        } else {
-            throw new ActivePersistenceError("updateAll doesn't support this relation");
-        }
+        return _updateAll(updates);
+    }
+
+    public int updateAll(Map<String, Object> updates) {
+        return _updateAll(updates);
     }
 
     public int deleteBy(String conditions, Object... params) {
@@ -319,6 +317,29 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private static String uncapitalize(String word) {
         return toLowerCase(word.charAt(0)) + word.substring(1);
+    }
+
+    private int _updateAll(Object updates) {
+        if (isValidRelationForUpdate()) {
+            var stmt = new UpdateManager();
+            stmt.entity(entity);
+            stmt.setWheres(getArel().getConstraints());
+            stmt.setOrders(getArel().getOrders());
+
+            if (updates instanceof Map) {
+                stmt.set(substituteValues((Map) updates));
+            } else {
+                stmt.set((String) updates);
+            }
+
+            return executeUpdate(stmt.toJpql());
+        } else {
+            throw new ActivePersistenceError("updateAll doesn't support this relation");
+        }
+    }
+
+    private Map<String, String> substituteValues(Map<String, Object> updates) {
+        return updates.entrySet().stream().collect(toMap(v -> v.getKey(), v -> literal(v.getValue())));
     }
 
 }
