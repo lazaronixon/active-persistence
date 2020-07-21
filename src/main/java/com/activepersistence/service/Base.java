@@ -24,13 +24,8 @@ public abstract class Base<T> implements Persistence<T>, Querying<T>, Scoping<T>
     }
 
     @Override
-    public boolean useDefaultScope() {
-        return false;
-    }
-
-    @Override
     public Relation<T> defaultScope() {
-        throw new UnsupportedOperationException("defaultScope() must be implemented when useDefaultScope() is true.");
+        throw new UnsupportedOperationException("not implemented");
     }
 
     @Override

@@ -13,7 +13,6 @@ import java.util.function.Supplier;
 import static java.util.regex.Matcher.quoteReplacement;
 import static java.util.regex.Pattern.compile;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 import java.util.stream.Stream;
 
 public class WhereClauseFactory {

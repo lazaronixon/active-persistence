@@ -235,11 +235,6 @@ clientsService.eagerLoads("client.address").limit(10).fetch();
 ```java
 public class ClientsService extends ApplicationService<Client> {
     @Override
-    public boolean useDefaultScope() {
-        return true;
-    }
-
-    @Override
     public Relation<Client> defaultScope() {
         return where("client.name = 'nixon'");
     }

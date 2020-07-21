@@ -24,9 +24,4 @@ public class ClientsService extends Base<Client> {
         return where("client.active = true");
     }
 
-    @Override
-    public boolean useDefaultScope() {
-        return true;
-    }
-
 }

@@ -9,8 +9,6 @@ public interface Scoping<T> {
 
     public Relation<T> getRelation();
 
-    public boolean useDefaultScope();
-
     public Relation<T> defaultScope();
 
     public default Relation<T> all() {
@@ -50,7 +48,7 @@ public interface Scoping<T> {
     }
 
     private Relation<T> buildDefaultScope() {
-        if (useDefaultScope()) {
+        if (defaultScopeOverride()) {
             return evaluateDefaultScope(() -> getRelation().merge$(defaultScope()));
         } else {
             return null;
@@ -64,6 +62,14 @@ public interface Scoping<T> {
             return yield.get();
         } finally {
             setIgnoreDefaultScope(false);
+        }
+    }
+
+    private boolean defaultScopeOverride() {
+        try {
+            return Base.class != getClass().getSuperclass().getMethod("defaultScope").getDeclaringClass();
+        } catch (NoSuchMethodException | SecurityException ex) {
+            throw new RuntimeException(ex.getMessage());
         }
     }
 
