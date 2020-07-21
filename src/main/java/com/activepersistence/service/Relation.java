@@ -15,6 +15,7 @@ import com.activepersistence.service.relation.Values;
 import static java.lang.Character.toLowerCase;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
 import static java.util.stream.Collectors.toList;
@@ -339,7 +340,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private Map<String, String> substituteValues(Map<String, Object> updates) {
-        return updates.entrySet().stream().collect(toMap(v -> v.getKey(), v -> literal(v.getValue())));
+        return updates.entrySet().stream().collect(toMap(Entry::getKey, v -> literal(v.getValue())));
     }
 
 }
