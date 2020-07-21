@@ -30,6 +30,7 @@ public class PersistenceTest extends IntegrationTest {
 
         var count = (long) postsService.count();
         postsService.update(post);
+        postsService.reload(post);
         assertEquals(count, postsService.count());
         assertEquals("changed", post.getTitle());
     }
@@ -57,6 +58,7 @@ public class PersistenceTest extends IntegrationTest {
 
         var count = (long) postsService.count();
         postsService.update(post);
+        postsService.reload(post);
         assertEquals(count, postsService.count());
         assertEquals("changed", post.getTitle());
     }

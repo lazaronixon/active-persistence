@@ -219,6 +219,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
                 .setLockMode(buildLockMode())
                 .setMaxResults(values.getLimit())
                 .setFirstResult(values.getOffset())
+                .setHint("eclipselink.read-only", values.isReadonly())
                 .setHint("eclipselink.batch.type", "IN");
     }
 
@@ -227,6 +228,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
                 .setLockMode(buildLockMode())
                 .setMaxResults(values.getLimit())
                 .setFirstResult(values.getOffset())
+                .setHint("eclipselink.read-only", values.isReadonly())
                 .setHint("eclipselink.batch.type", "IN");
     }
 

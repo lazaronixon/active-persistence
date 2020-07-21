@@ -2,6 +2,9 @@ package com.activepersistence.service;
 
 import java.util.function.Supplier;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import static javax.persistence.LockModeType.NONE;
+import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 import javax.transaction.Transactional;
 
 public interface Persistence<T> {
@@ -33,7 +36,11 @@ public interface Persistence<T> {
     }
 
     public default void reload(T entity) {
-        getEntityManager().refresh(entity);
+        reload(entity, false);
+    }
+
+    public default void reload(T entity, boolean lock) {
+        getEntityManager().refresh(entity, lock ? PESSIMISTIC_READ : NONE);
     }
 
     private T flush(Supplier<T> yield) {

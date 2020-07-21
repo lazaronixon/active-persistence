@@ -112,6 +112,18 @@ public interface QueryMethods<T> {
         where$("1=0"); return thiz();
     }
 
+    public default Relation<T> readonly() {
+        return spawn().readonly$(true);
+    }
+
+    public default Relation<T> readonly(boolean value) {
+        return spawn().readonly$(value);
+    }
+
+    public default Relation<T> readonly$(boolean value) {
+        getValues().setReadonly(value); return thiz();
+    }
+
     public default Relation<T> includes(String... includes) {
         return spawn().includes$(includes);
     }
