@@ -26,12 +26,12 @@ public class Merger {
 
         values.getJoins().forEach(this::mergeJoins$);
         values.getLeftOuterJoins().forEach(this::mergeLeftOuterJoins$);
+        values.getOrder().forEach(this::mergeOrder$);
 
         values.getSelect().forEach(relation::select$);
         values.getWhere().forEach(relation::where$);
         values.getGroup().forEach(relation::group$);
         values.getHaving().forEach(relation::having$);
-        values.getOrder().forEach(relation::order$);
         values.getIncludes().forEach(relation::includes$);
         values.getEagerLoad().forEach(relation::eagerLoad$);
         values.getUnscope().forEach(relation::unscope$);
@@ -58,6 +58,14 @@ public class Merger {
 
     private void mergeLeftOuterJoins$(JoinClause joinClause) {
         relation.leftOuterJoins$(joinClause.getPath(), joinClause.getAlias());
+    }
+
+    private void mergeOrder$(String value) {
+        if (values.isReordering()) {
+            relation.reorder$(value);
+        } else {
+            relation.order$(value);
+        }
     }
 
 }

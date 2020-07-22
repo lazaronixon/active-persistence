@@ -73,4 +73,14 @@ public class SpawnMethodsTest extends IntegrationTest {
                 commentsService.joins("INNER JOIN comment.post post").merge(postsService.from("Post post").where("post.id = 1")).toJpql());
     }
 
+    @Test
+    public void testMergeOrder() {
+        assertEquals("SELECT post FROM Post post ORDER BY post.id, post.title", postsService.order("post.id").merge(postsService.order("post.title")).toJpql());
+    }
+
+    @Test
+    public void testMergeReOrder() {
+        assertEquals("SELECT post FROM Post post ORDER BY post.title", postsService.order("post.id").merge(postsService.reorder("post.title")).toJpql());
+    }
+
 }

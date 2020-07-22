@@ -146,4 +146,12 @@ public class MutationTest extends IntegrationTest {
         assertEquals(asList("1=1", "1=2"), relation2.getValues().getWhere());
     }
 
+    @Test
+    public void testReOrder$() {
+        var relation  = postsService.order("foo");
+        var relation2 = relation.reorder$("buzz");
+        assertEquals(relation, relation2);
+        assertEquals(asList("buzz"), relation2.getValues().getOrder());
+    }
+
 }

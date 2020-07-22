@@ -185,7 +185,11 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> reorder(String... fields) {
-        return spawn().except(ValueMethods.ORDER).order(fields);
+        return spawn().reorder$(fields);
+    }
+
+    public default Relation<T> reorder$(String... fields) {
+        getValues().setReordering(true); getValues().setOrder(asList(fields)); return thiz();
     }
 
     private void unscoping(ValueMethods scope) {
