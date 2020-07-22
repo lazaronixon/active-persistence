@@ -2,7 +2,6 @@ package com.activepersistence.service;
 
 import java.util.function.Supplier;
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import static javax.persistence.LockModeType.NONE;
 import static javax.persistence.LockModeType.PESSIMISTIC_READ;
 import javax.transaction.Transactional;
