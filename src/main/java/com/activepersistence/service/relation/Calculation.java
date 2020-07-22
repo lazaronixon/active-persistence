@@ -59,7 +59,7 @@ public interface Calculation<T> {
         return relation.fetch$();
     }
 
-    private Object calculate(Operations operation, String field) {
+    public default Object calculate(Operations operation, String field) {
         var relation = spawn().except(CONSTRUCTOR, DISTINCT);
 
         if (relation.getValues().getGroup().isEmpty()) {

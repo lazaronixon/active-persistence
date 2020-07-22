@@ -99,14 +99,6 @@ public class MutationTest extends IntegrationTest {
     }
 
     @Test
-    public void testNone$() {
-        var relation  = postsService.all();
-        var relation2 = relation.none$();
-        assertEquals(relation, relation2);
-        assertEquals(asList("1=0"), relation2.getValues().getWhere());
-    }
-
-    @Test
     public void testIncludes$() {
         var relation  = postsService.all();
         var relation2 = relation.includes$("foo");

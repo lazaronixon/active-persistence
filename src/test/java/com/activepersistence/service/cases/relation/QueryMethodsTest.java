@@ -84,7 +84,7 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testNone() {
-        assertEquals("SELECT post FROM Post post WHERE 1=0", postsService.none().toJpql());
+        assertEquals("", postsService.none().toJpql());
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.activepersistence.service.relation;
 
+import com.activepersistence.service.NullRelation;
 import com.activepersistence.service.Relation;
 import static com.activepersistence.service.relation.ValueMethods.*;
 import static java.util.Arrays.asList;
@@ -104,12 +105,8 @@ public interface QueryMethods<T> {
         getValues().setDistinct(value); return thiz();
     }
 
-    public default Relation<T> none() {
-        return spawn().none$();
-    }
-
-    public default Relation<T> none$() {
-        where$("1=0"); return thiz();
+    public default NullRelation<T> none() {
+        return new NullRelation(where$("1=0"));
     }
 
     public default Relation<T> readonly() {
