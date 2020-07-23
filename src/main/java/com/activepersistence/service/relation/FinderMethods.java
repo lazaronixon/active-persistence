@@ -48,10 +48,18 @@ public interface FinderMethods<T> {
 
     public default T find(Object id) {
         return thiz().where(getPrimaryKey() + " = ?", id).takeOrFail();
-        }
+    }
 
     public default List<T> find(Object... ids) {
         return thiz().where(getPrimaryKey() + " IN (?)", asList(ids)).fetch();
+    }
+
+    public default T findById(Object id) {
+        return findBy(getPrimaryKey() + " = ?", id);
+    }
+
+    public default T findByIdOrFail(Object id) {
+        return findByOrFail(getPrimaryKey() + " = ?", id);
     }
 
     public default T findBy(String conditions, Object... params) {

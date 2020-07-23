@@ -66,6 +66,16 @@ public class FinderMethodsTest extends IntegrationTest {
     }
 
     @Test
+    public void testFindById() {
+        assertEquals((Integer) 1 ,postsService.findById(1).getId());
+    }
+
+    @Test
+    public void testFindByIdOrFail() {
+        assertThrows(NoResultException.class, () -> postsService.findByIdOrFail(48484));
+    }
+
+    @Test
     public void testFindBy() {
         assertEquals((Integer) 1 ,postsService.findBy("post.title = 'hello world'").getId());
     }
