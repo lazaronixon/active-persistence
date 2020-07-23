@@ -170,7 +170,7 @@ List<Order> orders = ordersService.select("date(order.createdAt)", "sum(order.pr
 
 ### Total of grouped items
 ```java
-HashMap<String, Long> result = (HashMap) ordersService.group("order.status").count
+HashMap<String, Long> result = (HashMap) ordersService.group("order.status").count();
 // => { 'awaiting_approval' => 7, 'paid' => 12 }
 ```
 
@@ -209,6 +209,11 @@ articlesService.where("article.trashed = true").rewhere("article.trashed = false
 ## Null Relation
 ```java
 studentsService.none(); // returns an empty Relation and fires where 1=0.
+```
+
+## Readonly Objects
+```java
+Client client = clientsService.readonly().first();
 ```
 
 ## Locking Records for Update
