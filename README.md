@@ -255,6 +255,14 @@ clientsService.unscoped().fetch();
 clientsService.where("client.published = false").unscoped().fetch();
 ```
 
+### Dynamic Finders
+```java
+Client client = clientsService.findByExp("Name", "Nixon");
+Client client = clientsService.findByExp("NameAndLocked", "Nixon", true);
+// OR
+Client client = clientsService.findByExpOrFail("Name", "Nixon");
+```
+
 ### Find or Build a New Object
 ```java
 Post createdPost = postsService.findOrCreateBy("post.title = 'awesome title'", new Post("awesome title", "body", 0));

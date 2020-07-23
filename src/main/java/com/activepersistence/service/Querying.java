@@ -126,6 +126,14 @@ public interface Querying<T> {
         return all().findByOrFail(conditions, params);
     }
 
+    public default T findByExp(String expression, Object... params) {
+        return all().findByExp(expression, params);
+    }
+
+    public default T findByExpOrFail(String expression, Object... params) {
+        return all().findByExpOrFail(expression, params);
+    }
+
     public default boolean exists() {
         return all().exists();
     }

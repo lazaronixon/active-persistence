@@ -86,6 +86,16 @@ public class FinderMethodsTest extends IntegrationTest {
     }
 
     @Test
+    public void testFindByExp() {
+        assertEquals((Integer) 1 ,postsService.findByExp("IdAndTitle", 1, "hello world").getId());
+    }
+
+    @Test
+    public void testFindByExpOrFail() {
+        assertThrows(NoResultException.class, () -> postsService.findByExpOrFail("Title", "not found"));
+    }
+
+    @Test
     public void testExists() {
         assertTrue(postsService.where("post.title = 'hello world'").exists());
     }

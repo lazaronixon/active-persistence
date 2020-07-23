@@ -1,12 +1,17 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
+import static java.lang.Character.toLowerCase;
 import static java.util.Arrays.asList;
 import java.util.List;
+import java.util.function.Function;
+import static java.util.stream.Collectors.joining;
 
 public interface FinderMethods<T> {
 
     public String getPrimaryKey();
+
+    public String getAlias();
 
     public Relation<T> thiz();
 
@@ -70,11 +75,35 @@ public interface FinderMethods<T> {
         return thiz().where(conditions, params).takeOrFail();
     }
 
+    public default T findByExp(String expression, Object... params) {
+        return findBy(exprToJpql(expression), params);
+    }
+
+    public default T findByExpOrFail(String expression, Object... params) {
+        return findByOrFail(exprToJpql(expression), params);
+    }
+
     public default boolean exists(String conditions, Object... params) {
         return thiz().where(conditions, params).exists();
     }
 
     public default boolean exists() {
         return thiz().limit(1).fetchExists();
+    }
+
+    private String exprToJpql(String expression) {
+        return splitExpr(expression).stream().map(parametize()).collect(joining(" AND "));
+    }
+
+    private Function<String, String> parametize() {
+        return attr -> (getAlias() + "." + uncapitalize(attr) + " = ?");
+    }
+
+    private List<String> splitExpr(String expression) {
+        return asList(expression.split("And"));
+    }
+
+    private static String uncapitalize(String word) {
+        return toLowerCase(word.charAt(0)) + word.substring(1);
     }
 }
