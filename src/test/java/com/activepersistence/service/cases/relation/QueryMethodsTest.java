@@ -3,6 +3,7 @@ package com.activepersistence.service.cases.relation;
 import com.activepersistence.IntegrationTest;
 import com.activepersistence.PreparedStatementInvalid;
 import com.activepersistence.service.models.ClientsService;
+import com.activepersistence.service.models.CommentsService;
 import static com.activepersistence.service.models.Gender.MALE;
 import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
@@ -23,6 +24,9 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Inject
     private PostsService postsService;
+
+    @Inject
+    private CommentsService commentsService;
 
     @Inject
     private ClientsService clientsService;
@@ -190,6 +194,13 @@ public class QueryMethodsTest extends IntegrationTest {
         var subquery = postsService.where("post.title = 'flood'").select("post.id");
         assertEquals("SELECT post FROM Post post WHERE post.id IN (SELECT post.id FROM Post post WHERE post.title = 'flood')", postsService.where("post.id IN (?)", subquery).toJpql());
         assertTrue(postsService.where("post.id IN (?)", subquery).exists());
+    }
+
+    @Test
+    public void testAssociate() {
+        var query = commentsService.where("comment.post.id = ?", postsService.find(1));
+        assertEquals("SELECT comment FROM Comment comment WHERE comment.post.id = 1", query.toJpql());
+        assertTrue(query.exists());
     }
 
     @Test
