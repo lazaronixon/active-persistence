@@ -26,8 +26,8 @@ public class FinderMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testTakeOrFail() {
-        assertThrows(NoResultException.class,() -> postsService.where("1=0").takeOrFail());
+    public void testTake$() {
+        assertThrows(NoResultException.class,() -> postsService.where("1=0").take$());
     }
 
     @Test
@@ -51,8 +51,8 @@ public class FinderMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testLastOrFail() {
-        assertThrows(NoResultException.class,() -> postsService.where("1=0").lastOrFail());
+    public void testLast$() {
+        assertThrows(NoResultException.class,() -> postsService.where("1=0").last$());
     }
 
     @Test
@@ -71,8 +71,8 @@ public class FinderMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testFindByIdOrFail() {
-        assertThrows(NoResultException.class, () -> postsService.findByIdOrFail(48484));
+    public void testFindById$() {
+        assertThrows(NoResultException.class, () -> postsService.findById$(48484));
     }
 
     @Test
@@ -81,8 +81,8 @@ public class FinderMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testFindByOrFail() {
-        assertThrows(NoResultException.class, () -> postsService.findByOrFail("post.title = 'not found'"));
+    public void testFindBy$() {
+        assertThrows(NoResultException.class, () -> postsService.findBy$("post.title = 'not found'"));
     }
 
     @Test
@@ -91,8 +91,8 @@ public class FinderMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testFindByExpOrFail() {
-        assertThrows(NoResultException.class, () -> postsService.findByExpOrFail("Title", "not found"));
+    public void testFindByExp$() {
+        assertThrows(NoResultException.class, () -> postsService.findByExp$("Title", "not found"));
     }
 
     @Test

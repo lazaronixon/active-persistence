@@ -129,7 +129,7 @@ List<Client> clients = clientsService.last(3);
 Client client = clientsService.findBy("client.firstName = ?", "Lifo"); // #<Client id: 1, firstName: "Lifo">
 Client client = clientsService.findBy("client.firstName = ?", "Jon"); // null
 
-Client client = clientsService.findByOrFail("client.firstName = ?", "does not exist"); // NoResultException
+Client client = clientsService.findBy$("client.firstName = ?", "does not exist"); // NoResultException
 ```
 
 ### Conditions
@@ -260,7 +260,7 @@ clientsService.where("client.published = false").unscoped().fetch();
 Client client = clientsService.findByExp("Name", "Nixon");
 Client client = clientsService.findByExp("NameAndLocked", "Nixon", true);
 // OR
-Client client = clientsService.findByExpOrFail("Name", "Nixon");
+Client client = clientsService.findByExp$("Name", "not found"); // NoResultException
 ```
 
 ### Find or Build a New Object

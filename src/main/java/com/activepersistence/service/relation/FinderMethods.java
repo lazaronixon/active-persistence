@@ -19,8 +19,8 @@ public interface FinderMethods<T> {
         return thiz().limit(1).fetchOne();
     }
 
-    public default T takeOrFail() {
-        return thiz().limit(1).fetchOneOrFail();
+    public default T take$() {
+        return thiz().limit(1).fetchOne$();
     }
 
     public default List<T> take(int limit) {
@@ -31,8 +31,8 @@ public interface FinderMethods<T> {
         return thiz().order(getPrimaryKey()).take();
     }
 
-    public default T firstOrFail() {
-        return thiz().order(getPrimaryKey()).takeOrFail();
+    public default T first$() {
+        return thiz().order(getPrimaryKey()).take$();
     }
 
     public default List<T> first(int limit) {
@@ -43,8 +43,8 @@ public interface FinderMethods<T> {
         return thiz().order(getPrimaryKey() + " DESC").take();
     }
 
-    public default T lastOrFail() {
-        return thiz().order(getPrimaryKey() + " DESC").takeOrFail();
+    public default T last$() {
+        return thiz().order(getPrimaryKey() + " DESC").take$();
     }
 
     public default List<T> last(int limit) {
@@ -52,7 +52,7 @@ public interface FinderMethods<T> {
     }
 
     public default T find(Object id) {
-        return thiz().where(getPrimaryKey() + " = ?", id).takeOrFail();
+        return thiz().where(getPrimaryKey() + " = ?", id).take$();
     }
 
     public default List<T> find(Object... ids) {
@@ -63,24 +63,24 @@ public interface FinderMethods<T> {
         return findBy(getPrimaryKey() + " = ?", id);
     }
 
-    public default T findByIdOrFail(Object id) {
-        return findByOrFail(getPrimaryKey() + " = ?", id);
+    public default T findById$(Object id) {
+        return findBy$(getPrimaryKey() + " = ?", id);
     }
 
     public default T findBy(String conditions, Object... params) {
         return thiz().where(conditions, params).take();
     }
 
-    public default T findByOrFail(String conditions, Object... params) {
-        return thiz().where(conditions, params).takeOrFail();
+    public default T findBy$(String conditions, Object... params) {
+        return thiz().where(conditions, params).take$();
     }
 
     public default T findByExp(String expression, Object... params) {
         return findBy(exprToJpql(expression), params);
     }
 
-    public default T findByExpOrFail(String expression, Object... params) {
-        return findByOrFail(exprToJpql(expression), params);
+    public default T findByExp$(String expression, Object... params) {
+        return findBy$(exprToJpql(expression), params);
     }
 
     public default boolean exists(String conditions, Object... params) {

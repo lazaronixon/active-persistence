@@ -69,7 +69,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return buildQuery(toJpql()).getResultStream().findFirst().orElse(null);
     }
 
-    public T fetchOneOrFail() {
+    public T fetchOne$() {
         return buildQuery(toJpql()).getSingleResult();
     }
 

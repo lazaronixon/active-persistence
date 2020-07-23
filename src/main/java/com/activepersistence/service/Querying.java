@@ -70,24 +70,24 @@ public interface Querying<T> {
         return all().take();
     }
 
-    public default T takeOrFail() {
-        return all().takeOrFail();
+    public default T take$() {
+        return all().take$();
     }
 
     public default T first() {
         return all().first();
     }
 
-    public default T firstOrFail() {
-        return all().firstOrFail();
+    public default T first$() {
+        return all().first$();
     }
 
     public default T last() {
         return all().last();
     }
 
-    public default T lastOrFail() {
-        return all().lastOrFail();
+    public default T last$() {
+        return all().last$();
     }
 
     public default List<T> take(int limit) {
@@ -114,24 +114,24 @@ public interface Querying<T> {
         return all().findById(id);
     }
 
-    public default T findByIdOrFail(Object id) {
-        return all().findByIdOrFail(id);
+    public default T findById$(Object id) {
+        return all().findById$(id);
     }
 
     public default T findBy(String conditions, Object... params) {
         return all().findBy(conditions, params);
     }
 
-    public default T findByOrFail(String conditions, Object... params) {
-        return all().findByOrFail(conditions, params);
+    public default T findBy$(String conditions, Object... params) {
+        return all().findBy$(conditions, params);
     }
 
     public default T findByExp(String expression, Object... params) {
         return all().findByExp(expression, params);
     }
 
-    public default T findByExpOrFail(String expression, Object... params) {
-        return all().findByExpOrFail(expression, params);
+    public default T findByExp$(String expression, Object... params) {
+        return all().findByExp$(expression, params);
     }
 
     public default boolean exists() {

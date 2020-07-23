@@ -47,8 +47,8 @@ public class RelationTest extends IntegrationTest {
     }
 
     @Test
-    public void testFetchOneOrFail() {
-        assertThrows(NoResultException.class,() -> postsService.where("1=0").fetchOneOrFail());
+    public void testFetchOne$() {
+        assertThrows(NoResultException.class,() -> postsService.where("1=0").fetchOne$());
     }
 
     @Test
