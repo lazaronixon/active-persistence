@@ -92,15 +92,7 @@ public interface FinderMethods<T> {
     }
 
     private String exprToJpql(String expression) {
-        return splitExpr(expression).stream().map(parametize()).collect(joining(" AND "));
-    }
-
-    private Function<String, String> parametize() {
-        return attr -> (getAlias() + "." + uncapitalize(attr) + " = ?");
-    }
-
-    private List<String> splitExpr(String expression) {
-        return asList(expression.split("And"));
+        return asList(expression.split("And")).stream().map(attr -> (getAlias() + "." + uncapitalize(attr) + " = ?")).collect(joining(" AND "));
     }
 
     private static String uncapitalize(String word) {
