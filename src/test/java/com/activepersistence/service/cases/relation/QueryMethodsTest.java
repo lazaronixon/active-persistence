@@ -258,7 +258,7 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testLiteralBoolean() {
-        assertEquals("SELECT client FROM Client client WHERE client.active = FALSE", clientsService.unscoped().where("client.active = ?", false).toJpql());
+        assertEquals("SELECT client FROM Client client WHERE client.active = false", clientsService.unscoped().where("client.active = ?", false).toJpql());
         assertTrue(clientsService.unscoped().where("client.active = ?", false).exists());
     }
 
@@ -283,11 +283,6 @@ public class QueryMethodsTest extends IntegrationTest {
     public void testLiteralRecord() {
         assertEquals("SELECT client FROM Client client WHERE client.id = 1", clientsService.unscoped().where("client.id = ?", clientsService.first()).toJpql());
         assertTrue(clientsService.unscoped().where("client.id = ?", clientsService.first()).exists());
-    }
-
-    @Test
-    public void testLiteralChar() {
-        assertEquals("SELECT client FROM Client client WHERE client.active = 'S'", clientsService.unscoped().where("client.active = ?", 'S').toJpql());
     }
 
     @Test

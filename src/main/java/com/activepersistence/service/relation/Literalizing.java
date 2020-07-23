@@ -32,8 +32,6 @@ public class Literalizing {
             return "NULL";
         } else if (value instanceof String) {
             return _literal((String) value);
-        } else if (value instanceof Character) {
-            return _literal((Character) value);
         } else if (value instanceof Integer) {
             return _literal((Integer) value);
         } else if (value instanceof Long) {
@@ -73,11 +71,11 @@ public class Literalizing {
         return "'" + value.replace("'", "''") + "'";
     }
 
-    private static String _literal(Character value) {
-        return "'" + value + "'";
+    private static String _literal(Integer value) {
+        return value.toString();
     }
 
-    private static String _literal(Integer value) {
+    private static String _literal(Boolean value) {
         return value.toString();
     }
 
@@ -95,10 +93,6 @@ public class Literalizing {
 
     private static String _literal(BigDecimal value) {
         return value + "D";
-    }
-
-    private static String _literal(Boolean value) {
-        return value ? "TRUE" : "FALSE";
     }
 
     private static String _literal(LocalDate value) {
