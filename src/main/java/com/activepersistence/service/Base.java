@@ -4,6 +4,8 @@ import javax.persistence.EntityManager;
 
 public abstract class Base<T> implements Persistence<T>, Querying<T>, Scoping<T> {
 
+    private static final String PROXY = "$Proxy$_$$_WeldSubclass";
+
     private final Class<T> entityClass;
 
     public Base(Class<T> entityClass) {
@@ -35,7 +37,7 @@ public abstract class Base<T> implements Persistence<T>, Querying<T>, Scoping<T>
 
     @Override
     public Class getRealClass() {
-        return getClass().getSimpleName().contains("$Proxy$_$$_WeldSubclass") ? getClass().getSuperclass() : getClass();
+        return getClass().getSimpleName().contains(PROXY) ? getClass().getSuperclass() : getClass();
     }
 
 }
