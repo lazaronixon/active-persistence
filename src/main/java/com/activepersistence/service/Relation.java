@@ -12,7 +12,7 @@ import com.activepersistence.service.relation.QueryMethods;
 import com.activepersistence.service.relation.SpawnMethods;
 import static com.activepersistence.service.relation.ValueMethods.CONSTRUCTOR;
 import com.activepersistence.service.relation.Values;
-import static java.lang.Character.toLowerCase;
+import static java.beans.Introspector.decapitalize;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -315,11 +315,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private Entity buildEntity(Class entityClass) {
-        return new Entity(entityClass, uncapitalize(entityClass.getSimpleName()));
-    }
-
-    private static String uncapitalize(String word) {
-        return toLowerCase(word.charAt(0)) + word.substring(1);
+        return new Entity(entityClass, decapitalize(entityClass.getSimpleName()));
     }
 
     private int _updateAll(Object updates) {

@@ -1,10 +1,9 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
-import static java.lang.Character.toLowerCase;
+import static java.beans.Introspector.decapitalize;
 import static java.util.Arrays.asList;
 import java.util.List;
-import java.util.function.Function;
 import static java.util.stream.Collectors.joining;
 
 public interface FinderMethods<T> {
@@ -92,10 +91,6 @@ public interface FinderMethods<T> {
     }
 
     private String exprToJpql(String expression) {
-        return asList(expression.split("And")).stream().map(attr -> (getAlias() + "." + uncapitalize(attr) + " = ?")).collect(joining(" AND "));
-    }
-
-    private static String uncapitalize(String word) {
-        return toLowerCase(word.charAt(0)) + word.substring(1);
+        return asList(expression.split("And")).stream().map(attr -> (getAlias() + "." + decapitalize(attr) + " = ?")).collect(joining(" AND "));
     }
 }
