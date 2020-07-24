@@ -4,6 +4,7 @@ import com.activepersistence.service.Relation;
 import static java.beans.Introspector.decapitalize;
 import static java.util.Arrays.asList;
 import java.util.List;
+import java.util.function.Function;
 import static java.util.stream.Collectors.joining;
 
 public interface FinderMethods<T> {
@@ -91,6 +92,10 @@ public interface FinderMethods<T> {
     }
 
     private String exprToJpql(String expression) {
-        return asList(expression.split("And")).stream().map(attr -> (getAlias() + "." + decapitalize(attr) + " = ?")).collect(joining(" AND "));
+        return asList(expression.split("And")).stream().map(parametize()).collect(joining(" AND "));
+    }
+
+    private Function<String, String> parametize() {
+        return attr -> (getAlias() + "." + decapitalize(attr) + " = ?");
     }
 }
