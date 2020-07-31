@@ -190,9 +190,9 @@ public class Values {
 
     private void reset(ValueMethods value) {
         switch (value) {
-            case FROM:        from = new FromClause(); break;
-            case WHERE:       where.clear();           break;
-            case HAVING:      having.clear();          break;
+            case FROM:   from = new FromClause(); break;
+            case WHERE:  where.clear();           break;
+            case HAVING: having.clear();          break;
 
             case LIMIT:       limit       = 0;         break;
             case OFFSET:      offset      = 0;         break;

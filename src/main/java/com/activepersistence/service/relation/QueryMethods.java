@@ -178,7 +178,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> rewhere(String conditions, Object... params) {
-        return spawn().except(ValueMethods.WHERE, ValueMethods.BIND).where(conditions, params);
+        return spawn().except(ValueMethods.WHERE).where(conditions, params);
     }
 
     public default Relation<T> reorder(String... fields) {
@@ -191,11 +191,11 @@ public interface QueryMethods<T> {
 
     private void unscoping(ValueMethods scope) {
         switch (scope) {
-            case FROM:       getValues().except$(FROM);   break;
-            case WHERE:      getValues().except$(WHERE);  break;
-            case HAVING:     getValues().except$(HAVING); break;
+            case FROM:   getValues().except$(FROM);   break;
+            case WHERE:  getValues().except$(WHERE);  break;
+            case HAVING: getValues().except$(HAVING); break;
 
-            case SELECT:     getValues().except$(SELECT, CONSTRUCTOR); break;
+            case SELECT: getValues().except$(SELECT, CONSTRUCTOR); break;
 
             case GROUP:            getValues().except$(GROUP);            break;
             case ORDER:            getValues().except$(ORDER);            break;
