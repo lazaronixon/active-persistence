@@ -127,7 +127,7 @@ public class MutationTest extends IntegrationTest {
         var relation  = postsService.all();
         var relation2 = relation.from$("foo");
         assertEquals(relation, relation2);
-        assertEquals("foo", relation2.getValues().getFrom().getValue());
+        assertEquals("foo", relation2.getValues().getFrom());
     }
 
     @Test

@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 
 public class Values {
 
-    private FromClause from = new FromClause();
+    private String from = null;
 
     private int limit           = 0;
     private int offset          = 0;
@@ -52,7 +52,7 @@ public class Values {
         unscope        = new ArrayList(other.unscope);
     }
 
-    public FromClause getFrom() {
+    public String getFrom() {
         return from;
     }
 
@@ -128,7 +128,7 @@ public class Values {
         this.select = select;
     }
 
-    public void setFrom(FromClause from) {
+    public void setFrom(String from) {
         this.from = from;
     }
 
@@ -190,9 +190,9 @@ public class Values {
 
     private void reset(ValueMethods value) {
         switch (value) {
-            case FROM:   from = new FromClause(); break;
-            case WHERE:  where.clear();           break;
-            case HAVING: having.clear();          break;
+            case FROM:   from = null;    break;
+            case WHERE:  where.clear();  break;
+            case HAVING: having.clear(); break;
 
             case LIMIT:       limit       = 0;         break;
             case OFFSET:      offset      = 0;         break;

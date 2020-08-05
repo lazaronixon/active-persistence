@@ -97,12 +97,6 @@ public class QueryMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testFromSubquery() {
-        var subquery = clientsService.unscoped().select("client.postId");
-        assertEquals("SELECT post FROM Post post, (SELECT client.postId FROM Client client) subquery", postsService.from(subquery).toJpql());
-    }
-
-    @Test
     public void testUnscope() {
         assertEquals("SELECT post FROM Post post WHERE 1=0", postsService.where("1=0").order("post.id").unscope(ORDER).toJpql());
     }

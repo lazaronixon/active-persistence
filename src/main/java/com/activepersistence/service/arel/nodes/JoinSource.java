@@ -8,8 +8,6 @@ public class JoinSource extends Node {
 
     private Source source;
 
-    private TableAlias tableAlias;
-
     private final List<Join> joins = new ArrayList();
 
     public JoinSource(Source source) {
@@ -22,14 +20,6 @@ public class JoinSource extends Node {
 
     public void setSource(Source source) {
         this.source = source;
-    }
-
-    public TableAlias getTableAlias() {
-        return tableAlias;
-    }
-
-    public void setTableAlias(TableAlias tableAlias) {
-        this.tableAlias = tableAlias;
     }
 
     public List<Join> getJoins() {

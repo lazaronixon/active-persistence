@@ -11,7 +11,6 @@ import com.activepersistence.service.arel.nodes.DeleteStatement;
 import com.activepersistence.service.arel.nodes.JoinSource;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
-import com.activepersistence.service.arel.nodes.TableAlias;
 import com.activepersistence.service.arel.nodes.UpdateStatement;
 import com.activepersistence.service.arel.visitors.Visitable;
 import com.activepersistence.service.arel.visitors.Visitor;
@@ -73,12 +72,6 @@ public class ToJpqlTest {
     @Test
     public void testVisitEntity() {
         assertEquals("Post post", compile(new Entity(Post.class, "post")));
-    }
-
-    @Test
-    public void testVisitTableAlias() {
-        var subquery = new SelectStatement(new Entity(Post.class, "post"));
-        assertEquals("(SELECT FROM Post post) subquery", compile(new TableAlias(subquery, jpql("subquery"))));
     }
 
     @Test

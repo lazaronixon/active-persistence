@@ -228,10 +228,6 @@ public interface Querying<T> {
         return all().from(from);
     }
 
-    public default Relation<T> from(Relation relation) {
-        return all().from(relation);
-    }
-
     public default Relation<T> none() {
         return all().none();
     }
