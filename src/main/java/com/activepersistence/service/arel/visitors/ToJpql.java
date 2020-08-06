@@ -151,7 +151,7 @@ public class ToJpql extends Visitor {
     }
 
     public StringBuilder visitAssignment(Assignment o, StringBuilder collector) {
-        collector = visit(o.getColumn(), collector);
+        collector = visit(o.getField(), collector);
         collector.append(" = ");
         visit(o.getValue(), collector);
         return collector;

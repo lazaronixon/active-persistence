@@ -134,7 +134,7 @@ public class ToJpqlTest {
 
     @Test
     public void testVisitAssignment() {
-        assertEquals("column = value", compile(new Assignment("column", "value")));
+        assertEquals("field = value", compile(new Assignment("field", "value")));
     }
 
     private String compile(Visitable node) {

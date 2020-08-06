@@ -4,21 +4,21 @@ import static com.activepersistence.service.Arel.jpql;
 
 public class Assignment extends Node {
 
-    private final JpqlLiteral column;
+    private final JpqlLiteral field;
     private final JpqlLiteral value;
 
-    public Assignment(JpqlLiteral column, JpqlLiteral value) {
-        this.column = column;
-        this.value  = value;
+    public Assignment(JpqlLiteral field, JpqlLiteral value) {
+        this.field = field;
+        this.value = value;
     }
 
-    public Assignment(String column, String value) {
-        this.column = jpql(column);
-        this.value  = jpql(value);
+    public Assignment(String field, String value) {
+        this.field = jpql(field);
+        this.value = jpql(value);
     }
 
-    public JpqlLiteral getColumn() {
-        return column;
+    public JpqlLiteral getField() {
+        return field;
     }
 
     public JpqlLiteral getValue() {
