@@ -12,7 +12,6 @@ import com.activepersistence.service.relation.QueryMethods;
 import com.activepersistence.service.relation.SpawnMethods;
 import com.activepersistence.service.relation.Values;
 import static java.beans.Introspector.decapitalize;
-import static java.util.Arrays.asList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,7 +22,7 @@ import static java.util.stream.Collectors.toMap;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import static javax.persistence.LockModeType.NONE;
-import static javax.persistence.LockModeType.PESSIMISTIC_READ;
+import static javax.persistence.LockModeType.PESSIMISTIC_WRITE;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
@@ -295,7 +294,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private LockModeType buildLockMode() {
-        return values.isLock() ? PESSIMISTIC_READ : NONE;
+        return values.isLock() ? PESSIMISTIC_WRITE : NONE;
     }
 
     private Entity buildEntity(Class entityClass) {
