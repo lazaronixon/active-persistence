@@ -2,7 +2,6 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.model.Base;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -32,16 +31,12 @@ public class Literalizing {
             return "NULL";
         } else if (value instanceof String) {
             return _literal((String) value);
-        } else if (value instanceof Integer) {
-            return _literal((Integer) value);
         } else if (value instanceof Long) {
             return _literal((Long) value);
         } else if (value instanceof Float) {
             return _literal((Float) value);
-        } else if (value instanceof Double) {
-            return _literal((Double) value);
-        } else if (value instanceof BigDecimal) {
-            return _literal((BigDecimal) value);
+        } else if (value instanceof Number) {
+            return _literal((Number) value);
         } else if (value instanceof Boolean) {
             return _literal((Boolean) value);
         } else if (value instanceof LocalDate) {
@@ -59,24 +54,12 @@ public class Literalizing {
         }
     }
 
-    private static String _literal(Class value) {
-        return value.getSimpleName();
-    }
-
-    private static String _literal(Enum value) {
-        return value.getClass().getName() + "." + value.name();
-    }
-
     private static String _literal(String value) {
-        return "'" + value.replace("'", "''") + "'";
-    }
-
-    private static String _literal(Integer value) {
-        return value.toString();
+        return "'" + value.replaceAll("'", "''") + "'";
     }
 
     private static String _literal(Boolean value) {
-        return value.toString();
+        return value ? "TRUE" : "FALSE";
     }
 
     private static String _literal(Long value) {
@@ -85,14 +68,6 @@ public class Literalizing {
 
     private static String _literal(Float value) {
         return value + "F";
-    }
-
-    private static String _literal(Double value) {
-        return value + "D";
-    }
-
-    private static String _literal(BigDecimal value) {
-        return value + "D";
     }
 
     private static String _literal(LocalDate value) {
@@ -105,6 +80,18 @@ public class Literalizing {
 
     private static String _literal(LocalDateTime value) {
         return "{ts '" + value.format(DATE_TIME_FORMAT) + "'}";
+    }
+
+    private static String _literal(Number value) {
+        return value.toString();
+    }
+
+    private static String _literal(Class value) {
+        return value.getSimpleName();
+    }
+
+    private static String _literal(Enum value) {
+        return value.getClass().getName() + "." + value.name();
     }
 
 }

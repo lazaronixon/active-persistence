@@ -246,13 +246,13 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testLiteralDouble() {
-        assertEquals("SELECT client FROM Client client WHERE client.ratio = 3.14D", clientsService.unscoped().where("client.ratio = ?", 3.14D).toJpql());
+        assertEquals("SELECT client FROM Client client WHERE client.ratio = 3.14", clientsService.unscoped().where("client.ratio = ?", 3.14D).toJpql());
         assertTrue(clientsService.unscoped().where("client.ratio = ?", 3.14D).exists());
     }
 
     @Test
     public void testLiteralBoolean() {
-        assertEquals("SELECT client FROM Client client WHERE client.active = false", clientsService.unscoped().where("client.active = ?", false).toJpql());
+        assertEquals("SELECT client FROM Client client WHERE client.active = FALSE", clientsService.unscoped().where("client.active = ?", false).toJpql());
         assertTrue(clientsService.unscoped().where("client.active = ?", false).exists());
     }
 
@@ -281,7 +281,7 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testLiteralBigDecimal() {
-        assertEquals("SELECT client FROM Client client WHERE client.salary = 8500.25D", clientsService.unscoped().where("client.salary = ?", BigDecimal.valueOf(8500.25)).toJpql());
+        assertEquals("SELECT client FROM Client client WHERE client.salary = 8500.25", clientsService.unscoped().where("client.salary = ?", BigDecimal.valueOf(8500.25)).toJpql());
         assertTrue(clientsService.unscoped().where("client.salary = ?", BigDecimal.valueOf(8500.25)).exists());
     }
 
