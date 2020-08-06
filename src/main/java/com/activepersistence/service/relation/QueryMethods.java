@@ -21,28 +21,20 @@ public interface QueryMethods<T> {
         getValues().setConstructor(true); getValues().getSelect().addAll(asList(fields)); return thiz();
     }
 
-    public default Relation<T> joins(String value) {
-        return spawn().joins$(value);
+    public default Relation<T> joins(String... values) {
+        return spawn().joins$(values);
     }
 
-    public default Relation<T> joins$(String value) {
-        getValues().getJoins().add(new JoinClause(value)); return thiz();
+    public default Relation<T> joins$(String... values) {
+        getValues().getJoins().addAll(asList(values)); return thiz();
     }
 
-    public default Relation<T> joins(String path, String alias) {
-        return spawn().joins$(path, alias);
+    public default Relation<T> leftOuterJoins(String... values) {
+        return spawn().leftOuterJoins$(values);
     }
 
-    public default Relation<T> joins$(String path, String alias) {
-        getValues().getJoins().add(new JoinClause(path, alias)); return thiz();
-    }
-
-    public default Relation<T> leftOuterJoins(String path, String alias) {
-        return spawn().leftOuterJoins$(path, alias);
-    }
-
-    public default Relation<T> leftOuterJoins$(String path, String alias) {
-        getValues().getLeftOuterJoins().add(new JoinClause(path, alias)); return thiz();
+    public default Relation<T> leftOuterJoins$(String... values) {
+        getValues().getLeftOuterJoins().addAll(asList(values)); return thiz();
     }
 
     public default Relation<T> where(String conditions, Object... params) {

@@ -51,16 +51,16 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testJoinsAlias() {
-        assertEquals("SELECT post FROM Post post INNER JOIN post.comments c",
-                postsService.joins("post.comments", "c").toJpql());
-        assertTrue(postsService.joins("post.comments", "c").exists());
+        assertEquals("SELECT post FROM Post post INNER JOIN post.comments comments",
+                postsService.joins("post.comments").toJpql());
+        assertTrue(postsService.joins("post.comments").exists());
     }
 
     @Test
     public void testLeftOuterJoin() {
-        assertEquals("SELECT post FROM Post post LEFT OUTER JOIN post.comments c",
-                postsService.leftOuterJoins("post.comments", "c").toJpql());
-        assertTrue(postsService.leftOuterJoins("post.comments", "c").exists());
+        assertEquals("SELECT post FROM Post post LEFT OUTER JOIN post.comments comments",
+                postsService.leftOuterJoins("post.comments").toJpql());
+        assertTrue(postsService.leftOuterJoins("post.comments").exists());
     }
 
     @Test

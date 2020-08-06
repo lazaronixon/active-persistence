@@ -23,8 +23,8 @@ public class Values {
     private List<String> group              = new ArrayList();
     private List<String> having             = new ArrayList();
     private List<String> order              = new ArrayList();
-    private List<JoinClause> joins          = new ArrayList();
-    private List<JoinClause> leftOuterJoins = new ArrayList();
+    private List<String> joins              = new ArrayList();
+    private List<String> leftOuterJoins     = new ArrayList();
     private List<String> includes           = new ArrayList();
     private List<String> eagerLoad          = new ArrayList();
     private List<ValueMethods> unscope      = new ArrayList();
@@ -76,11 +76,11 @@ public class Values {
         return order;
     }
 
-    public List<JoinClause> getJoins() {
+    public List<String> getJoins() {
         return joins;
     }
 
-    public List<JoinClause> getLeftOuterJoins() {
+    public List<String> getLeftOuterJoins() {
         return leftOuterJoins;
     }
 

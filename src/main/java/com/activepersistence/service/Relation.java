@@ -10,9 +10,9 @@ import com.activepersistence.service.relation.FinderMethods;
 import static com.activepersistence.service.relation.Literalizing.literal;
 import com.activepersistence.service.relation.QueryMethods;
 import com.activepersistence.service.relation.SpawnMethods;
-import static com.activepersistence.service.relation.ValueMethods.CONSTRUCTOR;
 import com.activepersistence.service.relation.Values;
 import static java.beans.Introspector.decapitalize;
+import static java.util.Arrays.asList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -269,15 +269,15 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private void buildJoins(SelectManager result) {
         values.getJoins().forEach(join -> {
-            if (join.getAlias() == null) {
-                result.join(join.getPath());
+            if (isJoinFragment(join)) {
+                result.join(join);
             } else {
-                result.join(join.getPath(), join.getAlias());
+                result.join(join, fieldAlias(join));
             }
         });
 
         values.getLeftOuterJoins().forEach(leftOuterJoin -> {
-            result.outerJoin(leftOuterJoin.getPath(), leftOuterJoin.getAlias());
+            result.outerJoin(leftOuterJoin, fieldAlias(leftOuterJoin));
         });
     }
 
@@ -296,14 +296,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private LockModeType buildLockMode() {
         return values.isLock() ? PESSIMISTIC_READ : NONE;
-    }
-
-    private boolean isValidRelationForUpdate() {
-        return values.isDistinct() == false
-                && values.getGroup().isEmpty()
-                && values.getHaving().isEmpty()
-                && values.getJoins().isEmpty()
-                && values.getLeftOuterJoins().isEmpty();
     }
 
     private Entity buildEntity(Class entityClass) {
@@ -331,6 +323,22 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private Map<String, String> substituteValues(Map<String, Object> updates) {
         return updates.entrySet().stream().collect(toMap(Entry::getKey, v -> literal(v.getValue())));
+    }
+
+    private boolean isValidRelationForUpdate() {
+        return values.isDistinct() == false
+                && values.getGroup().isEmpty()
+                && values.getHaving().isEmpty()
+                && values.getJoins().isEmpty()
+                && values.getLeftOuterJoins().isEmpty();
+    }
+
+    private boolean isJoinFragment(String join) {
+        return join.startsWith("JOIN ") || join.startsWith("INNER ") || join.startsWith("LEFT ");
+    }
+
+    private String fieldAlias(String join) {
+        var result = join.split("[.]"); return result[result.length -1];
     }
 
 }

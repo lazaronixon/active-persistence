@@ -225,9 +225,9 @@ Client client = clientsService.lock().first();
 ```java
 authorsService.joins("JOIN author.post p").fetch();
 //OR
-authorsService.joins("author.post", "p").fetch();
+authorsService.joins("author.post").fetch();
 //OR
-authorsService.leftOuterJoins("author.post", "p").fetch();
+authorsService.leftOuterJoins("author.post").fetch();
 ```
 
 ## Eager Loading Associations

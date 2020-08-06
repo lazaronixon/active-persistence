@@ -164,16 +164,12 @@ public interface Querying<T> {
         return all().select(values);
     }
 
-    public default Relation<T> joins(String value) {
-        return all().joins(value);
+    public default Relation<T> joins(String... values) {
+        return all().joins(values);
     }
 
-    public default Relation<T> joins(String path, String alias) {
-        return all().joins(path, alias);
-    }
-
-    public default Relation<T> leftOuterJoins(String path, String alias) {
-        return all().leftOuterJoins(path, alias);
+    public default Relation<T> leftOuterJoins(String... values) {
+        return all().leftOuterJoins(values);
     }
 
     public default Relation<T> group(String... values) {

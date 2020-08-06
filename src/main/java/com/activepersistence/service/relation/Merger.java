@@ -24,8 +24,8 @@ public class Merger {
         if (values.getLimit()   != 0)     relation.limit$(values.getLimit());
         if (values.getOffset()  != 0)     relation.offset$(values.getOffset());
 
-        values.getJoins().forEach(this::mergeJoins$);
-        values.getLeftOuterJoins().forEach(this::mergeLeftOuterJoins$);
+        values.getJoins().forEach(relation::joins$);
+        values.getLeftOuterJoins().forEach(relation::leftOuterJoins$);
         values.getOrder().forEach(this::mergeOrder$);
 
         values.getSelect().forEach(relation::select$);
@@ -46,18 +46,6 @@ public class Merger {
     private boolean shouldReplaceFromClause() {
         return relation.getValues().getFrom() == null && values.getFrom() != null
                 && relation.getEntityClass() == other.getEntityClass();
-    }
-
-    private void mergeJoins$(JoinClause joinClause) {
-        if (joinClause.getAlias() == null) {
-            relation.joins$(joinClause.getPath());
-        } else {
-            relation.joins$(joinClause.getPath(), joinClause.getAlias());
-        }
-    }
-
-    private void mergeLeftOuterJoins$(JoinClause joinClause) {
-        relation.leftOuterJoins$(joinClause.getPath(), joinClause.getAlias());
     }
 
     private void mergeOrder$(String value) {

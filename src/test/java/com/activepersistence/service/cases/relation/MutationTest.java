@@ -37,16 +37,9 @@ public class MutationTest extends IntegrationTest {
     }
 
     @Test
-    public void testJoin2$() {
-        var relation  = postsService.all();
-        var relation2 = relation.joins$("foo", "foo");
-        assertEquals(relation, relation2);
-    }
-
-    @Test
     public void testLeftOuterJoin$() {
         var relation  = postsService.all();
-        var relation2 = relation.leftOuterJoins$("foo", "foo");
+        var relation2 = relation.leftOuterJoins$("foo");
         assertEquals(relation, relation2);
     }
 
