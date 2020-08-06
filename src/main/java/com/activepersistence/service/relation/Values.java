@@ -18,16 +18,16 @@ public class Values {
     private boolean reordering  = false;
     private boolean constructor = false;
 
-    private List<String> select             = new ArrayList();
-    private List<String> where              = new ArrayList();
-    private List<String> group              = new ArrayList();
-    private List<String> having             = new ArrayList();
-    private List<String> order              = new ArrayList();
-    private List<String> joins              = new ArrayList();
-    private List<String> leftOuterJoins     = new ArrayList();
-    private List<String> includes           = new ArrayList();
-    private List<String> eagerLoad          = new ArrayList();
-    private List<ValueMethods> unscope      = new ArrayList();
+    private List<String> select         = new ArrayList();
+    private List<String> where          = new ArrayList();
+    private List<String> group          = new ArrayList();
+    private List<String> having         = new ArrayList();
+    private List<String> order          = new ArrayList();
+    private List<String> joins          = new ArrayList();
+    private List<String> leftOuterJoins = new ArrayList();
+    private List<String> includes       = new ArrayList();
+    private List<String> eagerLoad      = new ArrayList();
+    private List<ValueMethods> unscope  = new ArrayList();
 
     public Values() {}
 
@@ -194,13 +194,13 @@ public class Values {
             case WHERE:  where.clear();  break;
             case HAVING: having.clear(); break;
 
-            case LIMIT:       limit       = 0;         break;
-            case OFFSET:      offset      = 0;         break;
-            case LOCK:        lock        = false;     break;
-            case READONLY:    readonly    = false;     break;
-            case DISTINCT:    distinct    = false;     break;
-            case REORDERING:  reordering  = false;     break;
-            case CONSTRUCTOR: constructor = false;     break;
+            case LIMIT:       limit       = 0;     break;
+            case OFFSET:      offset      = 0;     break;
+            case LOCK:        lock        = false; break;
+            case READONLY:    readonly    = false; break;
+            case DISTINCT:    distinct    = false; break;
+            case REORDERING:  reordering  = false; break;
+            case CONSTRUCTOR: constructor = false; break;
 
             case SELECT:           select.clear();         break;
             case GROUP:            group.clear();          break;

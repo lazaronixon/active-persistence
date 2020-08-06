@@ -7,7 +7,7 @@ public abstract class Node implements Visitable {
 
     public String toJpql() {
         var collector = new StringBuilder();
-        collector = Entity.visitor.accept(this, collector);
+        collector     = Entity.visitor.accept(this, collector);
         return collector.toString();
     }
 
