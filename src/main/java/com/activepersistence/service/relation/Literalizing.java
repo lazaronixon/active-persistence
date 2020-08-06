@@ -35,6 +35,8 @@ public class Literalizing {
             return _literal((Long) value);
         } else if (value instanceof Float) {
             return _literal((Float) value);
+        } else if (value instanceof Double) {
+            return _literal((Double) value);
         } else if (value instanceof Number) {
             return _literal((Number) value);
         } else if (value instanceof Boolean) {
@@ -70,6 +72,14 @@ public class Literalizing {
         return value + "F";
     }
 
+    private static String _literal(Double value) {
+        return value + "D";
+    }
+
+    private static String _literal(Number value) {
+        return value.toString();
+    }
+
     private static String _literal(LocalDate value) {
         return "{d '" + value.format(DATE_FORMAT) + "'}";
     }
@@ -80,10 +90,6 @@ public class Literalizing {
 
     private static String _literal(LocalDateTime value) {
         return "{ts '" + value.format(DATE_TIME_FORMAT) + "'}";
-    }
-
-    private static String _literal(Number value) {
-        return value.toString();
     }
 
     private static String _literal(Class value) {

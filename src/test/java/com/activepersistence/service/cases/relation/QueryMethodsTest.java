@@ -224,11 +224,6 @@ public class QueryMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testLiteralStringDollar() {
-        assertEquals("SELECT client FROM Client client WHERE client.name = '$Nixon'", clientsService.unscoped().where("client.name = ?", "$Nixon").toJpql());
-    }
-
-    @Test
     public void testLiteralInteger() {
         assertEquals("SELECT client FROM Client client WHERE client.id = 1234", clientsService.unscoped().where("client.id = ?", 1234).toJpql());
     }
@@ -246,7 +241,7 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testLiteralDouble() {
-        assertEquals("SELECT client FROM Client client WHERE client.ratio = 3.14", clientsService.unscoped().where("client.ratio = ?", 3.14D).toJpql());
+        assertEquals("SELECT client FROM Client client WHERE client.ratio = 3.14D", clientsService.unscoped().where("client.ratio = ?", 3.14D).toJpql());
         assertTrue(clientsService.unscoped().where("client.ratio = ?", 3.14D).exists());
     }
 
