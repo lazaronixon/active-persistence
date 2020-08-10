@@ -1,13 +1,14 @@
 package com.activepersistence.service.arel.nodes;
 
 import static com.activepersistence.service.Arel.jpql;
+import com.activepersistence.service.arel.visitors.Visitable;
 
 public class Assignment extends Node {
 
-    private final JpqlLiteral field;
-    private final JpqlLiteral value;
+    private final Visitable field;
+    private final Object value;
 
-    public Assignment(JpqlLiteral field, JpqlLiteral value) {
+    public Assignment(Visitable field, Object value) {
         this.field = field;
         this.value = value;
     }
@@ -17,11 +18,11 @@ public class Assignment extends Node {
         this.value = jpql(value);
     }
 
-    public JpqlLiteral getField() {
+    public Visitable getField() {
         return field;
     }
 
-    public JpqlLiteral getValue() {
+    public Object getValue() {
         return value;
     }
 

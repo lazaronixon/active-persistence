@@ -1,6 +1,7 @@
 package com.activepersistence.service.arel.nodes;
 
 import com.activepersistence.service.arel.Entity;
+import com.activepersistence.service.arel.visitors.Visitable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +15,10 @@ public class SelectCore extends Node {
 
     private Constructor constructor;
 
-    private final List<Node> projections  = new ArrayList();
-    private final List<Node> wheres       = new ArrayList();
-    private final List<Node> groups       = new ArrayList();
-    private final List<Node> havings      = new ArrayList();
+    private final List<Visitable> projections  = new ArrayList();
+    private final List<Visitable> wheres       = new ArrayList();
+    private final List<Visitable> groups       = new ArrayList();
+    private final List<Visitable> havings      = new ArrayList();
 
     public SelectCore(Entity entity) {
         this.entity = entity;
@@ -32,11 +33,11 @@ public class SelectCore extends Node {
         return constructor;
     }
 
-    public List<Node> getGroups() {
+    public List<Visitable> getGroups() {
         return groups;
     }
 
-    public List<Node> getHavings() {
+    public List<Visitable> getHavings() {
         return havings;
     }
 
@@ -56,11 +57,11 @@ public class SelectCore extends Node {
         this.constructor = value ? new Constructor(entity.getName(), projections) : null;
     }
 
-    public List<Node> getProjections() {
+    public List<Visitable> getProjections() {
         return projections;
     }
 
-    public List<Node> getWheres() {
+    public List<Visitable> getWheres() {
         return wheres;
     }
 

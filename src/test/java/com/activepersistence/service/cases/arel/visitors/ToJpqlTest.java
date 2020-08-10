@@ -4,11 +4,16 @@ import static com.activepersistence.service.Arel.createInnerJoin;
 import static com.activepersistence.service.Arel.createOuterJoin;
 import static com.activepersistence.service.Arel.createStringJoin;
 import static com.activepersistence.service.Arel.jpql;
+import com.activepersistence.service.arel.Attribute;
 import com.activepersistence.service.arel.Entity;
+import com.activepersistence.service.arel.collectors.JPQLString;
 import com.activepersistence.service.arel.nodes.Assignment;
+import com.activepersistence.service.arel.nodes.BindParam;
 import com.activepersistence.service.arel.nodes.Constructor;
 import com.activepersistence.service.arel.nodes.DeleteStatement;
+import com.activepersistence.service.arel.nodes.Equality;
 import com.activepersistence.service.arel.nodes.JoinSource;
+import com.activepersistence.service.arel.nodes.NotEqual;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.UpdateStatement;
@@ -137,8 +142,25 @@ public class ToJpqlTest {
         assertEquals("field = value", compile(new Assignment("field", "value")));
     }
 
+    @Test
+    public void testVisitEquality() {
+        var entity = new Entity(Post.class, "post");
+        assertEquals("post.field = value", compile(new Equality(new Attribute(entity, "field"), jpql("value"))));
+    }
+
+    @Test
+    public void testVisitNotEqual() {
+        var entity = new Entity(Post.class, "post");
+        assertEquals("post.field != value", compile(new NotEqual(new Attribute(entity, "field"), jpql("value"))));
+    }
+
+    @Test
+    public void testVisitBindParam() {
+        assertEquals("?1", compile(new BindParam(1)));
+    }
+
     private String compile(Visitable node) {
-        return visitor.accept(node, new StringBuilder()).toString();
+        return visitor.accept(node, new JPQLString()).getValue();
     }
 
 }

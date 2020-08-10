@@ -7,7 +7,7 @@ import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.UpdateManager;
 import com.activepersistence.service.relation.Calculation;
 import com.activepersistence.service.relation.FinderMethods;
-import static com.activepersistence.service.relation.Literalizing.literal;
+import static com.activepersistence.service.Literalizing.literal;
 import com.activepersistence.service.relation.QueryMethods;
 import com.activepersistence.service.relation.SpawnMethods;
 import com.activepersistence.service.relation.Values;
@@ -204,9 +204,9 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         buildSelect(result);
         buildFrom(result);
         buildJoins(result);
+        buildWhere(result);
+        buildHaving(result);
 
-        values.getWhere().forEach(result::where);
-        values.getHaving().forEach(result::having);
         values.getGroup().forEach(result::group);
         values.getOrder().forEach(result::order);
 
@@ -278,6 +278,14 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         values.getLeftOuterJoins().forEach(leftOuterJoin -> {
             result.outerJoin(leftOuterJoin, fieldAlias(leftOuterJoin));
         });
+    }
+
+    private void buildWhere(SelectManager result) {
+        if (!values.getWhere().isEmpty()) result.where(values.getWhere().getAst());
+    }
+
+    private void buildHaving(SelectManager result) {
+        if (!values.getHaving().isEmpty()) result.having(values.getHaving().getAst());
     }
 
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {

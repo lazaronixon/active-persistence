@@ -1,6 +1,7 @@
 package com.activepersistence.service.arel.nodes;
 
 import com.activepersistence.service.arel.Entity;
+import com.activepersistence.service.arel.visitors.Visitable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +9,9 @@ public class DeleteStatement extends Node {
 
     private Entity relation;
 
-    private List<Node> wheres = new ArrayList();
+    private List<Visitable> wheres = new ArrayList();
 
-    private List<Node> orders = new ArrayList();
+    private List<Visitable> orders = new ArrayList();
 
     public Entity getRelation() {
         return relation;
@@ -20,19 +21,19 @@ public class DeleteStatement extends Node {
         this.relation = relation;
     }
 
-    public List<Node> getWheres() {
+    public List<Visitable> getWheres() {
         return wheres;
     }
 
-    public void setWheres(List<Node> wheres) {
+    public void setWheres(List<Visitable> wheres) {
         this.wheres = wheres;
     }
 
-    public List<Node> getOrders() {
+    public List<Visitable> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<Node> orders) {
+    public void setOrders(List<Visitable> orders) {
         this.orders = orders;
     }
 

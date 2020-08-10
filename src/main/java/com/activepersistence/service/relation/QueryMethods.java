@@ -4,6 +4,7 @@ import com.activepersistence.service.NullRelation;
 import com.activepersistence.service.Relation;
 import static com.activepersistence.service.relation.ValueMethods.*;
 import static java.util.Arrays.asList;
+import java.util.Map;
 
 public interface QueryMethods<T> {
 
@@ -41,8 +42,16 @@ public interface QueryMethods<T> {
         return spawn().where$(conditions, params);
     }
 
+    public default Relation<T> where(Map<String, Object> conditions) {
+        return spawn().where$(conditions);
+    }
+
     public default Relation<T> where$(String conditions, Object... params) {
-        getValues().getWhere().add(new WhereClauseFactory(conditions, params).build()); return thiz();
+        getValues().getWhere().add(whereClauseFactory().build(conditions, params)); return thiz();
+    }
+
+    public default Relation<T> where$(Map<String, Object> conditions) {
+        getValues().getWhere().add(whereClauseFactory().build(conditions)); return thiz();
     }
 
     public default Relation<T> group(String... fields) {
@@ -57,8 +66,16 @@ public interface QueryMethods<T> {
         return spawn().having$(conditions, params);
     }
 
+    public default Relation<T> having(Map<String, Object> conditions) {
+        return spawn().having$(conditions);
+    }
+
     public default Relation<T> having$(String conditions, Object... params) {
-        getValues().getHaving().add(new WhereClauseFactory(conditions, params).build()); return thiz();
+        getValues().getHaving().add(havingClauseFactory().build(conditions, params)); return thiz();
+    }
+
+    public default Relation<T> having$(Map<String, Object> conditions) {
+        getValues().getHaving().add(havingClauseFactory().build(conditions)); return thiz();
     }
 
     public default Relation<T> order(String... fields) {
@@ -192,5 +209,13 @@ public interface QueryMethods<T> {
 
             default: throw new RuntimeException("invalid unscoping value: " + scope);
         }
+    }
+
+    private WhereClauseFactory whereClauseFactory() {
+        return new WhereClauseFactory();
+    }
+
+    private WhereClauseFactory havingClauseFactory() {
+        return new WhereClauseFactory();
     }
 }

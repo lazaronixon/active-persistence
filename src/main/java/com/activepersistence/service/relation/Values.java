@@ -18,16 +18,17 @@ public class Values {
     private boolean reordering  = false;
     private boolean constructor = false;
 
-    private List<String> select         = new ArrayList();
-    private List<String> where          = new ArrayList();
-    private List<String> group          = new ArrayList();
-    private List<String> having         = new ArrayList();
-    private List<String> order          = new ArrayList();
-    private List<String> joins          = new ArrayList();
-    private List<String> leftOuterJoins = new ArrayList();
-    private List<String> includes       = new ArrayList();
-    private List<String> eagerLoad      = new ArrayList();
-    private List<ValueMethods> unscope  = new ArrayList();
+    private WhereClause  where  = WhereClause.empty();
+    private WhereClause  having = WhereClause.empty();
+
+    private List<String> select          = new ArrayList();
+    private List<String> group           = new ArrayList();
+    private List<String> order           = new ArrayList();
+    private List<String> joins           = new ArrayList();
+    private List<String> leftOuterJoins  = new ArrayList();
+    private List<String> includes        = new ArrayList();
+    private List<String> eagerLoad       = new ArrayList();
+    private List<ValueMethods> unscope   = new ArrayList();
 
     public Values() {}
 
@@ -41,9 +42,9 @@ public class Values {
         distinct       = other.distinct;
         reordering     = other.reordering;
         select         = new ArrayList(other.select);
-        where          = new ArrayList(other.where);
+        where          = new WhereClause(other.getWhere());
         group          = new ArrayList(other.group);
-        having         = new ArrayList(other.having);
+        having         = new WhereClause(other.getHaving());
         order          = new ArrayList(other.order);
         joins          = new ArrayList(other.joins);
         leftOuterJoins = new ArrayList(other.leftOuterJoins);
@@ -60,7 +61,7 @@ public class Values {
         return select;
     }
 
-    public List<String> getWhere() {
+    public WhereClause getWhere() {
         return where;
     }
 
@@ -68,7 +69,7 @@ public class Values {
         return group;
     }
 
-    public List<String> getHaving() {
+    public WhereClause getHaving() {
         return having;
     }
 
@@ -164,6 +165,14 @@ public class Values {
         this.reordering = reordering;
     }
 
+    public void setWhere(WhereClause where) {
+        this.where = where;
+    }
+
+    public void setHaving(WhereClause having) {
+        this.having = having;
+    }
+
     public Values except(ValueMethods... skips) {
         return dup().except$(skips);
     }
@@ -190,9 +199,10 @@ public class Values {
 
     private void reset(ValueMethods value) {
         switch (value) {
-            case FROM:   from = null;    break;
-            case WHERE:  where.clear();  break;
-            case HAVING: having.clear(); break;
+            case FROM: from = null; break;
+
+            case WHERE:  WhereClause.empty(); break;
+            case HAVING: WhereClause.empty(); break;
 
             case LIMIT:       limit       = 0;     break;
             case OFFSET:      offset      = 0;     break;

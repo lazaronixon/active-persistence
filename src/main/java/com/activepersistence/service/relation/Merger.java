@@ -24,12 +24,14 @@ public class Merger {
         if (values.getLimit()   != 0)     relation.limit$(values.getLimit());
         if (values.getOffset()  != 0)     relation.offset$(values.getOffset());
 
+        if (values.getWhere() != null) relation.getValues().getWhere().merge(values.getWhere());
+
+        if (values.getHaving() != null) relation.getValues().getHaving().merge(values.getHaving());
+
         values.getSelect().forEach(relation::select$);
         values.getJoins().forEach(relation::joins$);
         values.getLeftOuterJoins().forEach(relation::leftOuterJoins$);
-        values.getWhere().forEach(relation::where$);
         values.getGroup().forEach(relation::group$);
-        values.getHaving().forEach(relation::having$);
 
         values.getOrder().forEach(this::mergeOrder$);
 

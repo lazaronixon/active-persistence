@@ -1,5 +1,5 @@
 
-package com.activepersistence.service.relation;
+package com.activepersistence.service;
 
 import com.activepersistence.model.Base;
 import java.time.LocalDate;

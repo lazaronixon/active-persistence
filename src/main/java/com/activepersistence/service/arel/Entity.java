@@ -1,7 +1,8 @@
 package com.activepersistence.service.arel;
 
-import com.activepersistence.service.arel.nodes.Node;
+import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.arel.visitors.ToJpql;
+import com.activepersistence.service.arel.visitors.Visitable;
 import com.activepersistence.service.arel.visitors.Visitor;
 
 public class Entity implements Source {
@@ -22,6 +23,10 @@ public class Entity implements Source {
     }
 
     public SelectManager where(String condition) {
+        return from().where(jpql(condition));
+    }
+
+    public SelectManager where(Visitable condition) {
         return from().where(condition);
     }
 
@@ -30,6 +35,10 @@ public class Entity implements Source {
     }
 
     public SelectManager having(String condition) {
+        return from().having(jpql(condition));
+    }
+
+    public SelectManager having(Visitable condition) {
         return from().having(condition);
     }
 
@@ -38,10 +47,6 @@ public class Entity implements Source {
     }
 
     public SelectManager project(String... things) {
-        return from().project(things);
-    }
-
-    public SelectManager project(Node... things) {
         return from().project(things);
     }
 
@@ -55,6 +60,10 @@ public class Entity implements Source {
 
     public String getAlias() {
         return alias;
+    }
+
+    public Attribute get(String name) {
+        return new Attribute(this, name);
     }
 
 }

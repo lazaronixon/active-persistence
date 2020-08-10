@@ -1,10 +1,10 @@
 package com.activepersistence.service.arel;
 
 import static com.activepersistence.service.Arel.jpql;
+import static com.activepersistence.service.Arel.jpqlList;
 import com.activepersistence.service.arel.nodes.Assignment;
-import com.activepersistence.service.arel.nodes.JpqlLiteral;
-import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.UpdateStatement;
+import com.activepersistence.service.arel.visitors.Visitable;
 import static java.util.Arrays.asList;
 import java.util.List;
 import java.util.Map;
@@ -36,14 +36,14 @@ public class UpdateManager extends TreeManager {
     }
 
     public UpdateManager order(String... orders) {
-        ast.getOrders().addAll(JpqlLiteral.fromArray(orders)); return this;
+        ast.getOrders().addAll(jpqlList(orders)); return this;
     }
 
-    public void setWheres(List<Node> conditions) {
+    public void setWheres(List<Visitable> conditions) {
         ast.setWheres(conditions);
     }
 
-    public void setOrders(List<Node> orders) {
+    public void setOrders(List<Visitable> orders) {
         ast.setOrders(orders);
     }
 

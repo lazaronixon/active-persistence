@@ -4,12 +4,11 @@ import static com.activepersistence.service.Arel.createInnerJoin;
 import static com.activepersistence.service.Arel.createOuterJoin;
 import static com.activepersistence.service.Arel.createStringJoin;
 import static com.activepersistence.service.Arel.jpql;
+import static com.activepersistence.service.Arel.jpqlList;
 import com.activepersistence.service.arel.nodes.Join;
-import com.activepersistence.service.arel.nodes.JpqlLiteral;
-import com.activepersistence.service.arel.nodes.Node;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
-import static java.util.Arrays.asList;
+import com.activepersistence.service.arel.visitors.Visitable;
 import java.util.List;
 
 public class SelectManager extends TreeManager {
@@ -23,11 +22,7 @@ public class SelectManager extends TreeManager {
     }
 
     public SelectManager project(String... projections) {
-        ctx.getProjections().addAll(JpqlLiteral.fromArray(projections)); return this;
-    }
-
-    public SelectManager project(Node... projections) {
-        ctx.getProjections().addAll(asList(projections)); return this;
+        ctx.getProjections().addAll(jpqlList(projections)); return this;
     }
 
     public SelectManager constructor(boolean value) {
@@ -58,23 +53,31 @@ public class SelectManager extends TreeManager {
         ctx.getWheres().add(jpql(condition)); return this;
     }
 
+    public SelectManager where(Visitable condition) {
+        ctx.getWheres().add(condition); return this;
+    }
+
     public SelectManager group(String... fields) {
-        ctx.getGroups().addAll(JpqlLiteral.fromArray(fields)); return this;
+        ctx.getGroups().addAll(jpqlList(fields)); return this;
     }
 
     public SelectManager having(String condition) {
         ctx.getHavings().add(jpql(condition)); return this;
     }
 
-    public SelectManager order(String... expr) {
-        ast.getOrders().addAll(JpqlLiteral.fromArray(expr)); return this;
+    public SelectManager having(Visitable condition) {
+        ctx.getHavings().add(condition); return this;
     }
 
-    public List<Node> getConstraints() {
+    public SelectManager order(String... expr) {
+        ast.getOrders().addAll(jpqlList(expr)); return this;
+    }
+
+    public List<Visitable> getConstraints() {
         return ctx.getWheres();
     }
 
-    public List<Node> getOrders() {
+    public List<Visitable> getOrders() {
         return ast.getOrders();
     }
 

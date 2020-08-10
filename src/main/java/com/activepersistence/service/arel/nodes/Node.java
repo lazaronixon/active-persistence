@@ -1,14 +1,15 @@
 package com.activepersistence.service.arel.nodes;
 
 import com.activepersistence.service.arel.Entity;
+import com.activepersistence.service.arel.collectors.JPQLString;
 import com.activepersistence.service.arel.visitors.Visitable;
 
 public abstract class Node implements Visitable {
 
     public String toJpql() {
-        var collector = new StringBuilder();
+        var collector = new JPQLString();
         collector     = Entity.visitor.accept(this, collector);
-        return collector.toString();
+        return collector.getValue();
     }
 
 }

@@ -1,12 +1,8 @@
 package com.activepersistence.service.arel.nodes;
 
-import com.activepersistence.service.Arel;
 import com.activepersistence.service.arel.Source;
-import static java.util.Arrays.asList;
-import java.util.List;
-import static java.util.stream.Collectors.toList;
 
-public class JpqlLiteral extends Node implements Source {
+public class JpqlLiteral implements Source {
 
     private final String value;
 
@@ -36,10 +32,6 @@ public class JpqlLiteral extends Node implements Source {
 
     public Avg average() {
         return new Avg(this);
-    }
-
-    public static List<Node> fromArray(String[] values) {
-        return asList(values).stream().map(Arel::jpql).collect(toList());
     }
 
     @Override

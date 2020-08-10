@@ -5,6 +5,7 @@ import static com.activepersistence.service.Arel.jpql;
 public abstract class Function extends Node {
 
     private final JpqlLiteral expression;
+    
     private JpqlLiteral alias;
 
     private boolean distinct;

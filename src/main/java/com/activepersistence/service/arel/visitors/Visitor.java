@@ -1,15 +1,16 @@
 package com.activepersistence.service.arel.visitors;
 
+import com.activepersistence.service.arel.collectors.JPQLString;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public abstract class Visitor {
 
-    public StringBuilder accept(Visitable object, StringBuilder collector) {
+    public JPQLString accept(Visitable object, JPQLString collector) {
         return visit(object, collector);
     }
 
-    public StringBuilder visit(Visitable o, StringBuilder collector) {
+    public JPQLString visit(Visitable o, JPQLString collector) {
         var dispatchMethod = getMethodFor(o.getClass());
         if (collector != null) {
             return send(dispatchMethod, o, collector);
@@ -19,7 +20,7 @@ public abstract class Visitor {
     }
 
     private Method getMethodFor(Class klass) {
-        return getMethod("visit" + klass.getSimpleName(), klass, StringBuilder.class);
+        return getMethod("visit" + klass.getSimpleName(), klass, JPQLString.class);
     }
 
     private Method getMethod(String methodName, Class... params) {
@@ -30,9 +31,9 @@ public abstract class Visitor {
         }
     }
 
-    private StringBuilder send(Method method, Object... params) {
+    private JPQLString send(Method method, Object... params) {
         try {
-            return (StringBuilder) method.invoke(this, params);
+            return (JPQLString) method.invoke(this, params);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw new RuntimeException("Cannot send method " + method.getName(), ex);
         }
