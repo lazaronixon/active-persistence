@@ -78,7 +78,7 @@ User user = usersService.first();
 User david = usersService.where("user.name = David").take();
 
 // find all users named David who are Code Artists and sort by createdAt in reverse chronological order
-List<User> users = usersService.where("user.name = ? AND user.occupation = ?", "David", "Code Artist").order("user.createdAt DESC").fetch();
+List<User> users = usersService.where("user.name = 'David' AND user.occupation = 'Code Artist'").order("user.createdAt DESC").fetch();
 ```
 
 ### Update
