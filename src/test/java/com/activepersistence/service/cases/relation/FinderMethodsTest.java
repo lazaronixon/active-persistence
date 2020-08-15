@@ -1,7 +1,6 @@
 package com.activepersistence.service.cases.relation;
 
 import com.activepersistence.IntegrationTest;
-import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
@@ -76,65 +75,8 @@ public class FinderMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testFindBy() {
-        assertEquals((Integer) 1 ,postsService.findBy("post.title = 'hello world'").getId());
-    }
-
-    @Test
-    public void testFindBy$() {
-        assertThrows(NoResultException.class, () -> postsService.findBy$("post.title = 'not found'"));
-    }
-
-    @Test
-    public void testFindByExp() {
-        assertEquals((Integer) 1 ,postsService.findByExp("IdAndTitle", 1, "hello world").getId());
-    }
-
-    @Test
-    public void testFindByExp$() {
-        assertThrows(NoResultException.class, () -> postsService.findByExp$("Title", "not found"));
-    }
-
-    @Test
     public void testExists() {
         assertTrue(postsService.where("post.title = 'hello world'").exists());
-    }
-
-    @Test
-    public void testExistsWithParam() {
-        assertTrue(postsService.exists("post.title = 'hello world'"));
-    }
-
-    @Test
-    public void testFindOrCreateBy() {
-        var postsCount = (long) postsService.count();
-        var createdPost = postsService.findOrCreateBy("post.title = 'awesome title'", new Post("awesome title", "body", 0));
-        assertEquals(postsCount + 1, postsService.count());
-        assertEquals("body", createdPost.getBody());
-        assertTrue(createdPost.isPersisted());
-    }
-
-    @Test
-    public void testFindOrCreateByNotCreate() {
-        var postsCount   = (long) postsService.count();
-        var existentPost = postsService.findOrCreateBy("post.title = 'hello world'", new Post("hello world", "body", 0));
-        assertEquals(postsCount, postsService.count());
-        assertEquals("My first post", existentPost.getBody());
-        assertTrue(existentPost.isPersisted());
-    }
-
-    @Test
-    public void testFindOrInitializeBy() {
-        var newPost = postsService.findOrInitializeBy("post.title = 'not found'", new Post("awesome title", "body", 0));
-        assertEquals("body", newPost.getBody());
-        assertTrue(newPost.isNewRecord());
-    }
-
-    @Test
-    public void testFindOrInitializeByNotInitialize() {
-        var newPost = postsService.findOrInitializeBy("post.title = 'hello world'", new Post("hello world", "body", 0));
-        assertEquals("My first post", newPost.getBody());
-        assertTrue(newPost.isPersisted());
     }
 
 }

@@ -62,8 +62,4 @@ public class Entity implements Source {
         return alias;
     }
 
-    public Attribute get(String name) {
-        return new Attribute(this, name);
-    }
-
 }

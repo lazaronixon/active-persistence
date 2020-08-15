@@ -24,14 +24,11 @@ public class Merger {
         if (values.getLimit()   != 0)     relation.limit$(values.getLimit());
         if (values.getOffset()  != 0)     relation.offset$(values.getOffset());
 
-        if (values.getWhere() != null) relation.getValues().getWhere().merge(values.getWhere());
-
-        if (values.getHaving() != null) relation.getValues().getHaving().merge(values.getHaving());
-
         values.getSelect().forEach(relation::select$);
+        values.getWhere().forEach(relation::where$);
         values.getJoins().forEach(relation::joins$);
-        values.getLeftOuterJoins().forEach(relation::leftOuterJoins$);
         values.getGroup().forEach(relation::group$);
+        values.getHaving().forEach(relation::having$);
 
         values.getOrder().forEach(this::mergeOrder$);
 
@@ -39,6 +36,8 @@ public class Merger {
         values.getEagerLoad().forEach(relation::eagerLoad$);
 
         values.getUnscope().forEach(relation::unscope$);
+
+        values.getBindings().forEach(this::mergeBindings$);
 
         return relation;
     }
@@ -58,6 +57,10 @@ public class Merger {
         } else {
             relation.order$(value);
         }
+    }
+
+    private void mergeBindings$(Object key, Object Value) {
+        relation.getValues().getBindings().put(key, Value);
     }
 
 }

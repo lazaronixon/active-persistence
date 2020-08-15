@@ -94,14 +94,12 @@ usersService.updateAll("user.maxLoginAttempts = 3, user.mustChangePassword = 'tr
 
 ### Delete
 ```java
-User user = usersService.findBy("user.name = ?", "David");
+User user = usersService.where("user.name = 'David'").take();
 usersService.destroy(user);
 //OR
-usersService.destroyBy("user.name = 'David'");
-usersService.destroyAll()
+usersService.where("user.name = 'David'").destroyAll();
 //OR
-usersService.deleteBy("user.name = 'David'");
-usersService.deleteAll()
+usersService.where("user.name = 'David'").deleteAll();
 ```
 
 ## Retrieving Objects from the Database
@@ -125,23 +123,22 @@ Client client = clientsService.last();
 Client client = clientsService.order("client.firstName").last();
 List<Client> clients = clientsService.last(3);
 
-// The findBy method finds the first record matching some conditions
-Client client = clientsService.findBy("client.firstName = ?", "Lifo"); // #<Client id: 1, firstName: "Lifo">
-Client client = clientsService.findBy("client.firstName = ?", "Jon"); // null
+// The take method finds the first record matching some conditions
+Client client = clientsService.where("client.firstName = 'Lifo'").take(); // #<Client id: 1, firstName: "Lifo">
+Client client = clientsService.where("client.firstName = 'Jon'").take(); // null
 
-Client client = clientsService.findBy$("client.firstName = ?", "does not exist"); // NoResultException
+Client client = clientsService.where("client.firstName = 'does not exist'").take$(); // NoResultException
 ```
 
 ### Conditions
 ```java
 //Ordinal Conditions
-clientsService.where("client.ordersCount = ?", 10).fetch();
-clientsService.where("client.ordersCount = ? AND client.locked = ?", 10, false).fetch();
+clientsService.where("client.ordersCount = ?1").bind(1, 10).fetch();
+clientsService.where("client.ordersCount = ?1 AND client.locked = ?2").bind(1, 10).bind(2, false).fetch();
 
 //Placeholder Conditions
-clientsService.where("client.ordersCount = :count", Map.of("count", 10)).fetch();
-clientsService.where("client.ordersCount = :count AND client.locked = :locked", Map.of("count", 10, "locked", false)).fetch();
-
+clientsService.where("client.ordersCount = :count").bind("count", 10).fetch();
+clientsService.where("client.ordersCount = :count AND client.locked = :locked").bind("count", 10).bind("locked", false).fetch();
 ```
 
 ### Ordering
@@ -223,11 +220,7 @@ Client client = clientsService.lock().first();
 
 ## Joining Tables
 ```java
-authorsService.joins("JOIN author.post p").fetch();
-//OR
-authorsService.joins("author.post").fetch();
-//OR
-authorsService.leftOuterJoins("author.post").fetch();
+authorsService.joins("JOIN author.post post").fetch();
 ```
 
 ## Eager Loading Associations
@@ -260,20 +253,6 @@ clientsService.unscoped().fetch();
 clientsService.where("client.published = false").unscoped().fetch();
 ```
 
-### Dynamic Finders
-```java
-Client client = clientsService.findByExp("Name", "Nixon");
-Client client = clientsService.findByExp("NameAndLocked", "Nixon", true);
-// OR
-Client client = clientsService.findByExp$("Name", "not found"); // NoResultException
-```
-
-### Find or Build a New Object
-```java
-Post createdPost = postsService.findOrCreateBy("post.title = 'awesome title'", new Post("awesome title", "body", 0));
-Post newPost     = postsService.findOrInitializeBy("post.title = 'awesome title'", new Post("awesome title", "body", 0));
-```
-
 ## Finding by SQL
 ```java
 List<Post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = 5");
@@ -285,7 +264,6 @@ List<Map> posts = postsService.selectAll("SELECT id, title FROM Post WHERE id = 
 
 ### Existence of Objects
 ```java
-boolean exists = studentsService.exists("student.name = 'Lifo'");
 boolean exists = studentsService.where("student.name = 'Lifo'").exists();
 ```
 

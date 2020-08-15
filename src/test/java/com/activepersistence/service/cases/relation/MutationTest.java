@@ -3,6 +3,7 @@ package com.activepersistence.service.cases.relation;
 import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.PostsService;
 import static java.util.Arrays.asList;
+import java.util.Map;
 import javax.inject.Inject;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -32,14 +33,7 @@ public class MutationTest extends IntegrationTest {
     @Test
     public void testJoin$() {
         var relation  = postsService.all();
-        var relation2 = relation.joins$("foo");
-        assertEquals(relation, relation2);
-    }
-
-    @Test
-    public void testLeftOuterJoin$() {
-        var relation  = postsService.all();
-        var relation2 = relation.leftOuterJoins$("foo");
+        var relation2 = relation.joins$("INNER JOIN foo");
         assertEquals(relation, relation2);
     }
 
@@ -138,5 +132,14 @@ public class MutationTest extends IntegrationTest {
         assertEquals(relation, relation2);
         assertEquals(asList("buzz"), relation2.getValues().getOrder());
     }
+
+    @Test
+    public void testBind$() {
+        var relation  = postsService.all();
+        var relation2 = relation.bind$("foo", 1);
+        assertEquals(relation, relation2);
+        assertEquals(Map.of("foo", 1), relation2.getValues().getBindings());
+    }
+
 
 }

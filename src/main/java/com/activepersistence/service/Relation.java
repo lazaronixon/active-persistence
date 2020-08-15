@@ -7,18 +7,15 @@ import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.UpdateManager;
 import com.activepersistence.service.relation.Calculation;
 import com.activepersistence.service.relation.FinderMethods;
-import static com.activepersistence.service.Literalizing.literal;
 import com.activepersistence.service.relation.QueryMethods;
 import com.activepersistence.service.relation.SpawnMethods;
 import com.activepersistence.service.relation.Values;
 import static java.beans.Introspector.decapitalize;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import static javax.persistence.LockModeType.NONE;
@@ -102,28 +99,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         }
     }
 
-    public T findOrCreateBy(String conditions, Object[] params, T resource) {
-        return ofNullable(findBy(conditions, params)).orElseGet(() -> service.create(resource));
-    }
-
-    public T findOrCreateBy(String conditions, T resource) {
-        return findOrCreateBy(conditions, new Object[] {}, resource);
-    }
-
-    public T findOrInitializeBy(String conditions, Object[] params, T resource) {
-        return ofNullable(findBy(conditions, params)).orElseGet(() -> resource);
-    }
-
-    public T findOrInitializeBy(String conditions, T resource) {
-        return findOrInitializeBy(conditions, new Object[] {}, resource);
-    }
-
     public List<T> destroyAll() {
         return fetch().stream().map(r -> { service.destroy(r); return r; }).collect(toList());
-    }
-
-    public List<T> destroyBy(String conditions, Object... params) {
-        return where(conditions, params).destroyAll();
     }
 
     public int deleteAll() {
@@ -140,14 +117,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public int updateAll(String updates) {
         return _updateAll(updates);
-    }
-
-    public int updateAll(Map<String, Object> updates) {
-        return _updateAll(updates);
-    }
-
-    public int deleteBy(String conditions, Object... params) {
-        return where(conditions, params).deleteAll();
     }
 
     public String toJpql() {
@@ -203,11 +172,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         buildDistinct(result);
         buildSelect(result);
         buildFrom(result);
-        buildJoins(result);
-        buildWhere(result);
-        buildHaving(result);
 
+        values.getJoins().forEach(result::join);
+        values.getWhere().forEach(result::where);
         values.getGroup().forEach(result::group);
+        values.getHaving().forEach(result::having);
         values.getOrder().forEach(result::order);
 
         return result;
@@ -266,34 +235,19 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         if (values.getFrom() != null) arel.from(values.getFrom());
     }
 
-    private void buildJoins(SelectManager result) {
-        values.getJoins().forEach(join -> {
-            if (isJoinFragment(join)) {
-                result.join(join);
-            } else {
-                result.join(join, fieldAlias(join));
-            }
-        });
-
-        values.getLeftOuterJoins().forEach(leftOuterJoin -> {
-            result.outerJoin(leftOuterJoin, fieldAlias(leftOuterJoin));
-        });
-    }
-
-    private void buildWhere(SelectManager result) {
-        if (!values.getWhere().isEmpty()) result.where(values.getWhere().getAst());
-    }
-
-    private void buildHaving(SelectManager result) {
-        if (!values.getHaving().isEmpty()) result.having(values.getHaving().getAst());
-    }
-
     private <R> TypedQuery<R> parametize(TypedQuery<R> query) {
-        applyHints(query); return query;
+        applyParams(query); applyHints(query); return query;
     }
 
     private Query parametize(Query query) {
-        applyHints(query); return query;
+        applyParams(query); applyHints(query); return query;
+    }
+
+
+    private void applyParams(Query query) {
+        var bindings = values.getBindings().entrySet();
+        bindings.stream().filter(this::isOrdinalBind).forEach(bind -> query.setParameter((Integer) bind.getKey(), bind.getValue()));
+        bindings.stream().filter(this::isNamedBind).forEach(bind   -> query.setParameter((String)  bind.getKey(), bind.getValue()));
     }
 
     private void applyHints(Query query) {
@@ -309,18 +263,13 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return new Entity(entityClass, decapitalize(entityClass.getSimpleName()));
     }
 
-    private int _updateAll(Object updates) {
+    private int _updateAll(String updates) {
         if (isValidRelationForUpdate()) {
             var stmt = new UpdateManager();
             stmt.entity(entity);
             stmt.setWheres(getArel().getConstraints());
             stmt.setOrders(getArel().getOrders());
-
-            if (updates instanceof Map) {
-                stmt.set(substituteValues((Map) updates));
-            } else {
-                stmt.set((String) updates);
-            }
+            stmt.set(updates);
 
             return executeUpdate(stmt.toJpql());
         } else {
@@ -328,24 +277,19 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         }
     }
 
-    private Map<String, String> substituteValues(Map<String, Object> updates) {
-        return updates.entrySet().stream().collect(toMap(Entry::getKey, v -> literal(v.getValue())));
-    }
-
     private boolean isValidRelationForUpdate() {
         return values.isDistinct() == false
                 && values.getGroup().isEmpty()
                 && values.getHaving().isEmpty()
-                && values.getJoins().isEmpty()
-                && values.getLeftOuterJoins().isEmpty();
+                && values.getJoins().isEmpty();
     }
 
-    private boolean isJoinFragment(String join) {
-        return join.startsWith("JOIN ") || join.startsWith("INNER ") || join.startsWith("LEFT ");
+    private boolean isOrdinalBind(Entry<Object, Object> bind) {
+        return bind.getKey() instanceof Integer;
     }
 
-    private String fieldAlias(String join) {
-        var result = join.split("[.]"); return result[result.length -1];
+    private boolean isNamedBind(Entry<Object, Object> bind) {
+        return bind.getKey() instanceof String;
     }
 
 }

@@ -3,7 +3,9 @@ package com.activepersistence.service.relation;
 import static com.activepersistence.service.relation.ValueMethods.values;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class Values {
@@ -18,17 +20,17 @@ public class Values {
     private boolean reordering  = false;
     private boolean constructor = false;
 
-    private WhereClause  where  = WhereClause.empty();
-    private WhereClause  having = WhereClause.empty();
-
     private List<String> select          = new ArrayList();
+    private List<String> where           = new ArrayList();
     private List<String> group           = new ArrayList();
+    private List<String> having          = new ArrayList();
     private List<String> order           = new ArrayList();
     private List<String> joins           = new ArrayList();
-    private List<String> leftOuterJoins  = new ArrayList();
     private List<String> includes        = new ArrayList();
     private List<String> eagerLoad       = new ArrayList();
     private List<ValueMethods> unscope   = new ArrayList();
+
+    private Map<Object, Object> bindings = new HashMap();
 
     public Values() {}
 
@@ -42,15 +44,15 @@ public class Values {
         distinct       = other.distinct;
         reordering     = other.reordering;
         select         = new ArrayList(other.select);
-        where          = new WhereClause(other.getWhere());
+        where          = new ArrayList(other.where);
         group          = new ArrayList(other.group);
-        having         = new WhereClause(other.getHaving());
+        having         = new ArrayList(other.having);
         order          = new ArrayList(other.order);
         joins          = new ArrayList(other.joins);
-        leftOuterJoins = new ArrayList(other.leftOuterJoins);
         includes       = new ArrayList(other.includes);
         eagerLoad      = new ArrayList(other.eagerLoad);
         unscope        = new ArrayList(other.unscope);
+        bindings       = new HashMap(other.bindings);
     }
 
     public String getFrom() {
@@ -61,7 +63,7 @@ public class Values {
         return select;
     }
 
-    public WhereClause getWhere() {
+    public List<String> getWhere() {
         return where;
     }
 
@@ -69,7 +71,7 @@ public class Values {
         return group;
     }
 
-    public WhereClause getHaving() {
+    public List<String> getHaving() {
         return having;
     }
 
@@ -79,10 +81,6 @@ public class Values {
 
     public List<String> getJoins() {
         return joins;
-    }
-
-    public List<String> getLeftOuterJoins() {
-        return leftOuterJoins;
     }
 
     public List<String> getIncludes() {
@@ -95,6 +93,10 @@ public class Values {
 
     public List<ValueMethods> getUnscope() {
         return unscope;
+    }
+
+    public Map<Object, Object> getBindings() {
+        return bindings;
     }
 
     public int getLimit() {
@@ -165,14 +167,6 @@ public class Values {
         this.reordering = reordering;
     }
 
-    public void setWhere(WhereClause where) {
-        this.where = where;
-    }
-
-    public void setHaving(WhereClause having) {
-        this.having = having;
-    }
-
     public Values except(ValueMethods... skips) {
         return dup().except$(skips);
     }
@@ -201,9 +195,6 @@ public class Values {
         switch (value) {
             case FROM: from = null; break;
 
-            case WHERE:  WhereClause.empty(); break;
-            case HAVING: WhereClause.empty(); break;
-
             case LIMIT:       limit       = 0;     break;
             case OFFSET:      offset      = 0;     break;
             case LOCK:        lock        = false; break;
@@ -212,14 +203,17 @@ public class Values {
             case REORDERING:  reordering  = false; break;
             case CONSTRUCTOR: constructor = false; break;
 
-            case SELECT:           select.clear();         break;
-            case GROUP:            group.clear();          break;
-            case ORDER:            order.clear();          break;
-            case JOINS:            joins.clear();          break;
-            case LEFT_OUTER_JOINS: leftOuterJoins.clear(); break;
-            case INCLUDES:         includes.clear();       break;
-            case EAGER_LOAD:       eagerLoad.clear();      break;
-            case UNSCOPE:          unscope.clear();        break;
+            case SELECT:     select.clear();    break;
+            case WHERE:      where.clear();     break;
+            case GROUP:      group.clear();     break;
+            case HAVING:     having.clear();    break;
+            case ORDER:      order.clear();     break;
+            case JOINS:      joins.clear();     break;
+            case INCLUDES:   includes.clear();  break;
+            case EAGER_LOAD: eagerLoad.clear(); break;
+            case UNSCOPE:    unscope.clear();   break;
+
+            case BINDINGS:   bindings.clear();  break;
         }
     }
 

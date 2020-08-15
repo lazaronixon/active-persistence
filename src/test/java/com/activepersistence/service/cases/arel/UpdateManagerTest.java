@@ -3,7 +3,6 @@ package com.activepersistence.service.cases.arel;
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.UpdateManager;
 import com.activepersistence.service.models.Post;
-import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,12 +21,6 @@ public class UpdateManagerTest {
     public void testAll() {
         assertEquals("UPDATE Post post SET post.title = 'testing'",
                 manager.set("post.title = 'testing'").toJpql());
-    }
-
-    @Test
-    public void testAllMap() {
-        assertEquals("UPDATE Post post SET post.title = 'testing'",
-                manager.set(Map.of("post.title", "'testing'")).toJpql());
     }
 
     @Test
