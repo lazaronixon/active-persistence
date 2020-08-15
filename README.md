@@ -75,7 +75,7 @@ List<User> users = usersService.all().fetch();
 User user = usersService.first();
 
 // return the first user named David
-User david = usersService.findBy("user.name = ?", "David");
+User david = usersService.where("user.name = David").take();
 
 // find all users named David who are Code Artists and sort by createdAt in reverse chronological order
 List<User> users = usersService.where("user.name = ? AND user.occupation = ?", "David", "Code Artist").order("user.createdAt DESC").fetch();
@@ -83,7 +83,7 @@ List<User> users = usersService.where("user.name = ? AND user.occupation = ?", "
 
 ### Update
 ```java
-User user = userService.findBy("user.name = ?", "David");
+User user = userService.where("user.name = David").take();
 user.name = "Dave";
 usersService.save(user);
 //OR
