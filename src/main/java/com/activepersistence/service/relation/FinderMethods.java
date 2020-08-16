@@ -1,8 +1,11 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
+import static java.beans.Introspector.decapitalize;
 import static java.util.Arrays.asList;
 import java.util.List;
+import java.util.function.Function;
+import static java.util.stream.Collectors.joining;
 
 public interface FinderMethods<T> {
 
@@ -49,22 +52,50 @@ public interface FinderMethods<T> {
     }
 
     public default T find(Object id) {
-        return thiz().where(getPrimaryKey() + " = :pk").bind("pk", id).take$();
+        return thiz().where(getPrimaryKey() + " = ?", id).take$();
     }
 
     public default List<T> find(Object... ids) {
-        return thiz().where(getPrimaryKey() + " IN :pks").bind("pks", asList(ids)).fetch();
+        return thiz().where(getPrimaryKey() + " IN (?)", asList(ids)).fetch();
     }
 
     public default T findById(Object id) {
-        return thiz().where(getPrimaryKey() + " = :pk").bind("pk", id).take();
+        return findBy(getPrimaryKey() + " = ?", id);
     }
 
     public default T findById$(Object id) {
-        return thiz().where(getPrimaryKey() + " = :pk").bind("pk", id).take$();
+        return findBy$(getPrimaryKey() + " = ?", id);
+    }
+
+    public default T findBy(String conditions, Object... params) {
+        return thiz().where(conditions, params).take();
+    }
+
+    public default T findBy$(String conditions, Object... params) {
+        return thiz().where(conditions, params).take$();
+    }
+
+    public default T findByExp(String expression, Object... params) {
+        return findBy(exprToJpql(expression), params);
+    }
+
+    public default T findByExp$(String expression, Object... params) {
+        return findBy$(exprToJpql(expression), params);
+    }
+
+    public default boolean exists(String conditions, Object... params) {
+        return thiz().where(conditions, params).exists();
     }
 
     public default boolean exists() {
         return thiz().limit(1).fetchExists();
+    }
+
+    private String exprToJpql(String expression) {
+        return asList(expression.split("And")).stream().map(parametize()).collect(joining(" AND "));
+    }
+
+    private Function<String, String> parametize() {
+        return attr -> (getAlias() + "." + decapitalize(attr) + " = ?");
     }
 }

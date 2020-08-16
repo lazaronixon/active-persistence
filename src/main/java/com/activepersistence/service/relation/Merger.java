@@ -37,8 +37,6 @@ public class Merger {
 
         values.getUnscope().forEach(relation::unscope$);
 
-        values.getBindings().forEach(this::mergeBindings$);
-
         return relation;
     }
 
@@ -57,10 +55,6 @@ public class Merger {
         } else {
             relation.order$(value);
         }
-    }
-
-    private void mergeBindings$(Object key, Object Value) {
-        relation.getValues().getBindings().put(key, Value);
     }
 
 }

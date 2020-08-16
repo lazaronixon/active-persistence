@@ -3,9 +3,7 @@ package com.activepersistence.service.relation;
 import static com.activepersistence.service.relation.ValueMethods.values;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 
 public class Values {
@@ -30,8 +28,6 @@ public class Values {
     private List<String> eagerLoad       = new ArrayList();
     private List<ValueMethods> unscope   = new ArrayList();
 
-    private Map<Object, Object> bindings = new HashMap();
-
     public Values() {}
 
     public Values(Values other) {
@@ -52,7 +48,6 @@ public class Values {
         includes       = new ArrayList(other.includes);
         eagerLoad      = new ArrayList(other.eagerLoad);
         unscope        = new ArrayList(other.unscope);
-        bindings       = new HashMap(other.bindings);
     }
 
     public String getFrom() {
@@ -93,10 +88,6 @@ public class Values {
 
     public List<ValueMethods> getUnscope() {
         return unscope;
-    }
-
-    public Map<Object, Object> getBindings() {
-        return bindings;
     }
 
     public int getLimit() {
@@ -180,15 +171,19 @@ public class Values {
     }
 
     public Values slice$(ValueMethods... onlies) {
-        asList(values()).stream().filter(not(asList(onlies)::contains)).forEach(this::reset); return this;
+        asList(values()).stream().filter(notContains(onlies)).forEach(this::reset); return this;
     }
 
-    private Values dup() {
-        return new Values(this);
+    private Predicate<ValueMethods> notContains(ValueMethods[] onlies) {
+        return not(asList(onlies)::contains);
     }
 
     private <T> Predicate<T> not(Predicate<T> t) {
         return t.negate();
+    }
+
+    private Values dup() {
+        return new Values(this);
     }
 
     private void reset(ValueMethods value) {
@@ -212,8 +207,6 @@ public class Values {
             case INCLUDES:   includes.clear();  break;
             case EAGER_LOAD: eagerLoad.clear(); break;
             case UNSCOPE:    unscope.clear();   break;
-
-            case BINDINGS:   bindings.clear();  break;
         }
     }
 

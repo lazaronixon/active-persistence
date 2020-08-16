@@ -2,6 +2,7 @@ package com.activepersistence.service.relation;
 
 import com.activepersistence.service.NullRelation;
 import com.activepersistence.service.Relation;
+import com.activepersistence.service.Sanitization;
 import static com.activepersistence.service.relation.ValueMethods.*;
 import static java.util.Arrays.asList;
 
@@ -29,12 +30,12 @@ public interface QueryMethods<T> {
         getValues().getJoins().add(value); return thiz();
     }
 
-    public default Relation<T> where(String conditions) {
-        return spawn().where$(conditions);
+    public default Relation<T> where(String conditions, Object... params) {
+        return spawn().where$(conditions, params);
     }
 
-    public default Relation<T> where$(String conditions) {
-        getValues().getWhere().add(conditions); return thiz();
+    public default Relation<T> where$(String conditions, Object... params) {
+        getValues().getWhere().add(buildWhere(conditions, params)); return thiz();
     }
 
     public default Relation<T> group(String... fields) {
@@ -45,12 +46,12 @@ public interface QueryMethods<T> {
         getValues().getGroup().addAll(asList(fields)); return thiz();
     }
 
-    public default Relation<T> having(String conditions) {
-        return spawn().having$(conditions);
+    public default Relation<T> having(String conditions, Object... params) {
+        return spawn().having$(conditions, params);
     }
 
-    public default Relation<T> having$(String conditions) {
-        getValues().getHaving().add(conditions); return thiz();
+    public default Relation<T> having$(String conditions, Object... params) {
+        getValues().getHaving().add(buildWhere(conditions, params)); return thiz();
     }
 
     public default Relation<T> order(String... fields) {
@@ -153,8 +154,8 @@ public interface QueryMethods<T> {
         return spawn().except(SELECT, CONSTRUCTOR).select(fields);
     }
 
-    public default Relation<T> rewhere(String conditions) {
-        return spawn().except(WHERE, BINDINGS).where(conditions);
+    public default Relation<T> rewhere(String conditions, Object... params) {
+        return spawn().except(ValueMethods.WHERE).where(conditions, params);
     }
 
     public default Relation<T> reorder(String... fields) {
@@ -165,27 +166,11 @@ public interface QueryMethods<T> {
         getValues().setReordering(true); getValues().setOrder(asList(fields)); return thiz();
     }
 
-    public default Relation<T> bind(int index, Object value) {
-        return spawn().bind$(index, value);
-    }
-
-    public default Relation<T> bind$(int index, Object value) {
-        getValues().getBindings().put(index, value); return thiz();
-    }
-
-    public default Relation<T> bind(String name, Object value) {
-        return spawn().bind$(name, value);
-    }
-
-    public default Relation<T> bind$(String name, Object value) {
-        getValues().getBindings().put(name, value); return thiz();
-    }
-
     private void unscoping(ValueMethods scope) {
         switch (scope) {
             case FROM:   getValues().except$(FROM); break;
-            case WHERE:  getValues().except$(WHERE, BINDINGS); break;
-            case HAVING: getValues().except$(HAVING, BINDINGS); break;
+            case WHERE:  getValues().except$(WHERE); break;
+            case HAVING: getValues().except$(HAVING); break;
 
             case SELECT: getValues().except$(SELECT, CONSTRUCTOR); break;
 
@@ -199,5 +184,9 @@ public interface QueryMethods<T> {
 
             default: throw new RuntimeException("invalid unscoping value: " + scope);
         }
+    }
+
+    private String buildWhere(String conditions, Object[] params) {
+        return Sanitization.sanitizeJpql(conditions, params);
     }
 }

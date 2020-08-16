@@ -1,6 +1,8 @@
 package com.activepersistence.service.arel.visitors;
 
+import com.activepersistence.service.Literalizing;
 import com.activepersistence.service.arel.Entity;
+import com.activepersistence.service.arel.nodes.Assignment;
 import com.activepersistence.service.arel.nodes.Avg;
 import com.activepersistence.service.arel.nodes.Constructor;
 import com.activepersistence.service.arel.nodes.Count;
@@ -149,6 +151,13 @@ public class ToJpql extends Visitor {
         return aggregate("AVG", o, collector);
     }
 
+    public StringBuilder visitAssignment(Assignment o, StringBuilder collector) {
+        collector = visit(o.getField(), collector);
+        collector.append(" = ");
+        collector.append(literal(o.getValue()));
+        return collector;
+    }
+
     private StringBuilder maybeVisit(Visitable node, StringBuilder collector) {
         return node != null ? visit(node, collector.append(" ")) : collector;
     }
@@ -171,5 +180,13 @@ public class ToJpql extends Visitor {
         collector.append(o.getExpression()).append(")");
         if (o.getAlias() != null) { collector.append(" AS "); visitJpqlLiteral(o.getAlias(), collector); }
         return collector;
+    }
+
+    private String literal(Object value) {
+        if (value instanceof JpqlLiteral) {
+            return value.toString();
+        } else {
+            return Literalizing.literal(value);
+        }
     }
 }

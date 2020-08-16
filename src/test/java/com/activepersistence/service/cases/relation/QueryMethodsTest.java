@@ -4,6 +4,7 @@ import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.PostsService;
 import static com.activepersistence.service.relation.ValueMethods.FROM;
 import static com.activepersistence.service.relation.ValueMethods.ORDER;
+import java.util.Map;
 import javax.inject.Inject;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.*;
@@ -134,17 +135,17 @@ public class QueryMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testBindIndex() {
-        var query = postsService.where("post.title = ?1").bind(1, "hello world");
-        assertEquals("SELECT post FROM Post post WHERE post.title = ?1", query.toJpql());
-        assertTrue(query.exists());
+    public void testBind() {
+        assertEquals("SELECT post FROM Post post WHERE post.id = 1", postsService.where("post.id = ?", 1).toJpql());
     }
 
     @Test
     public void testBindNamed() {
-        var query = postsService.where("post.title = :title").bind("title", "hello world");
-        assertEquals("SELECT post FROM Post post WHERE post.title = :title", query.toJpql());
-        assertTrue(query.exists());
+        assertEquals("SELECT post FROM Post post WHERE post.id = 1", postsService.where("post.id = :id", Map.of("id", 1)).toJpql());
     }
 
+    @Test
+    public void testBindFormat() {
+        assertEquals("SELECT post FROM Post post WHERE post.id = 1", postsService.where("post.id = %s", 1).toJpql());
+    }
 }

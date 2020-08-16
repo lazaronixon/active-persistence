@@ -118,14 +118,38 @@ public interface Querying<T> {
         return all().findById$(id);
     }
 
-    public default boolean exists() {
-        return all().exists();
+    public default T findBy(String conditions, Object... params) {
+        return all().findBy(conditions, params);
+    }
+
+    public default T findBy$(String conditions, Object... params) {
+        return all().findBy$(conditions, params);
+    }
+
+    public default T findByExp(String expression, Object... params) {
+        return all().findByExp(expression, params);
+    }
+
+    public default T findByExp$(String expression, Object... params) {
+        return all().findByExp$(expression, params);
+    }
+
+    public default boolean exists(String conditions) {
+        return all().exists(conditions);
+    }
+
+    public default boolean exists(String conditions, Object... params) {
+        return all().exists(conditions, params);
     }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="QueryMethods">
     public default Relation<T> where(String conditions) {
         return all().where(conditions);
+    }
+
+    public default Relation<T> where(String conditions, Object... params) {
+        return all().where(conditions, params);
     }
 
     public default Relation<T> order(String... values) {
@@ -152,8 +176,8 @@ public interface Querying<T> {
         return all().group(values);
     }
 
-    public default Relation<T> having(String conditions) {
-        return all().having(conditions);
+    public default Relation<T> having(String conditions, Object... params) {
+        return all().having(conditions, params);
     }
 
     public default Relation<T> distinct() {
@@ -180,8 +204,8 @@ public interface Querying<T> {
         return all().reselect(values);
     }
 
-    public default Relation<T> rewhere(String conditions) {
-        return all().rewhere(conditions);
+    public default Relation<T> rewhere(String conditions, Object... params) {
+        return all().rewhere(conditions, params);
     }
 
     public default Relation<T> reorder(String... fields) {
@@ -211,15 +235,6 @@ public interface Querying<T> {
     public default Relation<T> readonly(boolean value) {
        return all().readonly(value);
     }
-
-    public default Relation<T> bind(int index, Object value) {
-        return all().bind(index, value);
-    }
-
-    public default Relation<T> bind(String name, Object value) {
-        return all().bind(name, value);
-    }
-
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Relation">
@@ -227,11 +242,23 @@ public interface Querying<T> {
         return all().destroyAll();
     }
 
+    public default List<T> destroyBy(String conditions, Object... params) {
+        return all().destroyBy(conditions, params);
+    }
+
     public default int deleteAll() {
         return all().deleteAll();
     }
 
+    public default int deleteBy(String conditions, Object... params) {
+        return all().deleteBy(conditions, params);
+    }
+
     public default int updateAll(String updates) {
+        return all().updateAll(updates);
+    }
+
+    public default int updateAll(Map<String, Object> updates) {
         return all().updateAll(updates);
     }
     //</editor-fold>
@@ -254,18 +281,12 @@ public interface Querying<T> {
     }
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="Private">
-    private Query parametize(Query query, Map<Integer, Object> binds) {
-        applyParams(query, binds); return query;
-    }
-
     private Query parametizeMap(Query query, Map<Integer, Object> binds) {
-        parametize(query, binds); query.setHint("eclipselink.result-type", "Map"); return query;
+        binds.forEach(query::setParameter); query.setHint("eclipselink.result-type", "Map"); return query;
     }
 
-    private void applyParams(Query query, Map<Integer, Object> binds) {
-        binds.entrySet().forEach(p -> query.setParameter(p.getKey(), p.getValue()));
+    private Query parametize(Query query, Map<Integer, Object> binds) {
+        binds.forEach(query::setParameter); return query;
     }
-    //</editor-fold>
 
 }

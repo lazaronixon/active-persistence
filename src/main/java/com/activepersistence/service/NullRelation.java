@@ -53,6 +53,11 @@ public class NullRelation<T> extends Relation<T> {
     }
 
     @Override
+    public boolean exists(String conditions, Object... params) {
+        return false;
+    }
+
+    @Override
     public List<T> fetch() {
         return new ArrayList();
     }
