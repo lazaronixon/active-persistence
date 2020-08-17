@@ -31,10 +31,6 @@ public interface DatabaseStatements<T> {
         return parametized$(getEntityManager().createNativeQuery(sql), binds).getResultList();
     }
 
-    public default List<T> selectAll$(String sql) {
-        return selectAll$(sql, new HashMap());
-    }
-
     public default List<T> selectAll$(String sql, Map<Integer, Object> binds) {
         return parametized(getEntityManager().createNativeQuery(sql, getEntityClass()), binds).getResultList();
     }
@@ -63,16 +59,16 @@ public interface DatabaseStatements<T> {
         return parametized(getEntityManager().createQuery(arel.toJpql()), firstResult, maxResults).executeUpdate();
     }
 
-    private Query parametized(Query query, Map<Integer, Object> binds) {
-        binds.forEach(query::setParameter); return query;
-    }
-
     private Query parametized(Query query, int firstResult, int maxResults) {
         return query.setFirstResult(firstResult).setMaxResults(maxResults);
     }
 
     private Query parametized(Query query, int firstResult, int maxResults, Map<String, Object> hints, LockModeType lockmode) {
         hints.forEach(query::setHint); return query.setFirstResult(firstResult).setMaxResults(maxResults).setLockMode(lockmode);
+    }
+
+    private Query parametized(Query query, Map<Integer, Object> binds) {
+        binds.forEach(query::setParameter); return query;
     }
 
     private Query parametized$(Query query, Map<Integer, Object> binds) {
