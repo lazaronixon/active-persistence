@@ -51,24 +51,24 @@ public interface DatabaseStatements<T> {
         return (T) parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 0, hints, lockmode).getSingleResult();
     }
 
-    public default boolean selectExists(SelectManager arel, Map<String, Object> hints) {
-        return parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 1, hints).getResultStream().findAny().isPresent();
+    public default boolean selectExists(SelectManager arel) {
+        return parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 1).getResultStream().findAny().isPresent();
     }
 
     public default int update(UpdateManager arel, int firstResult, int maxResults) {
-        return parametized(getEntityManager().createQuery(arel.toJpql()), firstResult, maxResults, new HashMap()).executeUpdate();
+        return parametized(getEntityManager().createQuery(arel.toJpql()), firstResult, maxResults).executeUpdate();
     }
 
     public default int delete(DeleteManager arel, int firstResult, int maxResults) {
-        return parametized(getEntityManager().createQuery(arel.toJpql()), firstResult, maxResults, new HashMap()).executeUpdate();
+        return parametized(getEntityManager().createQuery(arel.toJpql()), firstResult, maxResults).executeUpdate();
     }
 
     private Query parametized(Query query, Map<Integer, Object> binds) {
         binds.forEach(query::setParameter); return query;
     }
 
-    private Query parametized(Query query, int firstResult, int maxResults, Map<String, Object> hints) {
-        hints.forEach(query::setHint); return query.setFirstResult(firstResult).setMaxResults(maxResults);
+    private Query parametized(Query query, int firstResult, int maxResults) {
+        return query.setFirstResult(firstResult).setMaxResults(maxResults);
     }
 
     private Query parametized(Query query, int firstResult, int maxResults, Map<String, Object> hints, LockModeType lockmode) {

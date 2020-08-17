@@ -268,8 +268,8 @@ clientsService.where("client.published = false").unscoped().fetch();
 List<Post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = 5");
 List<Post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
 // OR
-List<Map> posts = postsService.selectAll("SELECT id, title FROM Post WHERE id = 5");
-List<Map> posts = postsService.selectAll("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
+List<Map> posts = postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = 5");
+List<Map> posts = postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
 ```
 
 ### Existence of Objects

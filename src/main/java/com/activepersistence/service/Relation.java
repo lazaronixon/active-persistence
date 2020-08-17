@@ -76,7 +76,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public boolean fetchExists() {
-        return getConnection().selectExists(getArel(), hints());
+        return getConnection().selectExists(getArel());
     }
 
     public Relation<T> reset() {
