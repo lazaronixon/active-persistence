@@ -1,17 +1,18 @@
 package com.activepersistence.service;
 
 import com.activepersistence.ActivePersistenceError;
-import static com.activepersistence.service.Literalizing.literal;
 import com.activepersistence.service.arel.DeleteManager;
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.UpdateManager;
+import com.activepersistence.service.connectionadapters.JpaAdapter;
 import com.activepersistence.service.relation.Calculation;
 import com.activepersistence.service.relation.FinderMethods;
 import com.activepersistence.service.relation.QueryMethods;
 import com.activepersistence.service.relation.SpawnMethods;
 import com.activepersistence.service.relation.Values;
 import static java.beans.Introspector.decapitalize;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -19,18 +20,15 @@ import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import static javax.persistence.LockModeType.NONE;
 import static javax.persistence.LockModeType.PESSIMISTIC_WRITE;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 
 public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, SpawnMethods<T> {
 
-    private final EntityManager entityManager;
+    private final JpaAdapter<T> connection;
 
-    private final Base<T> service;
+    private final Base service;
 
     private final Class entityClass;
 
@@ -42,7 +40,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public Relation(Base service) {
         this.entity        = buildEntity(service.getEntityClass());
-        this.entityManager = service.getEntityManager();
+        this.connection    = service.getConnection();
         this.entityClass   = service.getEntityClass();
         this.service       = service;
         this.values        = new Values();
@@ -50,38 +48,38 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public Relation(Base service, Values values) {
         this.entity        = buildEntity(service.getEntityClass());
-        this.entityManager = service.getEntityManager();
+        this.connection    = service.getConnection();
         this.entityClass   = service.getEntityClass();
         this.service       = service;
         this.values        = values;
     }
 
     public Relation(Relation<T> other) {
-        this.entityManager = other.entityManager;
+        this.connection    = other.connection;
         this.entityClass   = other.entityClass;
         this.service       = other.service;
         this.entity        = other.entity;
         this.values        = new Values(other.values);
     }
 
+    public List<T> records() {
+        return connection.selectAll(getArel(), values.getOffset(), values.getLimit(), lockMode(), hints());
+    }
+
+    public List fetchAll() {
+        return connection.selectAll$(getArel(), values.getOffset(), values.getLimit(), lockMode(), hints());
+    }
+
     public T fetchOne() {
-        return buildQuery(toJpql()).getResultStream().findFirst().orElse(null);
+        return connection.selectOne(getArel(), values.getOffset(), lockMode(), hints());
     }
 
     public T fetchOne$() {
-        return buildQuery(toJpql()).getSingleResult();
-    }
-
-    public List<T> fetch() {
-        return buildQuery(toJpql()).getResultList();
-    }
-
-    public List fetch$() {
-        return buildQuery$(toJpql()).getResultList();
+        return connection.selectOne$(getArel(), values.getOffset(), lockMode(), hints());
     }
 
     public boolean fetchExists() {
-        return buildQuery(toJpql()).getResultStream().findAny().isPresent();
+        return connection.selectExists(getArel(), values.getOffset(), hints());
     }
 
     public Relation<T> unscoped() {
@@ -103,7 +101,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public List<T> destroyAll() {
-        return fetch().stream().map(r -> { service.destroy(r); return r; }).collect(toList());
+        return records().stream().map(r -> { service.destroy(r); return r; }).collect(toList());
     }
 
     public List<T> destroyBy(String conditions, Object... params) {
@@ -111,12 +109,12 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public int deleteAll() {
-        if (isValidRelationForUpdate()) {
+        if (isValidRelationForUpdateOrDelete()) {
             var stmt = new DeleteManager();
             stmt.from(entity);
             stmt.setWheres(getArel().getConstraints());
             stmt.setOrders(getArel().getOrders());
-            return executeUpdate(stmt.toJpql());
+            return connection.delete(stmt);
         } else {
             throw new ActivePersistenceError("deleteAll doesn't support this relation");
         }
@@ -138,12 +136,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return getArel().toJpql();
     }
 
-    public Class getEntityClass() {
+    public Class<T> getEntityClass() {
         return entityClass;
-    }
-
-    public EntityManager getEntityManager() {
-        return entityManager;
     }
 
     @Override
@@ -197,39 +191,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return result;
     }
 
-    private TypedQuery<T> buildQuery(String query) {
-        return parametize(createTypedQuery(query))
-                .setLockMode(buildLockMode())
-                .setMaxResults(values.getLimit())
-                .setFirstResult(values.getOffset())
-                .setHint("eclipselink.read-only", values.isReadonly())
-                .setHint("eclipselink.batch.type", "IN");
-    }
-
-    private Query buildQuery$(String query) {
-        return parametize(createQuery(query))
-                .setLockMode(buildLockMode())
-                .setMaxResults(values.getLimit())
-                .setFirstResult(values.getOffset())
-                .setHint("eclipselink.read-only", values.isReadonly())
-                .setHint("eclipselink.batch.type", "IN");
-    }
-
-    private int executeUpdate(String query) {
-        return parametize(createQuery(query))
-                .setMaxResults(values.getLimit())
-                .setFirstResult(values.getOffset())
-                .executeUpdate();
-    }
-
-    private TypedQuery<T> createTypedQuery(String qlString) {
-        return entityManager.createQuery(qlString, entityClass);
-    }
-
-    private Query createQuery(String qlString) {
-        return entityManager.createQuery(qlString);
-    }
-
     private void buildDistinct(SelectManager arel) {
         arel.distinct(values.isDistinct());
     }
@@ -250,21 +211,22 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         if (values.getFrom() != null) arel.from(values.getFrom());
     }
 
-    private <R> TypedQuery<R> parametize(TypedQuery<R> query) {
-        applyHints(query); return query;
-    }
-
-    private Query parametize(Query query) {
-        applyHints(query); return query;
-    }
-
-    private void applyHints(Query query) {
-        values.getIncludes().forEach(value  -> query.setHint("eclipselink.batch", value));
-        values.getEagerLoad().forEach(value -> query.setHint("eclipselink.left-join-fetch", value));
-    }
-
-    private LockModeType buildLockMode() {
+    private LockModeType lockMode() {
         return values.isLock() ? PESSIMISTIC_WRITE : NONE;
+    }
+
+    private Map<String, Object> hints() {
+        var hints = new HashMap(); addDefaultHints(hints); addBatchHints(hints); return hints;
+    }
+
+    private void addDefaultHints(HashMap hints) {
+        hints.put("eclipselink.read-only", values.isReadonly());
+        hints.put("eclipselink.batch.type", "IN");
+    }
+
+    private void addBatchHints(HashMap hints) {
+        values.getIncludes().forEach(value  -> hints.put("eclipselink.batch", value));
+        values.getEagerLoad().forEach(value -> hints.put("eclipselink.left-join-fetch", value));
     }
 
     private Entity buildEntity(Class entityClass) {
@@ -272,7 +234,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     private int _updateAll(Object updates) {
-        if (isValidRelationForUpdate()) {
+        if (isValidRelationForUpdateOrDelete()) {
             var stmt = new UpdateManager();
             stmt.entity(entity);
             stmt.setWheres(getArel().getConstraints());
@@ -284,14 +246,16 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
                 stmt.set((String) updates);
             }
 
-            return executeUpdate(stmt.toJpql());
+            return connection.update(stmt);
         } else {
             throw new ActivePersistenceError("updateAll doesn't support this relation");
         }
     }
 
-    private boolean isValidRelationForUpdate() {
+    private boolean isValidRelationForUpdateOrDelete() {
         return values.isDistinct() == false
+                && values.getLimit() == 0
+                && values.getOffset() == 0
                 && values.getGroup().isEmpty()
                 && values.getHaving().isEmpty()
                 && values.getJoins().isEmpty();

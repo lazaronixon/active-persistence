@@ -58,7 +58,7 @@ public class NullRelation<T> extends Relation<T> {
     }
 
     @Override
-    public List<T> fetch() {
+    public List<T> records() {
         return new ArrayList();
     }
 

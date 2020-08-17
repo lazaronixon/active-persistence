@@ -24,18 +24,4 @@ public class QueryingTest extends IntegrationTest {
         assertEquals("flood", postsService.findBySql("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5)).get(0).getTitle());
     }
 
-    @Test
-    public void testSelectAll() {
-        var result = postsService.selectAll("SELECT id, title FROM Post WHERE id = 5").get(0);
-        assertEquals(5 , result.get("ID"));
-        assertEquals("flood" , result.get("TITLE"));
-    }
-
-    @Test
-    public void testSelectAllWithBind() {
-        var result = postsService.selectAll("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5)).get(0);
-        assertEquals(5 , result.get("ID"));
-        assertEquals("flood" , result.get("TITLE"));
-    }
-
 }

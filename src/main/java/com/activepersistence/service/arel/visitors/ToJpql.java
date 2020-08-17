@@ -1,6 +1,5 @@
 package com.activepersistence.service.arel.visitors;
 
-import com.activepersistence.service.Literalizing;
 import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.nodes.Assignment;
 import com.activepersistence.service.arel.nodes.Avg;
@@ -20,6 +19,7 @@ import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.StringJoin;
 import com.activepersistence.service.arel.nodes.Sum;
 import com.activepersistence.service.arel.nodes.UpdateStatement;
+import com.activepersistence.service.connectionadapters.Literalizing;
 import java.util.List;
 
 public class ToJpql extends Visitor {

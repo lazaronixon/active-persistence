@@ -1,5 +1,5 @@
 
-package com.activepersistence.service;
+package com.activepersistence.service.connectionadapters;
 
 import com.activepersistence.model.Base;
 import java.time.LocalDate;
@@ -8,11 +8,11 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import static java.time.format.DateTimeFormatter.ofPattern;
 
-public class Literalizing {
+public interface Literalizing<T> {
 
-    private static final DateTimeFormatter DATE_FORMAT      = ofPattern("yyyy-MM-dd");
-    private static final DateTimeFormatter TIME_FORMAT      = ofPattern("HH:mm:ss");
-    private static final DateTimeFormatter DATE_TIME_FORMAT = ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSSSSS");
+    public static final DateTimeFormatter DATE_FORMAT      = ofPattern("yyyy-MM-dd");
+    public static final DateTimeFormatter TIME_FORMAT      = ofPattern("HH:mm:ss");
+    public static final DateTimeFormatter DATE_TIME_FORMAT = ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSSSSS");
 
     public static String literal(Object value) {
         if (value instanceof Base) {

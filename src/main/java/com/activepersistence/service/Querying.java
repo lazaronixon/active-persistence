@@ -1,17 +1,14 @@
 package com.activepersistence.service;
 
+import com.activepersistence.service.connectionadapters.JpaAdapter;
 import com.activepersistence.service.relation.ValueMethods;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 public interface Querying<T> {
 
-    public EntityManager getEntityManager();
-
-    public Class<T> getEntityClass();
+    public JpaAdapter<T> getConnection();
 
     public Relation<T> getRelation();
 
@@ -269,24 +266,8 @@ public interface Querying<T> {
     }
 
     public default List<T> findBySql(String sql, Map<Integer, Object> binds) {
-        return parametize(getEntityManager().createNativeQuery(sql, getEntityClass()), binds).getResultList();
-    }
-
-    public default List<Map> selectAll(String sql) {
-        return selectAll(sql, new HashMap());
-    }
-
-    public default List<Map> selectAll(String sql, Map<Integer, Object> binds) {
-        return parametizeMap(getEntityManager().createNativeQuery(sql), binds).getResultList();
+        return getConnection().selectAll$(sql, binds);
     }
     //</editor-fold>
-
-    private Query parametizeMap(Query query, Map<Integer, Object> binds) {
-        binds.forEach(query::setParameter); query.setHint("eclipselink.result-type", "Map"); return query;
-    }
-
-    private Query parametize(Query query, Map<Integer, Object> binds) {
-        binds.forEach(query::setParameter); return query;
-    }
 
 }

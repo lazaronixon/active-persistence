@@ -1,24 +1,24 @@
 package com.activepersistence.service;
 
+import com.activepersistence.service.connectionadapters.JpaAdapter;
 import javax.persistence.EntityManager;
 
 public abstract class Base<T> implements Persistence<T>, Querying<T>, Scoping<T> {
 
     private static final String PROXY = "$Proxy$_$$_WeldSubclass";
 
-    private final Class<T> entityClass;
+    private final Class entityClass;
 
-    public Base(Class<T> entityClass) {
+    public Base(Class entityClass) {
         this.entityClass = entityClass;
+    }
+
+    public Class<T> getEntityClass() {
+        return entityClass;
     }
 
     @Override
     public abstract EntityManager getEntityManager();
-
-    @Override
-    public Class<T> getEntityClass() {
-        return entityClass;
-    }
 
     @Override
     public Relation<T> getRelation() {
@@ -26,13 +26,18 @@ public abstract class Base<T> implements Persistence<T>, Querying<T>, Scoping<T>
     }
 
     @Override
-    public Relation<T> defaultScope() {
-        throw new UnsupportedOperationException("not implemented");
+    public JpaAdapter<T> getConnection() {
+        return new JpaAdapter(getEntityManager(), entityClass);
     }
 
     @Override
     public Relation<T> all() {
         return Scoping.super.all();
+    }
+
+    @Override
+    public Relation<T> defaultScope() {
+        throw new UnsupportedOperationException("not implemented");
     }
 
     @Override

@@ -1,7 +1,8 @@
 package com.activepersistence.service;
 
 import com.activepersistence.PreparedStatementInvalid;
-import static com.activepersistence.service.Literalizing.literal;
+import com.activepersistence.service.connectionadapters.Literalizing;
+import static com.activepersistence.service.connectionadapters.Literalizing.literal;
 import static com.activepersistence.service.relation.ValueMethods.CONSTRUCTOR;
 import static java.lang.String.format;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import java.util.stream.Stream;
 public class Sanitization {
 
     public static String sanitizeJpql(String statement, Object... values) {
+        if (statement.isEmpty()) return null;
+
         if (values != null && values.length > 0) {
             if (values[0] instanceof Map && compile(":\\w+").matcher(statement).find()) {
                 return replaceNamedBindVariables(statement, (Map) values[0]);

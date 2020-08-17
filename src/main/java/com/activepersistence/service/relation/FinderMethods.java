@@ -24,7 +24,7 @@ public interface FinderMethods<T> {
     }
 
     public default List<T> take(int limit) {
-        return thiz().limit(limit).fetch();
+        return thiz().limit(limit).records();
     }
 
     public default T first() {
@@ -56,7 +56,7 @@ public interface FinderMethods<T> {
     }
 
     public default List<T> find(Object... ids) {
-        return thiz().where(getPrimaryKey() + " IN (?)", asList(ids)).fetch();
+        return thiz().where(getPrimaryKey() + " IN (?)", asList(ids)).records();
     }
 
     public default T findById(Object id) {

@@ -57,13 +57,13 @@ public class RelationTest extends IntegrationTest {
     }
 
     @Test
-    public void testFetch() {
-        assertNotNull(postsService.all().fetch());
+    public void testRecords() {
+        assertNotNull(postsService.all().records());
     }
 
     @Test
-    public void testFetch$() {
-        assertNotNull(postsService.all().fetch$());
+    public void testFetchAll() {
+        assertNotNull(postsService.all().fetchAll());
     }
 
     @Test
