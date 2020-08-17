@@ -60,19 +60,19 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public List<T> fetch() {
-        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), lockMode(), hints());
+        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), hints(), lockMode());
     }
 
     public List fetch$() {
-        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), lockMode(), hints());
+        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), hints(), lockMode());
     }
 
     public T fetchOne() {
-        return getConnection().selectOne(getArel(), lockMode(), hints());
+        return getConnection().selectOne(getArel(), hints(), lockMode());
     }
 
     public T fetchOne$() {
-        return getConnection().selectOne$(getArel(), lockMode(), hints());
+        return getConnection().selectOne$(getArel(), hints(), lockMode());
     }
 
     public boolean fetchExists() {
@@ -115,7 +115,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
             stmt.from(entity);
             stmt.setWheres(getArel().getConstraints());
             stmt.setOrders(getArel().getOrders());
-            return getConnection().delete(stmt);
+            return getConnection().delete(stmt, values.getOffset(), values.getLimit());
         } else {
             throw new ActivePersistenceError("deleteAll doesn't support this relation");
         }
@@ -251,19 +251,14 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
                 stmt.set((String) updates);
             }
 
-            return getConnection().update(stmt);
+            return getConnection().update(stmt, values.getOffset(), values.getLimit());
         } else {
             throw new ActivePersistenceError("updateAll doesn't support this relation");
         }
     }
 
     private boolean isValidRelationForUpdateOrDelete() {
-        return values.isDistinct() == false
-                && values.getLimit() == 0
-                && values.getOffset() == 0
-                && values.getGroup().isEmpty()
-                && values.getHaving().isEmpty()
-                && values.getJoins().isEmpty();
+        return values.isDistinct() == false && values.getJoins().isEmpty() && values.getGroup().isEmpty() && values.getHaving().isEmpty();
     }
 
     private Map<String, Object> substituteValues(Map<String, Object> updates) {

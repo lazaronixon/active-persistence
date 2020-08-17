@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
-import static javax.persistence.LockModeType.NONE;
 import javax.persistence.Query;
 
 public interface DatabaseStatements<T> {
@@ -40,35 +39,39 @@ public interface DatabaseStatements<T> {
         return parametized(getEntityManager().createNativeQuery(sql, getEntityClass()), binds).getResultList();
     }
 
-    public default List selectAll(SelectManager arel, int firstResult, int maxResults, LockModeType lockmode, Map<String, Object> hints) {
-        return parametized(getEntityManager().createQuery(arel.toJpql()), firstResult, maxResults, lockmode, hints).getResultList();
+    public default List selectAll(SelectManager arel, int firstResult, int maxResults, Map<String, Object> hints, LockModeType lockmode) {
+        return parametized(getEntityManager().createQuery(arel.toJpql()), firstResult, maxResults, hints, lockmode).getResultList();
     }
 
-    public default T selectOne(SelectManager arel, LockModeType lockmode, Map<String, Object> hints) {
-        return (T) parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 0, lockmode, hints).getResultStream().findFirst().orElse(null);
+    public default T selectOne(SelectManager arel, Map<String, Object> hints, LockModeType lockmode) {
+        return (T) parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 0, hints, lockmode).getResultStream().findFirst().orElse(null);
     }
 
-    public default T selectOne$(SelectManager arel, LockModeType lockmode, Map<String, Object> hints) {
-        return (T) parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 0, lockmode, hints).getSingleResult();
+    public default T selectOne$(SelectManager arel, Map<String, Object> hints, LockModeType lockmode) {
+        return (T) parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 0, hints, lockmode).getSingleResult();
     }
 
     public default boolean selectExists(SelectManager arel, Map<String, Object> hints) {
-        return parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 0, NONE, hints).getResultStream().findAny().isPresent();
+        return parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 1, hints).getResultStream().findAny().isPresent();
     }
 
-    public default int update(UpdateManager arel) {
-        return getEntityManager().createQuery(arel.toJpql()).executeUpdate();
+    public default int update(UpdateManager arel, int firstResult, int maxResults) {
+        return parametized(getEntityManager().createQuery(arel.toJpql()), firstResult, maxResults, new HashMap()).executeUpdate();
     }
 
-    public default int delete(DeleteManager arel) {
-        return getEntityManager().createQuery(arel.toJpql()).executeUpdate();
+    public default int delete(DeleteManager arel, int firstResult, int maxResults) {
+        return parametized(getEntityManager().createQuery(arel.toJpql()), firstResult, maxResults, new HashMap()).executeUpdate();
     }
 
     private Query parametized(Query query, Map<Integer, Object> binds) {
         binds.forEach(query::setParameter); return query;
     }
 
-    private Query parametized(Query query, int firstResult, int maxResults, LockModeType lockmode, Map<String, Object> hints) {
+    private Query parametized(Query query, int firstResult, int maxResults, Map<String, Object> hints) {
+        hints.forEach(query::setHint); return query.setFirstResult(firstResult).setMaxResults(maxResults);
+    }
+
+    private Query parametized(Query query, int firstResult, int maxResults, Map<String, Object> hints, LockModeType lockmode) {
         hints.forEach(query::setHint); return query.setFirstResult(firstResult).setMaxResults(maxResults).setLockMode(lockmode);
     }
 

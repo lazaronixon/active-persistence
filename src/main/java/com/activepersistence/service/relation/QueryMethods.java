@@ -155,7 +155,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> rewhere(String conditions, Object... params) {
-        return spawn().except(ValueMethods.WHERE).where(conditions, params);
+        return spawn().except(WHERE).where(conditions, params);
     }
 
     public default Relation<T> reorder(String... fields) {
