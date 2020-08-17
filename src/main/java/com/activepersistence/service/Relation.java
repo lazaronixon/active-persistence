@@ -64,7 +64,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public List fetch$() {
-        return getConnection().selectAll$(getArel(), values.getOffset(), values.getLimit(), lockMode(), hints());
+        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), lockMode(), hints());
     }
 
     public T fetchOne() {

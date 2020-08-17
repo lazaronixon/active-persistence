@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import static javax.persistence.LockModeType.NONE;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 
 public interface DatabaseStatements<T> {
 
@@ -30,7 +29,7 @@ public interface DatabaseStatements<T> {
     }
 
     public default List<Map<String, Object>> selectAll(String sql, Map<Integer, Object> binds) {
-        return parametizedNative(getEntityManager().createNativeQuery(sql), binds).getResultList();
+        return parametized$(getEntityManager().createNativeQuery(sql), binds).getResultList();
     }
 
     public default List<T> selectAll$(String sql) {
@@ -41,20 +40,16 @@ public interface DatabaseStatements<T> {
         return parametized(getEntityManager().createNativeQuery(sql, getEntityClass()), binds).getResultList();
     }
 
-    public default List<T> selectAll(SelectManager arel, int firstResult, int maxResults, LockModeType lockmode, Map<String, Object> hints) {
-        return parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), firstResult, maxResults, lockmode, hints).getResultList();
-    }
-
-    public default List selectAll$(SelectManager arel, int firstResult, int maxResults, LockModeType lockmode, Map<String, Object> hints) {
+    public default List selectAll(SelectManager arel, int firstResult, int maxResults, LockModeType lockmode, Map<String, Object> hints) {
         return parametized(getEntityManager().createQuery(arel.toJpql()), firstResult, maxResults, lockmode, hints).getResultList();
     }
 
     public default T selectOne(SelectManager arel, LockModeType lockmode, Map<String, Object> hints) {
-        return parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 0, lockmode, hints).getResultStream().findFirst().orElse(null);
+        return (T) parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 0, lockmode, hints).getResultStream().findFirst().orElse(null);
     }
 
     public default T selectOne$(SelectManager arel, LockModeType lockmode, Map<String, Object> hints) {
-        return parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 0, lockmode, hints).getSingleResult();
+        return (T) parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 0, lockmode, hints).getSingleResult();
     }
 
     public default boolean selectExists(SelectManager arel, Map<String, Object> hints) {
@@ -69,10 +64,6 @@ public interface DatabaseStatements<T> {
         return getEntityManager().createQuery(arel.toJpql()).executeUpdate();
     }
 
-    private Query parametizedNative(Query query, Map<Integer, Object> binds) {
-        binds.forEach(query::setParameter); query.setHint("eclipselink.result-type", "Map"); return query;
-    }
-
     private Query parametized(Query query, Map<Integer, Object> binds) {
         binds.forEach(query::setParameter); return query;
     }
@@ -81,8 +72,8 @@ public interface DatabaseStatements<T> {
         hints.forEach(query::setHint); return query.setFirstResult(firstResult).setMaxResults(maxResults).setLockMode(lockmode);
     }
 
-    private <R> TypedQuery<R> parametized(TypedQuery<R> query, int firstResult, int maxResults, LockModeType lockmode, Map<String, Object> hints) {
-        hints.forEach(query::setHint); return query.setFirstResult(firstResult).setMaxResults(maxResults).setLockMode(lockmode);
+    private Query parametized$(Query query, Map<Integer, Object> binds) {
+        binds.forEach(query::setParameter); query.setHint("eclipselink.result-type", "Map"); return query;
     }
 
 }
