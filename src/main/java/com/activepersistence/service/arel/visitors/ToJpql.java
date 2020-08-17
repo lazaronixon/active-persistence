@@ -158,6 +158,10 @@ public class ToJpql extends Visitor {
         return collector;
     }
 
+    public String compile(Visitable node, StringBuilder collector) {
+        return accept(node, collector).toString();
+    }
+
     private StringBuilder maybeVisit(Visitable node, StringBuilder collector) {
         return node != null ? visit(node, collector.append(" ")) : collector;
     }

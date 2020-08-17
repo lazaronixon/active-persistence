@@ -95,29 +95,29 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testLimit() {
-        assertEquals(2, postsService.limit(2).records().size());
+        assertEquals(2, postsService.limit(2).fetch().size());
     }
 
     @Test
     public void testOffset() {
-        assertEquals(1, postsService.where("post.id IN (1, 2, 3)").limit(2).offset(2).records().size());
+        assertEquals(1, postsService.where("post.id IN (1, 2, 3)").limit(2).offset(2).fetch().size());
     }
 
     @Test
     public void testIncludes() {
-        var posts = postsService.includes("post.comments").records();
+        var posts = postsService.includes("post.comments").fetch();
         var comments = posts.stream().flatMap(p -> p.getComments().stream());
         assertTrue(comments.findAny().isPresent());
     }
 
     @Test
     public void testEagerLoads() {
-        var posts = postsService.eagerLoad("post.comments").records();
+        var posts = postsService.eagerLoad("post.comments").fetch();
         var comments = posts.stream().flatMap(p -> p.getComments().stream());
         assertTrue(comments.findAny().isPresent());
     }
 
-    @Test @Ignore //Not works with H2DB
+    @Test 
     public void testLock() {
         assertNotNull(postsService.lock().fetchOne());
     }

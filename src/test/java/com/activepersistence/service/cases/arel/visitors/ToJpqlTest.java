@@ -13,15 +13,12 @@ import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.UpdateStatement;
 import com.activepersistence.service.arel.visitors.Visitable;
-import com.activepersistence.service.arel.visitors.Visitor;
 import com.activepersistence.service.models.Post;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 public class ToJpqlTest {
-
-    private final Visitor visitor = Entity.visitor;
 
     @Test
     public void testVisitDeleteStatement() {
@@ -138,7 +135,7 @@ public class ToJpqlTest {
     }
 
     private String compile(Visitable node) {
-        return visitor.accept(node, new StringBuilder()).toString();
+        return Entity.visitor.accept(node, new StringBuilder()).toString();
     }
 
 }

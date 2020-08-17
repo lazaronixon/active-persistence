@@ -26,8 +26,6 @@ import static javax.persistence.LockModeType.PESSIMISTIC_WRITE;
 
 public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, SpawnMethods<T> {
 
-    private final JpaAdapter<T> connection;
-
     private final Base service;
 
     private final Class entityClass;
@@ -38,9 +36,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private SelectManager arel;
 
+    private String toJpql;
+
     public Relation(Base service) {
         this.entity        = buildEntity(service.getEntityClass());
-        this.connection    = service.getConnection();
         this.entityClass   = service.getEntityClass();
         this.service       = service;
         this.values        = new Values();
@@ -48,38 +47,40 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     public Relation(Base service, Values values) {
         this.entity        = buildEntity(service.getEntityClass());
-        this.connection    = service.getConnection();
         this.entityClass   = service.getEntityClass();
         this.service       = service;
         this.values        = values;
     }
 
     public Relation(Relation<T> other) {
-        this.connection    = other.connection;
         this.entityClass   = other.entityClass;
         this.service       = other.service;
         this.entity        = other.entity;
         this.values        = new Values(other.values);
     }
 
-    public List<T> records() {
-        return connection.selectAll(getArel(), values.getOffset(), values.getLimit(), lockMode(), hints());
+    public List<T> fetch() {
+        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), lockMode(), hints());
     }
 
-    public List fetchAll() {
-        return connection.selectAll$(getArel(), values.getOffset(), values.getLimit(), lockMode(), hints());
+    public List fetch$() {
+        return getConnection().selectAll$(getArel(), values.getOffset(), values.getLimit(), lockMode(), hints());
     }
 
     public T fetchOne() {
-        return connection.selectOne(getArel(), values.getOffset(), lockMode(), hints());
+        return getConnection().selectOne(getArel(), lockMode(), hints());
     }
 
     public T fetchOne$() {
-        return connection.selectOne$(getArel(), values.getOffset(), lockMode(), hints());
+        return getConnection().selectOne$(getArel(), lockMode(), hints());
     }
 
     public boolean fetchExists() {
-        return connection.selectExists(getArel(), values.getOffset(), hints());
+        return getConnection().selectExists(getArel(), hints());
+    }
+
+    public Relation<T> reset() {
+        toJpql = null; arel = null; return this;
     }
 
     public Relation<T> unscoped() {
@@ -101,7 +102,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public List<T> destroyAll() {
-        return records().stream().map(r -> { service.destroy(r); return r; }).collect(toList());
+        return fetch().stream().map(r -> { service.destroy(r); return r; }).collect(toList());
     }
 
     public List<T> destroyBy(String conditions, Object... params) {
@@ -114,7 +115,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
             stmt.from(entity);
             stmt.setWheres(getArel().getConstraints());
             stmt.setOrders(getArel().getOrders());
-            return connection.delete(stmt);
+            return getConnection().delete(stmt);
         } else {
             throw new ActivePersistenceError("deleteAll doesn't support this relation");
         }
@@ -132,8 +133,12 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return where(conditions, params).deleteAll();
     }
 
+    public SelectManager getArel() {
+        return arel = ofNullable(arel).orElseGet(this::buildArel);
+    }
+
     public String toJpql() {
-        return getArel().toJpql();
+        return toJpql = ofNullable(toJpql).orElseGet(() -> getConnection().toJpql(getArel()));
     }
 
     public Class<T> getEntityClass() {
@@ -170,8 +175,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return this;
     }
 
-    private SelectManager getArel() {
-        return arel = ofNullable(arel).orElseGet(this::buildArel);
+    private JpaAdapter<T> getConnection() {
+        return service.getConnection();
     }
 
     private SelectManager buildArel() {
@@ -246,7 +251,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
                 stmt.set((String) updates);
             }
 
-            return connection.update(stmt);
+            return getConnection().update(stmt);
         } else {
             throw new ActivePersistenceError("updateAll doesn't support this relation");
         }

@@ -14,8 +14,8 @@ public class Entity implements Source {
     private final String alias;
 
     public Entity(Class klass, String alias) {
-        this.klass = klass;
-        this.alias = alias;
+        this.klass  = klass;
+        this.alias  = alias;
     }
 
     public SelectManager from() {
