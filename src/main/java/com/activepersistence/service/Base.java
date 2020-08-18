@@ -31,17 +31,16 @@ public abstract class Base<T> implements Persistence<T>, Querying<T>, Scoping<T>
         return getAlias() + "." + "id";
     }
 
+    public JpaAdapter<T> getConnection() {
+        return new JpaAdapter(getEntityManager(), entityClass);
+    }
+
     @Override
     public abstract EntityManager getEntityManager();
 
     @Override
     public Relation<T> getRelation() {
         return new Relation(this);
-    }
-
-    @Override
-    public JpaAdapter<T> getConnection() {
-        return new JpaAdapter(getEntityManager(), entityClass);
     }
 
     @Override

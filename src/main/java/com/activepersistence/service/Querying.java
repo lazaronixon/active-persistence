@@ -1,14 +1,17 @@
 package com.activepersistence.service;
 
-import com.activepersistence.service.connectionadapters.JpaAdapter;
 import com.activepersistence.service.relation.ValueMethods;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 public interface Querying<T> {
 
-    public JpaAdapter<T> getConnection();
+    public EntityManager getEntityManager();
+
+    public Class<T> getEntityClass();
 
     public Relation<T> getRelation();
 
@@ -266,7 +269,11 @@ public interface Querying<T> {
     }
 
     public default List<T> findBySql(String sql, Map<Integer, Object> binds) {
-        return getConnection().selectAll$(sql, binds);
+        return parametized(getEntityManager().createNativeQuery(sql, getEntityClass()), binds).getResultList();
+    }
+
+    private Query parametized(Query query, Map<Integer, Object> binds) {
+        binds.forEach(query::setParameter); return query;
     }
     //</editor-fold>
 

@@ -163,11 +163,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public List<T> fetch() {
-        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), hints(), lockMode());
+        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), lockMode(), hints());
     }
 
     public List fetch$() {
-        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), hints(), lockMode());
+        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), lockMode(), hints());
     }
 
     public T fetchOne() {
