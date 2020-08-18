@@ -11,12 +11,10 @@ import com.activepersistence.service.relation.FinderMethods;
 import com.activepersistence.service.relation.QueryMethods;
 import com.activepersistence.service.relation.SpawnMethods;
 import com.activepersistence.service.relation.Values;
-import static java.beans.Introspector.decapitalize;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -34,53 +32,25 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private final Values values;
 
-    private SelectManager arel;
-
-    private String toJpql;
-
     public Relation(Base service) {
-        this.entity        = buildEntity(service.getEntityClass());
+        this.entity        = service.getArelEntity();
         this.entityClass   = service.getEntityClass();
         this.service       = service;
         this.values        = new Values();
     }
 
     public Relation(Base service, Values values) {
-        this.entity        = buildEntity(service.getEntityClass());
+        this.entity        = service.getArelEntity();
         this.entityClass   = service.getEntityClass();
         this.service       = service;
         this.values        = values;
     }
 
     public Relation(Relation<T> other) {
+        this.entity        = other.entity;
         this.entityClass   = other.entityClass;
         this.service       = other.service;
-        this.entity        = other.entity;
         this.values        = new Values(other.values);
-    }
-
-    public List<T> fetch() {
-        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), hints(), lockMode());
-    }
-
-    public List fetch$() {
-        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), hints(), lockMode());
-    }
-
-    public T fetchOne() {
-        return getConnection().selectOne(getArel(), hints(), lockMode());
-    }
-
-    public T fetchOne$() {
-        return getConnection().selectOne$(getArel(), hints(), lockMode());
-    }
-
-    public boolean fetchExists() {
-        return getConnection().selectExists(getArel());
-    }
-
-    public Relation<T> reset() {
-        toJpql = null; arel = null; return this;
     }
 
     public Relation<T> unscoped() {
@@ -133,12 +103,8 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return where(conditions, params).deleteAll();
     }
 
-    public SelectManager getArel() {
-        return arel = ofNullable(arel).orElseGet(this::buildArel);
-    }
-
     public String toJpql() {
-        return toJpql = ofNullable(toJpql).orElseGet(() -> getConnection().toJpql(getArel()));
+        return getConnection().toJpql(getArel());
     }
 
     public Class<T> getEntityClass() {
@@ -148,16 +114,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     @Override
     public Values getValues() {
         return values;
-    }
-
-    @Override
-    public String getAlias() {
-        return entity.getAlias();
-    }
-
-    @Override
-    public String getPrimaryKey() {
-        return getAlias() + "." + "id";
     }
 
     @Override
@@ -175,11 +131,21 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return this;
     }
 
-    private JpaAdapter<T> getConnection() {
+    @Override
+    public String getPrimaryKey() {
+        return service.getPrimaryKey();
+    }
+
+    @Override
+    public String getAlias() {
+        return service.getAlias();
+    }
+
+    public JpaAdapter<T> getConnection() {
         return service.getConnection();
     }
 
-    private SelectManager buildArel() {
+    public SelectManager getArel() {
         var result = new SelectManager(entity);
 
         buildConstructor(result);
@@ -196,6 +162,26 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return result;
     }
 
+    public List<T> fetch() {
+        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), hints(), lockMode());
+    }
+
+    public List fetch$() {
+        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), hints(), lockMode());
+    }
+
+    public T fetchOne() {
+        return getConnection().selectOne(getArel(), hints(), lockMode());
+    }
+
+    public T fetchOne$() {
+        return getConnection().selectOne$(getArel(), hints(), lockMode());
+    }
+
+    public boolean fetchExists() {
+        return getConnection().selectExists(getArel());
+    }
+
     private void buildDistinct(SelectManager arel) {
         arel.distinct(values.isDistinct());
     }
@@ -206,7 +192,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private void buildSelect(SelectManager arel) {
         if (values.getSelect().isEmpty()) {
-            arel.project(getAlias());
+            arel.project(entity.getAlias());
         } else {
             values.getSelect().forEach(arel::project);
         }
@@ -232,10 +218,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private void addBatchHints(HashMap hints) {
         values.getIncludes().forEach(value  -> hints.put("eclipselink.batch", value));
         values.getEagerLoad().forEach(value -> hints.put("eclipselink.left-join-fetch", value));
-    }
-
-    private Entity buildEntity(Class entityClass) {
-        return new Entity(entityClass, decapitalize(entityClass.getSimpleName()));
     }
 
     private int _updateAll(Object updates) {
