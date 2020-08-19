@@ -3,7 +3,7 @@ package com.activepersistence.service;
 import java.util.function.Supplier;
 import javax.persistence.EntityManager;
 import static javax.persistence.LockModeType.NONE;
-import static javax.persistence.LockModeType.PESSIMISTIC_READ;
+import static javax.persistence.LockModeType.PESSIMISTIC_WRITE;
 import javax.transaction.Transactional;
 
 public interface Persistence<T> {
@@ -39,7 +39,7 @@ public interface Persistence<T> {
     }
 
     public default void reload(T entity, boolean lock) {
-        getEntityManager().refresh(entity, lock ? PESSIMISTIC_READ : NONE);
+        getEntityManager().refresh(entity, lock ? PESSIMISTIC_WRITE : NONE);
     }
 
     private T flush(Supplier<T> yield) {
