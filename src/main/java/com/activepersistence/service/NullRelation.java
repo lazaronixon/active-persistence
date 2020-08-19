@@ -7,7 +7,8 @@ import static com.activepersistence.service.relation.Calculation.Operations.MIN;
 import static com.activepersistence.service.relation.Calculation.Operations.SUM;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
-import java.util.HashMap;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import java.util.List;
 
 public class NullRelation<T> extends Relation<T> {
@@ -18,7 +19,7 @@ public class NullRelation<T> extends Relation<T> {
 
     @Override
     public List pluck(String... fields) {
-        return new ArrayList();
+        return emptyList();
     }
 
     @Override
@@ -39,9 +40,9 @@ public class NullRelation<T> extends Relation<T> {
     @Override
     public Object calculate(Operations operation, String field) {
         if (asList(COUNT, SUM).contains(operation)) {
-            return getValues().getGroup().isEmpty() ? 0 : new HashMap();
+            return getValues().getGroup().isEmpty() ? 0 : emptyMap();
         } else if (asList(AVG, MIN, MAX).contains(operation)) {
-            return getValues().getGroup().isEmpty() ? null : new HashMap();
+            return getValues().getGroup().isEmpty() ? null : emptyMap();
         } else {
             throw new RuntimeException("Operation not supported: " + operation);
         }
@@ -59,7 +60,7 @@ public class NullRelation<T> extends Relation<T> {
 
     @Override
     public List<T> fetch() {
-        return new ArrayList();
+        return emptyList();
     }
 
 }

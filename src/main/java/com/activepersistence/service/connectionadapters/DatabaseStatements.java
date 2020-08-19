@@ -5,18 +5,19 @@ import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.TreeManager;
 import com.activepersistence.service.arel.UpdateManager;
 import com.activepersistence.service.arel.visitors.ToJpql;
-import java.util.HashMap;
+import static java.util.Collections.emptyMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
+import static javax.persistence.LockModeType.NONE;
 import javax.persistence.Query;
 
 public interface DatabaseStatements<T> {
 
-    public Class<T> getEntityClass();
-
     public ToJpql getVisitor();
+
+    public Class<T> getEntityClass();
 
     public EntityManager getEntityManager();
 
@@ -25,7 +26,7 @@ public interface DatabaseStatements<T> {
     }
 
     public default List<Map<String, Object>> selectAll(String sql) {
-        return selectAll(sql, new HashMap());
+        return selectAll(sql, emptyMap());
     }
 
     public default List<Map<String, Object>> selectAll(String sql, Map<Integer, Object> binds) {
@@ -33,19 +34,19 @@ public interface DatabaseStatements<T> {
     }
 
     public default List selectAll(SelectManager arel, int firstResult, int maxResults, LockModeType lockmode, Map<String, Object> hints) {
-        return parametized(getEntityManager().createQuery(arel.toJpql()), firstResult, maxResults, lockmode, hints).getResultList();
+        return createQuery(arel, firstResult, maxResults, lockmode, hints).getResultList();
     }
 
-    public default T selectOne(SelectManager arel, Map<String, Object> hints, LockModeType lockmode) {
-        return (T) parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 0, lockmode, hints).getResultStream().findFirst().orElse(null);
+    public default T selectOne(SelectManager arel, LockModeType lockmode, Map<String, Object> hints) {
+        return (T) createQuery(arel, 0, 0, lockmode, hints).getResultStream().findFirst().orElse(null);
     }
 
-    public default T selectOne$(SelectManager arel, Map<String, Object> hints, LockModeType lockmode) {
-        return (T) parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 0, lockmode, hints).getSingleResult();
+    public default T selectOne$(SelectManager arel, LockModeType lockmode, Map<String, Object> hints) {
+        return (T) createQuery(arel, 0, 0, lockmode, hints).getSingleResult();
     }
 
     public default boolean selectExists(SelectManager arel) {
-        return parametized(getEntityManager().createQuery(arel.toJpql(), getEntityClass()), 0, 1).getResultStream().findAny().isPresent();
+        return createQuery(arel, 0, 1, NONE, emptyMap()).getResultStream().findAny().isPresent();
     }
 
     public default int update(UpdateManager arel, int firstResult, int maxResults) {
@@ -58,6 +59,10 @@ public interface DatabaseStatements<T> {
 
     private int executeUpdate(TreeManager arel, int firstResult, int maxResults) {
         return parametized(getEntityManager().createQuery(arel.toJpql()), firstResult, maxResults).executeUpdate();
+    }
+
+    private Query createQuery(SelectManager arel, int firstResult, int maxResults, LockModeType lockmode, Map<String, Object> hints) {
+        return parametized(getEntityManager().createQuery(arel.toJpql()), firstResult, maxResults, lockmode, hints);
     }
 
     private Query parametized(Query query, int firstResult, int maxResults) {

@@ -171,11 +171,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public T fetchOne() {
-        return getConnection().selectOne(getArel(), hints(), lockMode());
+        return getConnection().selectOne(getArel(), lockMode(), hints());
     }
 
     public T fetchOne$() {
-        return getConnection().selectOne$(getArel(), hints(), lockMode());
+        return getConnection().selectOne$(getArel(), lockMode(), hints());
     }
 
     public boolean fetchExists() {

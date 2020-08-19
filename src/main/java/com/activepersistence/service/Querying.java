@@ -1,6 +1,7 @@
 package com.activepersistence.service;
 
 import com.activepersistence.service.relation.ValueMethods;
+import static java.util.Collections.emptyMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -265,7 +266,7 @@ public interface Querying<T> {
 
     //<editor-fold defaultstate="collapsed" desc="Querying">
     public default List<T> findBySql(String sql) {
-        return findBySql(sql, new HashMap());
+        return findBySql(sql, emptyMap());
     }
 
     public default List<T> findBySql(String sql, Map<Integer, Object> binds) {
