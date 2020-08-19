@@ -25,11 +25,11 @@ public interface DatabaseStatements<T> {
         return getVisitor().compile(arel.getAst(), new StringBuilder());
     }
 
-    public default List<Map<String, Object>> selectAll(String sql) {
+    public default List<Object[]> selectAll(String sql) {
         return selectAll(sql, emptyMap());
     }
 
-    public default List<Map<String, Object>> selectAll(String sql, Map<Integer, Object> binds) {
+    public default List<Object[]> selectAll(String sql, Map<Integer, Object> binds) {
         return parametized$(getEntityManager().createNativeQuery(sql), binds).getResultList();
     }
 
@@ -74,7 +74,7 @@ public interface DatabaseStatements<T> {
     }
 
     private Query parametized$(Query query, Map<Integer, Object> binds) {
-        binds.forEach(query::setParameter); query.setHint("eclipselink.result-type", "Map"); return query;
+        binds.forEach(query::setParameter); return query;
     }
 
 }
