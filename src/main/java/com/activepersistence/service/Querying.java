@@ -2,7 +2,6 @@ package com.activepersistence.service;
 
 import com.activepersistence.service.relation.ValueMethods;
 import static java.util.Collections.emptyMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -270,12 +269,16 @@ public interface Querying<T> {
     }
 
     public default List<T> findBySql(String sql, Map<Integer, Object> binds) {
-        return parametized(getEntityManager().createNativeQuery(sql, getEntityClass()), binds).getResultList();
+        return createNativeQuery(sql, binds).getResultList();
+    }
+    //</editor-fold>
+
+    private Query createNativeQuery(String sql, Map<Integer, Object> binds) {
+        return parametized(getEntityManager().createNativeQuery(sql, getEntityClass()), binds);
     }
 
     private Query parametized(Query query, Map<Integer, Object> binds) {
         binds.forEach(query::setParameter); return query;
     }
-    //</editor-fold>
 
 }

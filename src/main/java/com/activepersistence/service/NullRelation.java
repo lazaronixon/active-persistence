@@ -5,7 +5,6 @@ import static com.activepersistence.service.relation.Calculation.Operations.COUN
 import static com.activepersistence.service.relation.Calculation.Operations.MAX;
 import static com.activepersistence.service.relation.Calculation.Operations.MIN;
 import static com.activepersistence.service.relation.Calculation.Operations.SUM;
-import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
