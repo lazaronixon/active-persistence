@@ -42,14 +42,16 @@ public abstract class Base<ID> {
 
     @Override
     public int hashCode() {
-        return (getId() != null) ? Objects.hash(getId()) : super.hashCode();
+        return Objects.hashCode(getId());
     }
 
     @Override
     public boolean equals(Object other) {
-        return (getId() != null && getClass().isInstance(other) && other.getClass().isInstance(this))
-                ? getId().equals(((Base<?>) other).getId())
-                : (other == this);
+        if (this == other) return true;
+        if (other == null) return false;
+        if (getClass() != other.getClass()) return false;
+        
+        return Objects.equals(getId(), ((Base) other).getId());
     }
 
 }

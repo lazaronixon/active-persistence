@@ -41,13 +41,13 @@ public class UsersService extends Base<User> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public UsersService() {
-        super(User.class);
-    }
-
     @Override
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+
+    public UsersService() {
+        super(User.class);
     }
 }
 ```
@@ -59,10 +59,10 @@ public class UsersService extends Base<User> {
 usersService.create(new User("David", "Code Artist"));
 
 // Using the new method, an object can be instantiated without being saved
-
 User user = new User();
 user.name = "David";
 user.occupation = "Code Artist";
+usersService.save(user);
 // A call to usersService.save(user) will commit the record to the database
 ```
 
