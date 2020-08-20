@@ -9,8 +9,6 @@ public interface SpawnMethods<T> {
 
     public Values getValues();
 
-    public Relation<T> thiz();
-
     public default Relation<T> spawn() {
         return new Relation(thiz());
     }
@@ -33,6 +31,10 @@ public interface SpawnMethods<T> {
 
     private Relation<T> relationWith(Values values) {
         return new Relation(getService(), values);
+    }
+
+    private Relation<T> thiz() {
+        return (Relation<T>) this;
     }
 
 }

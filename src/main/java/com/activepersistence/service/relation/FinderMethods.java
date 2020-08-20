@@ -13,8 +13,6 @@ public interface FinderMethods<T> {
 
     public String getAlias();
 
-    public Relation<T> thiz();
-
     public default T take() {
         return thiz().limit(1).fetchOne();
     }
@@ -97,5 +95,9 @@ public interface FinderMethods<T> {
 
     private Function<String, String> parametize() {
         return attr -> (getAlias() + "." + decapitalize(attr) + " = ?");
+    }
+
+    private Relation<T> thiz() {
+        return (Relation<T>) this;
     }
 }

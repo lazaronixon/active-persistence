@@ -64,7 +64,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     public Relation<T> scoping(Supplier<Relation> yield) {
         var previous = Scoping.getCurrentScope();
         try {
-            Scoping.setCurrentScope(thiz());
+            Scoping.setCurrentScope(this);
             return yield.get();
         } finally {
             Scoping.setCurrentScope(previous);
@@ -124,11 +124,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     @Override
     public Relation<T> spawn() {
         return SpawnMethods.super.spawn();
-    }
-
-    @Override
-    public Relation<T> thiz() {
-        return this;
     }
 
     @Override
@@ -212,7 +207,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private void addDefaultHints(HashMap hints) {
         hints.put("org.hibernate.readOnly", values.isReadonly());
-        
+
         hints.put("eclipselink.read-only", values.isReadonly());
         hints.put("eclipselink.batch.type", "IN");
     }

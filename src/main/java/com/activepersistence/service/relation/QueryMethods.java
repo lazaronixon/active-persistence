@@ -12,8 +12,6 @@ public interface QueryMethods<T> {
 
     public Relation<T> spawn();
 
-    public Relation<T> thiz();
-
     public default Relation<T> select(String... fields) {
         return spawn().select$(fields);
     }
@@ -188,5 +186,9 @@ public interface QueryMethods<T> {
 
     private String buildWhere(String conditions, Object[] params) {
         return Sanitization.sanitizeJpql(conditions, params);
+    }
+
+    private Relation<T> thiz() {
+        return (Relation<T>) this;
     }
 }
