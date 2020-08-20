@@ -15,10 +15,6 @@ public abstract class Base<T> implements Persistence<T>, Querying<T>, Scoping<T>
         this.entityClass = entityClass;
     }
 
-    public Class<T> getEntityClass() {
-        return entityClass;
-    }
-
     public String getAlias() {
         return decapitalize(entityClass.getSimpleName());
     }
@@ -37,6 +33,11 @@ public abstract class Base<T> implements Persistence<T>, Querying<T>, Scoping<T>
 
     @Override
     public abstract EntityManager getEntityManager();
+
+    @Override
+    public Class<T> getEntityClass() {
+        return entityClass;
+    }
 
     @Override
     public Relation<T> getRelation() {
