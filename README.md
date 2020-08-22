@@ -12,11 +12,7 @@ pom.xml
 models/User.java
 ```java
 @Entity
-public class User extends Base<Integer> {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class User extends BaseIdentity {
 
     private String name;
 

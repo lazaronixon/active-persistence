@@ -40,7 +40,7 @@ public class SanitizationTest extends IntegrationTest {
     @Test
     public void testAssociate() {
         var query = sanitizeJpql("comment.post.id = ?", postsService.find(1));
-        assertEquals("comment.post.id = 1", query);
+        assertEquals("comment.post.id = 1L", query);
     }
 
     @Test
@@ -110,7 +110,7 @@ public class SanitizationTest extends IntegrationTest {
 
     @Test
     public void testLiteralRecord() {
-        assertEquals("client.id = 1", sanitizeJpql("client.id = ?", clientsService.first()));
+        assertEquals("client.id = 1L", sanitizeJpql("client.id = ?", clientsService.first()));
     }
 
     @Test

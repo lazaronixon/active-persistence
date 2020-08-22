@@ -1,20 +1,13 @@
 package com.activepersistence.service.models;
 
-import com.activepersistence.model.Base;
-import java.io.Serializable;
+import com.activepersistence.model.BaseIdentity;
 import javax.persistence.Entity;
 import static javax.persistence.FetchType.LAZY;
-import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Comment extends Base<Integer> {
-
-    @Id @GeneratedValue(strategy = IDENTITY)
-    private Integer id;
+public class Comment extends BaseIdentity {
 
     @Lob
     private String body;
@@ -30,16 +23,7 @@ public class Comment extends Base<Integer> {
         this.post = post;
     }
 
-    @Override
-    public Integer getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
+    //<editor-fold defaultstate="collapsed" desc="GET/SET">
     public String getBody() {
         return body;
     }
@@ -55,5 +39,6 @@ public class Comment extends Base<Integer> {
     public void setPost(Post post) {
         this.post = post;
     }
+    //</editor-fold>
 
 }

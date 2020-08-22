@@ -56,13 +56,13 @@ public class CalculationTest extends IntegrationTest {
     @Test
     public void testPluckMultiple() {
         List<Object[]> results = postsService.where("post.id IN (4, 5)").pluck("post.id", "post.title");
-        assertArrayEquals(new Object[] {4, "flood"}, results.get(0));
-        assertArrayEquals(new Object[] {5, "flood"}, results.get(1));
+        assertArrayEquals(new Object[] {4L, "flood"}, results.get(0));
+        assertArrayEquals(new Object[] {5L, "flood"}, results.get(1));
     }
 
     @Test
     public void testIds() {
-        assertEquals(asList(1, 2), postsService.where("post.id IN (1, 2)").ids());
+        assertEquals(asList(1L, 2L), postsService.where("post.id IN (1, 2)").ids());
     }
 
     @Test

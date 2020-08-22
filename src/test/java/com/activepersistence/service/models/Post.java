@@ -1,33 +1,24 @@
 package com.activepersistence.service.models;
 
-import com.activepersistence.model.Base;
-import java.io.Serializable;
+import com.activepersistence.model.BaseIdentity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Post extends Base<Integer> {
-
-    @Id @GeneratedValue(strategy = IDENTITY)
-    private Integer id;
+public class Post extends BaseIdentity {
 
     private String title;
 
-    @Lob
     private String body;
 
     private Integer likesCount;
 
-    @OneToMany(mappedBy = "post", cascade = {PERSIST, REMOVE})
+    @OneToMany(mappedBy = "post", cascade = { PERSIST, REMOVE })
     private List<Comment> comments = new ArrayList();
 
     private LocalDateTime createdAt;
@@ -37,8 +28,8 @@ public class Post extends Base<Integer> {
     public Post() {
     }
 
-    public Post(Integer id, String title) {
-        this.id = id;
+    public Post(Long id, String title) {
+        super.setId(id);
         this.title = title;
     }
 
@@ -54,16 +45,7 @@ public class Post extends Base<Integer> {
         return comment;
     }
 
-    @Override
-    public Integer getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
+    //<editor-fold defaultstate="collapsed" desc="GET/SET">
     public String getTitle() {
         return title;
     }
@@ -109,5 +91,6 @@ public class Post extends Base<Integer> {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+    //</editor-fold>
 
 }

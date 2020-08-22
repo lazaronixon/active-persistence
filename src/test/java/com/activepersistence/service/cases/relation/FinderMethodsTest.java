@@ -31,7 +31,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFirst() {
-        assertEquals((Integer) 1, postsService.first().getId());
+        assertEquals((Long) 1L, postsService.first().getId());
     }
 
     @Test
@@ -41,12 +41,12 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testLast() {
-        assertEquals((Integer) 9999, postsService.last().getId());
+        assertEquals((Long) 9999L, postsService.last().getId());
     }
 
     @Test
     public void testLastWithLimit() {
-        assertEquals((Integer) 9999, postsService.last(2).get(0).getId());
+        assertEquals((Long) 9999L, postsService.last(2).get(0).getId());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFind() {
-        assertEquals((Integer) 2, postsService.find(2).getId());
+        assertEquals((Long) 2L, postsService.find(2).getId());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFindBy() {
-        assertEquals((Integer) 1 ,postsService.findBy("post.title = 'hello world'").getId());
+        assertEquals((Long) 1L ,postsService.findBy("post.title = 'hello world'").getId());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFindByExpression() {
-        assertEquals((Integer) 1 ,postsService.findByExpression("IdAndTitle", 1, "hello world").getId());
+        assertEquals((Long) 1L ,postsService.findByExpression("IdAndTitle", 1, "hello world").getId());
     }
 
     @Test
@@ -86,7 +86,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFindById() {
-        assertEquals((Integer) 1 ,postsService.findById(1).getId());
+        assertEquals((Long) 1L ,postsService.findById(1).getId());
     }
 
     @Test

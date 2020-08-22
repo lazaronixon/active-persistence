@@ -1,20 +1,14 @@
 package com.activepersistence.service.models;
 
-import com.activepersistence.model.Base;
+import com.activepersistence.model.BaseIdentity;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
 
 @Entity
-public class Client extends Base<Integer> {
-
-    @Id @GeneratedValue(strategy = IDENTITY)
-    private Integer id;
+public class Client extends BaseIdentity {
 
     private String name;
 
@@ -37,16 +31,7 @@ public class Client extends Base<Integer> {
     public Client() {
     }
 
-    @Override
-    public Integer getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
+    //<editor-fold defaultstate="collapsed" desc="GET/SET">
     public String getName() {
         return name;
     }
@@ -110,5 +95,6 @@ public class Client extends Base<Integer> {
     public void setSequence(BigInteger sequence) {
         this.sequence = sequence;
     }
+    //</editor-fold>
 
 }
