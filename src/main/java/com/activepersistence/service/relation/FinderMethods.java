@@ -9,7 +9,7 @@ import static java.util.stream.Collectors.joining;
 
 public interface FinderMethods<T> {
 
-    public String getPrimaryKey();
+    public String getPrimaryKeyAttr();
 
     public String getAlias();
 
@@ -26,43 +26,43 @@ public interface FinderMethods<T> {
     }
 
     public default T first() {
-        return thiz().order(getPrimaryKey()).take();
+        return thiz().order(getPrimaryKeyAttr()).take();
     }
 
     public default T first$() {
-        return thiz().order(getPrimaryKey()).take$();
+        return thiz().order(getPrimaryKeyAttr()).take$();
     }
 
     public default List<T> first(int limit) {
-        return thiz().order(getPrimaryKey()).take(limit);
+        return thiz().order(getPrimaryKeyAttr()).take(limit);
     }
 
     public default T last() {
-        return thiz().order(getPrimaryKey() + " DESC").take();
+        return thiz().order(getPrimaryKeyAttr() + " DESC").take();
     }
 
     public default T last$() {
-        return thiz().order(getPrimaryKey() + " DESC").take$();
+        return thiz().order(getPrimaryKeyAttr() + " DESC").take$();
     }
 
     public default List<T> last(int limit) {
-        return thiz().order(getPrimaryKey() + " DESC").take(limit);
+        return thiz().order(getPrimaryKeyAttr() + " DESC").take(limit);
     }
 
     public default T find(Object id) {
-        return thiz().where(getPrimaryKey() + " = ?", id).take$();
+        return thiz().where(getPrimaryKeyAttr() + " = ?", id).take$();
     }
 
     public default List<T> find(Object... ids) {
-        return thiz().where(getPrimaryKey() + " IN (?)", asList(ids)).fetch();
+        return thiz().where(getPrimaryKeyAttr() + " IN (?)", asList(ids)).fetch();
     }
 
     public default T findById(Object id) {
-        return findBy(getPrimaryKey() + " = ?", id);
+        return findBy(getPrimaryKeyAttr() + " = ?", id);
     }
 
     public default T findById$(Object id) {
-        return findBy$(getPrimaryKey() + " = ?", id);
+        return findBy$(getPrimaryKeyAttr() + " = ?", id);
     }
 
     public default T findBy(String conditions, Object... params) {

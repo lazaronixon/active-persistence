@@ -23,7 +23,15 @@ public interface Persistence<T> {
 
     @Transactional
     public default void destroy(com.activepersistence.model.Base entity) {
-        flush(() -> { if (entity.isPersisted()) getEntityManager().remove(getEntityManager().merge(entity)); });
+        if (!entity.isPersisted()) return;
+
+        flush(() -> {
+            if (getEntityManager().contains(entity)) {
+                getEntityManager().remove(entity);
+            } else {
+                getEntityManager().remove(getEntityManager().merge(entity));
+            }
+        });
     }
 
     @Transactional

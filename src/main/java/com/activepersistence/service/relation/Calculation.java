@@ -19,7 +19,7 @@ public interface Calculation<T> {
 
     public String getAlias();
 
-    public String getPrimaryKey();
+    public String getPrimaryKeyAttr();
 
     public Relation<T> spawn();
 
@@ -48,7 +48,7 @@ public interface Calculation<T> {
     }
 
     public default List<Object> ids() {
-        return pluck(getPrimaryKey());
+        return pluck(getPrimaryKeyAttr());
     }
 
     public default List pluck(String... fields) {

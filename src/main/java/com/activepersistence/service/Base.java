@@ -1,32 +1,14 @@
 package com.activepersistence.service;
 
-import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.connectionadapters.JpaAdapter;
-import static java.beans.Introspector.decapitalize;
 import javax.persistence.EntityManager;
 
-public abstract class Base<T> implements Persistence<T>, Querying<T>, Scoping<T> {
+public abstract class Base<T> implements Core<T>, Persistence<T>, Querying<T>, Scoping<T> {
 
     private final Class entityClass;
 
     public Base(Class entityClass) {
         this.entityClass = entityClass;
-    }
-
-    public String getAlias() {
-        return decapitalize(entityClass.getSimpleName());
-    }
-
-    public Entity getArelEntity() {
-        return new Entity(entityClass, getAlias());
-    }
-
-    public String getPrimaryKey() {
-        return getAlias() + "." + "id";
-    }
-
-    public JpaAdapter<T> getConnection() {
-        return new JpaAdapter(getEntityManager(), entityClass);
     }
 
     @Override
@@ -37,9 +19,13 @@ public abstract class Base<T> implements Persistence<T>, Querying<T>, Scoping<T>
         return entityClass;
     }
 
+    public JpaAdapter<T> getConnection() {
+        return new JpaAdapter(getEntityManager(), entityClass);
+    }
+
     @Override
     public Relation<T> getRelation() {
-        return new Relation(this);
+        return Core.super.getRelation();
     }
 
     @Override
