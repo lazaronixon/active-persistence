@@ -11,27 +11,29 @@ public interface Persistence<T> {
     public EntityManager getEntityManager();
 
     @Transactional
-    public default T create(T entity) {
-        return flush(() -> { getEntityManager().persist(entity); return entity; });
+    public default T create(com.activepersistence.model.Base entity) {
+        return flush(() -> { getEntityManager().persist(entity); return (T) entity; });
     }
 
     @Transactional
-    public default T update(T entity) {
-        return flush(() -> getEntityManager().merge(entity));
-    }
-
-    @Transactional
-    public default void destroy(T entity) {
-        flush(() -> getEntityManager().remove(getEntityManager().merge(entity)));
+    public default T update(com.activepersistence.model.Base entity) {
+        return flush(() -> (T) getEntityManager().merge(entity));
     }
 
     @Transactional
     public default T save(com.activepersistence.model.Base entity) {
+        if (entity.isDestroyed()) return (T) entity;
+
         if (entity.isNewRecord()) {
-            return create((T) entity);
+            return create(entity);
         } else {
-            return update((T) entity);
+            return update(entity);
         }
+    }
+
+    @Transactional
+    public default void destroy(com.activepersistence.model.Base entity) {
+        flush(() -> { if (entity.isPersisted()) getEntityManager().remove(getEntityManager().merge(entity)); });
     }
 
     public default void reload(T entity) {

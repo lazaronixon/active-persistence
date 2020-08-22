@@ -72,7 +72,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public List<T> destroyAll() {
-        return fetch().stream().map(r -> { service.destroy(r); return r; }).collect(toList());
+        return fetch().stream().map(r -> { service.destroy((com.activepersistence.model.Base) r); return r; }).collect(toList());
     }
 
     public List<T> destroyBy(String conditions, Object... params) {
