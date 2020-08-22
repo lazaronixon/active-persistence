@@ -11,9 +11,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Comment extends Base<Integer> implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Comment extends Base<Integer> {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     private Integer id;

@@ -1,7 +1,6 @@
 package com.activepersistence.service.models;
 
 import com.activepersistence.model.Base;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import javax.persistence.Column;
@@ -12,9 +11,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 
 @Entity
-public class Client extends Base<Integer> implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Client extends Base<Integer> {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     private Integer id;

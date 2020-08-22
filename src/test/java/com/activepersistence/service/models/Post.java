@@ -15,12 +15,9 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Post extends Base<Integer> implements Serializable {
+public class Post extends Base<Integer> {
 
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @Id @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
     private String title;
