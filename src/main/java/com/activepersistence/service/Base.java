@@ -2,8 +2,12 @@ package com.activepersistence.service;
 
 import com.activepersistence.service.connectionadapters.JpaAdapter;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 public abstract class Base<T> implements Core<T>, Persistence<T>, Querying<T>, Scoping<T> {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private final Class entityClass;
 
@@ -12,11 +16,13 @@ public abstract class Base<T> implements Core<T>, Persistence<T>, Querying<T>, S
     }
 
     @Override
-    public abstract EntityManager getEntityManager();
-
-    @Override
     public Class<T> getEntityClass() {
         return entityClass;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 
     public JpaAdapter<T> getConnection() {

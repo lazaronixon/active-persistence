@@ -33,15 +33,6 @@ users/UsersService.java
 ```java
 @ApplicationScoped
 public class UsersService extends Base<User> {
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Override
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
-
     public UsersService() {
         super(User.class);
     }
@@ -237,7 +228,12 @@ Client client = clientsService.findByExpression$("Name", "not found"); // NoResu
 
 ## Applying a default scope
 ```java
-public class ClientsService extends ApplicationService<Client> {
+public class ClientsService extends Base<Client> {
+
+    public ClientsService() {
+        super(Client.class);
+    }
+
     @Override
     public Relation<Client> defaultScope() {
         return where("client.name = 'nixon'");
