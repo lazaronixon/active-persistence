@@ -73,11 +73,11 @@ public interface FinderMethods<T> {
         return thiz().where(conditions, params).take$();
     }
 
-    public default T findByExp(String expression, Object... params) {
+    public default T findByExpression(String expression, Object... params) {
         return findBy(exprToJpql(expression), params);
     }
 
-    public default T findByExp$(String expression, Object... params) {
+    public default T findByExpression$(String expression, Object... params) {
         return findBy$(exprToJpql(expression), params);
     }
 

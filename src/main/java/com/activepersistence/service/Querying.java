@@ -126,12 +126,12 @@ public interface Querying<T> {
         return all().findBy$(conditions, params);
     }
 
-    public default T findByExp(String expression, Object... params) {
-        return all().findByExp(expression, params);
+    public default T findByExpression(String expression, Object... params) {
+        return all().findByExpression(expression, params);
     }
 
-    public default T findByExp$(String expression, Object... params) {
-        return all().findByExp$(expression, params);
+    public default T findByExpression$(String expression, Object... params) {
+        return all().findByExpression$(expression, params);
     }
 
     public default boolean exists(String conditions) {

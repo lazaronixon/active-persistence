@@ -233,10 +233,10 @@ clientsService.eagerLoads("client.address").limit(10).fetch();
 
 ### Dynamic Finders
 ```java
-Client client = clientsService.findByExp("Name", "Nixon");
-Client client = clientsService.findByExp("NameAndLocked", "Nixon", true);
+Client client = clientsService.findByExpression("Name", "Nixon");
+Client client = clientsService.findByExpression("NameAndLocked", "Nixon", true);
 // OR
-Client client = clientsService.findByExp$("Name", "not found"); // NoResultException
+Client client = clientsService.findByExpression$("Name", "not found"); // NoResultException
 ```
 
 ## Applying a default scope

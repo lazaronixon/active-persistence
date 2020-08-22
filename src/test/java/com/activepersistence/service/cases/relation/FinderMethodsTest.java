@@ -75,13 +75,13 @@ public class FinderMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testFindByExp() {
-        assertEquals((Integer) 1 ,postsService.findByExp("IdAndTitle", 1, "hello world").getId());
+    public void testFindByExpression() {
+        assertEquals((Integer) 1 ,postsService.findByExpression("IdAndTitle", 1, "hello world").getId());
     }
 
     @Test
-    public void testFindByExp$() {
-        assertThrows(NoResultException.class, () -> postsService.findByExp$("Title", "not found"));
+    public void testFindByExpression$() {
+        assertThrows(NoResultException.class, () -> postsService.findByExpression$("Title", "not found"));
     }
 
     @Test
