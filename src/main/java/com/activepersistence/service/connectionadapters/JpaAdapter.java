@@ -3,7 +3,7 @@ package com.activepersistence.service.connectionadapters;
 import com.activepersistence.service.arel.visitors.ToJpql;
 import javax.persistence.EntityManager;
 
-public class JpaAdapter<T> implements Literalizing<T>, DatabaseStatements<T> {
+public class JpaAdapter<T> implements DatabaseStatements<T>, Literalizing {
 
     private final EntityManager entityManager;
 

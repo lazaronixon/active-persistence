@@ -5,7 +5,7 @@ import static java.beans.Introspector.decapitalize;
 
 public interface Core<T> {
 
-    public Class<T> getEntityClass();
+    public Class getEntityClass();
 
     public default String getPrimaryKey() {
         return "id";

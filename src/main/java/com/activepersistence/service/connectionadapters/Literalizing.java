@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import static java.time.format.DateTimeFormatter.ofPattern;
 
-public interface Literalizing<T> {
+public interface Literalizing {
 
     public static final DateTimeFormatter DATE_FORMAT      = ofPattern("yyyy-MM-dd");
     public static final DateTimeFormatter TIME_FORMAT      = ofPattern("HH:mm:ss");

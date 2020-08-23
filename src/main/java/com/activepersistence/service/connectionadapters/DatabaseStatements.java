@@ -17,7 +17,7 @@ public interface DatabaseStatements<T> {
 
     public ToJpql getVisitor();
 
-    public Class<T> getEntityClass();
+    public Class getEntityClass();
 
     public EntityManager getEntityManager();
 

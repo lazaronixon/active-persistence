@@ -107,7 +107,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return getConnection().toJpql(getArel());
     }
 
-    public Class<T> getEntityClass() {
+    public Class getEntityClass() {
         return entityClass;
     }
 
@@ -166,11 +166,11 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public T fetchOne() {
-        return getConnection().selectOne(getArel(), lockMode(), hints());
+        return (T) getConnection().selectOne(getArel(), lockMode(), hints());
     }
 
     public T fetchOne$() {
-        return getConnection().selectOne$(getArel(), lockMode(), hints());
+        return (T) getConnection().selectOne$(getArel(), lockMode(), hints());
     }
 
     public boolean fetchExists() {

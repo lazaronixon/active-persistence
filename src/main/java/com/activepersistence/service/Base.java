@@ -16,7 +16,7 @@ public abstract class Base<T> implements Core<T>, Persistence<T>, Querying<T>, S
     }
 
     @Override
-    public Class<T> getEntityClass() {
+    public Class getEntityClass() {
         return entityClass;
     }
 

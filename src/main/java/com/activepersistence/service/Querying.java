@@ -11,7 +11,7 @@ public interface Querying<T> {
 
     public EntityManager getEntityManager();
 
-    public Class<T> getEntityClass();
+    public Class getEntityClass();
 
     public Relation<T> getRelation();
 
