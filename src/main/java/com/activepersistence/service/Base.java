@@ -4,7 +4,7 @@ import com.activepersistence.service.connectionadapters.JpaAdapter;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-public abstract class Base<T> implements Core<T>, Persistence<T>, Querying<T>, Scoping<T> {
+public abstract class Base<T, ID> implements Core<T, ID>, Persistence<T, ID>, Querying<T, ID>, Scoping<T, ID> {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -30,17 +30,17 @@ public abstract class Base<T> implements Core<T>, Persistence<T>, Querying<T>, S
     }
 
     @Override
-    public Relation<T> getRelation() {
+    public Relation<T, ID> getRelation() {
         return Core.super.getRelation();
     }
 
     @Override
-    public Relation<T> all() {
+    public Relation<T, ID> all() {
         return Scoping.super.all();
     }
 
     @Override
-    public Relation<T> defaultScope() {
+    public Relation<T, ID> defaultScope() {
         throw new UnsupportedOperationException("not implemented");
     }
 

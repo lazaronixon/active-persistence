@@ -5,15 +5,15 @@ import static com.activepersistence.service.ScopeRegistry.ValidScopeTypes.IGNORE
 import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
 
-public interface Scoping<T> {
+public interface Scoping<T, ID> {
 
-    public Relation<T> getRelation();
+    public Relation<T, ID> getRelation();
 
-    public Relation<T> defaultScope();
+    public Relation<T, ID> defaultScope();
 
     public Class getRealClass();
 
-    public default Relation<T> all() {
+    public default Relation<T, ID> all() {
         if (getCurrentScope() != null) {
             return new Relation(getCurrentScope());
         } else {
@@ -21,11 +21,11 @@ public interface Scoping<T> {
         }
     }
 
-    public default Relation<T> unscoped() {
+    public default Relation<T, ID> unscoped() {
         return getRelation();
     }
 
-    public default Relation<T> unscoped(Supplier<Relation> yield) {
+    public default Relation<T, ID> unscoped(Supplier<Relation> yield) {
         return getRelation().scoping(yield);
     }
 
@@ -45,11 +45,11 @@ public interface Scoping<T> {
         ScopeRegistry.setValueFor(IGNORE_DEFAULT_SCOPE, ignore);
     }
 
-    private Relation<T> defaultScoped() {
+    private Relation<T, ID> defaultScoped() {
         return ofNullable(buildDefaultScope()).orElse(getRelation());
     }
 
-    private Relation<T> buildDefaultScope() {
+    private Relation<T, ID> buildDefaultScope() {
         if (defaultScopeOverride()) {
             return evaluateDefaultScope(() -> getRelation().merge$(defaultScope()));
         } else {
@@ -57,7 +57,7 @@ public interface Scoping<T> {
         }
     }
 
-    private Relation<T> evaluateDefaultScope(Supplier<Relation> yield) {
+    private Relation<T, ID> evaluateDefaultScope(Supplier<Relation> yield) {
         if (shouldIgnoreDefaultScope()) return null;
         try {
             setIgnoreDefaultScope(true);

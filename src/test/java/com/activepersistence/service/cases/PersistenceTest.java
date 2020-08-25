@@ -26,7 +26,7 @@ public class PersistenceTest extends IntegrationTest {
 
     @Test
     public void testUpdate() {
-        var post = postsService.find(1);
+        var post = postsService.find(1L);
         post.setTitle("changed");
 
         var count = (long) postsService.count();
@@ -38,7 +38,7 @@ public class PersistenceTest extends IntegrationTest {
 
     @Test
     public void testDestroy() {
-        var post  = postsService.find(1);
+        var post  = postsService.find(1L);
         var count = (long) postsService.count();
 
         postsService.destroy(post);
@@ -57,7 +57,7 @@ public class PersistenceTest extends IntegrationTest {
 
     @Test
     public void testSaveUpdate() {
-        var post = postsService.find(1);
+        var post = postsService.find(1L);
         post.setTitle("changed");
 
         var count = (long) postsService.count();

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.function.Function;
 import static java.util.stream.Collectors.joining;
 
-public interface FinderMethods<T> {
+public interface FinderMethods<T, ID> {
 
     public String getPrimaryKeyAttr();
 
@@ -49,19 +49,19 @@ public interface FinderMethods<T> {
         return thiz().order(getPrimaryKeyAttr() + " DESC").take(limit);
     }
 
-    public default T find(Object id) {
+    public default T find(ID id) {
         return thiz().where(getPrimaryKeyAttr() + " = ?", id).take$();
     }
 
-    public default List<T> find(Object... ids) {
+    public default List<T> find(ID... ids) {
         return thiz().where(getPrimaryKeyAttr() + " IN (?)", asList(ids)).fetch();
     }
 
-    public default T findById(Object id) {
+    public default T findById(ID id) {
         return findBy(getPrimaryKeyAttr() + " = ?", id);
     }
 
-    public default T findById$(Object id) {
+    public default T findById$(ID id) {
         return findBy$(getPrimaryKeyAttr() + " = ?", id);
     }
 
@@ -97,7 +97,7 @@ public interface FinderMethods<T> {
         return attr -> (getAlias() + "." + decapitalize(attr) + " = ?");
     }
 
-    private Relation<T> thiz() {
-        return (Relation<T>) this;
+    private Relation<T, ID> thiz() {
+        return (Relation<T, ID>) this;
     }
 }

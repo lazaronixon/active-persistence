@@ -123,12 +123,12 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testReadOnly() {
-        var post = postsService.readonly().find(1);
+        var post = postsService.readonly().find(1L);
 
         post.setTitle("changed");
         postsService.update(post);
 
-        post = postsService.find(1);
+        post = postsService.find(1L);
         postsService.reload(post);
 
         assertNotEquals("changed", post.getTitle());

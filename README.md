@@ -32,7 +32,7 @@ public class User extends BaseIdentity {
 users/UsersService.java
 ```java
 @ApplicationScoped
-public class UsersService extends Base<User> {
+public class UsersService extends Base<User, Long> {
     public UsersService() {
         super(User.class);
     }
@@ -228,7 +228,7 @@ Client client = clientsService.findByExpression$("Name", "not found"); // NoResu
 
 ## Applying a default scope
 ```java
-public class ClientsService extends Base<Client> {
+public class ClientsService extends Base<Client, Long> {
 
     public ClientsService() {
         super(Client.class);

@@ -108,13 +108,13 @@ public class RelationTest extends IntegrationTest {
     @Test
     public void testUpdateAll() {
         assertEquals(3, postsService.where("post.id IN (1,2,3)").updateAll("post.title = 'testing'"));
-        assertEquals("testing", postsService.find(1).getTitle());
+        assertEquals("testing", postsService.find(1L).getTitle());
     }
 
     @Test
     public void testUpdateAllMap() {
         assertEquals(3, postsService.where("post.id IN (1,2,3)").updateAll(Map.of("post.title", "testing")));
-        assertEquals("testing", postsService.find(1).getTitle());
+        assertEquals("testing", postsService.find(1L).getTitle());
     }
 
     @Test

@@ -56,12 +56,12 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFind() {
-        assertEquals((Long) 2L, postsService.find(2).getId());
+        assertEquals((Long) 2L, postsService.find(2L).getId());
     }
 
     @Test
     public void testFindMultiple() {
-        assertEquals(2 ,postsService.find(1, 2).size());
+        assertEquals(2 ,postsService.find(1L, 2L).size());
     }
 
     @Test
@@ -86,12 +86,12 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFindById() {
-        assertEquals((Long) 1L ,postsService.findById(1).getId());
+        assertEquals((Long) 1L ,postsService.findById(1L).getId());
     }
 
     @Test
     public void testFindById$() {
-        assertThrows(NoResultException.class, () -> postsService.findById$(48484));
+        assertThrows(NoResultException.class, () -> postsService.findById$(48484L));
     }
 
     @Test

@@ -39,7 +39,7 @@ public class SanitizationTest extends IntegrationTest {
 
     @Test
     public void testAssociate() {
-        var query = sanitizeJpql("comment.post.id = ?", postsService.find(1));
+        var query = sanitizeJpql("comment.post.id = ?", postsService.find(1L));
         assertEquals("comment.post.id = 1L", query);
     }
 
