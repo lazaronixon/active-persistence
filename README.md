@@ -5,7 +5,7 @@ pom.xml
 <dependency>
   <groupId>com.github.lazaronixon</groupId>
   <artifactId>active-persistence</artifactId>
-  <version>0.0.17</version>
+  <version>0.0.18</version>
 </dependency>
 ```
 
