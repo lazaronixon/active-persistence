@@ -191,11 +191,6 @@ articlesService.where("article.trashed = true").rewhere("article.trashed = false
 studentsService.none(); // returns an empty Relation and fires where 1=0.
 ```
 
-## Readonly Objects
-```java
-Client client = clientsService.readonly().first();
-```
-
 ## Locking Records for Update
 ```java
 Client client = clientsService.lock().first();

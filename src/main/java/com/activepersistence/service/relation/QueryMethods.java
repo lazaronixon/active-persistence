@@ -92,18 +92,6 @@ public interface QueryMethods<T, ID> {
         return new NullRelation(where$("1=0"));
     }
 
-    public default Relation<T, ID> readonly() {
-        return spawn().readonly$(true);
-    }
-
-    public default Relation<T, ID> readonly(boolean value) {
-        return spawn().readonly$(value);
-    }
-
-    public default Relation<T, ID> readonly$(boolean value) {
-        getValues().setReadonly(value); return thiz();
-    }
-
     public default Relation<T, ID> includes(String... includes) {
         return spawn().includes$(includes);
     }

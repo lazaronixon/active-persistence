@@ -13,7 +13,6 @@ public class Values {
     private int limit           = 0;
     private int offset          = 0;
     private boolean lock        = false;
-    private boolean readonly    = false;
     private boolean distinct    = false;
     private boolean reordering  = false;
     private boolean constructor = false;
@@ -36,7 +35,6 @@ public class Values {
         limit          = other.limit;
         offset         = other.offset;
         lock           = other.lock;
-        readonly       = other.readonly;
         distinct       = other.distinct;
         reordering     = other.reordering;
         select         = new ArrayList(other.select);
@@ -102,10 +100,6 @@ public class Values {
         return lock;
     }
 
-    public boolean isReadonly() {
-        return readonly;
-    }
-
     public boolean isDistinct() {
         return distinct;
     }
@@ -140,10 +134,6 @@ public class Values {
 
     public void setLock(boolean lock) {
         this.lock = lock;
-    }
-
-    public void setReadonly(boolean readonly) {
-        this.readonly = readonly;
     }
 
     public void setConstructor(boolean constructor) {
@@ -193,7 +183,6 @@ public class Values {
             case LIMIT:       limit       = 0;     break;
             case OFFSET:      offset      = 0;     break;
             case LOCK:        lock        = false; break;
-            case READONLY:    readonly    = false; break;
             case DISTINCT:    distinct    = false; break;
             case REORDERING:  reordering  = false; break;
             case CONSTRUCTOR: constructor = false; break;

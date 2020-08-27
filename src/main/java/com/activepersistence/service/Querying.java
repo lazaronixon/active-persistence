@@ -227,14 +227,6 @@ public interface Querying<T, ID> {
     public default Relation<T, ID> none() {
         return all().none();
     }
-
-    public default Relation<T, ID> readonly() {
-        return all().readonly();
-    }
-
-    public default Relation<T, ID> readonly(boolean value) {
-       return all().readonly(value);
-    }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Relation">

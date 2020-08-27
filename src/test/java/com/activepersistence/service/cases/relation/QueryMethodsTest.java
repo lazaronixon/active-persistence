@@ -122,19 +122,6 @@ public class QueryMethodsTest extends IntegrationTest {
         assertNotNull(postsService.lock().fetchOne());
     }
 
-    @Test @Ignore
-    public void testReadOnly() {
-        var post = postsService.find(1L);
-
-        post.setTitle("changed");
-        postsService.save(post);
-
-        post = postsService.find(1L);
-        postsService.reload(post);
-
-        assertNotEquals("changed", post.getTitle());
-    }
-
     @Test
     public void testBind() {
         assertEquals("SELECT post FROM Post post WHERE post.id = 1", postsService.where("post.id = ?", 1).toJpql());

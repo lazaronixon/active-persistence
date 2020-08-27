@@ -206,9 +206,6 @@ public class Relation<T, ID> implements FinderMethods<T, ID>, QueryMethods<T, ID
     }
 
     private void addDefaultHints(HashMap hints) {
-        hints.put("org.hibernate.readOnly", values.isReadonly());
-
-        hints.put("eclipselink.read-only", values.isReadonly());
         hints.put("eclipselink.batch.type", "IN");
     }
 
