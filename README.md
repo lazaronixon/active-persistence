@@ -212,14 +212,6 @@ clientsService.includes("client.address").limit(10).fetch();
 clientsService.eagerLoads("client.address").limit(10).fetch();
 ```
 
-### Dynamic Finders
-```java
-Client client = clientsService.findByExpression("Name", "Nixon");
-Client client = clientsService.findByExpression("NameAndLocked", "Nixon", true);
-// OR
-Client client = clientsService.findByExpression$("Name", "not found"); // NoResultException
-```
-
 ## Applying a default scope
 ```java
 public class ClientsService extends Base<Client, Long> {
@@ -247,6 +239,14 @@ usersService.merge(usersService.active()).fetch();
 ```java
 clientsService.unscoped().fetch();
 clientsService.where("client.published = false").unscoped().fetch();
+```
+
+### Dynamic Finders
+```java
+Client client = clientsService.findByExpression("Name", "Nixon");
+Client client = clientsService.findByExpression("NameAndLocked", "Nixon", true);
+// OR
+Client client = clientsService.findByExpression$("Name", "not found"); // NoResultException
 ```
 
 ## Finding by SQL
