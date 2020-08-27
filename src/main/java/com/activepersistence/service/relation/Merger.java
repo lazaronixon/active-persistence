@@ -19,8 +19,7 @@ public class Merger {
 
     public Relation merge() {
         if (shouldReplaceFromClause()) relation.getValues().setFrom(values.getFrom());
-
-        if (values.getLock() != LockModeType.NONE) relation.lock$(values.getLock());
+        if (shouldReplaceLockValue())  relation.lock$(values.getLock());
 
         if (values.isDistinct() != false) relation.distinct$(values.isDistinct());
         if (values.getLimit()   != 0)     relation.limit$(values.getLimit());
@@ -40,6 +39,10 @@ public class Merger {
         values.getUnscope().forEach(relation::unscope$);
 
         return relation;
+    }
+
+    private boolean shouldReplaceLockValue() {
+        return relation.getValues().getLock() == LockModeType.NONE;
     }
 
     private boolean shouldReplaceFromClause() {
