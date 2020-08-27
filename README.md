@@ -82,10 +82,7 @@ User user = usersService.findBy("user.name = ?", "David");
 usersService.destroy(user);
 //OR
 usersService.destroyBy("user.name = ?", "David");
-usersService.destroyAll()
-//OR
-usersService.deleteBy("user.name = ?", "David");
-usersService.deleteAll()
+usersService.destroyAll();
 ```
 
 ## Retrieving Objects from the Database
