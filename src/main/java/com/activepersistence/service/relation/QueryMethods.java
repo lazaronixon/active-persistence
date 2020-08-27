@@ -5,6 +5,7 @@ import com.activepersistence.service.Relation;
 import com.activepersistence.service.Sanitization;
 import static com.activepersistence.service.relation.ValueMethods.*;
 import static java.util.Arrays.asList;
+import javax.persistence.LockModeType;
 
 public interface QueryMethods<T, ID> {
 
@@ -109,14 +110,18 @@ public interface QueryMethods<T, ID> {
     }
 
     public default Relation<T, ID> lock() {
-        return spawn().lock$(true);
+        return spawn().lock$(LockModeType.NONE);
     }
 
     public default Relation<T, ID> lock(boolean value) {
+        return spawn().lock$(value ? LockModeType.PESSIMISTIC_WRITE : LockModeType.NONE);
+    }
+
+    public default Relation<T, ID> lock(LockModeType value) {
         return spawn().lock$(value);
     }
 
-    public default Relation<T, ID> lock$(boolean value) {
+    public default Relation<T, ID> lock$(LockModeType value) {
         getValues().setLock(value); return thiz();
     }
 

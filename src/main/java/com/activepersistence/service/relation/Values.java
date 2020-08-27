@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import java.util.List;
 import java.util.function.Predicate;
+import javax.persistence.LockModeType;
 
 public class Values {
 
@@ -12,7 +13,6 @@ public class Values {
 
     private int limit           = 0;
     private int offset          = 0;
-    private boolean lock        = false;
     private boolean distinct    = false;
     private boolean reordering  = false;
     private boolean constructor = false;
@@ -26,6 +26,8 @@ public class Values {
     private List<String> includes        = new ArrayList();
     private List<String> eagerLoad       = new ArrayList();
     private List<ValueMethods> unscope   = new ArrayList();
+
+    private LockModeType lock = LockModeType.NONE;
 
     public Values() {}
 
@@ -96,7 +98,7 @@ public class Values {
         return offset;
     }
 
-    public boolean isLock() {
+    public LockModeType getLock() {
         return lock;
     }
 
@@ -132,7 +134,7 @@ public class Values {
         this.distinct = distinct;
     }
 
-    public void setLock(boolean lock) {
+    public void setLock(LockModeType lock) {
         this.lock = lock;
     }
 
@@ -182,7 +184,6 @@ public class Values {
 
             case LIMIT:       limit       = 0;     break;
             case OFFSET:      offset      = 0;     break;
-            case LOCK:        lock        = false; break;
             case DISTINCT:    distinct    = false; break;
             case REORDERING:  reordering  = false; break;
             case CONSTRUCTOR: constructor = false; break;
@@ -196,6 +197,8 @@ public class Values {
             case INCLUDES:   includes.clear();  break;
             case EAGER_LOAD: eagerLoad.clear(); break;
             case UNSCOPE:    unscope.clear();   break;
+
+            case LOCK: lock = LockModeType.NONE; break;
         }
     }
 

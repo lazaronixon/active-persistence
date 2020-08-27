@@ -5,6 +5,7 @@ import static java.util.Collections.emptyMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.Query;
 
 public interface Querying<T, ID> {
@@ -217,6 +218,10 @@ public interface Querying<T, ID> {
     }
 
     public default Relation<T, ID> lock(boolean value) {
+        return all().lock(value);
+    }
+
+    public default Relation<T, ID> lock(LockModeType value) {
         return all().lock(value);
     }
 

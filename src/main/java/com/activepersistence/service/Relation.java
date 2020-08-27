@@ -18,9 +18,6 @@ import java.util.Map.Entry;
 import java.util.function.Supplier;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import javax.persistence.LockModeType;
-import static javax.persistence.LockModeType.NONE;
-import static javax.persistence.LockModeType.PESSIMISTIC_WRITE;
 
 public class Relation<T, ID> implements FinderMethods<T, ID>, QueryMethods<T, ID>, Calculation<T, ID>, SpawnMethods<T, ID> {
 
@@ -158,19 +155,19 @@ public class Relation<T, ID> implements FinderMethods<T, ID>, QueryMethods<T, ID
     }
 
     public List<T> fetch() {
-        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), lockMode(), hints());
+        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), values.getLock(), hints());
     }
 
     public List fetch$() {
-        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), lockMode(), hints());
+        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), values.getLock(), hints());
     }
 
     public T fetchOne() {
-        return (T) getConnection().selectOne(getArel(), lockMode(), hints());
+        return (T) getConnection().selectOne(getArel(), values.getLock(), hints());
     }
 
     public T fetchOne$() {
-        return (T) getConnection().selectOne$(getArel(), lockMode(), hints());
+        return (T) getConnection().selectOne$(getArel(), values.getLock(), hints());
     }
 
     public boolean fetchExists() {
@@ -195,10 +192,6 @@ public class Relation<T, ID> implements FinderMethods<T, ID>, QueryMethods<T, ID
 
     private void buildFrom(SelectManager arel) {
         if (values.getFrom() != null) arel.from(values.getFrom());
-    }
-
-    private LockModeType lockMode() {
-        return values.isLock() ? PESSIMISTIC_WRITE : NONE;
     }
 
     private Map<String, Object> hints() {

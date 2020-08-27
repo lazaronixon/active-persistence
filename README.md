@@ -194,6 +194,10 @@ studentsService.none(); // returns an empty Relation and fires where 1=0.
 ## Locking Records for Update
 ```java
 Client client = clientsService.lock().first();
+// OR
+Client client = clientsService.lock(true).first();
+// OR
+Client client = clientsService.lock(PESSIMISTIC_WRITE).first();
 ```
 
 ## Joining Tables

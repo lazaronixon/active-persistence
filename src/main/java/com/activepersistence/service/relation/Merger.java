@@ -1,6 +1,7 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.service.Relation;
+import javax.persistence.LockModeType;
 
 public class Merger {
 
@@ -18,7 +19,8 @@ public class Merger {
 
     public Relation merge() {
         if (shouldReplaceFromClause()) relation.getValues().setFrom(values.getFrom());
-        if (shouldReplaceLockValue())  relation.lock$(values.isLock());
+
+        if (values.getLock() != LockModeType.NONE) relation.lock$(values.getLock());
 
         if (values.isDistinct() != false) relation.distinct$(values.isDistinct());
         if (values.getLimit()   != 0)     relation.limit$(values.getLimit());
@@ -39,10 +41,6 @@ public class Merger {
 
         return relation;
     }
-
-    private boolean shouldReplaceLockValue() {
-        return relation.getValues().isLock() == false && values.isLock();
-}
 
     private boolean shouldReplaceFromClause() {
         return relation.getValues().getFrom() == null && values.getFrom() != null

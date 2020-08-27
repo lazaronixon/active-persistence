@@ -4,6 +4,7 @@ import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.PostsService;
 import static java.util.Arrays.asList;
 import javax.inject.Inject;
+import javax.persistence.LockModeType;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -103,9 +104,9 @@ public class MutationTest extends IntegrationTest {
     @Test
     public void testLock$() {
         var relation  = postsService.all();
-        var relation2 = relation.lock$(true);
+        var relation2 = relation.lock$(LockModeType.WRITE);
         assertEquals(relation, relation2);
-        assertEquals(true, relation2.getValues().isLock());
+        assertEquals(LockModeType.WRITE, relation2.getValues().getLock());
     }
 
     @Test
