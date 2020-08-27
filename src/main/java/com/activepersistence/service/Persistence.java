@@ -34,22 +34,21 @@ public interface Persistence<T, ID> {
         });
     }
 
-    @Transactional
-    public default T create(T entity) {
-        return flush(() -> { getEntityManager().persist(entity); return entity; });
-    }
-
-    @Transactional
-    public default T update(T entity) {
-        return flush(() -> getEntityManager().merge(entity));
-    }
-
     public default void reload(T entity) {
         reload(entity, false);
     }
 
     public default void reload(T entity, boolean lock) {
         getEntityManager().refresh(entity, lock ? PESSIMISTIC_WRITE : NONE);
+    }
+
+    private T create(T entity) {
+        return flush(() -> { getEntityManager().persist(entity); return entity; });
+    }
+
+    @Transactional
+    private T update(T entity) {
+        return flush(() -> getEntityManager().merge(entity));
     }
 
     private T flush(Supplier<T> yield) {

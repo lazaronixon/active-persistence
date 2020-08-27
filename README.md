@@ -43,12 +43,11 @@ public class UsersService extends Base<User, Long> {
 
 ### Create
 ```java
-usersService.create(new User("David", "Code Artist"));
-
 // Using the new method, an object can be instantiated without being saved
 User user = new User();
 user.name = "David";
 user.occupation = "Code Artist";
+
 usersService.save(user);
 // A call to usersService.save(user) will commit the record to the database
 ```
@@ -73,8 +72,6 @@ List<User> users = usersService.where("user.name = 'David' AND user.occupation =
 User user = usersService.findBy("user.name = ?", "David");
 user.name = "Dave";
 usersService.save(user);
-//OR
-usersService.update(user);
 //OR
 usersService.updateAll("user.maxLoginAttempts = 3, user.mustChangePassword = 'true'");
 ```

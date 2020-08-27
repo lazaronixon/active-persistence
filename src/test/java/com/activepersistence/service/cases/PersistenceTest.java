@@ -15,28 +15,6 @@ public class PersistenceTest extends IntegrationTest {
     private PostsService postsService;
 
     @Test
-    public void testCreate() {
-        var post  = new Post("new post", "body", 0);
-        var count = (long) postsService.count();
-
-        postsService.create(post);
-        assertEquals(count + 1, postsService.count());
-        assertTrue(post.isPersisted());
-    }
-
-    @Test
-    public void testUpdate() {
-        var post = postsService.find(1L);
-        post.setTitle("changed");
-
-        var count = (long) postsService.count();
-        postsService.update(post);
-        postsService.reload(post);
-        assertEquals(count, postsService.count());
-        assertEquals("changed", post.getTitle());
-    }
-
-    @Test
     public void testDestroy() {
         var post  = postsService.find(1L);
         var count = (long) postsService.count();
@@ -61,7 +39,7 @@ public class PersistenceTest extends IntegrationTest {
         post.setTitle("changed");
 
         var count = (long) postsService.count();
-        postsService.update(post);
+        postsService.save(post);
         postsService.reload(post);
         assertEquals(count, postsService.count());
         assertEquals("changed", post.getTitle());
