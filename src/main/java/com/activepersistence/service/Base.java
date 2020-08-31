@@ -1,6 +1,8 @@
 package com.activepersistence.service;
 
 import com.activepersistence.service.connectionadapters.JpaAdapter;
+import java.lang.reflect.Array;
+import java.lang.reflect.ParameterizedType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -11,8 +13,8 @@ public abstract class Base<T, ID> implements Core<T, ID>, Persistence<T, ID>, Qu
 
     private final Class entityClass;
 
-    public Base(Class entityClass) {
-        this.entityClass = entityClass;
+    public Base() {
+        entityClass = resolveEntityClass();
     }
 
     @Override
@@ -46,11 +48,15 @@ public abstract class Base<T, ID> implements Core<T, ID>, Persistence<T, ID>, Qu
 
     @Override
     public Class getRealClass() {
-        if (getClass().getSimpleName().contains("$Proxy$_$$_WeldSubclass")) {
-            return getClass().getSuperclass();
-        } else {
-            return getClass();
-        }
+        return getClass().getSuperclass();
+    }
+
+    private Class resolveEntityClass() {
+        return (Class) Array.get(getParameterizedType().getActualTypeArguments(), 0);
+    }
+
+    private ParameterizedType getParameterizedType() {
+        return (ParameterizedType) getRealClass().getGenericSuperclass();
     }
 
 }

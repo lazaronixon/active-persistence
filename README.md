@@ -31,11 +31,8 @@ public class User extends BaseIdentity {
 
 users/UsersService.java
 ```java
-@ApplicationScoped
 public class UsersService extends Base<User, Long> {
-    public UsersService() {
-        super(User.class);
-    }
+
 }
 ```
 
@@ -215,14 +212,11 @@ clientsService.eagerLoads("client.address").limit(10).fetch();
 ```java
 public class ClientsService extends Base<Client, Long> {
 
-    public ClientsService() {
-        super(Client.class);
-    }
-
     @Override
     public Relation<Client> defaultScope() {
         return where("client.name = 'nixon'");
     }
+
 }
 
 clientsService.all(); // SELECT client FROM Client client WHERE client.name = 'nixon'

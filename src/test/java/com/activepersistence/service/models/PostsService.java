@@ -5,10 +5,6 @@ import com.activepersistence.service.Relation;
 
 public class PostsService extends Base<Post, Long> {
 
-    public PostsService() {
-        super(Post.class);
-    }
-
     public Relation<Post, Long> oneEqZero() {
         return where("1=0");
     }
