@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import static javax.persistence.LockModeType.NONE;
 import javax.persistence.Query;
+import javax.persistence.Tuple;
 
 public interface DatabaseStatements<T> {
 
@@ -25,11 +26,11 @@ public interface DatabaseStatements<T> {
         return getVisitor().compile(arel.getAst(), new StringBuilder());
     }
 
-    public default List<Object[]> selectAll(String sql) {
+    public default List selectAll(String sql) {
         return selectAll(sql, emptyMap());
     }
 
-    public default List<Object[]> selectAll(String sql, Map<Integer, Object> binds) {
+    public default List selectAll(String sql, Map<Integer, Object> binds) {
         return parametized$(getEntityManager().createNativeQuery(sql), binds).getResultList();
     }
 
