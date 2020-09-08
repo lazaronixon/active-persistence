@@ -245,8 +245,8 @@ Client client = clientsService.findByExpression$("Name", "not found"); // NoResu
 List<Post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = 5");
 List<Post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
 // OR
-List<Object[]> posts = postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = 5");
-List<Object[]> posts = postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
+List posts = postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = 5");
+List posts = postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
 ```
 
 ### Existence of Objects

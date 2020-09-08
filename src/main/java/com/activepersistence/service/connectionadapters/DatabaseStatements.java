@@ -12,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import static javax.persistence.LockModeType.NONE;
 import javax.persistence.Query;
-import javax.persistence.Tuple;
 
 public interface DatabaseStatements<T> {
 

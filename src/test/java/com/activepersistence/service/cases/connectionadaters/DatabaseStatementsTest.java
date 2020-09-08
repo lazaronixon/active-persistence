@@ -2,10 +2,8 @@ package com.activepersistence.service.cases.connectionadaters;
 
 import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.PostsService;
-import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
-import javax.persistence.Tuple;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;

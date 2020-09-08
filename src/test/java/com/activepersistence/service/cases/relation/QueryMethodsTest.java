@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 import org.junit.Test;
 
 @UsingDataSet({"posts.xml", "comments.xml", "clients.xml"})
