@@ -40,13 +40,11 @@ public class UsersService extends Base<User, Long> {
 
 ### Create
 ```java
-// Using the new method, an object can be instantiated without being saved
 User user = new User();
 user.name = "David";
 user.occupation = "Code Artist";
 
 usersService.save(user);
-// A call to usersService.save(user) will commit the record to the database
 ```
 
 ### Read
