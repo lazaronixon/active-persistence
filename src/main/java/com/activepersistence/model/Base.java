@@ -62,14 +62,14 @@ public abstract class Base<ID> {
         setUpdatedAt(LocalDateTime.now());
     }
 
-    @PostPersist
-    private void postPersist() {
-        newRecord = false;
-    }
-
     @PreUpdate
     private void preUpdate() {
         setUpdatedAt(LocalDateTime.now());
+    }
+
+    @PostPersist
+    private void postPersist() {
+        newRecord = false;
     }
 
     @PostUpdate

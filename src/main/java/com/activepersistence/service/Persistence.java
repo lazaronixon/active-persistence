@@ -46,7 +46,6 @@ public interface Persistence<T, ID> {
         return flush(() -> { getEntityManager().persist(entity); return entity; });
     }
 
-    @Transactional
     private T update(T entity) {
         return flush(() -> getEntityManager().merge(entity));
     }
