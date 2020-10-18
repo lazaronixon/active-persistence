@@ -159,20 +159,17 @@ public interface QueryMethods<T, ID> {
 
     private void unscoping(ValueMethods scope) {
         switch (scope) {
-            case FROM:   getValues().except$(FROM); break;
-            case WHERE:  getValues().except$(WHERE); break;
-            case HAVING: getValues().except$(HAVING); break;
-
-            case SELECT: getValues().except$(SELECT, CONSTRUCTOR); break;
-
-            case GROUP:            getValues().except$(GROUP);            break;
-            case ORDER:            getValues().except$(ORDER);            break;
-            case LOCK:             getValues().except$(LOCK);             break;
-            case LIMIT:            getValues().except$(LIMIT);            break;
-            case OFFSET:           getValues().except$(OFFSET);           break;
-            case JOINS:            getValues().except$(JOINS);            break;
-            case INCLUDES:         getValues().except$(INCLUDES);         break;
-
+            case FROM:     getValues().except$(FROM);     break;
+            case WHERE:    getValues().except$(WHERE);    break;
+            case HAVING:   getValues().except$(HAVING);   break;
+            case SELECT:   getValues().except$(SELECT, CONSTRUCTOR); break;
+            case GROUP:    getValues().except$(GROUP);    break;
+            case ORDER:    getValues().except$(ORDER);    break;
+            case LOCK:     getValues().except$(LOCK);     break;
+            case LIMIT:    getValues().except$(LIMIT);    break;
+            case OFFSET:   getValues().except$(OFFSET);   break;
+            case JOINS:    getValues().except$(JOINS);    break;
+            case INCLUDES: getValues().except$(INCLUDES); break;
             default: throw new RuntimeException("invalid unscoping value: " + scope);
         }
     }
