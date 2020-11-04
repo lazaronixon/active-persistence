@@ -1,8 +1,6 @@
 package com.activepersistence.service.arel;
 
-import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.arel.visitors.ToJpql;
-import com.activepersistence.service.arel.visitors.Visitable;
 import com.activepersistence.service.arel.visitors.Visitor;
 
 public class Entity implements Source {
@@ -23,10 +21,6 @@ public class Entity implements Source {
     }
 
     public SelectManager where(String condition) {
-        return from().where(jpql(condition));
-    }
-
-    public SelectManager where(Visitable condition) {
         return from().where(condition);
     }
 
@@ -35,10 +29,6 @@ public class Entity implements Source {
     }
 
     public SelectManager having(String condition) {
-        return from().having(jpql(condition));
-    }
-
-    public SelectManager having(Visitable condition) {
         return from().having(condition);
     }
 

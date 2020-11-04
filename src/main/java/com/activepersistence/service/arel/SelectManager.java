@@ -14,7 +14,7 @@ import java.util.List;
 public class SelectManager extends TreeManager {
 
     private final SelectStatement ast;
-    
+
     private final SelectCore ctx;
 
     public SelectManager(Entity entity) {
@@ -54,20 +54,12 @@ public class SelectManager extends TreeManager {
         ctx.getWheres().add(jpql(condition)); return this;
     }
 
-    public SelectManager where(Visitable condition) {
-        ctx.getWheres().add(condition); return this;
-    }
-
     public SelectManager group(String... fields) {
         ctx.getGroups().addAll(jpqlList(fields)); return this;
     }
 
     public SelectManager having(String condition) {
         ctx.getHavings().add(jpql(condition)); return this;
-    }
-
-    public SelectManager having(Visitable condition) {
-        ctx.getHavings().add(condition); return this;
     }
 
     public SelectManager order(String... expr) {
