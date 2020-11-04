@@ -5,7 +5,7 @@ pom.xml
 <dependency>
   <groupId>com.github.lazaronixon</groupId>
   <artifactId>active-persistence</artifactId>
-  <version>0.0.19</version>
+  <version>0.0.20</version>
 </dependency>
 ```
 
@@ -21,9 +21,6 @@ public class User extends BaseIdentity {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
-
-    public User() {
-    }
 
     // Get/Set omitted by brevity
 }
