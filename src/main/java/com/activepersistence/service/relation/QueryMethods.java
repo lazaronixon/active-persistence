@@ -2,10 +2,9 @@ package com.activepersistence.service.relation;
 
 import com.activepersistence.service.NullRelation;
 import com.activepersistence.service.Relation;
-import static com.activepersistence.service.Sanitization.sanitizeJpql;
+import com.activepersistence.service.Sanitization;
 import static com.activepersistence.service.relation.ValueMethods.*;
 import static java.util.Arrays.asList;
-import java.util.Map;
 import javax.persistence.LockModeType;
 
 public interface QueryMethods<T, ID> {
@@ -13,8 +12,6 @@ public interface QueryMethods<T, ID> {
     public Values getValues();
 
     public Relation<T, ID> spawn();
-
-    public PredicateBuilder getPredicateBuilder();
 
     public default Relation<T, ID> select(String... fields) {
         return spawn().select$(fields);
@@ -37,7 +34,7 @@ public interface QueryMethods<T, ID> {
     }
 
     public default Relation<T, ID> where$(String conditions, Object... params) {
-        getValues().getWhere().addAll(buildWhereClause(conditions, params)); return thiz();
+        getValues().getWhere().add(buildWhere(conditions, params)); return thiz();
     }
 
     public default Relation<T, ID> group(String... fields) {
@@ -53,7 +50,7 @@ public interface QueryMethods<T, ID> {
     }
 
     public default Relation<T, ID> having$(String conditions, Object... params) {
-        getValues().getHaving().addAll(buildWhereClause(conditions, params)); return thiz();
+        getValues().getHaving().add(buildWhere(conditions, params)); return thiz();
     }
 
     public default Relation<T, ID> order(String... fields) {
@@ -177,12 +174,8 @@ public interface QueryMethods<T, ID> {
         }
     }
 
-    private WhereClause buildWhereClause(Map conditions) {
-        return new WhereClause(asList(getPredicateBuilder().buildFromHash(conditions)));
-    }
-
-    private WhereClause buildWhereClause(String conditions, Object[] params) {
-        return new WhereClause(asList(sanitizeJpql(conditions, params)));
+    private String buildWhere(String conditions, Object[] params) {
+        return Sanitization.sanitizeJpql(conditions, params);
     }
 
     private Relation<T, ID> thiz() {

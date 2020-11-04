@@ -17,16 +17,8 @@ public interface SpawnMethods<T, ID> {
         return spawn().merge$(other);
     }
 
-    public default Relation<T, ID> merge(Relation other, Boolean rewhere) {
-        return spawn().merge$(other, rewhere);
-    }
-
     public default Relation<T, ID> merge$(Relation other) {
         return new Merger(thiz(), other).merge();
-    }
-
-    public default Relation<T, ID> merge$(Relation other, Boolean rewhere) {
-        return new Merger(thiz(), other, rewhere).merge();
     }
 
     public default Relation<T, ID> except(ValueMethods... skips) {

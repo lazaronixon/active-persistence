@@ -11,56 +11,34 @@ public class Merger {
 
     private final Values values;
 
-    private final Boolean rewhere;
-
     public Merger(Relation relation, Relation other) {
         this.relation = relation;
         this.other    = other;
         this.values   = other.getValues();
-        this.rewhere  = false;
-    }
-
-    public Merger(Relation relation, Relation other, Boolean rewhere) {
-        this.relation = relation;
-        this.other    = other;
-        this.values   = other.getValues();
-        this.rewhere  = rewhere;
     }
 
     public Relation merge() {
-        mergeMultiValues();
-        mergeSingleValues();
-        mergeClauses();
-
-        return relation;
-    }
-
-    private void mergeMultiValues() {
-        values.getSelect().forEach(relation::select$);
-        values.getJoins().forEach(relation::joins$);
-        values.getGroup().forEach(relation::group$);
-        values.getIncludes().forEach(relation::includes$);
-        values.getEagerLoad().forEach(relation::eagerLoad$);
-        values.getUnscope().forEach(relation::unscope$);
-        values.getOrder().forEach(this::mergeOrder$);
-    }
-
-    private void mergeSingleValues() {
-        if (shouldReplaceLockValue()) relation.lock$(values.getLock());
+        if (shouldReplaceFromClause()) relation.getValues().setFrom(values.getFrom());
+        if (shouldReplaceLockValue())  relation.lock$(values.getLock());
 
         if (values.isDistinct() != false) relation.distinct$(values.isDistinct());
         if (values.getLimit()   != 0)     relation.limit$(values.getLimit());
         if (values.getOffset()  != 0)     relation.offset$(values.getOffset());
-    }
 
-    private void mergeClauses() {
-        if (shouldReplaceFromClause()) relation.getValues().setFrom(values.getFrom());
+        values.getSelect().forEach(relation::select$);
+        values.getWhere().forEach(relation::where$);
+        values.getJoins().forEach(relation::joins$);
+        values.getGroup().forEach(relation::group$);
+        values.getHaving().forEach(relation::having$);
 
-        var whereClause = relation.getValues().getWhere().merge(values.getWhere(), rewhere);
-        if (!values.getWhere().isEmpty()) relation.getValues().setWhere(whereClause);
+        values.getOrder().forEach(this::mergeOrder$);
 
-        var havingClause = relation.getValues().getHaving().merge(values.getHaving(), false);
-        if (!values.getHaving().isEmpty()) relation.getValues().setHaving(havingClause);
+        values.getIncludes().forEach(relation::includes$);
+        values.getEagerLoad().forEach(relation::eagerLoad$);
+
+        values.getUnscope().forEach(relation::unscope$);
+
+        return relation;
     }
 
     private boolean shouldReplaceLockValue() {
@@ -68,7 +46,8 @@ public class Merger {
     }
 
     private boolean shouldReplaceFromClause() {
-        return relation.getValues().getFrom() == null && values.getFrom() != null && relation.getEntityClass() == other.getEntityClass();
+        return relation.getValues().getFrom() == null && values.getFrom() != null
+                && relation.getEntityClass() == other.getEntityClass();
     }
 
     private void mergeOrder$(String value) {

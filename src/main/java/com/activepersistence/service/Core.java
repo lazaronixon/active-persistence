@@ -1,7 +1,6 @@
 package com.activepersistence.service;
 
 import com.activepersistence.service.arel.Entity;
-import com.activepersistence.service.relation.PredicateBuilder;
 import static java.beans.Introspector.decapitalize;
 
 public interface Core<T, ID> {
@@ -26,10 +25,6 @@ public interface Core<T, ID> {
 
     public default String getPrimaryKeyAttr() {
         return getAlias() + "." + getPrimaryKey();
-    }
-
-    public default PredicateBuilder getPredicateBuilder() {
-        return new PredicateBuilder();
     }
 
 }
