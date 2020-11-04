@@ -6,7 +6,7 @@ import java.lang.reflect.ParameterizedType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-public abstract class Base<T, ID> implements Core<T, ID>, Persistence<T, ID>, Querying<T, ID>, Scoping<T, ID> {
+public abstract class Base<T> implements Core<T>, Persistence<T>, Querying<T>, Scoping<T> {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -32,17 +32,17 @@ public abstract class Base<T, ID> implements Core<T, ID>, Persistence<T, ID>, Qu
     }
 
     @Override
-    public Relation<T, ID> getRelation() {
+    public Relation<T> getRelation() {
         return Core.super.getRelation();
     }
 
     @Override
-    public Relation<T, ID> all() {
+    public Relation<T> all() {
         return Scoping.super.all();
     }
 
     @Override
-    public Relation<T, ID> defaultScope() {
+    public Relation<T> defaultScope() {
         throw new UnsupportedOperationException("not implemented");
     }
 

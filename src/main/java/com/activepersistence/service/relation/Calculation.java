@@ -11,7 +11,7 @@ import static java.util.Arrays.copyOfRange;
 import java.util.List;
 import static java.util.stream.Collectors.toMap;
 
-public interface Calculation<T, ID> {
+public interface Calculation<T> {
 
     public enum Operations { COUNT, MIN, MAX, AVG, SUM }
 
@@ -21,7 +21,7 @@ public interface Calculation<T, ID> {
 
     public String getPrimaryKeyAttr();
 
-    public Relation<T, ID> spawn();
+    public Relation<T> spawn();
 
     public default Object count() {
         return count(getAlias());
@@ -47,7 +47,7 @@ public interface Calculation<T, ID> {
         return calculate(SUM, field);
     }
 
-    public default List<ID> ids() {
+    public default List<Object> ids() {
         return pluck(getPrimaryKeyAttr());
     }
 
@@ -69,11 +69,11 @@ public interface Calculation<T, ID> {
         }
     }
 
-    private Object executeSimpleCalculation(Relation<T, ID> relation, Operations operation, String field) {
+    private Object executeSimpleCalculation(Relation<T> relation, Operations operation, String field) {
         relation.getValues().setSelect(asList(operationOverAggregateColumn(operation, field).toJpql())); return relation.fetchOne();
     }
 
-    private Object executeGroupedCalculation(Relation<T, ID> relation, Operations operation, String field) {
+    private Object executeGroupedCalculation(Relation<T> relation, Operations operation, String field) {
         var values = relation.getValues();
 
         values.getSelect().clear();
@@ -99,7 +99,7 @@ public interface Calculation<T, ID> {
         }
     }
 
-    private Object fetchGroupedResult(Relation<T, ID> relation, Values values) {
+    private Object fetchGroupedResult(Relation<T> relation, Values values) {
         List<Object[]> results = relation.fetch$();
 
         if (values.getGroup().size() > 1) {

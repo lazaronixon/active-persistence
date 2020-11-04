@@ -31,7 +31,7 @@ public class User extends BaseIdentity {
 
 users/UsersService.java
 ```java
-public class UsersService extends Base<User, Long> {
+public class UsersService extends Base<User> {
 
 }
 ```
@@ -208,7 +208,7 @@ clientsService.eagerLoads("client.address").limit(10).fetch();
 
 ## Applying a default scope
 ```java
-public class ClientsService extends Base<Client, Long> {
+public class ClientsService extends Base<Client> {
 
     @Override
     public Relation<Client> defaultScope() {

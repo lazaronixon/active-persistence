@@ -10,9 +10,9 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import java.util.List;
 
-public class NullRelation<T, ID> extends Relation<T, ID> {
+public class NullRelation<T> extends Relation<T> {
 
-    public NullRelation(Relation<T, ID> other) {
+    public NullRelation(Relation<T> other) {
         super(other);
     }
 

@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-public class Relation<T, ID> implements FinderMethods<T, ID>, QueryMethods<T, ID>, Calculation<T, ID>, SpawnMethods<T, ID> {
+public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, SpawnMethods<T> {
 
     private final Base service;
 
@@ -43,22 +43,22 @@ public class Relation<T, ID> implements FinderMethods<T, ID>, QueryMethods<T, ID
         this.values        = values;
     }
 
-    public Relation(Relation<T, ID> other) {
+    public Relation(Relation<T> other) {
         this.entity        = other.entity;
         this.entityClass   = other.entityClass;
         this.service       = other.service;
         this.values        = new Values(other.values);
     }
 
-    public Relation<T, ID> unscoped() {
+    public Relation<T> unscoped() {
         return service.unscoped();
     }
 
-    public Relation<T, ID> unscoped(Supplier<Relation> yield) {
+    public Relation<T> unscoped(Supplier<Relation> yield) {
         return service.unscoped(yield);
     }
 
-    public Relation<T, ID> scoping(Supplier<Relation> yield) {
+    public Relation<T> scoping(Supplier<Relation> yield) {
         var previous = Scoping.getCurrentScope();
         try {
             Scoping.setCurrentScope(this);
@@ -114,12 +114,12 @@ public class Relation<T, ID> implements FinderMethods<T, ID>, QueryMethods<T, ID
     }
 
     @Override
-    public Base<T, ID> getService() {
+    public Base<T> getService() {
         return service;
     }
 
     @Override
-    public Relation<T, ID> spawn() {
+    public Relation<T> spawn() {
         return SpawnMethods.super.spawn();
     }
 

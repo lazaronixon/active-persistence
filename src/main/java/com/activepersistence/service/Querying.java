@@ -8,26 +8,26 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
 
-public interface Querying<T, ID> {
+public interface Querying<T> {
 
     public EntityManager getEntityManager();
 
     public Class getEntityClass();
 
-    public Relation<T, ID> getRelation();
+    public Relation<T> getRelation();
 
-    public Relation<T, ID> all();
+    public Relation<T> all();
 
     //<editor-fold defaultstate="collapsed" desc="SpawnMethods">
-    public default Relation<T, ID> merge(Relation other) {
+    public default Relation<T> merge(Relation other) {
         return all().merge(other);
     }
 
-    public default Relation<T, ID> except(ValueMethods... skips) {
+    public default Relation<T> except(ValueMethods... skips) {
         return all().except(skips);
     }
 
-    public default Relation<T, ID> only(ValueMethods... onlies) {
+    public default Relation<T> only(ValueMethods... onlies) {
         return all().only(onlies);
     }
     //</editor-fold>
@@ -61,7 +61,7 @@ public interface Querying<T, ID> {
         return all().pluck(field);
     }
 
-    public default List<ID> ids() {
+    public default List<Object> ids() {
         return all().ids();
     }
     //</editor-fold>
@@ -103,19 +103,19 @@ public interface Querying<T, ID> {
         return all().last(limit);
     }
 
-    public default T find(ID id) {
+    public default T find(Object id) {
         return all().find(id);
     }
 
-    public default List<T> find(ID... ids) {
+    public default List<T> find(Object... ids) {
         return all().find(ids);
     }
 
-    public default T findById(ID id) {
+    public default T findById(Object id) {
         return all().findById(id);
     }
 
-    public default T findById$(ID id) {
+    public default T findById$(Object id) {
         return all().findById$(id);
     }
 
@@ -145,87 +145,87 @@ public interface Querying<T, ID> {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="QueryMethods">
-    public default Relation<T, ID> where(String conditions, Object... params) {
+    public default Relation<T> where(String conditions, Object... params) {
         return all().where(conditions, params);
     }
 
-    public default Relation<T, ID> order(String... values) {
+    public default Relation<T> order(String... values) {
         return all().order(values);
     }
 
-    public default Relation<T, ID> limit(int value) {
+    public default Relation<T> limit(int value) {
         return all().limit(value);
     }
 
-    public default Relation<T, ID> offset(int value) {
+    public default Relation<T> offset(int value) {
         return all().offset(value);
     }
 
-    public default Relation<T, ID> select(String... values) {
+    public default Relation<T> select(String... values) {
         return all().select(values);
     }
 
-    public default Relation<T, ID> joins(String value) {
+    public default Relation<T> joins(String value) {
         return all().joins(value);
     }
 
-    public default Relation<T, ID> group(String... values) {
+    public default Relation<T> group(String... values) {
         return all().group(values);
     }
 
-    public default Relation<T, ID> having(String conditions, Object... params) {
+    public default Relation<T> having(String conditions, Object... params) {
         return all().having(conditions, params);
     }
 
-    public default Relation<T, ID> distinct() {
+    public default Relation<T> distinct() {
         return all().distinct(true);
     }
 
-    public default Relation<T, ID> distinct(boolean value) {
+    public default Relation<T> distinct(boolean value) {
         return all().distinct(value);
     }
 
-    public default Relation<T, ID> includes(String... values) {
+    public default Relation<T> includes(String... values) {
         return all().includes(values);
     }
 
-    public default Relation<T, ID> eagerLoad(String... values) {
+    public default Relation<T> eagerLoad(String... values) {
         return all().eagerLoad(values);
     }
 
-    public default Relation<T, ID> unscope(ValueMethods... values) {
+    public default Relation<T> unscope(ValueMethods... values) {
         return all().unscope(values);
     }
 
-    public default Relation<T, ID> reselect(String... values) {
+    public default Relation<T> reselect(String... values) {
         return all().reselect(values);
     }
 
-    public default Relation<T, ID> rewhere(String conditions, Object... params) {
+    public default Relation<T> rewhere(String conditions, Object... params) {
         return all().rewhere(conditions, params);
     }
 
-    public default Relation<T, ID> reorder(String... fields) {
+    public default Relation<T> reorder(String... fields) {
         return all().reorder(fields);
     }
 
-    public default Relation<T, ID> lock() {
+    public default Relation<T> lock() {
         return all().lock();
     }
 
-    public default Relation<T, ID> lock(boolean value) {
+    public default Relation<T> lock(boolean value) {
         return all().lock(value);
     }
 
-    public default Relation<T, ID> lock(LockModeType value) {
+    public default Relation<T> lock(LockModeType value) {
         return all().lock(value);
     }
 
-    public default Relation<T, ID> from(String from) {
+    public default Relation<T> from(String from) {
         return all().from(from);
     }
 
-    public default Relation<T, ID> none() {
+    public default Relation<T> none() {
         return all().none();
     }
     //</editor-fold>

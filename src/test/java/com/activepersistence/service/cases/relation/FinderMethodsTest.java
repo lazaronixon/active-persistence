@@ -55,6 +55,11 @@ public class FinderMethodsTest extends IntegrationTest {
     }
 
     @Test
+    public void testFindString() {
+        assertEquals((Long) 2L, postsService.find("2").getId());
+    }
+
+    @Test
     public void testFind() {
         assertEquals((Long) 2L, postsService.find(2L).getId());
     }

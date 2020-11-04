@@ -3,7 +3,7 @@ package com.activepersistence.service;
 import com.activepersistence.service.arel.Entity;
 import static java.beans.Introspector.decapitalize;
 
-public interface Core<T, ID> {
+public interface Core<T> {
 
     public Class getEntityClass();
 
@@ -19,7 +19,7 @@ public interface Core<T, ID> {
         return new Entity(getEntityClass(), getAlias());
     }
 
-    public default Relation<T, ID> getRelation() {
+    public default Relation<T> getRelation() {
         return new Relation((Base) this);
     }
 

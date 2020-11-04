@@ -6,7 +6,7 @@ import static javax.persistence.LockModeType.NONE;
 import static javax.persistence.LockModeType.PESSIMISTIC_WRITE;
 import javax.transaction.Transactional;
 
-public interface Persistence<T, ID> {
+public interface Persistence<T> {
 
     public EntityManager getEntityManager();
 
