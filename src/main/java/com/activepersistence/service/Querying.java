@@ -145,10 +145,6 @@ public interface Querying<T, ID> {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="QueryMethods">
-    public default Relation<T, ID> where(String conditions) {
-        return all().where(conditions);
-    }
-
     public default Relation<T, ID> where(String conditions, Object... params) {
         return all().where(conditions, params);
     }

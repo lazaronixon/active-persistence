@@ -18,9 +18,9 @@ public class Values {
     private boolean constructor = false;
 
     private List<String> select          = new ArrayList();
-    private List<String> where           = new ArrayList();
+    private WhereClause where            = new WhereClause();
     private List<String> group           = new ArrayList();
-    private List<String> having          = new ArrayList();
+    private WhereClause having           = new WhereClause();
     private List<String> order           = new ArrayList();
     private List<String> joins           = new ArrayList();
     private List<String> includes        = new ArrayList();
@@ -40,9 +40,9 @@ public class Values {
         distinct       = other.distinct;
         reordering     = other.reordering;
         select         = new ArrayList(other.select);
-        where          = new ArrayList(other.where);
+        where          = new WhereClause(other.where);
         group          = new ArrayList(other.group);
-        having         = new ArrayList(other.having);
+        having         = new WhereClause(other.having);
         order          = new ArrayList(other.order);
         joins          = new ArrayList(other.joins);
         includes       = new ArrayList(other.includes);
@@ -58,16 +58,24 @@ public class Values {
         return select;
     }
 
-    public List<String> getWhere() {
+    public WhereClause getWhere() {
         return where;
+    }
+    
+    public void setWhere(WhereClause where) {
+        this.where = where;
     }
 
     public List<String> getGroup() {
         return group;
     }
 
-    public List<String> getHaving() {
+    public WhereClause getHaving() {
         return having;
+    }
+
+    public void setHaving(WhereClause having) {
+        this.having = having;
     }
 
     public List<String> getOrder() {

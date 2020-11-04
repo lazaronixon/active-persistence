@@ -14,7 +14,7 @@ import java.util.List;
 public class SelectManager extends TreeManager {
 
     private final SelectStatement ast;
-    
+
     private final SelectCore ctx;
 
     public SelectManager(Entity entity) {

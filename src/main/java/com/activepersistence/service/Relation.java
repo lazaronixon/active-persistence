@@ -8,6 +8,7 @@ import com.activepersistence.service.arel.UpdateManager;
 import com.activepersistence.service.connectionadapters.JpaAdapter;
 import com.activepersistence.service.relation.Calculation;
 import com.activepersistence.service.relation.FinderMethods;
+import com.activepersistence.service.relation.PredicateBuilder;
 import com.activepersistence.service.relation.QueryMethods;
 import com.activepersistence.service.relation.SpawnMethods;
 import com.activepersistence.service.relation.Values;
@@ -137,8 +138,16 @@ public class Relation<T, ID> implements FinderMethods<T, ID>, QueryMethods<T, ID
         return service.getConnection();
     }
 
+    @Override
+    public PredicateBuilder getPredicateBuilder() {
+        return service.getPredicateBuilder();
+    }
+
     public SelectManager getArel() {
         var result = new SelectManager(entity);
+
+        buildWhere(result);
+        buildHaving(result);
 
         buildConstructor(result);
         buildDistinct(result);
@@ -146,9 +155,7 @@ public class Relation<T, ID> implements FinderMethods<T, ID>, QueryMethods<T, ID
         buildFrom(result);
 
         values.getJoins().forEach(result::join);
-        values.getWhere().forEach(result::where);
         values.getGroup().forEach(result::group);
-        values.getHaving().forEach(result::having);
         values.getOrder().forEach(result::order);
 
         return result;
@@ -172,6 +179,14 @@ public class Relation<T, ID> implements FinderMethods<T, ID>, QueryMethods<T, ID
 
     public boolean fetchExists() {
         return getConnection().selectExists(getArel());
+    }
+
+    private void buildWhere(SelectManager arel) {
+        if (!values.getWhere().isEmpty()) arel.where(values.getWhere().getAst());
+    }
+
+    private void buildHaving(SelectManager arel) {
+        if (!values.getHaving().isEmpty()) arel.having(values.getHaving().getAst());
     }
 
     private void buildDistinct(SelectManager arel) {
