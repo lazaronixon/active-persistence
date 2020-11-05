@@ -1,7 +1,5 @@
 package com.activepersistence.service.arel;
 
-import static com.activepersistence.service.Arel.createInnerJoin;
-import static com.activepersistence.service.Arel.createOuterJoin;
 import static com.activepersistence.service.Arel.createStringJoin;
 import static com.activepersistence.service.Arel.jpql;
 import static com.activepersistence.service.Arel.jpqlList;
@@ -40,14 +38,6 @@ public class SelectManager extends TreeManager {
 
     public SelectManager join(String join) {
         ctx.getSource().getJoins().add(createStringJoin(join)); return this;
-    }
-
-    public SelectManager join(String path, String alias) {
-        ctx.getSource().getJoins().add(createInnerJoin(path, alias)); return this;
-    }
-
-    public SelectManager outerJoin(String path, String alias) {
-        ctx.getSource().getJoins().add(createOuterJoin(path, alias)); return this;
     }
 
     public SelectManager where(String condition) {

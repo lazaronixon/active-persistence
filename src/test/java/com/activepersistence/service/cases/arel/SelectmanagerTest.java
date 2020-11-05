@@ -42,16 +42,6 @@ public class SelectmanagerTest {
     }
 
     @Test
-    public void testInnerJoin() {
-        assertEquals("SELECT FROM Post post INNER JOIN post.comments c", manager.join("post.comments", "c").toJpql());
-    }
-
-    @Test
-    public void testOuterJoin() {
-        assertEquals("SELECT FROM Post post LEFT OUTER JOIN post.comments c", manager.outerJoin("post.comments", "c").toJpql());
-    }
-
-    @Test
     public void testWhere() {
         assertEquals("SELECT FROM Post post WHERE post.id = 1", manager.where("post.id = 1").toJpql());
     }

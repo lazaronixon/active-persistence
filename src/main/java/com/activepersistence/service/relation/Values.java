@@ -182,6 +182,8 @@ public class Values {
         switch (value) {
             case FROM: from = null; break;
 
+            case LOCK: lock = LockModeType.NONE; break;
+
             case LIMIT:       limit       = 0;     break;
             case OFFSET:      offset      = 0;     break;
             case DISTINCT:    distinct    = false; break;
@@ -197,8 +199,6 @@ public class Values {
             case INCLUDES:   includes.clear();  break;
             case EAGER_LOAD: eagerLoad.clear(); break;
             case UNSCOPE:    unscope.clear();   break;
-
-            case LOCK: lock = LockModeType.NONE; break;
         }
     }
 
