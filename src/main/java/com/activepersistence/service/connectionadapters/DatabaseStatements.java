@@ -15,9 +15,9 @@ import javax.persistence.Query;
 
 public interface DatabaseStatements<T> {
 
-    public ToJpql getVisitor();
-
     public Class getEntityClass();
+
+    public ToJpql getVisitor();
 
     public EntityManager getEntityManager();
 

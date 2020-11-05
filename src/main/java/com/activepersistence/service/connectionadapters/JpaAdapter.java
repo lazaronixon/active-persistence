@@ -13,8 +13,8 @@ public class JpaAdapter<T> implements DatabaseStatements<T>, Literalizing {
 
     public JpaAdapter(EntityManager entityManager, Class entityClass) {
         this.entityManager = entityManager;
-        this.entityClass = entityClass;
-        this.visitor = new ToJpql();
+        this.entityClass   = entityClass;
+        this.visitor       = new ToJpql();
     }
 
     @Override
