@@ -3,11 +3,15 @@ package com.activepersistence.service.arel;
 import static com.activepersistence.service.Arel.createStringJoin;
 import static com.activepersistence.service.Arel.jpql;
 import static com.activepersistence.service.Arel.jpqlList;
+import com.activepersistence.service.arel.nodes.And;
 import com.activepersistence.service.arel.nodes.Join;
+import com.activepersistence.service.arel.nodes.JpqlLiteral;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.visitors.Visitable;
+import java.util.HashMap;
 import java.util.List;
+import javax.persistence.LockModeType;
 
 public class SelectManager extends TreeManager {
 
@@ -56,10 +60,41 @@ public class SelectManager extends TreeManager {
         ast.getOrders().addAll(jpqlList(expr)); return this;
     }
 
+    public SelectManager limit(int limit) {
+        ast.setLimit(limit); return this;
+    }
+
+    public SelectManager offset(int offset) {
+        ast.setOffset(offset); return this;
+    }
+
+    public SelectManager lock(LockModeType lock) {
+        ast.setLock(lock); return this;
+    }
+
+    public void setHints(HashMap<String, Object> hints) {
+        ast.setHints(hints);
+    }
+
+    public int getLimit() {
+        return ast.getLimit();
+    }
+
+    public int getOffset() {
+        return ast.getOffset();
+    }
+
+    public LockModeType getLock() {
+        return ast.getLock();
+    }
+
+    public HashMap<String, Object> getHints() {
+        return ast.getHints();
+    }
+
     public List<Visitable> getConstraints() {
         return ctx.getWheres();
     }
-
     public List<Visitable> getOrders() {
         return ast.getOrders();
     }
@@ -68,9 +103,22 @@ public class SelectManager extends TreeManager {
         return ctx.getSource().getJoins();
     }
 
+    public JpqlLiteral whereJpql() {
+        if (ctx.getWheres().isEmpty()) {
+            return null;
+        } else {
+            return new JpqlLiteral("WHERE " + new And(ctx.getWheres()).toJpql());
+        }
+    }
+
     @Override
     public SelectStatement getAst() {
         return ast;
+    }
+
+    @Override
+    public SelectCore getCtx() {
+        return ctx;
     }
 
 }

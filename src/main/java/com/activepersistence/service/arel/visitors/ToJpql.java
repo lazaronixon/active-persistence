@@ -1,6 +1,7 @@
 package com.activepersistence.service.arel.visitors;
 
 import com.activepersistence.service.arel.Entity;
+import com.activepersistence.service.arel.nodes.And;
 import com.activepersistence.service.arel.nodes.Assignment;
 import com.activepersistence.service.arel.nodes.Avg;
 import com.activepersistence.service.arel.nodes.Constructor;
@@ -156,6 +157,10 @@ public class ToJpql extends Visitor {
         collector.append(" = ");
         collector.append(literal(o.getValue()));
         return collector;
+    }
+
+    public StringBuilder visitAnd(And o, StringBuilder collector) {
+        return injectJoin(o.getChildren(), collector, " AND ");
     }
 
     public String compile(Visitable node, StringBuilder collector) {

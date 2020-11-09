@@ -11,15 +11,20 @@ import com.activepersistence.service.relation.FinderMethods;
 import com.activepersistence.service.relation.QueryMethods;
 import com.activepersistence.service.relation.SpawnMethods;
 import com.activepersistence.service.relation.Values;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculation<T>, SpawnMethods<T> {
+public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, Calculation<T>, SpawnMethods<T> {
 
     private final Base service;
 
@@ -29,25 +34,29 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
 
     private final Values values;
 
-    public Relation(Base service) {
-        this.entity        = service.getArelEntity();
-        this.entityClass   = service.getEntityClass();
-        this.service       = service;
-        this.values        = new Values();
-    }
+    private SelectManager arel;
+
+    private List<T> records;
+
+    private String toJpql;
+
+    private boolean loaded;
 
     public Relation(Base service, Values values) {
-        this.entity        = service.getArelEntity();
-        this.entityClass   = service.getEntityClass();
-        this.service       = service;
-        this.values        = values;
+        this.entityClass = service.getEntityClass();
+        this.entity      = service.getArelEntity();
+        this.service     = service;
+        this.values      = values;
+        this.loaded      = false;
     }
 
     public Relation(Relation<T> other) {
-        this.entity        = other.entity;
-        this.entityClass   = other.entityClass;
-        this.service       = other.service;
-        this.values        = new Values(other.values);
+        this.entityClass = other.entityClass;
+        this.entity      = other.entity;
+        this.service     = other.service;
+        this.loaded      = other.loaded;
+        this.values      = new Values(other.values);
+        reset();
     }
 
     public Relation<T> unscoped() {
@@ -69,20 +78,47 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public List<T> destroyAll() {
-        return fetch().stream().map(r -> { service.destroy((com.activepersistence.model.Base) r); return r; }).collect(toList());
+        return getRecords().stream().map(r -> { service.destroy((com.activepersistence.model.Base) r); return r; }).collect(toList());
     }
 
     public List<T> destroyBy(String conditions, Object... params) {
         return where(conditions, params).destroyAll();
     }
 
+    public Relation<T> load() {
+        if (!loaded) {
+            records = execQueries(); loaded = true; return this;
+        } else {
+            return this;
+        }
+    }
+
+    public Relation<T> reload() {
+        reset(); load(); return this;
+    }
+
+    public final Relation<T> reset() {
+        toJpql = null; arel = null; loaded = false; records = new ArrayList(); return this;
+    }
+
+    public List<T> getRecords() {
+        load(); return records;
+    }
+
     public int deleteAll() {
         if (isValidRelationForUpdateOrDelete()) {
             var stmt = new DeleteManager();
             stmt.from(entity);
+            stmt.limit(getArel().getLimit());
+            stmt.offset(getArel().getOffset());
             stmt.setWheres(getArel().getConstraints());
             stmt.setOrders(getArel().getOrders());
-            return getConnection().delete(stmt, values.getOffset(), values.getLimit());
+
+            var affected = getConnection().delete(stmt);
+
+            reset();
+
+            return affected;
         } else {
             throw new ActivePersistenceError("deleteAll doesn't support this relation");
         }
@@ -101,9 +137,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     }
 
     public String toJpql() {
-        return getConnection().toJpql(getArel());
+        return ofNullable(toJpql).orElseGet(() -> toJpql = getConnection().toJpql(getArel()));
     }
 
+    @Override
     public Class getEntityClass() {
         return entityClass;
     }
@@ -133,15 +170,22 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         return service.getAlias();
     }
 
+    @Override
     public JpaAdapter<T> getConnection() {
         return service.getConnection();
     }
 
+    @Override
     public SelectManager getArel() {
+        return ofNullable(arel).orElseGet(() -> arel = buildArel());
+    }
+
+    public SelectManager buildArel() {
         var result = new SelectManager(entity);
 
-        buildConstructor(result);
-        buildDistinct(result);
+        result.constructor(values.isConstructor());
+        result.distinct(values.isDistinct());
+
         buildSelect(result);
         buildFrom(result);
 
@@ -151,37 +195,132 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         values.getHaving().forEach(result::having);
         values.getOrder().forEach(result::order);
 
+        result.limit(values.getLimit());
+        result.offset(values.getOffset());
+        result.lock(values.getLock());
+        result.setHints(hints());
+
         return result;
     }
 
-    public List<T> fetch() {
-        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), values.getLock(), hints());
+    //<editor-fold defaultstate="collapsed" desc="List Implementation">
+    @Override
+    public int size() {
+        return getRecords().size();
     }
 
-    public List fetch$() {
-        return getConnection().selectAll(getArel(), values.getOffset(), values.getLimit(), values.getLock(), hints());
+    @Override
+    public boolean isEmpty() {
+        return getRecords().isEmpty();
     }
 
-    public T fetchOne() {
-        return (T) getConnection().selectOne(getArel(), values.getLock(), hints());
+    @Override
+    public boolean contains(Object o) {
+        return getRecords().contains(o);
     }
 
-    public T fetchOne$() {
-        return (T) getConnection().selectOne$(getArel(), values.getLock(), hints());
+    @Override
+    public Iterator<T> iterator() {
+        return getRecords().iterator();
     }
 
-    public boolean fetchExists() {
-        return getConnection().selectExists(getArel());
+    @Override
+    public Object[] toArray() {
+        return getRecords().toArray();
     }
 
-    private void buildDistinct(SelectManager arel) {
-        arel.distinct(values.isDistinct());
+    @Override
+    public <T> T[] toArray(T[] a) {
+        return getRecords().toArray(a);
     }
 
-    private void buildConstructor(SelectManager arel) {
-        arel.constructor(values.isConstructor());
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        return getRecords().containsAll(c);
     }
 
+    @Override
+    public T get(int index) {
+        return getRecords().get(index);
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        return getRecords().indexOf(o);
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+        return getRecords().lastIndexOf(o);
+    }
+
+    @Override
+    public ListIterator<T> listIterator() {
+        return getRecords().listIterator();
+    }
+
+    @Override
+    public ListIterator<T> listIterator(int index) {
+        return getRecords().listIterator(index);
+    }
+
+    @Override
+    public List<T> subList(int fromIndex, int toIndex) {
+        return getRecords().subList(fromIndex, toIndex);
+    }
+
+    @Override
+    public T set(int index, T element) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean add(T e) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void add(int index, T element) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public T remove(int index) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends T> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean addAll(int index, Collection<? extends T> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Private Methods">
     private void buildSelect(SelectManager arel) {
         if (values.getSelect().isEmpty()) {
             arel.project(entity.getAlias());
@@ -194,10 +333,6 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         if (values.getFrom() != null) arel.from(values.getFrom());
     }
 
-    private Map<String, Object> hints() {
-        var hints = new HashMap(); addDefaultHints(hints); addBatchHints(hints); return hints;
-    }
-
     private void addDefaultHints(HashMap hints) {
         hints.put("eclipselink.batch.type", "IN");
     }
@@ -207,10 +342,16 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
         values.getEagerLoad().forEach(value -> hints.put("eclipselink.left-join-fetch", value));
     }
 
+    private HashMap<String, Object> hints() {
+        var hints = new HashMap(); addDefaultHints(hints); addBatchHints(hints); return hints;
+    }
+
     private int _updateAll(Object updates) {
         if (isValidRelationForUpdateOrDelete()) {
             var stmt = new UpdateManager();
             stmt.entity(entity);
+            stmt.limit(getArel().getLimit());
+            stmt.offset(getArel().getOffset());
             stmt.setWheres(getArel().getConstraints());
             stmt.setOrders(getArel().getOrders());
 
@@ -220,7 +361,7 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
                 stmt.set((String) updates);
             }
 
-            return getConnection().update(stmt, values.getOffset(), values.getLimit());
+            return getConnection().update(stmt);
         } else {
             throw new ActivePersistenceError("updateAll doesn't support this relation");
         }
@@ -233,5 +374,10 @@ public class Relation<T> implements FinderMethods<T>, QueryMethods<T>, Calculati
     private Map<String, Object> substituteValues(Map<String, Object> updates) {
         return updates.entrySet().stream().collect(toMap(Entry::getKey, v -> v.getValue()));
     }
+
+    private List<T> execQueries() {
+        return getConnection().selectAll(getArel());
+    }
+    //</editor-fold>
 
 }

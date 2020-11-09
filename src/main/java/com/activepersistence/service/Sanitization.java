@@ -70,7 +70,7 @@ public class Sanitization {
     private static String literalBoundValue(Object value) {
         if (value instanceof List) {
             Supplier<Stream<String>> literalized = () -> ((List) value).stream().map(Literalizing::literal);
-            if (literalized.get().findAny().isEmpty()) {
+            if (literalized.get().findFirst().isEmpty()) {
                 return literal(null);
             } else {
                 return literalized.get().collect(joining(","));

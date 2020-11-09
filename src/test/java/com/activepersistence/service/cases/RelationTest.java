@@ -6,7 +6,6 @@ import com.activepersistence.service.models.PostsService;
 import static com.activepersistence.service.relation.ValueMethods.ORDER;
 import java.util.Map;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -39,31 +38,6 @@ public class RelationTest extends IntegrationTest {
     public void testScopingWithUnscope() {
         assertEquals("SELECT post FROM Post post",
                 postsService.order("post.id").scoping(() -> postsService.unscope(ORDER)).toJpql());
-    }
-
-    @Test
-    public void testFetchOne() {
-        assertNotNull(postsService.where("post.id = 1").fetchOne());
-    }
-
-    @Test
-    public void testFetchOne$() {
-        assertThrows(NoResultException.class,() -> postsService.where("1=0").fetchOne$());
-    }
-
-    @Test
-    public void testFetchExists() {
-        assertTrue(postsService.where("post.id = 1").fetchExists());
-    }
-
-    @Test
-    public void testgetFetch() {
-        assertNotNull(postsService.all().fetch());
-    }
-
-    @Test
-    public void testFetch$() {
-        assertNotNull(postsService.all().fetch$());
     }
 
     @Test

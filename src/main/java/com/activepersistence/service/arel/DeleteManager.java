@@ -10,33 +10,57 @@ public class DeleteManager extends TreeManager {
 
     private final DeleteStatement ast;
 
+    private final DeleteStatement ctx;
+
     public DeleteManager() {
         this.ast = new DeleteStatement();
+        this.ctx = ast;
     }
 
     public DeleteManager from(Entity entity) {
         ast.setRelation(entity); return this;
     }
 
+    public DeleteManager limit(int limit) {
+        ast.setLimit(limit); return this;
+    }
+
+    public DeleteManager offset(int offset) {
+        ast.setOffset(offset); return this;
+    }
+
     public DeleteManager where(String condition) {
-        ast.getWheres().add(jpql(condition)); return this;
+        ctx.getWheres().add(jpql(condition)); return this;
     }
 
-    public DeleteManager order(String... orders) {
-        ast.getOrders().addAll(jpqlList(orders)); return this;
+    public DeleteManager order(String... expr) {
+        ast.getOrders().addAll(jpqlList(expr)); return this;
     }
 
-    public void setWheres(List<Visitable> conditions) {
-        ast.setWheres(conditions);
+    public void setWheres(List<Visitable> exprs) {
+        ast.setWheres(exprs);
     }
 
-    public void setOrders(List<Visitable> orders) {
-        ast.setOrders(orders);
+    public void setOrders(List<Visitable> exprs) {
+        ast.setOrders(exprs);
+    }
+
+    public int getLimit() {
+        return ast.getLimit();
+    }
+
+    public int getOffset() {
+        return ast.getOffset();
     }
 
     @Override
     public DeleteStatement getAst() {
         return ast;
+    }
+
+    @Override
+    public DeleteStatement getCtx() {
+        return ctx;
     }
 
 }

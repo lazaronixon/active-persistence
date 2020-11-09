@@ -2,7 +2,7 @@ package com.activepersistence.service.relation;
 
 import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.Relation;
-import com.activepersistence.service.arel.nodes.Function;
+import com.activepersistence.service.connectionadapters.JpaAdapter;
 import static com.activepersistence.service.relation.Calculation.Operations.*;
 import static com.activepersistence.service.relation.ValueMethods.CONSTRUCTOR;
 import static com.activepersistence.service.relation.ValueMethods.DISTINCT;
@@ -18,6 +18,8 @@ public interface Calculation<T> {
     public Values getValues();
 
     public String getAlias();
+
+    public JpaAdapter<T> getConnection();
 
     public String getPrimaryKeyAttr();
 
@@ -53,10 +55,10 @@ public interface Calculation<T> {
 
     public default List pluck(String... fields) {
         var relation = spawn();
-
         relation.getValues().setConstructor(false);
         relation.getValues().setSelect(asList(fields));
-        return relation.fetch$();
+
+        return getConnection().selectAll(relation.getArel());
     }
 
     public default Object calculate(Operations operation, String field) {
@@ -70,37 +72,41 @@ public interface Calculation<T> {
     }
 
     private Object executeSimpleCalculation(Relation<T> relation, Operations operation, String field) {
-        relation.getValues().setSelect(asList(operationOverAggregateColumn(operation, field).toJpql())); return relation.fetchOne();
+        var selectValue  = operationOverAggregateColumn(operation, field);
+        relation.getValues().setSelect(asList(selectValue));
+
+        var result = getConnection().selectAll(relation.getArel());
+        return result.stream().findFirst().orElse(null);
     }
 
     private Object executeGroupedCalculation(Relation<T> relation, Operations operation, String field) {
         var values = relation.getValues();
 
         values.getSelect().clear();
-        values.getSelect().add(operationOverAggregateColumn(operation, field).toJpql());
+        values.getSelect().add(operationOverAggregateColumn(operation, field));
         values.getSelect().addAll(values.getGroup());
         return fetchGroupedResult(relation, values);
     }
 
-    private Function operationOverAggregateColumn(Operations operation, String field) {
+    private String operationOverAggregateColumn(Operations operation, String field) {
         switch (operation) {
             case COUNT:
-                return jpql(field).count(getValues().isDistinct());
+                return jpql(field).count(getValues().isDistinct()).toJpql();
             case MIN:
-                return jpql(field).minimum();
+                return jpql(field).minimum().toJpql();
             case MAX:
-                return jpql(field).maximum();
+                return jpql(field).maximum().toJpql();
             case AVG:
-                return jpql(field).average();
+                return jpql(field).average().toJpql();
             case SUM:
-                return jpql(field).sum();
+                return jpql(field).sum().toJpql();
             default:
                 throw new RuntimeException("Operation not supported: " + operation);
         }
     }
 
     private Object fetchGroupedResult(Relation<T> relation, Values values) {
-        List<Object[]> results = relation.fetch$();
+        List<Object[]> results = getConnection().selectAll(relation.getArel());
 
         if (values.getGroup().size() > 1) {
             return results.stream().collect(toMap(v -> copyOfRange(v, 1, v.length), v -> v[0]));

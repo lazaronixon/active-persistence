@@ -13,6 +13,10 @@ public class DeleteStatement extends Node {
 
     private List<Visitable> orders = new ArrayList();
 
+    private int limit;
+
+    private int offset;
+
     public Entity getRelation() {
         return relation;
     }
@@ -35,6 +39,22 @@ public class DeleteStatement extends Node {
 
     public void setOrders(List<Visitable> orders) {
         this.orders = orders;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
 }

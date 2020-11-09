@@ -1,6 +1,7 @@
 package com.activepersistence.service;
 
 import com.activepersistence.service.arel.Entity;
+import com.activepersistence.service.relation.Values;
 import static java.beans.Introspector.decapitalize;
 
 public interface Core<T> {
@@ -20,11 +21,15 @@ public interface Core<T> {
     }
 
     public default Relation<T> getRelation() {
-        return new Relation((Base) this);
+        return new Relation(thiz(), new Values());
     }
 
     public default String getPrimaryKeyAttr() {
         return getAlias() + "." + getPrimaryKey();
+    }
+
+    private Base thiz() {
+        return (Base) this;
     }
 
 }

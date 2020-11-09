@@ -15,6 +15,10 @@ public class UpdateStatement extends Node {
 
     private List<Visitable> values = new ArrayList();
 
+    private int limit;
+
+    private int offset;
+
     public Entity getRelation() {
         return relation;
     }
@@ -45,6 +49,22 @@ public class UpdateStatement extends Node {
 
     public void setValues(List<Visitable> values) {
         this.values = values;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
 }

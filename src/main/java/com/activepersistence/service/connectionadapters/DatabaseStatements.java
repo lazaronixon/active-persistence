@@ -2,15 +2,12 @@ package com.activepersistence.service.connectionadapters;
 
 import com.activepersistence.service.arel.DeleteManager;
 import com.activepersistence.service.arel.SelectManager;
-import com.activepersistence.service.arel.TreeManager;
 import com.activepersistence.service.arel.UpdateManager;
 import com.activepersistence.service.arel.visitors.ToJpql;
 import static java.util.Collections.emptyMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import static javax.persistence.LockModeType.NONE;
 import javax.persistence.Query;
 
 public interface DatabaseStatements<T> {
@@ -29,52 +26,43 @@ public interface DatabaseStatements<T> {
         return selectAll(sql, emptyMap());
     }
 
-    public default List selectAll(String sql, Map<Integer, Object> binds) {
-        return parametized$(getEntityManager().createNativeQuery(sql), binds).getResultList();
+    public default List selectAll(String sql, Map<Integer, Object> params) {
+        return setParams(createNativeQuery(sql), params).getResultList();
     }
 
-    public default List selectAll(SelectManager arel, int firstResult, int maxResults, LockModeType lockmode, Map<String, Object> hints) {
-        return createQuery(arel, firstResult, maxResults, lockmode, hints).getResultList();
+    public default List selectAll(SelectManager arel) {
+        return setHints(createQuery(arel), arel.getHints()).getResultList();
     }
 
-    public default T selectOne(SelectManager arel, LockModeType lockmode, Map<String, Object> hints) {
-        return (T) createQuery(arel, 0, 0, lockmode, hints).getResultStream().findFirst().orElse(null);
+    public default int update(UpdateManager arel) {
+        return createQuery(arel).executeUpdate();
     }
 
-    public default T selectOne$(SelectManager arel, LockModeType lockmode, Map<String, Object> hints) {
-        return (T) createQuery(arel, 0, 0, lockmode, hints).getSingleResult();
+    public default int delete(DeleteManager arel) {
+        return createQuery(arel).executeUpdate();
     }
 
-    public default boolean selectExists(SelectManager arel) {
-        return createQuery(arel, 0, 1, NONE, emptyMap()).getResultStream().findAny().isPresent();
+    private Query createNativeQuery(String query) {
+        return getEntityManager().createNativeQuery(query);
     }
 
-    public default int update(UpdateManager arel, int firstResult, int maxResults) {
-        return executeUpdate(arel, firstResult, maxResults);
+    private Query createQuery(SelectManager arel) {
+        return getEntityManager().createQuery(arel.toJpql()).setLockMode(arel.getLock()).setFirstResult(arel.getOffset()).setMaxResults(arel.getLimit());
     }
 
-    public default int delete(DeleteManager arel, int firstResult, int maxResults) {
-        return executeUpdate(arel, firstResult, maxResults);
+    private Query createQuery(UpdateManager arel) {
+        return getEntityManager().createQuery(arel.toJpql()).setFirstResult(arel.getOffset()).setMaxResults(arel.getLimit());
     }
 
-    private int executeUpdate(TreeManager arel, int firstResult, int maxResults) {
-        return parametized(getEntityManager().createQuery(arel.toJpql()), firstResult, maxResults).executeUpdate();
+    private Query createQuery(DeleteManager arel) {
+        return getEntityManager().createQuery(arel.toJpql()).setFirstResult(arel.getOffset()).setMaxResults(arel.getLimit());
     }
 
-    private Query createQuery(SelectManager arel, int firstResult, int maxResults, LockModeType lockmode, Map<String, Object> hints) {
-        return parametized(getEntityManager().createQuery(arel.toJpql()), firstResult, maxResults, lockmode, hints);
+    private Query setParams(Query query, Map<Integer, Object> params) {
+        params.forEach(query::setParameter); return query;
     }
 
-    private Query parametized(Query query, int firstResult, int maxResults) {
-        return query.setFirstResult(firstResult).setMaxResults(maxResults);
+    private Query setHints(Query query, Map<String, Object> hints) {
+        hints.forEach(query::setHint); return query;
     }
-
-    private Query parametized(Query query, int firstResult, int maxResults, LockModeType lockmode, Map<String, Object> hints) {
-        hints.forEach(query::setHint); return query.setFirstResult(firstResult).setMaxResults(maxResults).setLockMode(lockmode);
-    }
-
-    private Query parametized$(Query query, Map<Integer, Object> binds) {
-        binds.forEach(query::setParameter); return query;
-    }
-
 }

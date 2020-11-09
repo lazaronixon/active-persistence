@@ -1,9 +1,9 @@
 package com.activepersistence.service.cases.relation;
 
 import com.activepersistence.IntegrationTest;
+import com.activepersistence.RecordNotFound;
 import com.activepersistence.service.models.PostsService;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testTake$() {
-        assertThrows(NoResultException.class,() -> postsService.where("1=0").take$());
+        assertThrows(RecordNotFound.class,() -> postsService.where("1=0").take$());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testLast$() {
-        assertThrows(NoResultException.class,() -> postsService.where("1=0").last$());
+        assertThrows(RecordNotFound.class,() -> postsService.where("1=0").last$());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFindBy$() {
-        assertThrows(NoResultException.class, () -> postsService.findBy$("post.title = 'not found'"));
+        assertThrows(RecordNotFound.class, () -> postsService.findBy$("post.title = 'not found'"));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFindByExpression$() {
-        assertThrows(NoResultException.class, () -> postsService.findByExpression$("Title", "not found"));
+        assertThrows(RecordNotFound.class, () -> postsService.findByExpression$("Title", "not found"));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFindById$() {
-        assertThrows(NoResultException.class, () -> postsService.findById$(48484L));
+        assertThrows(RecordNotFound.class, () -> postsService.findById$(48484L));
     }
 
     @Test

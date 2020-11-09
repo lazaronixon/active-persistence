@@ -47,7 +47,7 @@ usersService.save(user);
 ### Read
 ```java
 // return a collection with all users
-List<User> users = usersService.all().fetch();
+List<User> users = usersService.all();
 
 // return the first user
 User user = usersService.first();
@@ -56,7 +56,7 @@ User user = usersService.first();
 User david = usersService.findBy("user.name = ?", "David");
 
 // find all users named David who are Code Artists and sort by createdAt in reverse chronological order
-List<User> users = usersService.where("user.name = 'David' AND user.occupation = 'Code Artist'").order("user.createdAt DESC").fetch();
+List<User> users = usersService.where("user.name = 'David' AND user.occupation = 'Code Artist'").order("user.createdAt DESC");
 ```
 
 ### Update
@@ -108,36 +108,36 @@ Client client = clientsService.findBy$("client.firstName = ?", "does not exist")
 ### Conditions
 ```java
 //Ordinal Conditions
-clientsService.where("client.ordersCount = ?", 10).fetch();
-clientsService.where("client.ordersCount = ? AND client.locked = ?", 10, false).fetch();
+clientsService.where("client.ordersCount = ?", 10);
+clientsService.where("client.ordersCount = ? AND client.locked = ?", 10, false);
 
 //Placeholder Conditions
-clientsService.where("client.ordersCount = :count", Map.of("count", 10)).fetch();
-clientsService.where("client.ordersCount = :count AND client.locked = :locked", Map.of("count", 10, "locked", false)).fetch();
+clientsService.where("client.ordersCount = :count", Map.of("count", 10));
+clientsService.where("client.ordersCount = :count AND client.locked = :locked", Map.of("count", 10, "locked", false));
 ```
 
 ### Ordering
 ```java
-clientsService.order("client.createdAt").fetch();
-clientsService.order("client.createdAt DESC").fetch();
-clientsService.order("client.createdAt ASC").fetch();
+clientsService.order("client.createdAt");
+clientsService.order("client.createdAt DESC");
+clientsService.order("client.createdAt ASC");
 ```
 
 ### Selecting Specific Fields
 ```java
-List<Client> client = clientsService.select("client.viewableBy", "client.locked").fetch();
-List<Client> client = clientsService.select("client.name").distinct().fetch();
+List<Client> client = clientsService.select("client.viewableBy", "client.locked");
+List<Client> client = clientsService.select("client.name").distinct();
 ```
 
 ### Limit and Offset
 ```java
-clientsService.limit(5).fetch();
-clientsService.limit(5).offset(30).fetch();
+clientsService.limit(5);
+clientsService.limit(5).offset(30);
 ```
 
 ### Group
 ```java
-List<Order> orders = ordersService.select("date(order.createdAt)", "sum(order.price)").group("date(order.createdAt)").fetch();
+List<Order> orders = ordersService.select("date(order.createdAt)", "sum(order.price)").group("date(order.createdAt)");
 ```
 
 ### Total of grouped items
@@ -148,34 +148,34 @@ HashMap<String, Long> result = (HashMap) ordersService.group("order.status").cou
 
 ### Having
 ```java
-List<Order> orders = ordersService.select("date(order.createdAt)", "sum(order.price)").group("date(order.createdAt)").having("sum(order.price) > 100").fetch();
+List<Order> orders = ordersService.select("date(order.createdAt)", "sum(order.price)").group("date(order.createdAt)").having("sum(order.price) > 100");
 ```
 
 ## Overriding Conditions
 
 ### Unscope
 ```java
-ordersService.where("order.id > 10").limit(20).order("order.id asc").unscope(ORDER).fetch();
+ordersService.where("order.id > 10").limit(20).order("order.id asc").unscope(ORDER);
 ```
 
 ### Only
 ```java
-ordersService.where("order.id > 10").limit(20).order("order.id asc").only(ORDER).fetch();
+ordersService.where("order.id > 10").limit(20).order("order.id asc").only(ORDER);
 ```
 
 ### Reselect
 ```java
-postsService.select("post.title", "post.body").reselect("post.createdAt").fetch();
+postsService.select("post.title", "post.body").reselect("post.createdAt");
 ```
 
 ### Reorder
 ```java
-postsService.order("post.title").reorder("post.createdAt").fetch();
+postsService.order("post.title").reorder("post.createdAt");
 ```
 
 ### Rewhere
 ```java
-articlesService.where("article.trashed = true").rewhere("article.trashed = false").fetch();
+articlesService.where("article.trashed = true").rewhere("article.trashed = false");
 ```
 
 ## Null Relation
@@ -194,13 +194,13 @@ Client client = clientsService.lock(PESSIMISTIC_WRITE).first();
 
 ## Joining Tables
 ```java
-authorsService.joins("JOIN author.post post").fetch();
+authorsService.joins("JOIN author.post post");
 ```
 
 ## Eager Loading Associations
 ```java
-clientsService.includes("client.address").limit(10).fetch();
-clientsService.eagerLoads("client.address").limit(10).fetch();
+clientsService.includes("client.address").limit(10);
+clientsService.eagerLoads("client.address").limit(10);
 ```
 
 ## Applying a default scope
@@ -220,13 +220,13 @@ clientsService.unscoped().all(); // SELECT client FROM Client client
 
 ### Merging of scopes
 ```java
-usersService.merge(usersService.active()).fetch();
+usersService.merge(usersService.active());
 ```
 
 ### Removing All Scoping
 ```java
-clientsService.unscoped().fetch();
-clientsService.where("client.published = false").unscoped().fetch();
+clientsService.unscoped();
+clientsService.where("client.published = false").unscoped();
 ```
 
 ### Dynamic Finders
