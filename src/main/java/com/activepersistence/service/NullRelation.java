@@ -5,6 +5,7 @@ import static com.activepersistence.service.relation.Calculation.Operations.COUN
 import static com.activepersistence.service.relation.Calculation.Operations.MAX;
 import static com.activepersistence.service.relation.Calculation.Operations.MIN;
 import static com.activepersistence.service.relation.Calculation.Operations.SUM;
+import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
@@ -18,7 +19,7 @@ public class NullRelation<T> extends Relation<T> {
 
     @Override
     public List pluck(String... fields) {
-        return emptyList();
+        return new ArrayList();
     }
 
     @Override
@@ -29,6 +30,11 @@ public class NullRelation<T> extends Relation<T> {
     @Override
     public int updateAll(String updates) {
         return 0;
+    }
+    
+    @Override
+    public boolean isEmpty() {
+        return true;
     }
 
     @Override
@@ -49,11 +55,6 @@ public class NullRelation<T> extends Relation<T> {
 
     @Override
     public boolean exists() {
-        return false;
-    }
-
-    @Override
-    public boolean exists(String conditions, Object... params) {
         return false;
     }
 

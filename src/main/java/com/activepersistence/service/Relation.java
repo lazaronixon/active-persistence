@@ -11,8 +11,8 @@ import com.activepersistence.service.relation.FinderMethods;
 import com.activepersistence.service.relation.QueryMethods;
 import com.activepersistence.service.relation.SpawnMethods;
 import com.activepersistence.service.relation.Values;
-import java.util.ArrayList;
 import java.util.Collection;
+import static java.util.Collections.emptyList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -98,7 +98,7 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     }
 
     public final Relation<T> reset() {
-        toJpql = null; arel = null; loaded = false; records = new ArrayList(); return this;
+        toJpql = null; arel = null; loaded = false; records = emptyList(); return this;
     }
 
     public List<T> getRecords() {
@@ -220,8 +220,8 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     }
 
     @Override
-    public Iterator<T> iterator() {
-        return getRecords().iterator();
+    public boolean containsAll(Collection<?> c) {
+        return getRecords().containsAll(c);
     }
 
     @Override
@@ -232,11 +232,6 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     @Override
     public <T> T[] toArray(T[] a) {
         return getRecords().toArray(a);
-    }
-
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        return getRecords().containsAll(c);
     }
 
     @Override
@@ -252,6 +247,11 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     @Override
     public int lastIndexOf(Object o) {
         return getRecords().lastIndexOf(o);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return getRecords().iterator();
     }
 
     @Override
