@@ -70,8 +70,7 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     public Relation<T> scoping(Supplier<Relation> yield) {
         var previous = Scoping.getCurrentScope();
         try {
-            Scoping.setCurrentScope(this);
-            return yield.get();
+            Scoping.setCurrentScope(this); return yield.get();
         } finally {
             Scoping.setCurrentScope(previous);
         }
@@ -86,10 +85,10 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     }
 
     public Relation<T> load() {
-        if (!loaded) {
-            records = execQueries(); loaded = true; return this;
-        } else {
+        if (loaded) {
             return this;
+        } else {
+            records = execQueries(); loaded = true; return this;
         }
     }
 

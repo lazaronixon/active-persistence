@@ -19,9 +19,9 @@ public interface Calculation<T> {
 
     public String getAlias();
 
-    public JpaAdapter<T> getConnection();
-
     public String getPrimaryKeyAttr();
+
+    public JpaAdapter<T> getConnection();
 
     public Relation<T> spawn();
 

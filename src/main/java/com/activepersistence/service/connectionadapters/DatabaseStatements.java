@@ -18,10 +18,6 @@ public interface DatabaseStatements<T> {
 
     public EntityManager getEntityManager();
 
-    public default String toJpql(SelectManager arel) {
-        return getVisitor().compile(arel.getAst(), new StringBuilder());
-    }
-
     public default List selectAll(String sql) {
         return selectAll(sql, emptyMap());
     }
@@ -40,6 +36,10 @@ public interface DatabaseStatements<T> {
 
     public default int delete(DeleteManager arel) {
         return createQuery(arel).executeUpdate();
+    }
+
+    public default String toJpql(SelectManager arel) {
+        return getVisitor().compile(arel.getAst(), new StringBuilder());
     }
 
     private Query createNativeQuery(String query) {
