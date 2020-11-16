@@ -269,6 +269,30 @@ long   total   = (long)   clientsService.sum("client.ordersCount");
 double average = (double) clientsService.average("client.ordersCount");
 ```
 
+## Callbacks
+
+### Creating an Object 
+```java
+    private void doSomething(@Observes @BeforeCreate Post post);
+    private void doSomething(@Observes @AfterCreate Post post);
+    private void doSomething(@Observes @BeforeSave Post post);
+    private void doSomething(@Observes @AfterSave Post post);
+```
+
+### Updating an Object 
+```java
+    private void doSomething(@Observes @BeforeUpdate Post post);
+    private void doSomething(@Observes @AfterUpdate Post post);
+    private void doSomething(@Observes @BeforeSave Post post);
+    private void doSomething(@Observes @AfterSave Post post);
+```
+
+### Destroying an Object 
+```java
+    private void doSomething(@Observes @BeforeDestroy Post post);
+    private void doSomething(@Observes @AfterDestroy Post post);
+```
+
 ## Recommended Environment
 * Java 9
 * JakartaEE 8

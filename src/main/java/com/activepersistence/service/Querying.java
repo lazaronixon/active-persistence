@@ -266,6 +266,7 @@ public interface Querying<T> {
     }
     //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="Private">
     private Query createNativeQuery(String sql, Map<Integer, Object> binds) {
         return parametized(getEntityManager().createNativeQuery(sql, getEntityClass()), binds);
     }
@@ -273,5 +274,5 @@ public interface Querying<T> {
     private Query parametized(Query query, Map<Integer, Object> binds) {
         binds.forEach(query::setParameter); return query;
     }
-
+    //</editor-fold>
 }

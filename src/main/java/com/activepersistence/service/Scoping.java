@@ -2,6 +2,7 @@ package com.activepersistence.service;
 
 import static com.activepersistence.service.ScopeRegistry.ValidScopeTypes.CURRENT_SCOPE;
 import static com.activepersistence.service.ScopeRegistry.ValidScopeTypes.IGNORE_DEFAULT_SCOPE;
+import java.lang.reflect.Method;
 import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
 
@@ -68,8 +69,12 @@ public interface Scoping<T> {
     }
 
     private boolean defaultScopeOverride() {
+        return Base.class != defaultScopeMethod().getDeclaringClass();
+    }
+
+    private Method defaultScopeMethod() {
         try {
-            return Base.class != getRealClass().getMethod("defaultScope").getDeclaringClass();
+            return getRealClass().getMethod("defaultScope");
         } catch (NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex.getMessage());
         }

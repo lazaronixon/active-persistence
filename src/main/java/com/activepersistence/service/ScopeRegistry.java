@@ -2,9 +2,9 @@ package com.activepersistence.service;
 
 public class ScopeRegistry {
 
-    public static ThreadLocal<Relation> currentScopeRegistry = new ThreadLocal();
+    private static final ThreadLocal<Relation> currentScopeRegistry = new ThreadLocal();
 
-    public static ThreadLocal<Boolean> ignoreDefaultRegistry = ThreadLocal.withInitial(() -> false);
+    private static final ThreadLocal<Boolean> ignoreDefaultRegistry = ThreadLocal.withInitial(() -> false);
 
     public enum ValidScopeTypes { CURRENT_SCOPE, IGNORE_DEFAULT_SCOPE }
 

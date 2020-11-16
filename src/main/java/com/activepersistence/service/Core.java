@@ -21,15 +21,11 @@ public interface Core<T> {
     }
 
     public default Relation<T> getRelation() {
-        return new Relation(thiz(), new Values());
+        return new Relation(((Base) this), new Values());
     }
 
     public default String getPrimaryKeyAttr() {
         return getAlias() + "." + getPrimaryKey();
-    }
-
-    private Base thiz() {
-        return (Base) this;
     }
 
 }

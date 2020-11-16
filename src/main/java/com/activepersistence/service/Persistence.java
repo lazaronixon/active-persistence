@@ -1,37 +1,28 @@
 package com.activepersistence.service;
 
-import java.util.function.Supplier;
+import com.activepersistence.model.Base;
 import javax.persistence.EntityManager;
 import static javax.persistence.LockModeType.NONE;
 import static javax.persistence.LockModeType.PESSIMISTIC_WRITE;
-import javax.transaction.Transactional;
 
 public interface Persistence<T> {
 
     public EntityManager getEntityManager();
 
-    @Transactional
-    public default T save(com.activepersistence.model.Base entity) {
-        if (entity.isDestroyed()) return (T) entity;
-
-        if (entity.isNewRecord()) {
-            return create((T) entity);
-        } else {
-            return update((T) entity);
-        }
+    public default T save(Base entity) {
+        return createOrUpdate(entity);
     }
 
-    @Transactional
-    public default void destroy(com.activepersistence.model.Base entity) {
+    public default void destroy(Base entity) {
         if (!entity.isPersisted()) return;
 
-        flush(() -> {
-            if (getEntityManager().contains(entity)) {
-                getEntityManager().remove(entity);
-            } else {
-                getEntityManager().remove(getEntityManager().merge(entity));
-            }
-        });
+        if (getEntityManager().contains(entity)) {
+            getEntityManager().remove(entity);
+            getEntityManager().flush();
+        } else {
+            getEntityManager().remove(getEntityManager().merge(entity));
+            getEntityManager().flush();
+        }
     }
 
     public default void reload(T entity) {
@@ -42,20 +33,22 @@ public interface Persistence<T> {
         getEntityManager().refresh(entity, lock ? PESSIMISTIC_WRITE : NONE);
     }
 
-    private T create(T entity) {
-        return flush(() -> { getEntityManager().persist(entity); return entity; });
+    public default T _createRecord(T entity) {
+        getEntityManager().persist(entity); getEntityManager().flush(); return entity;
     }
 
-    private T update(T entity) {
-        return flush(() -> getEntityManager().merge(entity));
+    public default T _updateRecord(T entity) {
+        var merged = getEntityManager().merge(entity); getEntityManager().flush(); return merged;
     }
 
-    private T flush(Supplier<T> yield) {
-        var result = yield.get(); getEntityManager().flush(); return result;
-    }
+    private T createOrUpdate(Base entity) {
+        if (entity.isDestroyed()) return (T) entity;
 
-    private void flush(Runnable yield) {
-        yield.run(); getEntityManager().flush();
+        if (entity.isNewRecord()) {
+            return _createRecord((T) entity);
+        } else {
+            return _updateRecord((T) entity);
+        }
     }
 
 }

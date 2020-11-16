@@ -170,36 +170,13 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     }
 
     @Override
-    public JpaAdapter<T> getConnection() {
-        return service.getConnection();
-    }
-
-    @Override
     public SelectManager getArel() {
         return ofNullable(arel).orElseGet(() -> arel = buildArel());
     }
 
-    public SelectManager buildArel() {
-        var result = new SelectManager(entity);
-
-        result.constructor(values.isConstructor());
-        result.distinct(values.isDistinct());
-
-        buildSelect(result);
-        buildFrom(result);
-
-        values.getJoins().forEach(result::join);
-        values.getWhere().forEach(result::where);
-        values.getGroup().forEach(result::group);
-        values.getHaving().forEach(result::having);
-        values.getOrder().forEach(result::order);
-
-        result.limit(values.getLimit());
-        result.offset(values.getOffset());
-        result.lock(values.getLock());
-        result.setHints(hints());
-
-        return result;
+    @Override
+    public JpaAdapter<T> getConnection() {
+        return service.getConnection();
     }
 
     //<editor-fold defaultstate="collapsed" desc="List Implementation">
@@ -320,6 +297,29 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Private Methods">
+    private SelectManager buildArel() {
+        var result = new SelectManager(entity);
+
+        result.constructor(values.isConstructor());
+        result.distinct(values.isDistinct());
+
+        buildSelect(result);
+        buildFrom(result);
+
+        values.getJoins().forEach(result::join);
+        values.getWhere().forEach(result::where);
+        values.getGroup().forEach(result::group);
+        values.getHaving().forEach(result::having);
+        values.getOrder().forEach(result::order);
+
+        result.limit(values.getLimit());
+        result.offset(values.getOffset());
+        result.lock(values.getLock());
+        result.setHints(hints());
+
+        return result;
+    }
+
     private void buildSelect(SelectManager arel) {
         if (values.getSelect().isEmpty()) {
             arel.project(entity.getAlias());
