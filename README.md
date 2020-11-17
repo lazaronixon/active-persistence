@@ -303,4 +303,6 @@ double average = (double) clientsService.average("client.ordersCount");
 * Add Resources - ./asadmin add-resources path_to/payara-resources.xml
 
 ## More info
+* https://github.com/lazaronixon/jsf-perfect-crud/tree/active-persistence
+* https://www.youtube.com/watch?v=Hw8iKrZQk4o
 * https://guides.rubyonrails.org/active_record_querying.html
