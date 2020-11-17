@@ -12,7 +12,6 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import java.util.List;
 import static java.util.stream.Collectors.toMap;
-import javax.transaction.NotSupportedException;
 
 public interface Calculation<T> {
 

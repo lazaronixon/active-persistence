@@ -141,7 +141,7 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
 
     @Override
     public boolean hasLimitOrOffset() {
-        return getValues().getLimit() != 0 || getValues().getOffset() != 0;
+        return values.getLimit() != 0 || values.getOffset() != 0;
     }
 
     @Override
@@ -187,11 +187,7 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     //<editor-fold defaultstate="collapsed" desc="List Implementation">
     @Override
     public int size() {
-        if (getValues().getGroup().isEmpty()) {
-            return loaded ? records.size() : ((Long) count()).intValue();
-        } else {
-            throw new UnsupportedOperationException();
-        }
+        return getRecords().size();
     }
 
     @Override
