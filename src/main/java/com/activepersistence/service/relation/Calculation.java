@@ -2,6 +2,7 @@ package com.activepersistence.service.relation;
 
 import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.Relation;
+import com.activepersistence.service.arel.nodes.Function;
 import com.activepersistence.service.connectionadapters.JpaAdapter;
 import static com.activepersistence.service.relation.Calculation.Operations.*;
 import static com.activepersistence.service.relation.ValueMethods.CONSTRUCTOR;
@@ -72,34 +73,35 @@ public interface Calculation<T> {
     }
 
     private Object executeSimpleCalculation(Relation<T> relation, Operations operation, String field) {
-        var selectValue  = operationOverAggregateColumn(operation, field);
-        relation.getValues().setSelect(asList(selectValue));
+        var selectValue = operationOverAggregateColumn(operation, field);
+        relation.getValues().setSelect(asList(selectValue.toJpql()));
 
-        var result = getConnection().selectAll(relation.getArel());
-        return result.stream().findFirst().orElse(null);
+        return getConnection().selectAll(relation.getArel()).stream().findFirst().orElse(null);
     }
 
     private Object executeGroupedCalculation(Relation<T> relation, Operations operation, String field) {
-        var values = relation.getValues();
+        var selectValue = operationOverAggregateColumn(operation, field);
 
+        var values = relation.getValues();
         values.getSelect().clear();
-        values.getSelect().add(operationOverAggregateColumn(operation, field));
+        values.getSelect().add(selectValue.toJpql());
         values.getSelect().addAll(values.getGroup());
+
         return fetchGroupedResult(relation, values);
     }
 
-    private String operationOverAggregateColumn(Operations operation, String field) {
+    private Function operationOverAggregateColumn(Operations operation, String field) {
         switch (operation) {
             case COUNT:
-                return jpql(field).count(getValues().isDistinct()).toJpql();
+                return jpql(field).count(getValues().isDistinct());
             case MIN:
-                return jpql(field).minimum().toJpql();
+                return jpql(field).minimum();
             case MAX:
-                return jpql(field).maximum().toJpql();
+                return jpql(field).maximum();
             case AVG:
-                return jpql(field).average().toJpql();
+                return jpql(field).average();
             case SUM:
-                return jpql(field).sum().toJpql();
+                return jpql(field).sum();
             default:
                 throw new RuntimeException("Operation not supported: " + operation);
         }
