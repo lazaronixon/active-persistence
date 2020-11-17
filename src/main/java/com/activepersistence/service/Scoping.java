@@ -61,8 +61,7 @@ public interface Scoping<T> {
     private Relation<T> evaluateDefaultScope(Supplier<Relation> yield) {
         if (shouldIgnoreDefaultScope()) return null;
         try {
-            setIgnoreDefaultScope(true);
-            return yield.get();
+            setIgnoreDefaultScope(true); return yield.get();
         } finally {
             setIgnoreDefaultScope(false);
         }

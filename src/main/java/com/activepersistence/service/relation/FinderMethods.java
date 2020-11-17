@@ -7,6 +7,7 @@ import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.nodes.And;
 import com.activepersistence.service.arel.nodes.JpqlLiteral;
 import com.activepersistence.service.arel.visitors.Visitable;
+import static com.activepersistence.service.relation.ValueMethods.ORDER;
 import static java.beans.Introspector.decapitalize;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -100,7 +101,7 @@ public interface FinderMethods<T> {
     }
 
     public default boolean exists() {
-        return thiz().limit(1).getRecords().size() == 1;
+        return thiz().except(ORDER).limit(1).getRecords().size() == 1;
     }
 
     private T raiseRecordNotFoundException() {
