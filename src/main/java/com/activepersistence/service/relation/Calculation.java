@@ -5,8 +5,8 @@ import com.activepersistence.service.Relation;
 import com.activepersistence.service.arel.nodes.Function;
 import com.activepersistence.service.connectionadapters.JpaAdapter;
 import static com.activepersistence.service.relation.Calculation.Operations.*;
-import static com.activepersistence.service.relation.ValueMethods.CONSTRUCTOR;
-import static com.activepersistence.service.relation.ValueMethods.DISTINCT;
+import static com.activepersistence.service.relation.ValueMethods.ORDER;
+import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import java.util.List;
@@ -63,37 +63,53 @@ public interface Calculation<T> {
     }
 
     public default Object calculate(Operations operation, String field) {
-        var relation = spawn().except(CONSTRUCTOR, DISTINCT);
+        var distinct = getValues().isDistinct();
 
-        if (relation.getValues().getGroup().isEmpty()) {
-            return executeSimpleCalculation(relation, operation, field);
+        if (getValues().getGroup().isEmpty()) {
+            return executeSimpleCalculation(operation, field, distinct);
         } else {
-            return executeGroupedCalculation(relation, operation, field);
+            return executeGroupedCalculation(operation, field, distinct);
         }
     }
 
-    private Object executeSimpleCalculation(Relation<T> relation, Operations operation, String field) {
-        var selectValue = operationOverAggregateColumn(operation, field);
+    private Object executeSimpleCalculation(Operations operation, String field, boolean distinct) {
+        var relation = thiz().unscope(ORDER).distinct(false);
+
+        var selectValue = operationOverAggregateColumn(operation, field, distinct);
+        relation.getValues().setConstructor(false);
         relation.getValues().setSelect(asList(selectValue.toJpql()));
 
-        return getConnection().selectAll(relation.getArel()).stream().findFirst().orElse(null);
+        var queryBuilder = relation.getArel();
+        return getConnection().selectAll(queryBuilder).stream().findFirst().orElse(null);
     }
 
-    private Object executeGroupedCalculation(Relation<T> relation, Operations operation, String field) {
-        var selectValue = operationOverAggregateColumn(operation, field);
+    private Object executeGroupedCalculation(Operations operation, String field, boolean distinct) {
+        var groupFields = getValues().getGroup();
 
-        var values = relation.getValues();
-        values.getSelect().clear();
-        values.getSelect().add(selectValue.toJpql());
-        values.getSelect().addAll(values.getGroup());
+        var selectValue = operationOverAggregateColumn(operation, field, distinct);
 
-        return fetchGroupedResult(relation, values);
+        var selectValues = new ArrayList();
+        selectValues.add(selectValue.toJpql());
+        selectValues.addAll(getValues().getSelect());
+
+        var relation = thiz().distinct(false);
+        relation.getValues().setConstructor(false);
+        relation.getValues().setSelect(selectValues);
+        relation.getValues().getSelect().addAll(groupFields);
+
+        List<Object[]> calculatedData = getConnection().selectAll(relation.getArel());
+
+        if (groupFields.size() > 1) {
+            return calculatedData.stream().collect(toMap(v -> copyOfRange(v, 1, v.length), v -> v[0]));
+        } else {
+            return calculatedData.stream().collect(toMap(v -> v[1], v -> v[0]));
+        }
     }
 
-    private Function operationOverAggregateColumn(Operations operation, String field) {
+    private Function operationOverAggregateColumn(Operations operation, String field, boolean distinct) {
         switch (operation) {
             case COUNT:
-                return jpql(field).count(getValues().isDistinct());
+                return jpql(field).count(distinct);
             case MIN:
                 return jpql(field).minimum();
             case MAX:
@@ -107,14 +123,8 @@ public interface Calculation<T> {
         }
     }
 
-    private Object fetchGroupedResult(Relation<T> relation, Values values) {
-        List<Object[]> results = getConnection().selectAll(relation.getArel());
-
-        if (values.getGroup().size() > 1) {
-            return results.stream().collect(toMap(v -> copyOfRange(v, 1, v.length), v -> v[0]));
-        } else {
-            return results.stream().collect(toMap(v -> v[1], v -> v[0]));
-        }
+    private Relation<T> thiz() {
+        return (Relation<T>) this;
     }
 
 }

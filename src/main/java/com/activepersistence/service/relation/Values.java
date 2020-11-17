@@ -150,6 +150,10 @@ public class Values {
         this.reordering = reordering;
     }
 
+    public void setGroup(List<String> group) {
+        this.group = group;
+    }
+
     public Values except(ValueMethods... skips) {
         return dup().except$(skips);
     }
