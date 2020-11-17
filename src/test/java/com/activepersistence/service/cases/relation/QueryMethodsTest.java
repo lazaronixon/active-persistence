@@ -94,12 +94,12 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testLimit() {
-        assertEquals(2, postsService.limit(2).size());
+        assertEquals(2, postsService.limit(2).getRecords().size());
     }
 
     @Test
     public void testOffset() {
-        assertEquals(1, postsService.where("post.id IN (1, 2, 3)").limit(2).offset(2).size());
+        assertEquals(1, postsService.where("post.id IN (1, 2, 3)").limit(2).offset(2).getRecords().size());
     }
 
     @Test

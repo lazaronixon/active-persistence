@@ -7,7 +7,11 @@ import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.nodes.And;
 import com.activepersistence.service.arel.nodes.JpqlLiteral;
 import com.activepersistence.service.arel.visitors.Visitable;
+import com.activepersistence.service.connectionadapters.JpaAdapter;
+import static com.activepersistence.service.relation.ValueMethods.CONSTRUCTOR;
+import static com.activepersistence.service.relation.ValueMethods.DISTINCT;
 import static com.activepersistence.service.relation.ValueMethods.ORDER;
+import static com.activepersistence.service.relation.ValueMethods.SELECT;
 import static java.beans.Introspector.decapitalize;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -18,6 +22,8 @@ import static java.util.stream.Collectors.toList;
 
 public interface FinderMethods<T> {
 
+    public static final String ONE_AS_ONE = "1 AS one";
+
     public Class getEntityClass();
 
     public String getPrimaryKeyAttr();
@@ -27,6 +33,8 @@ public interface FinderMethods<T> {
     public Values getValues();
 
     public SelectManager getArel();
+
+    public JpaAdapter<T> getConnection();
 
     public default T take() {
         return thiz().limit(1).getRecords().stream().findFirst().orElse(null);
@@ -101,7 +109,15 @@ public interface FinderMethods<T> {
     }
 
     public default boolean exists() {
-        return thiz().except(ORDER).limit(1).getRecords().size() == 1;
+        return getConnection().selectAll(constructRelationForExists().getArel()).size() == 1;
+    }
+
+    private Relation constructRelationForExists() {
+        if (getValues().isDistinct() && getValues().getOffset() > 0) {
+          return thiz().except(ORDER).limit(1);
+        } else {
+          return thiz().except(SELECT, CONSTRUCTOR, DISTINCT, ORDER).selectFields(ONE_AS_ONE).limit(1);
+        }
     }
 
     private T raiseRecordNotFoundException() {

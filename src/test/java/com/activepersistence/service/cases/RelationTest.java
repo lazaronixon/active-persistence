@@ -96,4 +96,14 @@ public class RelationTest extends IntegrationTest {
         assertThrows(ActivePersistenceError.class, () -> postsService.distinct().updateAll("post.name = 'testing'"));
     }
 
+    @Test
+    public void testSize() {
+        assertEquals(2L, postsService.where("post.id IN (1, 2)").size());
+    }
+
+    @Test
+    public void testIsEmpty() {
+        assertTrue(postsService.where("post.title = 'not found'").isEmpty());
+    }
+
 }

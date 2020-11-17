@@ -2,6 +2,7 @@ package com.activepersistence.service.relation;
 
 import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.Relation;
+import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.nodes.Function;
 import com.activepersistence.service.connectionadapters.JpaAdapter;
 import static com.activepersistence.service.relation.Calculation.Operations.*;
@@ -11,6 +12,7 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import java.util.List;
 import static java.util.stream.Collectors.toMap;
+import javax.transaction.NotSupportedException;
 
 public interface Calculation<T> {
 
@@ -19,6 +21,8 @@ public interface Calculation<T> {
     public Values getValues();
 
     public String getAlias();
+
+    public boolean hasLimitOrOffset();
 
     public String getPrimaryKeyAttr();
 
@@ -73,13 +77,20 @@ public interface Calculation<T> {
     }
 
     private Object executeSimpleCalculation(Operations operation, String field, boolean distinct) {
-        var relation = thiz().unscope(ORDER).distinct(false);
+        SelectManager queryBuilder = null;
 
-        var selectValue = operationOverAggregateColumn(operation, field, distinct);
-        relation.getValues().setConstructor(false);
-        relation.getValues().setSelect(asList(selectValue.toJpql()));
+        if (operation == COUNT && hasLimitOrOffset()) {
+            throw new UnsupportedOperationException();
+        } else {
+            var relation = thiz().unscope(ORDER).distinct(false);
 
-        var queryBuilder = relation.getArel();
+            var selectValue = operationOverAggregateColumn(operation, field, distinct);
+            relation.getValues().setConstructor(false);
+            relation.getValues().setSelect(asList(selectValue.toJpql()));
+
+            queryBuilder = relation.getArel();
+        }
+
         return getConnection().selectAll(queryBuilder).stream().findFirst().orElse(null);
     }
 

@@ -21,6 +21,14 @@ public interface QueryMethods<T> {
         getValues().setConstructor(true); getValues().getSelect().addAll(asList(fields)); return thiz();
     }
 
+    public default Relation<T> selectFields(String... fields) {
+        return spawn().selectFields$(fields);
+    }
+
+    public default Relation<T> selectFields$(String... fields) {
+        getValues().setConstructor(false); getValues().getSelect().addAll(asList(fields)); return thiz();
+    }
+
     public default Relation<T> joins(String value) {
         return spawn().joins$(value);
     }
@@ -78,11 +86,15 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> distinct() {
-        return spawn().distinct$(true);
+        return spawn().distinct$();
     }
 
     public default Relation<T> distinct(boolean value) {
         return spawn().distinct$(value);
+    }
+
+    public default Relation<T> distinct$() {
+        getValues().setDistinct(true); return thiz();
     }
 
     public default Relation<T> distinct$(boolean value) {
