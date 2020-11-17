@@ -192,7 +192,7 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
 
     @Override
     public boolean isEmpty() {
-        return loaded ? records.isEmpty() : !exists();
+        return getRecords().isEmpty();
     }
 
     @Override
