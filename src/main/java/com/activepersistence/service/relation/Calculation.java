@@ -6,11 +6,13 @@ import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.nodes.Function;
 import com.activepersistence.service.connectionadapters.JpaAdapter;
 import static com.activepersistence.service.relation.Calculation.Operations.*;
+import static com.activepersistence.service.relation.FinderMethods.ONE_AS_ONE;
 import static com.activepersistence.service.relation.ValueMethods.ORDER;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import java.util.List;
+import java.util.Objects;
 import static java.util.stream.Collectors.toMap;
 
 public interface Calculation<T> {
@@ -76,10 +78,10 @@ public interface Calculation<T> {
     }
 
     private Object executeSimpleCalculation(Operations operation, String field, boolean distinct) {
-        SelectManager queryBuilder = null;
+        SelectManager queryBuilder;
 
-        if (operation == COUNT && hasLimitOrOffset()) {
-            throw new UnsupportedOperationException();
+        if (operation == COUNT && (field.equals(getAlias()) && distinct || hasLimitOrOffset())) {
+            queryBuilder = buildCountSubquery(spawn(), field, distinct);
         } else {
             var relation = thiz().unscope(ORDER).distinct(false);
 
@@ -90,7 +92,22 @@ public interface Calculation<T> {
             queryBuilder = relation.getArel();
         }
 
-        return getConnection().selectAll(queryBuilder).stream().findFirst().orElse(null);
+        if (operation == COUNT && (field.equals(getAlias()) && distinct || hasLimitOrOffset())) {
+            return count(getConnection().selectAll(queryBuilder));
+        } else {
+            return getConnection().selectAll(queryBuilder).stream().findFirst().orElse(null);
+        }
+    }
+
+    private SelectManager buildCountSubquery(Relation<T> relation, String field, boolean distinct) {
+        if (Objects.equals(field, getAlias())) {
+            relation.getValues().setConstructor(false);
+            if (!distinct) relation.getValues().setSelect(asList(ONE_AS_ONE));
+        } else {
+            relation.getValues().setConstructor(false);
+            relation.getValues().setSelect(asList(field));
+        }
+        return relation.getArel();
     }
 
     private Object executeGroupedCalculation(Operations operation, String field, boolean distinct) {
@@ -131,6 +148,10 @@ public interface Calculation<T> {
             default:
                 throw new RuntimeException("Operation not supported: " + operation);
         }
+    }
+
+    private Long count(List<Object> items) {
+        return items.stream().filter(Objects::nonNull).count();
     }
 
     private Relation<T> thiz() {

@@ -33,6 +33,21 @@ public class CalculationTest extends IntegrationTest {
     }
 
     @Test
+    public void testCountLimit() {
+        assertEquals(1L, postsService.where("post.id IN (1, 2)").limit(1).count());
+    }
+
+    @Test
+    public void testCountAllDistinctLimit() {
+        assertEquals(1L, postsService.where("post.id IN (4, 5)").limit(1).distinct().count());
+    }
+
+    @Test
+    public void testCountDistinctLimit() {
+        assertEquals(1L, postsService.where("post.id IN (4, 5)").limit(1).distinct().count("post.title"));
+    }
+
+    @Test
     public void testMinimum() {
         assertEquals(1, postsService.minimum("post.likesCount"));
     }
