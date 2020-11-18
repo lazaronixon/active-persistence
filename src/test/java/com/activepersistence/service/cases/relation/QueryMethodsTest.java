@@ -23,6 +23,12 @@ public class QueryMethodsTest extends IntegrationTest {
     }
 
     @Test
+    public void testSelectScalar() {
+        assertEquals("SELECT post.id, post.title FROM Post post",
+                postsService.selectScalar("post.id", "post.title").toJpql());
+    }
+
+    @Test
     public void testDistinct() {
         assertEquals("SELECT DISTINCT NEW com.activepersistence.service.models.Post(post.id, post.title) FROM Post post",
                 postsService.select("post.id", "post.title").distinct().toJpql());
