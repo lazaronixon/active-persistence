@@ -165,6 +165,10 @@ public interface Querying<T> {
         return all().select(values);
     }
 
+    public default Relation<T> selectScalar(String... values) {
+        return all().selectScalar(values);
+    }
+
     public default Relation<T> joins(String value) {
         return all().joins(value);
     }

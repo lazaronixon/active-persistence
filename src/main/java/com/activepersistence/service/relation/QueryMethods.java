@@ -21,11 +21,11 @@ public interface QueryMethods<T> {
         getValues().setConstructor(true); getValues().getSelect().addAll(asList(fields)); return thiz();
     }
 
-    public default Relation<T> selectFields(String... fields) {
-        return spawn().selectFields$(fields);
+    public default Relation<T> selectScalar(String... fields) {
+        return spawn().selectScalar$(fields);
     }
 
-    public default Relation<T> selectFields$(String... fields) {
+    public default Relation<T> selectScalar$(String... fields) {
         getValues().setConstructor(false); getValues().getSelect().addAll(asList(fields)); return thiz();
     }
 
