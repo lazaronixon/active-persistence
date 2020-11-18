@@ -8,7 +8,6 @@ import com.activepersistence.service.arel.nodes.And;
 import com.activepersistence.service.arel.nodes.JpqlLiteral;
 import com.activepersistence.service.arel.visitors.Visitable;
 import com.activepersistence.service.connectionadapters.JpaAdapter;
-import static com.activepersistence.service.relation.ValueMethods.CONSTRUCTOR;
 import static com.activepersistence.service.relation.ValueMethods.DISTINCT;
 import static com.activepersistence.service.relation.ValueMethods.ORDER;
 import static com.activepersistence.service.relation.ValueMethods.SELECT;

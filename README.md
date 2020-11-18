@@ -127,6 +127,9 @@ clientsService.order("client.createdAt ASC");
 ```java
 List<Client> client = clientsService.select("client.viewableBy", "client.locked");
 List<Client> client = clientsService.select("client.name").distinct();
+
+List values = clientsService.selectScalar("client.viewableBy", "client.locked");
+List values = clientsService.selectScalar("client.name").distinct();
 ```
 
 ### Limit and Offset
