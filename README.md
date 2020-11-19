@@ -114,6 +114,10 @@ clientsService.where("client.ordersCount = ? AND client.locked = ?", 10, false);
 //Placeholder Conditions
 clientsService.where("client.ordersCount = :count", Map.of("count", 10));
 clientsService.where("client.ordersCount = :count AND client.locked = :locked", Map.of("count", 10, "locked", false));
+
+//SubQuery Conditions
+var subquery = ordersService.selectScalar("post.client.id");
+clientsService.where("client.id IN (?), subquery);
 ```
 
 ### Ordering
