@@ -122,7 +122,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> lock() {
-        return spawn().lock$(LockModeType.NONE);
+        return spawn().lock$(LockModeType.PESSIMISTIC_WRITE);
     }
 
     public default Relation<T> lock(boolean value) {
