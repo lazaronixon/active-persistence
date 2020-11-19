@@ -36,8 +36,6 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
 
     private SelectManager arel;
 
-    private T take;
-
     private List<T> records;
 
     private String toJpql;
@@ -99,7 +97,7 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     }
 
     public final Relation<T> reset() {
-        toJpql = null; arel = null; loaded = false; take = null; records = emptyList(); return this;
+        toJpql = null; arel = null; loaded = false; records = emptyList(); return this;
     }
 
     public int deleteAll() {
@@ -160,16 +158,6 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     @Override
     public boolean isLoaded() {
         return loaded;
-    }
-
-    @Override
-    public T getTake() {
-        return take;
-    }
-
-    @Override
-    public T setTake(T take) {
-        return this.take = take;
     }
 
     @Override

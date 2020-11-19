@@ -37,18 +37,14 @@ public interface FinderMethods<T> {
 
     public boolean isLoaded();
 
-    public T setTake(T take);
-
-    public T getTake();
-
     public List<T> getRecords();
 
     public default T take() {
-        return findTake();
+        return first(thiz().limit(1).getRecords());
     }
 
     public default List<T> take(int limit) {
-        return findTakeWithLimit(limit);
+        return thiz().limit(limit).getRecords();
     }
 
     public default T take$() {
@@ -163,28 +159,8 @@ public interface FinderMethods<T> {
         return (Relation<T>) this;
     }
 
-    private T findTake() {
-        if (isLoaded()) {
-            return first(getRecords());
-        } else {
-            return ofNullable(getTake()).orElseGet(() -> setTake(first(thiz().limit(1).getRecords())));
-        }
-    }
-
-    private List<T> findTakeWithLimit(int limit) {
-       if (isLoaded()) {
-            return limit(getRecords(), limit);
-        } else {
-            return thiz().limit(limit).getRecords();
-        }
-    }
-
     private T first(List<T> items) {
         return items.stream().findFirst().orElse(null);
-    }
-
-    private List<T> limit(List<T> items, int limit) {
-        return items.stream().limit(limit).collect(toList());
     }
 
 }
