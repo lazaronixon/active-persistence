@@ -95,7 +95,7 @@ public interface Calculation<T> {
         if (operation == COUNT && (field.equals(getAlias()) && distinct || hasLimitOrOffset())) {
             return count(getConnection().selectAll(queryBuilder));
         } else {
-            return getConnection().selectAll(queryBuilder).stream().findFirst().orElse(null);
+            return first(getConnection().selectAll(queryBuilder));
         }
     }
 
@@ -152,6 +152,10 @@ public interface Calculation<T> {
 
     private Long count(List<Object> items) {
         return items.stream().filter(Objects::nonNull).count();
+    }
+
+    private Object first(List items) {
+        return items.stream().findFirst().orElse(null);
     }
 
     private Relation<T> thiz() {

@@ -47,7 +47,7 @@ public interface Scoping<T> {
     }
 
     private Relation<T> defaultScoped() {
-        return ofNullable(buildDefaultScope()).orElse(getRelation());
+        return ofNullable(buildDefaultScope()).orElseGet(() -> getRelation());
     }
 
     private Relation<T> buildDefaultScope() {

@@ -35,16 +35,24 @@ public interface FinderMethods<T> {
 
     public JpaAdapter<T> getConnection();
 
+    public boolean isLoaded();
+
+    public T setTake(T take);
+
+    public T getTake();
+
+    public List<T> getRecords();
+
     public default T take() {
-        return thiz().limit(1).getRecords().stream().findFirst().orElse(null);
+        return findTake();
+    }
+
+    public default List<T> take(int limit) {
+        return findTakeWithLimit(limit);
     }
 
     public default T take$() {
         return ofNullable(take()).orElseGet(() -> raiseRecordNotFoundException());
-    }
-
-    public default List<T> take(int limit) {
-        return thiz().limit(limit).getRecords();
     }
 
     public default T first() {
@@ -154,4 +162,29 @@ public interface FinderMethods<T> {
     private Relation<T> thiz() {
         return (Relation<T>) this;
     }
+
+    private T findTake() {
+        if (isLoaded()) {
+            return first(getRecords());
+        } else {
+            return ofNullable(getTake()).orElseGet(() -> setTake(first(thiz().limit(1).getRecords())));
+        }
+    }
+
+    private List<T> findTakeWithLimit(int limit) {
+       if (isLoaded()) {
+            return limit(getRecords(), limit);
+        } else {
+            return thiz().limit(limit).getRecords();
+        }
+    }
+
+    private T first(List<T> items) {
+        return items.stream().findFirst().orElse(null);
+    }
+
+    private List<T> limit(List<T> items, int limit) {
+        return items.stream().limit(limit).collect(toList());
+    }
+
 }

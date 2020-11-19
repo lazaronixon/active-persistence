@@ -36,6 +36,8 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
 
     private SelectManager arel;
 
+    private T take;
+
     private List<T> records;
 
     private String toJpql;
@@ -97,11 +99,7 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     }
 
     public final Relation<T> reset() {
-        toJpql = null; arel = null; loaded = false; records = emptyList(); return this;
-    }
-
-    public List<T> getRecords() {
-        load(); return records;
+        toJpql = null; arel = null; loaded = false; take = null; records = emptyList(); return this;
     }
 
     public int deleteAll() {
@@ -140,8 +138,8 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     }
 
     @Override
-    public boolean hasLimitOrOffset() {
-        return values.getLimit() != 0 || values.getOffset() != 0;
+    public List<T> getRecords() {
+        load(); return records;
     }
 
     @Override
@@ -150,13 +148,28 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     }
 
     @Override
+    public Base<T> getService() {
+        return service;
+    }
+
+    @Override
     public Values getValues() {
         return values;
     }
 
     @Override
-    public Base<T> getService() {
-        return service;
+    public boolean isLoaded() {
+        return loaded;
+    }
+
+    @Override
+    public T getTake() {
+        return take;
+    }
+
+    @Override
+    public T setTake(T take) {
+        return this.take = take;
     }
 
     @Override
@@ -175,13 +188,18 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     }
 
     @Override
-    public SelectManager getArel() {
-        return ofNullable(arel).orElseGet(() -> arel = buildArel());
+    public JpaAdapter<T> getConnection() {
+        return service.getConnection();
     }
 
     @Override
-    public JpaAdapter<T> getConnection() {
-        return service.getConnection();
+    public boolean hasLimitOrOffset() {
+        return values.getLimit() != 0 || values.getOffset() != 0;
+    }
+
+    @Override
+    public SelectManager getArel() {
+        return ofNullable(arel).orElseGet(() -> arel = buildArel());
     }
 
     //<editor-fold defaultstate="collapsed" desc="List Implementation">
