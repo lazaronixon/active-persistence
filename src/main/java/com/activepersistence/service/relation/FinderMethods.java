@@ -1,11 +1,10 @@
 package com.activepersistence.service.relation;
 
 import com.activepersistence.RecordNotFound;
-import com.activepersistence.service.Arel;
+import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.Relation;
 import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.nodes.And;
-import com.activepersistence.service.arel.nodes.JpqlLiteral;
 import com.activepersistence.service.arel.visitors.Visitable;
 import com.activepersistence.service.connectionadapters.JpaAdapter;
 import static com.activepersistence.service.relation.ValueMethods.DISTINCT;
@@ -136,15 +135,11 @@ public interface FinderMethods<T> {
     }
 
     private List<Visitable> conditionsFor(String expression) {
-        return asList(expression.split("And")).stream().map(toConditions()).map(toLiteral()).collect(toList());
+        return asList(expression.split("And")).stream().map(toConditions()).collect(toList());
     }
 
-    private Function<String, String> toConditions() {
-        return attr -> getAlias() + "." + decapitalize(attr) + " = ?";
-    }
-
-    private Function<String, JpqlLiteral> toLiteral() {
-        return attr -> Arel.jpql(attr);
+    private Function<String, Visitable> toConditions() {
+        return attr -> jpql(getAlias() + "." + decapitalize(attr) + " = ?");
     }
 
     private String className() {
