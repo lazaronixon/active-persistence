@@ -271,7 +271,7 @@ Client client = clientsService.lock(PESSIMISTIC_WRITE).first();
 authorsService.joins("JOIN author.post post");
 ```
 
-## Eager Loading Associations
+## Eager Loading Associations (EclipseLink only)
 ```java
 clientsService.includes("client.address").limit(10);
 clientsService.eagerLoads("client.address").limit(10);
