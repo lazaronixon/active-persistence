@@ -278,26 +278,46 @@ double average = (double) clientsService.average("client.ordersCount");
 
 ## Callbacks
 
-### Creating an Object 
 ```java
-    private void doSomething(@Observes @BeforeCreate Post post);
-    private void doSomething(@Observes @AfterCreate Post post);
-    private void doSomething(@Observes @BeforeSave Post post);
-    private void doSomething(@Observes @AfterSave Post post);
-```
+@Override
+public void beforeSave(Post post) {
+    // implementation here
+}
 
-### Updating an Object 
-```java
-    private void doSomething(@Observes @BeforeUpdate Post post);
-    private void doSomething(@Observes @AfterUpdate Post post);
-    private void doSomething(@Observes @BeforeSave Post post);
-    private void doSomething(@Observes @AfterSave Post post);
-```
+@Override
+public void afterSave(Post post) {
+    // implementation here
+}
 
-### Destroying an Object 
-```java
-    private void doSomething(@Observes @BeforeDestroy Post post);
-    private void doSomething(@Observes @AfterDestroy Post post);
+@Override
+public void beforeCreate(Post post) {
+    // implementation here
+}
+
+@Override
+public void afterCreate(Post post) {
+    // implementation here
+}
+
+@Override
+public void beforeUpdate(Post post) {
+    // implementation here
+}
+
+@Override
+public void afterUpdate(Post post) {
+    // implementation here
+}
+
+@Override
+public void beforeDestroy(Post post) {
+    // implementation here
+}
+
+@Override
+public void afterDestroy(Post post) {
+    // implementation here
+}
 ```
 
 ## Recommended Environment

@@ -2,26 +2,25 @@ package com.activepersistence.service;
 
 import com.activepersistence.model.Base;
 import java.util.function.Supplier;
-import javax.enterprise.event.Event;
 import javax.transaction.Transactional;
 
 public interface Callbacks<T> extends Persistence<T> {
 
-    public Event<T> getBeforeSave();
+    public default void beforeSave(T entity) {}
 
-    public Event<T> getAfterSave();
+    public default void afterSave(T entity) {}
 
-    public Event<T> getBeforeCreate();
+    public default void beforeCreate(T entity) {}
 
-    public Event<T> getAfterCreate();
+    public default void afterCreate(T entity) {}
 
-    public Event<T> getBeforeUpdate();
+    public default void beforeUpdate(T entity) {}
 
-    public Event<T> getAfterUpdate();
+    public default void afterUpdate(T entity) {}
 
-    public Event<T> getBeforeDestroy();
+    public default void beforeDestroy(T entity) {}
 
-    public Event<T> getAfterDestroy();
+    public default void afterDestroy(T entity) {}
 
     @Override @Transactional
     public default T save(Base entity) {
@@ -44,33 +43,19 @@ public interface Callbacks<T> extends Persistence<T> {
     }
 
     private T _runSaveCallbacks(T entity, Supplier<T> yield) {
-        getBeforeSave().fire(entity);
-        var result = yield.get();
-        getAfterSave().fire(result);
-
-        return result;
+        beforeSave(entity); var result = yield.get(); afterSave(result); return result;
     }
 
     private T _runCreateCallbacks(T entity, Supplier<T> yield) {
-        getBeforeCreate().fire(entity);
-        var result = yield.get();
-        getAfterCreate().fire(result);
-
-        return result;
+        beforeCreate(entity); var result = yield.get(); afterCreate(result); return result;
     }
 
     private T _runUpdateCallbacks(T entity, Supplier<T> yield) {
-        getBeforeUpdate().fire(entity);
-        var result = yield.get();
-        getAfterUpdate().fire(result);
-
-        return result;
+        beforeUpdate(entity); var result = yield.get(); afterUpdate(result); return result;
     }
 
     private void _runDestroyCallbacks(T entity, Runnable yield) {
-        getBeforeDestroy().fire(entity);
-        yield.run();
-        getAfterDestroy().fire(entity);
+        beforeDestroy(entity); yield.run(); afterDestroy(entity);
     }
 
 }

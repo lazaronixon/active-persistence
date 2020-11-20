@@ -49,6 +49,22 @@ public class PersistenceTest extends IntegrationTest {
     }
 
     @Test
+    public void testBeforeSave() {
+        var post = new Post("new post", "execBeforeSave", 0);
+        postsService.save(post);
+
+        assertEquals("OK", post.getBody());
+    }
+
+    @Test
+    public void testAfterSave() {
+        var post = new Post("new post", "execAfterSave", 0);
+        postsService.save(post);
+
+        assertEquals("OK", post.getBody());
+    }
+
+    @Test
     public void testBeforeCreate() {
         var post = new Post("new post", "execBeforeCreate", 0);
         postsService.save(post);
