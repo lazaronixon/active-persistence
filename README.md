@@ -282,42 +282,42 @@ double average = (double) clientsService.average("client.ordersCount");
 public class ClientsService extends Base<Client> {
 
     @Override
-    public void beforeSave(Post post) {
+    public void beforeSave(Client client) {
         // implementation here
     }
 
     @Override
-    public void afterSave(Post post) {
+    public void afterSave(Client client) {
         // implementation here
     }
 
     @Override
-    public void beforeCreate(Post post) {
+    public void beforeCreate(Client client) {
         // implementation here
     }
 
     @Override
-    public void afterCreate(Post post) {
+    public void afterCreate(Client client) {
         // implementation here
     }
 
     @Override
-    public void beforeUpdate(Post post) {
+    public void beforeUpdate(Client client) {
         // implementation here
     }
 
     @Override
-    public void afterUpdate(Post post) {
+    public void afterUpdate(Client client) {
         // implementation here
     }
 
     @Override
-    public void beforeDestroy(Post post) {
+    public void beforeDestroy(Client client) {
         // implementation here
     }
 
     @Override
-    public void afterDestroy(Post post) {
+    public void afterDestroy(Client client) {
         // implementation here
     }
 
