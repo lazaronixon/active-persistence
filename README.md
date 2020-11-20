@@ -217,8 +217,7 @@ List<Order> orders = ordersService.select("date(order.createdAt)", "sum(order.pr
 
 ### Total of grouped items
 ```java
-HashMap<String, Long> result = (HashMap) ordersService.group("order.status").count();
-// => { 'awaiting_approval' => 7, 'paid' => 12 }
+HashMap<String, Long> result = (HashMap) ordersService.group("order.status").count(); // => { 'awaiting_approval' => 7, 'paid' => 12 }
 ```
 
 ### Having
@@ -278,7 +277,9 @@ clientsService.includes("client.address").limit(10);
 clientsService.eagerLoads("client.address").limit(10);
 ```
 
-## Applying a default scope
+## Scopes
+
+### Applying a default scope
 ```java
 public class ClientsService extends Base<Client> {
 
