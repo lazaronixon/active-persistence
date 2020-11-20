@@ -77,6 +77,74 @@ usersService.destroyBy("user.name = ?", "David");
 usersService.destroyAll();
 ```
 
+### Callbacks
+
+```java
+public class ClientsService extends Base<Client> {
+
+    @Override
+    public void beforeSave(Client client) {
+        // implementation here
+    }
+
+    @Override
+    public void afterSave(Client client) {
+        // implementation here
+    }
+
+    @Override
+    public void beforeCreate(Client client) {
+        // implementation here
+    }
+
+    @Override
+    public void afterCreate(Client client) {
+        // implementation here
+    }
+
+    @Override
+    public void beforeUpdate(Client client) {
+        // implementation here
+    }
+
+    @Override
+    public void afterUpdate(Client client) {
+        // implementation here
+    }
+
+    @Override
+    public void beforeDestroy(Client client) {
+        // implementation here
+    }
+
+    @Override
+    public void afterDestroy(Client client) {
+        // implementation here
+    }
+
+}
+```
+
+### TimeStamps
+```java
+public class Post extends BaseIdentity {
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    @Override
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @Override
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+}
+```
+
 ## Retrieving Objects from the Database
 
 ### Retrieving a Single Object
@@ -236,7 +304,7 @@ clientsService.unscoped();
 clientsService.where("client.published = false").unscoped();
 ```
 
-### Dynamic Finders
+## Dynamic Finders
 ```java
 Client client = clientsService.findByExpression("Name", "Nixon");
 Client client = clientsService.findByExpression("NameAndLocked", "Nixon", true);
@@ -253,20 +321,20 @@ List posts = postsService.getConnection().selectAll("SELECT id, title FROM Post 
 List posts = postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
 ```
 
-### Existence of Objects
+## Existence of Objects
 ```java
 boolean exists = studentsService.exists("student.name = 'Lifo'");
 boolean exists = studentsService.where("student.name = 'Lifo'").exists();
 ```
 
-### Pluck
+## Pluck
 ```java
 List<Integer> ids = clientsService.where("client.active = true").pluck("client.id"); //[1, 2, 3]
 List<Integer> ids = clientsService.where("client.active = true").ids; //[1, 2, 3]
 
 ```
 
-### Calculations
+## Calculations
 ```java
 long   count   = (long)   clientsService.count();
 long   count   = (long)   clientsService.count("client.age");
@@ -274,54 +342,6 @@ int    minimum = (int)    clientsService.minimum("client.age");
 int    maximum = (int)    clientsService.maximum("client.age");
 long   total   = (long)   clientsService.sum("client.ordersCount");
 double average = (double) clientsService.average("client.ordersCount");
-```
-
-## Callbacks
-
-```java
-public class ClientsService extends Base<Client> {
-
-    @Override
-    public void beforeSave(Client client) {
-        // implementation here
-    }
-
-    @Override
-    public void afterSave(Client client) {
-        // implementation here
-    }
-
-    @Override
-    public void beforeCreate(Client client) {
-        // implementation here
-    }
-
-    @Override
-    public void afterCreate(Client client) {
-        // implementation here
-    }
-
-    @Override
-    public void beforeUpdate(Client client) {
-        // implementation here
-    }
-
-    @Override
-    public void afterUpdate(Client client) {
-        // implementation here
-    }
-
-    @Override
-    public void beforeDestroy(Client client) {
-        // implementation here
-    }
-
-    @Override
-    public void afterDestroy(Client client) {
-        // implementation here
-    }
-
-}
 ```
 
 ## Recommended Environment
