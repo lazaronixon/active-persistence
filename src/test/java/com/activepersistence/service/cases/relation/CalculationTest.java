@@ -5,6 +5,7 @@ import com.activepersistence.service.models.PostsService;
 import static java.util.Arrays.asList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.assertArrayEquals;
@@ -82,7 +83,7 @@ public class CalculationTest extends IntegrationTest {
 
     @Test
     public void testCountGrouped() {
-        HashMap<String, Long> result = (HashMap) postsService.where("post.id IN (3, 4, 5)").group("post.title").count();
+        Map<String, Long> result = (Map) postsService.where("post.id IN (3, 4, 5)").group("post.title").count();
         assertEquals(Long.valueOf(1), result.get("beautiful night"));
         assertEquals(Long.valueOf(2), result.get("flood"));
         assertEquals(2, result.size());

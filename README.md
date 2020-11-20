@@ -217,7 +217,7 @@ List<Order> orders = ordersService.select("date(order.createdAt)", "sum(order.pr
 
 ### Total of grouped items
 ```java
-HashMap<String, Long> result = (HashMap) ordersService.group("order.status").count(); // => { 'awaiting_approval' => 7, 'paid' => 12 }
+Map<String, Long> result = (Map) ordersService.group("order.status").count(); // => { 'awaiting_approval' => 7, 'paid' => 12 }
 ```
 
 ### Having
