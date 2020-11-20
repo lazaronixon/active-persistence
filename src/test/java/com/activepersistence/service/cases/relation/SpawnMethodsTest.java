@@ -27,13 +27,13 @@ public class SpawnMethodsTest extends IntegrationTest {
 
     @Test
     public void testMerge() {
-        assertEquals("SELECT post FROM Post post WHERE 1=0",
+        assertEquals("SELECT post FROM Post post WHERE (1=0)",
                 postsService.merge(postsService.oneEqZero()).toJpql());
     }
 
     @Test
     public void testMergeTwice() {
-        assertEquals("SELECT post FROM Post post WHERE 1=0 AND 2=0",
+        assertEquals("SELECT post FROM Post post WHERE (1=0) AND (2=0)",
                 postsService.all().merge(postsService.oneEqZero()).merge(postsService.twoEqZero()).toJpql());
     }
 
@@ -57,19 +57,19 @@ public class SpawnMethodsTest extends IntegrationTest {
 
     @Test
     public void testExcept() {
-        assertEquals("SELECT post FROM Post post WHERE 1=0",
+        assertEquals("SELECT post FROM Post post WHERE (1=0)",
                 postsService.where("1=0").order("post.id").except(ORDER).toJpql());
     }
 
     @Test
     public void testMergeAnotherRelation() {
-        assertEquals("SELECT comment FROM Comment comment INNER JOIN comment.post post WHERE post.id = 1",
+        assertEquals("SELECT comment FROM Comment comment INNER JOIN comment.post post WHERE (post.id = 1)",
                 commentsService.joins("INNER JOIN comment.post post").merge(postsService.where("post.id = 1")).toJpql());
     }
 
     @Test
     public void testMergeFromAnotherRelation() {
-        assertEquals("SELECT comment FROM Comment comment INNER JOIN comment.post post WHERE post.id = 1",
+        assertEquals("SELECT comment FROM Comment comment INNER JOIN comment.post post WHERE (post.id = 1)",
                 commentsService.joins("INNER JOIN comment.post post").merge(postsService.from("Post post").where("post.id = 1")).toJpql());
     }
 

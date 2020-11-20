@@ -18,8 +18,8 @@ public class MutationTest extends IntegrationTest {
         var relation  = postsService.where("1=1");
         var relation2 = relation.where("2=2");
 
-        assertEquals("SELECT post FROM Post post WHERE 1=1", relation.toJpql());
-        assertEquals("SELECT post FROM Post post WHERE 1=1 AND 2=2", relation2.toJpql());
+        assertEquals("SELECT post FROM Post post WHERE (1=1)", relation.toJpql());
+        assertEquals("SELECT post FROM Post post WHERE (1=1) AND (2=2)", relation2.toJpql());
     }
 
     @Test
@@ -42,7 +42,7 @@ public class MutationTest extends IntegrationTest {
         var relation  = postsService.all();
         var relation2 = relation.where$("foo");
         assertEquals(relation, relation2);
-        assertEquals(asList("foo"), relation2.getValues().getWhere());
+        assertEquals(asList("(foo)"), relation2.getValues().getWhere());
     }
 
     @Test
@@ -58,7 +58,7 @@ public class MutationTest extends IntegrationTest {
         var relation  = postsService.all();
         var relation2 = relation.having$("foo");
         assertEquals(relation, relation2);
-        assertEquals(asList("foo"), relation2.getValues().getHaving());
+        assertEquals(asList("(foo)"), relation2.getValues().getHaving());
     }
 
     @Test
@@ -122,7 +122,7 @@ public class MutationTest extends IntegrationTest {
         var relation  = postsService.where("1=1");
         var relation2 = relation.merge$(postsService.where("1=2"));
         assertEquals(relation, relation2);
-        assertEquals(asList("1=1", "1=2"), relation2.getValues().getWhere());
+        assertEquals(asList("(1=1)", "(1=2)"), relation2.getValues().getWhere());
     }
 
     @Test

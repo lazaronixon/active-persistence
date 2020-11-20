@@ -33,11 +33,12 @@ public class Merger {
     }
 
     private void mergeMultiValues() {
+        relation.getValues().getWhere().addAll(values.getWhere());
+        relation.getValues().getHaving().addAll(values.getHaving());
+
         values.getSelect().forEach(relation::select$);
-        values.getWhere().forEach(relation::where$);
         values.getJoins().forEach(relation::joins$);
         values.getGroup().forEach(relation::group$);
-        values.getHaving().forEach(relation::having$);
         values.getOrder().forEach(this::mergeOrder$);
 
         values.getIncludes().forEach(relation::includes$);

@@ -35,17 +35,17 @@ public class ScopingTest extends IntegrationTest {
 
     @Test
     public void testUnscopedBlock() {
-        assertEquals("SELECT client FROM Client client WHERE 1=0", clientsService.unscoped(() -> clientsService.where("1=0")).toJpql());
+        assertEquals("SELECT client FROM Client client WHERE (1=0)", clientsService.unscoped(() -> clientsService.where("1=0")).toJpql());
     }
 
     @Test
     public void testDefaultScope() {
-        assertEquals("SELECT client FROM Client client WHERE client.active = true", clientsService.all().toJpql());
+        assertEquals("SELECT client FROM Client client WHERE (client.active = true)", clientsService.all().toJpql());
     }
 
     @Test
     public void testDefaultScopeWhere() {
-        assertEquals("SELECT client FROM Client client WHERE client.active = true AND 1=0", clientsService.where("1=0").toJpql());
+        assertEquals("SELECT client FROM Client client WHERE (client.active = true) AND (1=0)", clientsService.where("1=0").toJpql());
     }
 
 }

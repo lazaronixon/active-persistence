@@ -42,7 +42,7 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testWhere() {
-        assertEquals("SELECT post FROM Post post WHERE post.title = 'nixon'",
+        assertEquals("SELECT post FROM Post post WHERE (post.title = 'nixon')",
                 postsService.where("post.title = 'nixon'").toJpql());
     }
 
@@ -54,7 +54,7 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testHaving() {
-        assertEquals("SELECT NEW com.activepersistence.service.models.Post(post.id) FROM Post post GROUP BY post.id HAVING COUNT(post.title) > 0",
+        assertEquals("SELECT NEW com.activepersistence.service.models.Post(post.id) FROM Post post GROUP BY post.id HAVING (COUNT(post.title) > 0)",
                 postsService.select("post.id").group("post.id").having("COUNT(post.title) > 0").toJpql());
     }
 
@@ -75,12 +75,12 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testUnscope() {
-        assertEquals("SELECT post FROM Post post WHERE 1=0", postsService.where("1=0").order("post.id").unscope(ORDER).toJpql());
+        assertEquals("SELECT post FROM Post post WHERE (1=0)", postsService.where("1=0").order("post.id").unscope(ORDER).toJpql());
     }
 
     @Test
     public void testUnscopeFrom() {
-        assertEquals("SELECT post FROM Post post WHERE 1=0", postsService.where("1=0").from("Teste teste").unscope(FROM).toJpql());
+        assertEquals("SELECT post FROM Post post WHERE (1=0)", postsService.where("1=0").from("Teste teste").unscope(FROM).toJpql());
     }
 
     @Test
@@ -90,7 +90,7 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testReWhere() {
-        assertEquals("SELECT post FROM Post post WHERE 1=0", postsService.where("1=0").rewhere("1=0").toJpql());
+        assertEquals("SELECT post FROM Post post WHERE (1=0)", postsService.where("1=0").rewhere("1=0").toJpql());
     }
 
     @Test
@@ -129,16 +129,16 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testBind() {
-        assertEquals("SELECT post FROM Post post WHERE post.id = 1", postsService.where("post.id = ?", 1).toJpql());
+        assertEquals("SELECT post FROM Post post WHERE (post.id = 1)", postsService.where("post.id = ?", 1).toJpql());
     }
 
     @Test
     public void testBindNamed() {
-        assertEquals("SELECT post FROM Post post WHERE post.id = 1", postsService.where("post.id = :id", Map.of("id", 1)).toJpql());
+        assertEquals("SELECT post FROM Post post WHERE (post.id = 1)", postsService.where("post.id = :id", Map.of("id", 1)).toJpql());
     }
 
     @Test
     public void testBindFormat() {
-        assertEquals("SELECT post FROM Post post WHERE post.id = 1", postsService.where("post.id = %s", 1).toJpql());
+        assertEquals("SELECT post FROM Post post WHERE (post.id = 1)", postsService.where("post.id = %s", 1).toJpql());
     }
 }

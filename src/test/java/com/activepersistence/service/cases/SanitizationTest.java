@@ -34,7 +34,7 @@ public class SanitizationTest extends IntegrationTest {
     @Test
     public void testBindSubQuery() {
         var subquery = postsService.where("post.title = 'flood'").selectScalar("post.id");
-        assertEquals("post.id IN (SELECT post.id FROM Post post WHERE post.title = 'flood')", sanitizeJpql("post.id IN (?)", subquery));
+        assertEquals("post.id IN (SELECT post.id FROM Post post WHERE (post.title = 'flood'))", sanitizeJpql("post.id IN (?)", subquery));
     }
 
     @Test

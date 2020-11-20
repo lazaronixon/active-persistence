@@ -9,6 +9,7 @@ import com.activepersistence.service.arel.nodes.Count;
 import com.activepersistence.service.arel.nodes.DeleteStatement;
 import com.activepersistence.service.arel.nodes.Distinct;
 import com.activepersistence.service.arel.nodes.Function;
+import com.activepersistence.service.arel.nodes.Grouping;
 import com.activepersistence.service.arel.nodes.InnerJoin;
 import com.activepersistence.service.arel.nodes.JoinSource;
 import com.activepersistence.service.arel.nodes.JpqlLiteral;
@@ -161,6 +162,15 @@ public class ToJpql extends Visitor {
 
     public StringBuilder visitAnd(And o, StringBuilder collector) {
         return injectJoin(o.getChildren(), collector, " AND ");
+    }
+
+    public StringBuilder visitGrouping(Grouping o, StringBuilder collector) {
+        if (o.getValue() instanceof Grouping) {
+            return visit(o.getValue(), collector);
+        } else {
+            collector.append("(");
+            return visit(o.getValue(), collector).append(")");
+        }
     }
 
     public String compile(Visitable node, StringBuilder collector) {
