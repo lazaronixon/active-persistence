@@ -83,20 +83,20 @@ public interface FinderMethods<T> {
         return thiz().where(getPrimaryKeyAttr() + " IN (?)", asList(ids)).getRecords();
     }
 
-    public default T findById(Object id) {
-        return findBy(getPrimaryKeyAttr() + " = ?", id);
-    }
-
-    public default T findById$(Object id) {
-        return findBy$(getPrimaryKeyAttr() + " = ?", id);
-    }
-
     public default T findBy(String conditions, Object... params) {
         return thiz().where(conditions, params).take();
     }
 
     public default T findBy$(String conditions, Object... params) {
         return thiz().where(conditions, params).take$();
+    }
+
+    public default T findById(Object id) {
+        return findBy(getPrimaryKeyAttr() + " = ?", id);
+    }
+
+    public default T findById$(Object id) {
+        return findBy$(getPrimaryKeyAttr() + " = ?", id);
     }
 
     public default T findByExpression(String expression, Object... params) {

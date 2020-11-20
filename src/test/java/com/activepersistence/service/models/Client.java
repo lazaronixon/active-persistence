@@ -3,7 +3,6 @@ package com.activepersistence.service.models;
 import com.activepersistence.model.BaseIdentity;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 
@@ -20,7 +19,6 @@ public class Client extends BaseIdentity {
 
     private Double ratio;
 
-    @Column(precision= 10, scale=2)
     private BigDecimal salary;
 
     @Enumerated

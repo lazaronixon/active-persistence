@@ -2,7 +2,6 @@ package com.activepersistence.service.models;
 
 import com.activepersistence.model.BaseIdentity;
 import javax.persistence.Entity;
-import static javax.persistence.FetchType.LAZY;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
@@ -12,7 +11,7 @@ public class Comment extends BaseIdentity {
     @Lob
     private String body;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     private Post post;
 
     public Comment() {

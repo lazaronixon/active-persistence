@@ -2,7 +2,7 @@ package com.activepersistence.service.relation;
 
 import com.activepersistence.service.NullRelation;
 import com.activepersistence.service.Relation;
-import com.activepersistence.service.Sanitization;
+import static com.activepersistence.service.Sanitization.sanitizeJpql;
 import static com.activepersistence.service.relation.ValueMethods.*;
 import static java.util.Arrays.asList;
 import javax.persistence.LockModeType;
@@ -187,7 +187,7 @@ public interface QueryMethods<T> {
     }
 
     private String buildWhere(String conditions, Object[] params) {
-        return Sanitization.sanitizeJpql(conditions, params);
+        return sanitizeJpql(conditions, params);
     }
 
     private Relation<T> thiz() {
