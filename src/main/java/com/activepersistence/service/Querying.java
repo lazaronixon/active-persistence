@@ -118,7 +118,7 @@ public interface Querying<T> {
     public default T findBy$(String conditions, Object... params) {
         return all().findBy$(conditions, params);
     }
-    
+
     public default T findById(Object id) {
         return all().findById(id);
     }
@@ -135,12 +135,12 @@ public interface Querying<T> {
         return all().findByExpression$(expression, params);
     }
 
-    public default boolean exists(String conditions) {
-        return all().exists(conditions);
-    }
-
     public default boolean exists(String conditions, Object... params) {
         return all().exists(conditions, params);
+    }
+
+    public default boolean exists() {
+        return all().exists();
     }
     //</editor-fold>
 

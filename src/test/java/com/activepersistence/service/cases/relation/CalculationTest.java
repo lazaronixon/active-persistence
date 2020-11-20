@@ -3,7 +3,6 @@ package com.activepersistence.service.cases.relation;
 import com.activepersistence.IntegrationTest;
 import com.activepersistence.service.models.PostsService;
 import static java.util.Arrays.asList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
