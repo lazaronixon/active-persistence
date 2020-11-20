@@ -279,44 +279,48 @@ double average = (double) clientsService.average("client.ordersCount");
 ## Callbacks
 
 ```java
-@Override
-public void beforeSave(Post post) {
-    // implementation here
-}
+public class ClientsService extends Base<Client> {
 
-@Override
-public void afterSave(Post post) {
-    // implementation here
-}
+    @Override
+    public void beforeSave(Post post) {
+        // implementation here
+    }
 
-@Override
-public void beforeCreate(Post post) {
-    // implementation here
-}
+    @Override
+    public void afterSave(Post post) {
+        // implementation here
+    }
 
-@Override
-public void afterCreate(Post post) {
-    // implementation here
-}
+    @Override
+    public void beforeCreate(Post post) {
+        // implementation here
+    }
 
-@Override
-public void beforeUpdate(Post post) {
-    // implementation here
-}
+    @Override
+    public void afterCreate(Post post) {
+        // implementation here
+    }
 
-@Override
-public void afterUpdate(Post post) {
-    // implementation here
-}
+    @Override
+    public void beforeUpdate(Post post) {
+        // implementation here
+    }
 
-@Override
-public void beforeDestroy(Post post) {
-    // implementation here
-}
+    @Override
+    public void afterUpdate(Post post) {
+        // implementation here
+    }
 
-@Override
-public void afterDestroy(Post post) {
-    // implementation here
+    @Override
+    public void beforeDestroy(Post post) {
+        // implementation here
+    }
+
+    @Override
+    public void afterDestroy(Post post) {
+        // implementation here
+    }
+
 }
 ```
 
