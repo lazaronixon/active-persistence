@@ -51,8 +51,7 @@ public class Sanitization {
         var valuesCount  = (int) values.length;
 
         if (bindCount == valuesCount) {
-            List<Object> bound = new ArrayList(asList(values));
-            return compile("\\?").matcher(statement).replaceAll(match -> quoteReplacement(replaceBindVariable(bound.remove(0))));
+            var bound = new ArrayList(asList(values)); return compile("\\?").matcher(statement).replaceAll(match -> quoteReplacement(replaceBindVariable(bound.remove(0))));
         } else {
             throw new PreparedStatementInvalid("wrong number of bind variables (" + bindCount + " for " + valuesCount + ") in: " + statement);
         }
