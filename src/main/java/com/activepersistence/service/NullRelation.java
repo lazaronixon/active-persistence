@@ -31,7 +31,7 @@ public class NullRelation<T> extends Relation<T> {
     public int updateAll(String updates) {
         return 0;
     }
-    
+
     @Override
     public boolean isEmpty() {
         return true;
@@ -45,7 +45,7 @@ public class NullRelation<T> extends Relation<T> {
     @Override
     public Object calculate(Operations operation, String field) {
         if (asList(COUNT, SUM).contains(operation)) {
-            return getValues().getGroup().isEmpty() ? 0 : emptyMap();
+            return getValues().getGroup().isEmpty() ? 0L : emptyMap();
         } else if (asList(AVG, MIN, MAX).contains(operation)) {
             return getValues().getGroup().isEmpty() ? null : emptyMap();
         } else {
@@ -59,7 +59,7 @@ public class NullRelation<T> extends Relation<T> {
     }
 
     @Override
-    public List<T> getRecords() {
+    public List<T> execQueries() {
         return emptyList();
     }
 

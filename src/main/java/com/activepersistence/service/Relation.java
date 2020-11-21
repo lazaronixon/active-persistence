@@ -96,6 +96,10 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
         reset(); load(); return this;
     }
 
+    public List<T> execQueries() {
+        return getConnection().selectAll(getArel());
+    }
+
     public final Relation<T> reset() {
         toJpql = null; arel = null; loaded = false; records = emptyList(); return this;
     }
@@ -387,10 +391,6 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
 
     private Map<String, Object> substituteValues(Map<String, Object> updates) {
         return updates.entrySet().stream().collect(toMap(Entry::getKey, v -> v.getValue()));
-    }
-
-    private List<T> execQueries() {
-        return getConnection().selectAll(getArel());
     }
     //</editor-fold>
 
