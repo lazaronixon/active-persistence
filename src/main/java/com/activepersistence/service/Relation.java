@@ -386,7 +386,7 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     }
 
     private boolean isValidRelationForUpdateOrDelete() {
-        return values.isDistinct() == false && values.getJoins().isEmpty() && values.getGroup().isEmpty() && values.getHaving().isEmpty();
+        return values.isDistinct() == false && values.getJoins().isEmpty() && values.getGroup().isEmpty();
     }
 
     private Map<String, Object> substituteValues(Map<String, Object> updates) {
