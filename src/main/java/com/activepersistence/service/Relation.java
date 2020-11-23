@@ -6,6 +6,7 @@ import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.UpdateManager;
 import com.activepersistence.service.connectionadapters.JpaAdapter;
+import static com.activepersistence.service.connectionadapters.Literalizing.literal;
 import com.activepersistence.service.relation.Calculation;
 import com.activepersistence.service.relation.FinderMethods;
 import com.activepersistence.service.relation.QueryMethods;
@@ -84,26 +85,6 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
         return where(conditions, params).destroyAll();
     }
 
-    public Relation<T> load() {
-        if (loaded) {
-            return this;
-        } else {
-            records = execQueries(); loaded = true; return this;
-        }
-    }
-
-    public Relation<T> reload() {
-        reset(); load(); return this;
-    }
-
-    public List<T> execQueries() {
-        return getConnection().selectAll(getArel());
-    }
-
-    public final Relation<T> reset() {
-        toJpql = null; arel = null; loaded = false; records = emptyList(); return this;
-    }
-
     public int deleteAll() {
         if (isValidRelationForUpdateOrDelete()) {
             var stmt = new DeleteManager();
@@ -133,6 +114,26 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
 
     public int deleteBy(String conditions, Object... params) {
         return where(conditions, params).deleteAll();
+    }
+
+    public Relation<T> load() {
+        if (loaded) {
+            return this;
+        } else {
+            records = execQueries(); loaded = true; return this;
+        }
+    }
+
+    public Relation<T> reload() {
+        reset(); load(); return this;
+    }
+
+    public List<T> execQueries() {
+        return getConnection().selectAll(getArel());
+    }
+
+    public final Relation<T> reset() {
+        toJpql = null; arel = null; loaded = false; records = emptyList(); return this;
     }
 
     public String toJpql() {
@@ -374,7 +375,7 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
             stmt.setOrders(getArel().getOrders());
 
             if (updates instanceof Map) {
-                stmt.set(substituteValues((Map) updates));
+                stmt.set((Map) updates);
             } else {
                 stmt.set((String) updates);
             }
@@ -387,10 +388,6 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
 
     private boolean isValidRelationForUpdateOrDelete() {
         return values.isDistinct() == false && values.getJoins().isEmpty() && values.getGroup().isEmpty();
-    }
-
-    private Map<String, Object> substituteValues(Map<String, Object> updates) {
-        return updates.entrySet().stream().collect(toMap(Entry::getKey, v -> v.getValue()));
     }
     //</editor-fold>
 

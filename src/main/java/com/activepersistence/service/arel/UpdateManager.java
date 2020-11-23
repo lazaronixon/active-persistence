@@ -25,7 +25,7 @@ public class UpdateManager extends TreeManager {
         ast.setRelation(entity); return this;
     }
 
-    public UpdateManager set(Map<String, String> values) {
+    public UpdateManager set(Map<String, Object> values) {
         ast.setValues(values.entrySet().stream().map(v -> new Assignment(v.getKey(), v.getValue())).collect(toList())); return this;
     }
 

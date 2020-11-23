@@ -38,17 +38,17 @@ public abstract class Base<T> implements Core<T>, Callbacks<T>, Querying<T>, Sco
     }
 
     @Override
-    public Relation<T> defaultScope() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public Class getRealClass() {
         return getClass().getSuperclass();
     }
 
     public JpaAdapter<T> getConnection() {
         return new JpaAdapter(getEntityManager(), entityClass);
+    }
+
+    @Override
+    public Relation<T> defaultScope() {
+        throw new UnsupportedOperationException();
     }
 
     //<editor-fold defaultstate="collapsed" desc="Private">
