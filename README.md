@@ -313,6 +313,13 @@ Client client = clientsService.findByExpression("NameAndLocked", "Nixon", true);
 Client client = clientsService.findByExpression$("Name", "not found"); // RecordNotFound Exception
 ```
 
+## Find or Build a New Object
+```java
+Client client = clientsService.findWith("client.firstName = ?", "Andy").orCreate(new Cliente("Andy"));
+// OR
+Client client = clientsService.findWith("client.firstName = ?", "Andy").orGet(new Cliente("Andy"));
+```
+
 ## Finding by SQL
 ```java
 List<Post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = 5");

@@ -74,6 +74,10 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
         }
     }
 
+    public FindWith<T> findWith(String conditions, Object... params) {
+        return new FindWith(conditions, params, this);
+    }
+
     public List<T> destroyAll() {
         return getRecords().stream().map(r -> { service.destroy((com.activepersistence.model.Base) r); return r; }).collect(toList());
     }
@@ -101,16 +105,16 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
         }
     }
 
+    public int deleteBy(String conditions, Object... params) {
+        return where(conditions, params).deleteAll();
+    }
+
     public int updateAll(String updates) {
         return _updateAll(updates);
     }
 
     public int updateAll(Map<String, Object> updates) {
         return _updateAll(updates);
-    }
-
-    public int deleteBy(String conditions, Object... params) {
-        return where(conditions, params).deleteAll();
     }
 
     public Relation<T> load() {
