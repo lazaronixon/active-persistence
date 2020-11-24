@@ -235,10 +235,6 @@ public interface Querying<T> {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Relation">
-    public default FindFor<T> findFor(String conditions, Object... params) {
-        return all().findFor(conditions, params);
-    }
-
     public default List<T> destroyAll() {
         return all().destroyAll();
     }

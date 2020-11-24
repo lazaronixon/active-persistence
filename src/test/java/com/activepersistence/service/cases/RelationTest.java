@@ -2,7 +2,6 @@ package com.activepersistence.service.cases;
 
 import com.activepersistence.ActivePersistenceError;
 import com.activepersistence.IntegrationTest;
-import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
 import static com.activepersistence.service.relation.ValueMethods.ORDER;
 import java.util.Map;
@@ -39,22 +38,6 @@ public class RelationTest extends IntegrationTest {
     public void testScopingWithUnscope() {
         assertEquals("SELECT post FROM Post post",
                 postsService.order("post.id").scoping(() -> postsService.unscope(ORDER)).toJpql());
-    }
-
-    @Test
-    public void testFindOrCreateBy() {
-        var count = (long) postsService.count();
-        var post  = postsService.findFor("post.title = 'not found'").orCreate(new Post("nixon", "test", 1));
-        assertEquals(count + 1, postsService.count());
-        assertEquals("nixon", post.getTitle());
-    }
-
-    @Test
-    public void testFindOrInitializeBy() {
-        var count = (long) postsService.count();
-        var post  = postsService.findFor("post.title = 'not found'").orGet(new Post("nixon", "test", 1));
-        assertEquals(count + 0, postsService.count());
-        assertEquals("nixon", post.getTitle());
     }
 
     @Test

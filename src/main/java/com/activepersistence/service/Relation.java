@@ -74,10 +74,6 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
         }
     }
 
-    public FindFor<T> findFor(String conditions, Object... params) {
-        return new FindFor(conditions, params, this);
-    }
-
     public List<T> destroyAll() {
         return getRecords().stream().map(r -> { service.destroy((com.activepersistence.model.Base) r); return r; }).collect(toList());
     }
