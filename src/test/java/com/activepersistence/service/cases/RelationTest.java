@@ -6,7 +6,6 @@ import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
 import static com.activepersistence.service.relation.ValueMethods.ORDER;
 import java.util.Map;
-import static java.util.Optional.ofNullable;
 import javax.inject.Inject;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.*;
@@ -45,7 +44,7 @@ public class RelationTest extends IntegrationTest {
     @Test
     public void testFindOrCreateBy() {
         var count = (long) postsService.count();
-        var post  = postsService.findWith("post.title = 'not found'").orCreate(new Post("nixon", "test", 1));
+        var post  = postsService.findFor("post.title = 'not found'").orCreate(new Post("nixon", "test", 1));
         assertEquals(count + 1, postsService.count());
         assertEquals("nixon", post.getTitle());
     }
@@ -53,7 +52,7 @@ public class RelationTest extends IntegrationTest {
     @Test
     public void testFindOrInitializeBy() {
         var count = (long) postsService.count();
-        var post  = postsService.findWith("post.title = 'not found'").orGet(new Post("nixon", "test", 1));
+        var post  = postsService.findFor("post.title = 'not found'").orGet(new Post("nixon", "test", 1));
         assertEquals(count + 0, postsService.count());
         assertEquals("nixon", post.getTitle());
     }

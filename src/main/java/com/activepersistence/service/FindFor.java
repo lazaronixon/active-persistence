@@ -4,7 +4,7 @@ import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
 
 
-public class FindWith<T> {
+public class FindFor<T> {
 
     private final String conditions;
 
@@ -14,7 +14,7 @@ public class FindWith<T> {
 
     private final Base<T> service;
 
-    public FindWith(String conditions, Object[] params, Relation relation) {
+    public FindFor(String conditions, Object[] params, Relation relation) {
         this.conditions = conditions;
         this.params     = params;
         this.relation   = relation;

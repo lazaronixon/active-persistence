@@ -74,8 +74,8 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
         }
     }
 
-    public FindWith<T> findWith(String conditions, Object... params) {
-        return new FindWith(conditions, params, this);
+    public FindFor<T> findFor(String conditions, Object... params) {
+        return new FindFor(conditions, params, this);
     }
 
     public List<T> destroyAll() {

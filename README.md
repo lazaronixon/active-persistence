@@ -315,8 +315,11 @@ Client client = clientsService.findByExpression$("Name", "not found"); // Record
 
 ## Find or Build a New Object
 ```java
-Client client = clientsService.findWith("client.firstName = ?", "Andy").orCreate(new Cliente("Andy"));
-Client client = clientsService.findWith("client.firstName = ?", "Andy").orGet(new Cliente("Andy"));
+// findOrCreate
+Client client = clientsService.findFor("client.firstName = ?", "Andy").orCreate(new Cliente("Andy"));
+
+// findOrGet
+Client client = clientsService.findFor("client.firstName = ?", "Andy").orGet(new Cliente("Andy"));
 ```
 
 ## Finding by SQL
