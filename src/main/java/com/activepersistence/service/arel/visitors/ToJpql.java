@@ -10,12 +10,10 @@ import com.activepersistence.service.arel.nodes.DeleteStatement;
 import com.activepersistence.service.arel.nodes.Distinct;
 import com.activepersistence.service.arel.nodes.Function;
 import com.activepersistence.service.arel.nodes.Grouping;
-import com.activepersistence.service.arel.nodes.InnerJoin;
 import com.activepersistence.service.arel.nodes.JoinSource;
 import com.activepersistence.service.arel.nodes.JpqlLiteral;
 import com.activepersistence.service.arel.nodes.Max;
 import com.activepersistence.service.arel.nodes.Min;
-import com.activepersistence.service.arel.nodes.OuterJoin;
 import com.activepersistence.service.arel.nodes.SelectCore;
 import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.StringJoin;
@@ -97,28 +95,6 @@ public class ToJpql extends Visitor {
         }
 
         return collector;
-    }
-
-    public StringBuilder visitInnerJoin(InnerJoin o, StringBuilder collector) {
-        collector.append("INNER JOIN ");
-        collector = visit(o.getPath(), collector).append(" ").append(o.getAlias());
-        if (o.getConstraint() != null) {
-            collector.append(" ");
-            return visit(o.getConstraint(), collector);
-        } else {
-            return collector;
-        }
-    }
-
-    public StringBuilder visitOuterJoin(OuterJoin o, StringBuilder collector) {
-        collector.append("LEFT OUTER JOIN ");
-        collector = visit(o.getPath(), collector).append(" ").append(o.getAlias());
-        if (o.getConstraint() != null) {
-            collector.append(" ");
-            return visit(o.getConstraint(), collector);
-        } else {
-            return collector;
-        }
     }
 
     public StringBuilder visitStringJoin(StringJoin o, StringBuilder collector) {
