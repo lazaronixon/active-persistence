@@ -6,7 +6,6 @@ import com.activepersistence.service.arel.Entity;
 import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.UpdateManager;
 import com.activepersistence.service.connectionadapters.JpaAdapter;
-import static com.activepersistence.service.connectionadapters.Literalizing.literal;
 import com.activepersistence.service.relation.Calculation;
 import com.activepersistence.service.relation.FinderMethods;
 import com.activepersistence.service.relation.QueryMethods;
@@ -19,11 +18,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import static java.util.Optional.ofNullable;
 import java.util.function.Supplier;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, Calculation<T>, SpawnMethods<T> {
 

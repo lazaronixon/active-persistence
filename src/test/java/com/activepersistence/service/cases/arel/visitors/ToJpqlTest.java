@@ -119,7 +119,7 @@ public class ToJpqlTest {
 
     @Test
     public void testVisitAssignment() {
-        assertEquals("field = 'value'", compile(new Assignment("field", "value")));
+        assertEquals("field = 'value'", compile(new Assignment(jpql("field"), "value")));
     }
 
     private String compile(Visitable node) {

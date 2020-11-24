@@ -26,7 +26,7 @@ public class UpdateManager extends TreeManager {
     }
 
     public UpdateManager set(Map<String, Object> values) {
-        ast.setValues(values.entrySet().stream().map(v -> new Assignment(v.getKey(), v.getValue())).collect(toList())); return this;
+        ast.setValues(values.entrySet().stream().map(v -> new Assignment(jpql(v.getKey()), v.getValue())).collect(toList())); return this;
     }
 
     public UpdateManager set(String values) {
