@@ -316,7 +316,6 @@ Client client = clientsService.findByExpression$("Name", "not found"); // Record
 ## Find or Build a New Object
 ```java
 Client client = clientsService.findWith("client.firstName = ?", "Andy").orCreate(new Cliente("Andy"));
-// OR
 Client client = clientsService.findWith("client.firstName = ?", "Andy").orGet(new Cliente("Andy"));
 ```
 
