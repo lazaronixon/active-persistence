@@ -1,5 +1,6 @@
 package com.activepersistence.model;
 
+import com.activepersistence.ReadOnlyRecord;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.MappedSuperclass;
@@ -8,6 +9,7 @@ import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;
 import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 
@@ -17,6 +19,8 @@ public abstract class Base<ID> {
     @Transient private boolean newRecord = true;
 
     @Transient private boolean destroyed = false;
+
+    @Transient private boolean readOnly  = false;
 
     public abstract ID getId();
 
@@ -32,6 +36,10 @@ public abstract class Base<ID> {
 
     public boolean isPersisted() {
         return !(newRecord || destroyed);
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
@@ -58,13 +66,26 @@ public abstract class Base<ID> {
 
     @PrePersist
     private void prePersist() {
-        setCreatedAt(LocalDateTime.now());
-        setUpdatedAt(LocalDateTime.now());
+        if (readOnly) {
+            raiseReadOnlyRecordError();
+        } else {
+            setCreatedAt(LocalDateTime.now());
+            setUpdatedAt(LocalDateTime.now());
+        }
     }
 
     @PreUpdate
     private void preUpdate() {
-        setUpdatedAt(LocalDateTime.now());
+        if (readOnly) {
+            raiseReadOnlyRecordError();
+        } else {
+            setUpdatedAt(LocalDateTime.now());
+        }
+    }
+
+    @PreRemove
+    private void preRemove() {
+        if (readOnly) raiseReadOnlyRecordError();
     }
 
     @PostPersist
@@ -85,6 +106,10 @@ public abstract class Base<ID> {
     @PostLoad
     private void postLoad() {
         newRecord = false;
+    }
+
+    private void raiseReadOnlyRecordError() {
+      throw new ReadOnlyRecord(getClass().getSimpleName() + " is marked as readonly");
     }
 
 }

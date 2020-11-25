@@ -16,6 +16,7 @@ public class Values {
     private boolean distinct    = false;
     private boolean reordering  = false;
     private boolean constructor = false;
+    private boolean readonly    = false;
 
     private List<String> select          = new ArrayList();
     private List<String> where           = new ArrayList();
@@ -39,6 +40,7 @@ public class Values {
         lock           = other.lock;
         distinct       = other.distinct;
         reordering     = other.reordering;
+        readonly       = other.readonly;
         select         = new ArrayList(other.select);
         where          = new ArrayList(other.where);
         group          = new ArrayList(other.group);
@@ -114,6 +116,10 @@ public class Values {
         return reordering;
     }
 
+    public boolean isReadonly() {
+        return readonly;
+    }
+
     public void setSelect(List<String> select) {
         this.select = select;
     }
@@ -148,6 +154,10 @@ public class Values {
 
     public void setReordering(boolean reordering) {
         this.reordering = reordering;
+    }
+
+    public void setReadonly(boolean readonly) {
+        this.readonly = readonly;
     }
 
     public void setGroup(List<String> group) {
@@ -193,6 +203,7 @@ public class Values {
             case DISTINCT:    distinct    = false; break;
             case REORDERING:  reordering  = false; break;
             case CONSTRUCTOR: constructor = false; break;
+            case READONLY:   readonly    = false; break;
 
             case SELECT:     select.clear();    break;
             case WHERE:      where.clear();     break;

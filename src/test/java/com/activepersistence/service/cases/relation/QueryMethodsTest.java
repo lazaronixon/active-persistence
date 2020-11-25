@@ -1,6 +1,8 @@
 package com.activepersistence.service.cases.relation;
 
 import com.activepersistence.IntegrationTest;
+import com.activepersistence.ReadOnlyRecord;
+import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
 import static com.activepersistence.service.relation.ValueMethods.FROM;
 import static com.activepersistence.service.relation.ValueMethods.ORDER;
@@ -125,6 +127,20 @@ public class QueryMethodsTest extends IntegrationTest {
     @Test
     public void testLock() {
         assertNotNull(postsService.lock());
+    }
+
+    @Test
+    public void testUpdateReadOnly() {
+        var post = postsService.readonly().first();
+        post.setTitle("change");
+
+        assertThrows(ReadOnlyRecord.class,() -> postsService.save(post));
+    }
+
+    @Test
+    public void testDestroyReadOnly() {
+        var post = postsService.readonly().first();
+        assertThrows(ReadOnlyRecord.class,() -> postsService.destroy(post));
     }
 
     @Test

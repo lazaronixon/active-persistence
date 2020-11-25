@@ -266,6 +266,14 @@ Client client = clientsService.lock(true).first();
 Client client = clientsService.lock(PESSIMISTIC_WRITE).first();
 ```
 
+## Readonly Objects
+```java
+Client client = clientsService.readonly().first();
+client.visits = 1;
+
+clientsService.save(); // ReadOnlyRecord Exception
+```
+
 ## Joining Tables
 ```java
 authorsService.joins("JOIN author.post post");

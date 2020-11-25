@@ -189,6 +189,14 @@ public interface Querying<T> {
         return all().distinct(value);
     }
 
+    public default Relation<T> readonly() {
+        return all().readonly();
+    }
+
+    public default Relation<T> readonly(boolean value) {
+        return all().readonly(value);
+    }
+
     public default Relation<T> includes(String... values) {
         return all().includes(values);
     }

@@ -125,8 +125,14 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
         reset(); load(); return this;
     }
 
-    public List<T> execQueries() {
-        return getConnection().selectAll(getArel());
+    public List execQueries() {
+        var results = (List<com.activepersistence.model.Base>) getConnection().selectAll(getArel());
+
+        if (getValues().isReadonly()) {
+            results.forEach(r -> r.setReadOnly(true)); return results;
+        } else {
+            return results;
+        }
     }
 
     public final Relation<T> reset() {

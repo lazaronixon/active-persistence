@@ -102,6 +102,22 @@ public interface QueryMethods<T> {
         getValues().setDistinct(value); return thiz();
     }
 
+    public default Relation<T> readonly() {
+        return spawn().readonly$();
+    }
+
+    public default Relation<T> readonly(boolean value) {
+        return spawn().readonly$(value);
+    }
+
+    public default Relation<T> readonly$() {
+        getValues().setReadonly(true); return thiz();
+    }
+
+    public default Relation<T> readonly$(boolean value) {
+        getValues().setReadonly(value); return thiz();
+    }
+
     public default NullRelation<T> none() {
         return new NullRelation(where$("1=0"));
     }
@@ -172,17 +188,18 @@ public interface QueryMethods<T> {
 
     private void unscoping(ValueMethods scope) {
         switch (scope) {
-            case FROM:     getValues().except$(FROM);     break;
-            case WHERE:    getValues().except$(WHERE);    break;
-            case HAVING:   getValues().except$(HAVING);   break;
+            case FROM:     getValues().except$(FROM);       break;
+            case WHERE:    getValues().except$(WHERE);      break;
+            case HAVING:   getValues().except$(HAVING);     break;
             case SELECT:   getValues().except$(SELECT, CONSTRUCTOR); break;
-            case GROUP:    getValues().except$(GROUP);    break;
-            case ORDER:    getValues().except$(ORDER);    break;
-            case LOCK:     getValues().except$(LOCK);     break;
-            case LIMIT:    getValues().except$(LIMIT);    break;
-            case OFFSET:   getValues().except$(OFFSET);   break;
-            case JOINS:    getValues().except$(JOINS);    break;
-            case INCLUDES: getValues().except$(INCLUDES); break;
+            case GROUP:    getValues().except$(GROUP);      break;
+            case ORDER:    getValues().except$(ORDER);      break;
+            case LOCK:     getValues().except$(LOCK);       break;
+            case READONLY: getValues().except$(READONLY); break;
+            case LIMIT:    getValues().except$(LIMIT);      break;
+            case OFFSET:   getValues().except$(OFFSET);     break;
+            case JOINS:    getValues().except$(JOINS);      break;
+            case INCLUDES: getValues().except$(INCLUDES);   break;
             default: throw new RuntimeException("invalid unscoping value: " + scope);
         }
     }
