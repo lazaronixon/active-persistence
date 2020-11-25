@@ -59,7 +59,7 @@ public class NullRelation<T> extends Relation<T> {
     }
 
     @Override
-    public List<T> execQueries() {
+    public List execQueries() {
         return emptyList();
     }
 
