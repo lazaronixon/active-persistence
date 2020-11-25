@@ -30,7 +30,7 @@ public interface Persistence<T> {
     }
 
     public default void reload(T entity, boolean lock) {
-        getEntityManager().refresh(entity, lock ? PESSIMISTIC_WRITE : NONE);
+        getEntityManager().flush(); getEntityManager().refresh(entity, lock ? PESSIMISTIC_WRITE : NONE);
     }
 
     public default T _createRecord(T entity) {

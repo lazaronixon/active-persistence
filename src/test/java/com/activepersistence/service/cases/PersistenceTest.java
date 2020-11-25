@@ -25,6 +25,7 @@ public class PersistenceTest extends IntegrationTest {
         assertTrue(post.isDestroyed());
     }
 
+    @Test
     public void testCreate() {
         var post  = new Post("new post", "body", 0);
         var count = (long) postsService.count();
@@ -43,6 +44,8 @@ public class PersistenceTest extends IntegrationTest {
         var count = (long) postsService.count();
 
         postsService.save(post);
+        
+        postsService.reload(post);
 
         assertEquals(count, postsService.count());
         assertEquals("changed", post.getTitle());
