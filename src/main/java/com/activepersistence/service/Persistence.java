@@ -9,6 +9,8 @@ public interface Persistence<T> {
 
     public EntityManager getEntityManager();
 
+    public Class getEntityClass();
+
     public default T save(Base entity) {
         return createOrUpdate(entity);
     }
@@ -16,12 +18,14 @@ public interface Persistence<T> {
     public default void destroy(Base entity) {
         if (!entity.isPersisted()) return;
 
-        if (getEntityManager().contains(entity)) {
-            getEntityManager().remove(entity);
-            getEntityManager().flush();
+        var em = getEntityManager();
+
+        var existing = em.find(getEntityClass(), entity.getId());
+
+        if (existing == null) {
+            // delete is a NOOP
         } else {
-            getEntityManager().remove(getEntityManager().merge(entity));
-            getEntityManager().flush();
+            em.remove(em.contains(entity) ? entity : em.merge(entity));
         }
     }
 
