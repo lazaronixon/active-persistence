@@ -196,7 +196,7 @@ public interface QueryMethods<T> {
             case GROUP:    getValues().except$(GROUP);      break;
             case ORDER:    getValues().except$(ORDER);      break;
             case LOCK:     getValues().except$(LOCK);       break;
-            case READONLY: getValues().except$(READONLY); break;
+            case READONLY: getValues().except$(READONLY);   break;
             case LIMIT:    getValues().except$(LIMIT);      break;
             case OFFSET:   getValues().except$(OFFSET);     break;
             case JOINS:    getValues().except$(JOINS);      break;
