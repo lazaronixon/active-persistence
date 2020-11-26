@@ -6,6 +6,7 @@ import static com.activepersistence.service.Sanitization.sanitizeJpql;
 import com.activepersistence.service.arel.nodes.Grouping;
 import static com.activepersistence.service.relation.ValueMethods.*;
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import javax.persistence.LockModeType;
 
 public interface QueryMethods<T> {
@@ -167,7 +168,7 @@ public interface QueryMethods<T> {
     }
 
     public default Relation<T> unscope$(ValueMethods... args) {
-        getValues().getUnscope().addAll(asList(args)); asList(args).forEach(this::unscoping); return thiz();
+        getValues().getUnscope().addAll(asList(args)); stream(args).forEach(this::unscoping); return thiz();
     }
 
     public default Relation<T> reselect(String... fields) {

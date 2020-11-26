@@ -6,6 +6,7 @@ import static com.activepersistence.service.connectionadapters.Literalizing.lite
 import static java.lang.String.format;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -27,7 +28,7 @@ public class Sanitization {
             } else if (statement.isBlank()) {
                 return statement;
             } else {
-                return format(statement, asList(values).stream().map(Literalizing::literal).toArray());
+                return format(statement, stream(values).map(v -> literal(v)).toArray());
             }
         } else {
             return statement;

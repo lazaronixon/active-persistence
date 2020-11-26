@@ -2,7 +2,6 @@ package com.activepersistence.service.cases.relation;
 
 import com.activepersistence.IntegrationTest;
 import com.activepersistence.ReadOnlyRecord;
-import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
 import static com.activepersistence.service.relation.ValueMethods.FROM;
 import static com.activepersistence.service.relation.ValueMethods.ORDER;

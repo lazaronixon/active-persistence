@@ -13,6 +13,7 @@ import static com.activepersistence.service.relation.ValueMethods.SELECT;
 import static java.beans.Introspector.decapitalize;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import java.util.List;
 import static java.util.Optional.ofNullable;
 import java.util.function.Function;
@@ -135,7 +136,7 @@ public interface FinderMethods<T> {
     }
 
     private List<Visitable> conditionsFor(String expression) {
-        return asList(expression.split("And")).stream().map(toConditions()).collect(toList());
+        return stream(expression.split("And")).map(toConditions()).collect(toList());
     }
 
     private Function<String, Visitable> toConditions() {

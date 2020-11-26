@@ -3,6 +3,7 @@ package com.activepersistence.service.relation;
 import static com.activepersistence.service.relation.ValueMethods.values;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import java.util.List;
 import java.util.function.Predicate;
 import javax.persistence.LockModeType;
@@ -169,7 +170,7 @@ public class Values {
     }
 
     public Values except$(ValueMethods... skips) {
-        asList(skips).forEach(this::reset); return this;
+        stream(skips).forEach(this::reset); return this;
     }
 
     public Values slice(ValueMethods... onlies) {
@@ -177,7 +178,7 @@ public class Values {
     }
 
     public Values slice$(ValueMethods... onlies) {
-        asList(values()).stream().filter(notContains(onlies)).forEach(this::reset); return this;
+        stream(values()).filter(notContains(onlies)).forEach(this::reset); return this;
     }
 
     private Predicate<ValueMethods> notContains(ValueMethods[] onlies) {
