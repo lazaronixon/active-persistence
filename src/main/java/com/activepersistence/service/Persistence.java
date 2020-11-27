@@ -4,6 +4,7 @@ import com.activepersistence.model.Base;
 import javax.persistence.EntityManager;
 import static javax.persistence.LockModeType.NONE;
 import static javax.persistence.LockModeType.PESSIMISTIC_WRITE;
+import javax.transaction.Transactional;
 
 public interface Persistence<T> {
 
@@ -29,12 +30,14 @@ public interface Persistence<T> {
         }
     }
 
+    @Transactional
     public default void reload(T entity) {
         reload(entity, false);
     }
 
+    @Transactional
     public default void reload(T entity, boolean lock) {
-        getEntityManager().flush(); getEntityManager().refresh(entity, lock ? PESSIMISTIC_WRITE : NONE);
+        getEntityManager().refresh(entity, lock ? PESSIMISTIC_WRITE : NONE);
     }
 
     public default T _createRecord(T entity) {
@@ -53,10 +56,6 @@ public interface Persistence<T> {
         } else {
             return _updateRecord((T) entity);
         }
-    }
-
-    private String className() {
-        return getEntityClass().getSimpleName();
     }
 
 }
