@@ -55,4 +55,8 @@ public interface Persistence<T> {
         }
     }
 
+    private String className() {
+        return getEntityClass().getSimpleName();
+    }
+
 }

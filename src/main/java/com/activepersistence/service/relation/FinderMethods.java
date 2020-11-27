@@ -1,6 +1,5 @@
 package com.activepersistence.service.relation;
 
-import com.activepersistence.RecordNotFound;
 import static com.activepersistence.service.Arel.jpql;
 import com.activepersistence.service.Relation;
 import com.activepersistence.service.arel.SelectManager;
@@ -18,6 +17,7 @@ import java.util.List;
 import static java.util.Optional.ofNullable;
 import java.util.function.Function;
 import static java.util.stream.Collectors.toList;
+import javax.persistence.EntityNotFoundException;
 
 public interface FinderMethods<T> {
 
@@ -48,7 +48,7 @@ public interface FinderMethods<T> {
     }
 
     public default T take$() {
-        return ofNullable(take()).orElseGet(() -> raiseRecordNotFoundException());
+        return ofNullable(take()).orElseGet(() -> raiseEntityNotFoundException());
     }
 
     public default T first() {
@@ -123,11 +123,11 @@ public interface FinderMethods<T> {
         }
     }
 
-    private T raiseRecordNotFoundException() {
+    private T raiseEntityNotFoundException() {
         if (getValues().getWhere().isEmpty()) {
-            throw new RecordNotFound(format("Couldn't find %s", className()));
+            throw new EntityNotFoundException(format("Couldn't find %s", className()));
         } else {
-            throw new RecordNotFound(format("Couldn't find %s with %s", className(), getConditions()));
+            throw new EntityNotFoundException(format("Couldn't find %s with %s", className(), getConditions()));
         }
     }
 

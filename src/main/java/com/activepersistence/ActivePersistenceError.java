@@ -1,6 +1,8 @@
 package com.activepersistence;
 
-public class ActivePersistenceError extends RuntimeException {
+import javax.persistence.PersistenceException;
+
+public class ActivePersistenceError extends PersistenceException {
 
     public ActivePersistenceError(String message) {
         super(message);

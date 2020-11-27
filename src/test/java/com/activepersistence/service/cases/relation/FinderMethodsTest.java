@@ -1,9 +1,9 @@
 package com.activepersistence.service.cases.relation;
 
 import com.activepersistence.IntegrationTest;
-import com.activepersistence.RecordNotFound;
 import com.activepersistence.service.models.PostsService;
 import javax.inject.Inject;
+import javax.persistence.EntityNotFoundException;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testTake$() {
-        assertThrows(RecordNotFound.class,() -> postsService.where("1=0").take$());
+        assertThrows(EntityNotFoundException.class,() -> postsService.where("1=0").take$());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testLast$() {
-        assertThrows(RecordNotFound.class,() -> postsService.where("1=0").last$());
+        assertThrows(EntityNotFoundException.class,() -> postsService.where("1=0").last$());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFindBy$() {
-        assertThrows(RecordNotFound.class, () -> postsService.findBy$("post.title = 'not found'"));
+        assertThrows(EntityNotFoundException.class, () -> postsService.findBy$("post.title = 'not found'"));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFindByExpression$() {
-        assertThrows(RecordNotFound.class, () -> postsService.findByExpression$("Title", "not found"));
+        assertThrows(EntityNotFoundException.class, () -> postsService.findByExpression$("Title", "not found"));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class FinderMethodsTest extends IntegrationTest {
 
     @Test
     public void testFindById$() {
-        assertThrows(RecordNotFound.class, () -> postsService.findById$(48484L));
+        assertThrows(EntityNotFoundException.class, () -> postsService.findById$(48484L));
     }
 
     @Test

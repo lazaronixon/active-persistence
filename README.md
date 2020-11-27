@@ -170,7 +170,7 @@ List<Client> clients = clientsService.last(3);
 Client client = clientsService.findBy("client.firstName = ?", "Lifo"); // #<Client id: 1, firstName: "Lifo">
 Client client = clientsService.findBy("client.firstName = ?", "Jon");  // null
 
-Client client = clientsService.findBy$("client.firstName = ?", "does not exist"); // RecordNotFound Exception
+Client client = clientsService.findBy$("client.firstName = ?", "does not exist"); // EntityNotFoundException
 ```
 
 ### Conditions
@@ -318,7 +318,7 @@ clientsService.where("client.published = false").unscoped();
 Client client = clientsService.findByExpression("Name", "Nixon");
 Client client = clientsService.findByExpression("NameAndLocked", "Nixon", true);
 // OR
-Client client = clientsService.findByExpression$("Name", "not found"); // RecordNotFound Exception
+Client client = clientsService.findByExpression$("Name", "not found"); // EntityNotFoundException
 ```
 
 ## Finding by SQL
