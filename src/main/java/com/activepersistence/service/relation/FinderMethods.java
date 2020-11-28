@@ -91,14 +91,6 @@ public interface FinderMethods<T> {
         return thiz().where(conditions, params).take$();
     }
 
-    public default T findById(Object id) {
-        return findBy(getPrimaryKeyAttr() + " = ?", id);
-    }
-
-    public default T findById$(Object id) {
-        return findBy$(getPrimaryKeyAttr() + " = ?", id);
-    }
-
     public default T findByExpression(String expression, Object... params) {
         return findBy(expressionToJpql(expression), params);
     }

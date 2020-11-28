@@ -90,16 +90,6 @@ public class FinderMethodsTest extends IntegrationTest {
     }
 
     @Test
-    public void testFindById() {
-        assertEquals((Long) 1L ,postsService.findById(1L).getId());
-    }
-
-    @Test
-    public void testFindById$() {
-        assertThrows(EntityNotFoundException.class, () -> postsService.findById$(48484L));
-    }
-
-    @Test
     public void testExists() {
         assertTrue(postsService.where("post.title = 'hello world'").exists());
     }

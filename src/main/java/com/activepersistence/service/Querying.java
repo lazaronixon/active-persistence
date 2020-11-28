@@ -119,14 +119,6 @@ public interface Querying<T> {
         return all().findBy$(conditions, params);
     }
 
-    public default T findById(Object id) {
-        return all().findById(id);
-    }
-
-    public default T findById$(Object id) {
-        return all().findById$(id);
-    }
-
     public default T findByExpression(String expression, Object... params) {
         return all().findByExpression(expression, params);
     }
