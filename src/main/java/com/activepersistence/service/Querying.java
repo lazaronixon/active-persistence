@@ -272,11 +272,11 @@ public interface Querying<T> {
 
     //<editor-fold defaultstate="collapsed" desc="Private">
     private Query createNativeQuery(String sql, Map<Integer, Object> binds) {
-        return parametized(getEntityManager().createNativeQuery(sql, getEntityClass()), binds);
+        return setParams(getEntityManager().createNativeQuery(sql, getEntityClass()), binds);
     }
 
-    private Query parametized(Query query, Map<Integer, Object> binds) {
-        binds.forEach(query::setParameter); return query;
+    private Query setParams(Query query, Map<Integer, Object> params) {
+        params.forEach(query::setParameter); return query;
     }
     //</editor-fold>
 }
