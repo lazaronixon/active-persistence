@@ -1,8 +1,9 @@
 package com.activepersistence.service.cases;
 
 import com.activepersistence.IntegrationTest;
+import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
-import java.util.Map;
+import java.util.List;
 import javax.inject.Inject;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.*;
@@ -16,12 +17,12 @@ public class QueryingTest extends IntegrationTest {
 
     @Test
     public void testFindBySql() {
-        assertEquals("flood", postsService.findBySql("SELECT id, title FROM Post WHERE id = 5").get(0).getTitle());
+        List<Post> results = postsService.findBySql("SELECT id, title FROM Post WHERE id = 5").getResultList(); assertEquals("flood", results.get(0).getTitle());
     }
 
     @Test
-    public void testFindBySqlWithBind() {
-        assertEquals("flood", postsService.findBySql("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5)).get(0).getTitle());
+    public void testFindByJpql() {
+        List<Post> results = postsService.findByJpql("SELECT p FROM Post p WHERE p.id = 5").getResultList(); assertEquals("flood", results.get(0).getTitle());
     }
 
 }

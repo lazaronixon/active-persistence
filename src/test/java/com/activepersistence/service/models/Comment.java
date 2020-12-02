@@ -18,8 +18,7 @@ public class Comment extends BaseIdentity {
     }
 
     public Comment(String body, Post post) {
-        this.body = body;
-        this.post = post;
+        this.body = body; this.post = post;
     }
 
     //<editor-fold defaultstate="collapsed" desc="GET/SET">

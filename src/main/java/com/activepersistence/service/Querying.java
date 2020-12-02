@@ -1,12 +1,12 @@
 package com.activepersistence.service;
 
 import com.activepersistence.service.relation.ValueMethods;
-import static java.util.Collections.emptyMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 public interface Querying<T> {
 
@@ -261,22 +261,12 @@ public interface Querying<T> {
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="Querying">
-    public default List<T> findBySql(String sql) {
-        return findBySql(sql, emptyMap());
+    public default Query findBySql(String sqlString) {
+        return getEntityManager().createNativeQuery(sqlString, getEntityClass());
     }
 
-    public default List<T> findBySql(String sql, Map<Integer, Object> binds) {
-        return createNativeQuery(sql, binds).getResultList();
-    }
-    //</editor-fold>
-
-    //<editor-fold defaultstate="collapsed" desc="Private">
-    private Query createNativeQuery(String sql, Map<Integer, Object> binds) {
-        return setParams(getEntityManager().createNativeQuery(sql, getEntityClass()), binds);
-    }
-
-    private Query setParams(Query query, Map<Integer, Object> params) {
-        params.forEach(query::setParameter); return query;
+    public default TypedQuery findByJpql(String qlString) {
+        return getEntityManager().createQuery(qlString, getEntityClass());
     }
     //</editor-fold>
 }

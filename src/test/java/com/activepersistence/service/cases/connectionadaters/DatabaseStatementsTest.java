@@ -1,8 +1,11 @@
 package com.activepersistence.service.cases.connectionadaters;
 
 import com.activepersistence.IntegrationTest;
+import static com.activepersistence.service.connectionadapters.QueryType.JPQL;
+import static com.activepersistence.service.connectionadapters.QueryType.SQL;
+import com.activepersistence.service.models.Post;
 import com.activepersistence.service.models.PostsService;
-import java.util.Map;
+import java.util.List;
 import javax.inject.Inject;
 import org.jboss.arquillian.persistence.UsingDataSet;
 import static org.junit.Assert.assertEquals;
@@ -16,16 +19,12 @@ public class DatabaseStatementsTest extends IntegrationTest {
 
     @Test
     public void testSelectAll() {
-        var result = (Object[]) postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = 5").get(0);
-        assertEquals(5L , result[0]);
-        assertEquals("flood" , result[1]);
+        List<Object[]> results = postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = 5", SQL).getResultList(); assertEquals(5L, results.get(0)[0]); assertEquals("flood", results.get(0)[1]);
     }
 
     @Test
-    public void testSelectAllWithBind() {
-        var result = (Object[]) postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5)).get(0);
-        assertEquals(5L , result[0]);
-        assertEquals("flood" , result[1]);
+    public void testSelectEntity() {
+        List<Post> results = postsService.getConnection().selectAll("SELECT p FROM Post p WHERE p.id = 5", JPQL).getResultList(); assertEquals(5L, (long) results.get(0).getId()); assertEquals("flood", results.get(0).getTitle());
     }
 
 }

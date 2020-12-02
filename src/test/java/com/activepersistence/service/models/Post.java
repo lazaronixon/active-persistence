@@ -29,20 +29,15 @@ public class Post extends BaseIdentity {
     }
 
     public Post(Long id, String title) {
-        super.setId(id);
-        this.title = title;
+        super.setId(id); this.title = title;
     }
 
     public Post(String title, String body, Integer likesCount) {
-        this.title = title;
-        this.body = body;
-        this.likesCount = likesCount;
+        this.title = title; this.body = body; this.likesCount = likesCount;
     }
 
     public Comment commentsBuild(String body) {
-        var comment = new Comment(body, this);
-        comments.add(comment);
-        return comment;
+        var comment = new Comment(body, this); comments.add(comment); return comment;
     }
 
     //<editor-fold defaultstate="collapsed" desc="GET/SET">

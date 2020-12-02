@@ -321,13 +321,13 @@ Client client = clientsService.findByExpression("NameAndLocked", "Nixon", true);
 Client client = clientsService.findByExpression$("Name", "not found"); // EntityNotFoundException
 ```
 
-## Finding by SQL
+## Finding by SQL/JPQL
 ```java
-List<Post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = 5");
-List<Post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
+List<Post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id = 5").getResultList();
+List<Post> posts = postsService.findByJpql("SELECT p FROM Post p WHERE p.id = 5").getResultList();
 // OR
-List posts = postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = 5");
-List posts = postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = ?1", Map.of(1, 5));
+List posts = postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = 5", QueryType.SQL).getResultList();
+List posts = postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = 5", QueryType.JPQL).getResultList();
 ```
 
 ## Existence of Objects
