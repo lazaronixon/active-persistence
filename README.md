@@ -327,7 +327,7 @@ List<Post> posts = postsService.findBySql("SELECT id, title FROM Post WHERE id =
 List<Post> posts = postsService.findByJpql("SELECT p FROM Post p WHERE p.id = 5").getResultList();
 // OR
 List posts = postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = 5", QueryType.SQL).getResultList();
-List posts = postsService.getConnection().selectAll("SELECT id, title FROM Post WHERE id = 5", QueryType.JPQL).getResultList();
+List posts = postsService.getConnection().selectAll("SELECT p FROM Post p WHERE p.id = 5", QueryType.JPQL).getResultList();
 ```
 
 ## Existence of Objects
