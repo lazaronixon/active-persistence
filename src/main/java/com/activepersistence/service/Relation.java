@@ -126,12 +126,12 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     }
 
     public List execQueries() {
-        List<com.activepersistence.model.Base> results = getConnection().selectAll(getArel());
+        var records = (List<com.activepersistence.model.Base>) getConnection().selectAll(getArel());
 
         if (getValues().isReadonly()) {
-            results.forEach(r -> r.setReadOnly(true)); return results;
+            records.forEach(r -> r.setReadOnly(true)); return records;
         } else {
-            return results;
+            return records;
         }
     }
 
