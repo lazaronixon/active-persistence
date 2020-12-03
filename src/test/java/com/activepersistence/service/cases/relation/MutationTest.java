@@ -25,7 +25,7 @@ public class MutationTest extends IntegrationTest {
     @Test
     public void testSelect$() {
         var relation  = postsService.all();
-        var relation2 = relation.select$("foo");
+        var relation2 = relation.select$(true, "foo");
         assertEquals(relation, relation2);
         assertEquals(asList("foo"), relation2.getValues().getSelect());
     }

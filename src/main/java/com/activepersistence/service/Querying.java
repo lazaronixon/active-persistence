@@ -156,9 +156,9 @@ public interface Querying<T> {
     public default Relation<T> select(String... values) {
         return all().select(values);
     }
-
-    public default Relation<T> selectScalar(String... values) {
-        return all().selectScalar(values);
+    
+    public default Relation<T> select(boolean constructor, String... values) {
+        return all().select(constructor, values);
     }
 
     public default Relation<T> joins(String value) {

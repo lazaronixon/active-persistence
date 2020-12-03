@@ -184,7 +184,7 @@ clientsService.where("client.ordersCount = :count", Map.of("count", 10));
 clientsService.where("client.ordersCount = :count AND client.locked = :locked", Map.of("count", 10, "locked", false));
 
 //SubQuery Conditions
-var subquery = ordersService.selectScalar("order.client.id");
+var subquery = ordersService.select(false, "order.client.id");
 clientsService.where("client.id IN (?), subquery);
 ```
 
@@ -199,9 +199,6 @@ clientsService.order("client.createdAt ASC");
 ```java
 List<Client> client = clientsService.select("client.viewableBy", "client.locked");
 List<Client> client = clientsService.select("client.name").distinct();
-
-List values = clientsService.selectScalar("client.viewableBy", "client.locked");
-List values = clientsService.selectScalar("client.name").distinct();
 ```
 
 ### Limit and Offset

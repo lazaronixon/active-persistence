@@ -36,7 +36,8 @@ public class Merger {
         relation.getValues().getWhere().addAll(values.getWhere());
         relation.getValues().getHaving().addAll(values.getHaving());
 
-        values.getSelect().forEach(relation::select$);
+        values.getSelect().forEach(fields -> relation.select$(true, fields));
+        
         values.getJoins().forEach(relation::joins$);
         values.getGroup().forEach(relation::group$);
         values.getOrder().forEach(this::mergeOrder$);
