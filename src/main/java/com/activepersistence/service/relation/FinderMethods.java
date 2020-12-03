@@ -111,7 +111,7 @@ public interface FinderMethods<T> {
         if (getValues().isDistinct() && getValues().getOffset() > 0) {
           return thiz().except(ORDER).limit(1);
         } else {
-          return thiz().except(SELECT, DISTINCT, ORDER).select(false, ONE_AS_ONE).limit(1);
+          return thiz().except(SELECT, DISTINCT, ORDER).select2(ONE_AS_ONE).limit(1);
         }
     }
 

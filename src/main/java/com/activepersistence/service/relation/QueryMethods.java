@@ -16,16 +16,20 @@ public interface QueryMethods<T> {
     public Relation<T> spawn();
 
     public default Relation<T> select(String... fields) {
-        return spawn().select$(true, fields);
+        return spawn().select$(fields);
+    }       
+
+    public default Relation<T> select$(String... fields) {
+        getValues().setConstructor(true); getValues().getSelect().addAll(asList(fields)); return thiz();
     }
     
-    public default Relation<T> select(boolean constructor, String... fields) {
-        return spawn().select$(constructor, fields);
-    }    
-
-    public default Relation<T> select$(boolean constructor, String... fields) {
-        getValues().setConstructor(constructor); getValues().getSelect().addAll(asList(fields)); return thiz();
+    public default Relation<T> select2(String... fields) {
+        return spawn().select2$(fields);
     }
+    
+    public default Relation<T> select2$(String... fields) {
+        getValues().setConstructor(false); getValues().getSelect().addAll(asList(fields)); return thiz();
+    }    
 
     public default Relation<T> joins(String value) {
         return spawn().joins$(value);

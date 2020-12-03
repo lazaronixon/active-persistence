@@ -26,7 +26,7 @@ public class QueryMethodsTest extends IntegrationTest {
     @Test
     public void testSelectScalar() {
         assertEquals("SELECT post.id, post.title FROM Post post",
-                postsService.select(false, "post.id", "post.title").toJpql());
+                postsService.select2("post.id", "post.title").toJpql());
     }
 
     @Test

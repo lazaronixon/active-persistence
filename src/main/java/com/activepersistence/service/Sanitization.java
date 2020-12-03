@@ -3,6 +3,7 @@ package com.activepersistence.service;
 import com.activepersistence.PreparedStatementInvalid;
 import com.activepersistence.service.connectionadapters.Literalizing;
 import static com.activepersistence.service.connectionadapters.Literalizing.literal;
+import static com.activepersistence.service.relation.ValueMethods.CONSTRUCTOR;
 import static java.lang.String.format;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
@@ -60,7 +61,7 @@ public class Sanitization {
 
     private static String replaceBindVariable(Object value) {
         if (value instanceof Relation) {
-            return ((Relation) value).toJpql();
+            return ((Relation) value).except(CONSTRUCTOR).toJpql();
         } else {
             return literalBoundValue(value);
         }

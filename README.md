@@ -184,7 +184,7 @@ clientsService.where("client.ordersCount = :count", Map.of("count", 10));
 clientsService.where("client.ordersCount = :count AND client.locked = :locked", Map.of("count", 10, "locked", false));
 
 //SubQuery Conditions
-var subquery = ordersService.select(false, "order.client.id");
+var subquery = ordersService.select("order.client.id");
 clientsService.where("client.id IN (?), subquery);
 ```
 

@@ -157,8 +157,8 @@ public interface Querying<T> {
         return all().select(values);
     }
     
-    public default Relation<T> select(boolean constructor, String... values) {
-        return all().select(constructor, values);
+    public default Relation<T> select2(String... values) {
+        return all().select2(values);
     }
 
     public default Relation<T> joins(String value) {
