@@ -101,25 +101,25 @@ public class QueryMethodsTest extends IntegrationTest {
 
     @Test
     public void testLimit() {
-        assertEquals(2, postsService.limit(2).getRecords().size());
+        assertEquals(2, postsService.limit(2).size());
     }
 
     @Test
     public void testOffset() {
-        assertEquals(1, postsService.where("post.id IN (1, 2, 3)").limit(2).offset(2).getRecords().size());
+        assertEquals(1, postsService.where("post.id IN (1, 2, 3)").limit(2).offset(2).size());
     }
 
     @Test
     public void testIncludes() {
         var posts = postsService.includes("post.comments");
-        var comments = posts.getRecords().stream().flatMap(p -> p.getComments().stream());
+        var comments = posts.stream().flatMap(p -> p.getComments().stream());
         assertTrue(comments.findFirst().isPresent());
     }
 
     @Test
     public void testEagerLoads() {
         var posts = postsService.eagerLoad("post.comments");
-        var comments = posts.getRecords().stream().flatMap(p -> p.getComments().stream());
+        var comments = posts.stream().flatMap(p -> p.getComments().stream());
         assertTrue(comments.findFirst().isPresent());
     }
 

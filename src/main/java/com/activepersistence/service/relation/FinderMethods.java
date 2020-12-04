@@ -40,11 +40,11 @@ public interface FinderMethods<T> {
     public List<T> getRecords();
 
     public default T take() {
-        return first(thiz().limit(1).getRecords());
+        return first(thiz().limit(1));
     }
 
     public default List<T> take(int limit) {
-        return thiz().limit(limit).getRecords();
+        return thiz().limit(limit);
     }
 
     public default T take$() {
@@ -80,7 +80,7 @@ public interface FinderMethods<T> {
     }
 
     public default List<T> find(Object... ids) {
-        return thiz().where(getPrimaryKeyAttr() + " IN (?)", asList(ids)).getRecords();
+        return thiz().where(getPrimaryKeyAttr() + " IN (?)", asList(ids));
     }
 
     public default T findBy(String conditions, Object... params) {

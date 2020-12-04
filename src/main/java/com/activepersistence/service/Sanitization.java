@@ -1,7 +1,6 @@
 package com.activepersistence.service;
 
 import com.activepersistence.PreparedStatementInvalid;
-import com.activepersistence.service.connectionadapters.Literalizing;
 import static com.activepersistence.service.connectionadapters.Literalizing.literal;
 import static com.activepersistence.service.relation.ValueMethods.CONSTRUCTOR;
 import static java.lang.String.format;
@@ -69,7 +68,8 @@ public class Sanitization {
 
     private static String literalBoundValue(Object value) {
         if (value instanceof List) {
-            Supplier<Stream<String>> literalized = () -> ((List) value).stream().map(Literalizing::literal);
+            Supplier<Stream<String>> literalized = () -> ((List) value).stream().map(v -> literal(v));
+
             if (literalized.get().findFirst().isEmpty()) {
                 return literal(null);
             } else {

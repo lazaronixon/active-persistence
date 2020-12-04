@@ -75,7 +75,7 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     }
 
     public List<T> destroyAll() {
-        return getRecords().stream().map(r -> { service.destroy((com.activepersistence.model.Base) r); return r; }).collect(toList());
+        return getRecords().stream().map(this::destroy).collect(toList());
     }
 
     public List<T> destroyBy(String conditions, Object... params) {
@@ -391,6 +391,10 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
 
     private boolean isValidRelationForUpdateOrDelete() {
         return values.isDistinct() == false && values.getJoins().isEmpty() && values.getGroup().isEmpty();
+    }
+
+    private T destroy(T entity) {
+        service.destroy((com.activepersistence.model.Base) entity); return entity;
     }
     //</editor-fold>
 
