@@ -23,6 +23,11 @@ import com.activepersistence.service.connectionadapters.Quoting;
 import java.util.List;
 
 public class ToJpql extends Visitor {
+    
+    @Override
+    public String compile(Visitable node, StringBuilder collector) {
+        return accept(node, collector).toString();
+    }
 
     public StringBuilder visitDeleteStatement(DeleteStatement o, StringBuilder collector) {
         collector.append("DELETE FROM ");
@@ -147,10 +152,6 @@ public class ToJpql extends Visitor {
             collector.append("(");
             return visit(o.getValue(), collector).append(")");
         }
-    }
-
-    public String compile(Visitable node, StringBuilder collector) {
-        return accept(node, collector).toString();
     }
 
     private StringBuilder maybeVisit(Visitable node, StringBuilder collector) {

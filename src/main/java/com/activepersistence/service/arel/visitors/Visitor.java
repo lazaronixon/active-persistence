@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public abstract class Visitor {
+    
+    public abstract String compile(Visitable node, StringBuilder collector);
 
     public StringBuilder accept(Visitable object, StringBuilder collector) {
         return visit(object, collector);

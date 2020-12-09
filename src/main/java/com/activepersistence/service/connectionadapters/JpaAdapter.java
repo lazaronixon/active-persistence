@@ -1,6 +1,7 @@
 package com.activepersistence.service.connectionadapters;
 
 import com.activepersistence.service.arel.visitors.ToJpql;
+import com.activepersistence.service.arel.visitors.Visitor;
 import javax.persistence.EntityManager;
 
 public class JpaAdapter<T> implements DatabaseStatements<T>, Quoting<T> {
@@ -9,7 +10,7 @@ public class JpaAdapter<T> implements DatabaseStatements<T>, Quoting<T> {
 
     private final Class entityClass;
 
-    private final ToJpql visitor;
+    private final Visitor visitor;
 
     public JpaAdapter(EntityManager entityManager, Class entityClass) {
         this.entityManager = entityManager;
@@ -28,7 +29,7 @@ public class JpaAdapter<T> implements DatabaseStatements<T>, Quoting<T> {
     }
 
     @Override
-    public ToJpql getVisitor() {
+    public Visitor getVisitor() {
         return visitor;
     }
 

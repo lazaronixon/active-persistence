@@ -3,7 +3,7 @@ package com.activepersistence.service.connectionadapters;
 import com.activepersistence.service.arel.DeleteManager;
 import com.activepersistence.service.arel.SelectManager;
 import com.activepersistence.service.arel.UpdateManager;
-import com.activepersistence.service.arel.visitors.ToJpql;
+import com.activepersistence.service.arel.visitors.Visitor;
 import static com.activepersistence.service.connectionadapters.QueryType.JPQL;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +14,9 @@ public interface DatabaseStatements<T> {
 
     public Class getEntityClass();
 
-    public ToJpql getVisitor();
-
     public EntityManager getEntityManager();
+    
+    public Visitor getVisitor();    
 
     public default Query selectAll(String queryString, QueryType queryType) {
         if (queryType == JPQL) {
