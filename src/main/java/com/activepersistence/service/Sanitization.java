@@ -1,7 +1,7 @@
 package com.activepersistence.service;
 
 import com.activepersistence.PreparedStatementInvalid;
-import static com.activepersistence.service.connectionadapters.Literalizing.literal;
+import static com.activepersistence.service.connectionadapters.Quoting.quote;
 import static com.activepersistence.service.relation.ValueMethods.CONSTRUCTOR;
 import static java.lang.String.format;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class Sanitization {
             } else if (statement.isBlank()) {
                 return statement;
             } else {
-                return format(statement, stream(values).map(v -> literal(v)).toArray());
+                return format(statement, stream(values).map(v -> quote(v)).toArray());
             }
         } else {
             return statement;
@@ -62,21 +62,21 @@ public class Sanitization {
         if (value instanceof Relation) {
             return ((Relation) value).except(CONSTRUCTOR).toJpql();
         } else {
-            return literalBoundValue(value);
+            return quoteBoundValue(value);
         }
     }
 
-    private static String literalBoundValue(Object value) {
+    private static String quoteBoundValue(Object value) {
         if (value instanceof List) {
-            Supplier<Stream<String>> literalized = () -> ((List) value).stream().map(v -> literal(v));
+            Supplier<Stream<String>> values = () -> ((List) value).stream().map(v -> quote(v));
 
-            if (literalized.get().findFirst().isEmpty()) {
-                return literal(null);
+            if (values.get().findFirst().isEmpty()) {
+                return quote(null);
             } else {
-                return literalized.get().collect(joining(","));
+                return values.get().collect(joining(","));
             }
         } else {
-            return literal(value);
+            return quote(value);
         }
     }
 

@@ -19,7 +19,7 @@ import com.activepersistence.service.arel.nodes.SelectStatement;
 import com.activepersistence.service.arel.nodes.StringJoin;
 import com.activepersistence.service.arel.nodes.Sum;
 import com.activepersistence.service.arel.nodes.UpdateStatement;
-import com.activepersistence.service.connectionadapters.Literalizing;
+import com.activepersistence.service.connectionadapters.Quoting;
 import java.util.List;
 
 public class ToJpql extends Visitor {
@@ -132,7 +132,7 @@ public class ToJpql extends Visitor {
     public StringBuilder visitAssignment(Assignment o, StringBuilder collector) {
         collector = visit(o.getField(), collector);
         collector.append(" = ");
-        collector.append(literal(o.getValue()));
+        collector.append(quote(o.getValue()));
         return collector;
     }
 
@@ -177,11 +177,11 @@ public class ToJpql extends Visitor {
         return collector;
     }
 
-    private String literal(Object value) {
+    private String quote(Object value) {
         if (value instanceof JpqlLiteral) {
             return value.toString();
         } else {
-            return Literalizing.literal(value);
+            return Quoting.quote(value);
         }
     }
 }

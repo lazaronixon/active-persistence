@@ -44,77 +44,77 @@ public class SanitizationTest extends IntegrationTest {
     }
 
     @Test
-    public void testLiteralNull() {
+    public void testQuoteNull() {
         assertEquals("post.id = NULL", sanitizeJpql("post.id = ?", (Object) null));
     }
 
     @Test
-    public void testLiteralClass() {
+    public void testQuoteClass() {
         assertEquals("post.type = Post", sanitizeJpql("post.type = ?", Post.class));
     }
 
     @Test
-    public void testLiteralEnum() {
+    public void testQuoteEnum() {
         assertEquals("client.gender = com.activepersistence.service.models.Gender.MALE", sanitizeJpql("client.gender = ?", MALE));
     }
 
     @Test
-    public void testLiteralString() {
+    public void testQuoteString() {
         assertEquals("client.name = 'Nixon'", sanitizeJpql("client.name = ?", "Nixon"));
     }
 
     @Test
-    public void testLiteralStringQuote() {
+    public void testQuoteStringQuote() {
         assertEquals("client.name = 'Ni''xon'", sanitizeJpql("client.name = ?", "Ni'xon"));
     }
 
     @Test
-    public void testLiteralInteger() {
+    public void testQuoteInteger() {
         assertEquals("client.id = 1234", sanitizeJpql("client.id = ?", 1234));
     }
 
     @Test
-    public void testLiteralLong() {
+    public void testQuoteLong() {
         assertEquals("client.id = 1234L", sanitizeJpql("client.id = ?", 1234L));
     }
 
     @Test
-    public void testLiteralFloat() {
+    public void testQuoteFloat() {
         assertEquals("client.weight = 64.14F", sanitizeJpql("client.weight = ?", 64.14F));
     }
 
     @Test
-    public void testLiteralDouble() {
+    public void testQuoteDouble() {
         assertEquals("client.ratio = 3.14D", sanitizeJpql("client.ratio = ?", 3.14D));
     }
 
     @Test
-    public void testLiteralBoolean() {
+    public void testQuoteBoolean() {
         assertEquals("client.active = FALSE", sanitizeJpql("client.active = ?", false));
     }
 
     @Test
-    public void testLiteralLocalDate() {
+    public void testQuoteLocalDate() {
         assertEquals("post.createdAt = {d '2020-01-04'}", sanitizeJpql("post.createdAt = ?", LocalDate.of(2020, 01, 04)));
     }
 
     @Test
-    public void testLiteralLocalDateTime() {
+    public void testQuoteLocalDateTime() {
         assertEquals("post.createdAt = {ts '2020-01-04 00:00:00.000000000'}", sanitizeJpql("post.createdAt = ?", LocalDateTime.of(2020, 01, 04, 0, 0, 0, 0)));
     }
 
     @Test
-    public void testLiteralLocalTime() {
+    public void testQuoteLocalTime() {
         assertEquals("post.createdAt = {t '00:00:00'}", sanitizeJpql("post.createdAt = ?", LocalTime.of(0, 0, 0)));
     }
 
     @Test
-    public void testLiteralRecord() {
+    public void testQuoteRecord() {
         assertEquals("client.id = 1L", sanitizeJpql("client.id = ?", clientsService.first()));
     }
 
     @Test
-    public void testLiteralBigDecimal() {
+    public void testQuoteBigDecimal() {
         assertEquals("client.salary = 8500.25", sanitizeJpql("client.salary = ?", BigDecimal.valueOf(8500.25)));
     }
 
