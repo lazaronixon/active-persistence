@@ -4,7 +4,7 @@ import com.activepersistence.service.arel.visitors.ToJpql;
 import com.activepersistence.service.arel.visitors.Visitor;
 import javax.persistence.EntityManager;
 
-public class JpaAdapter<T> implements DatabaseStatements<T>, Quoting<T> {
+public class JpaAdapter<T> implements DatabaseStatements<T> {
 
     private final EntityManager entityManager;
 
