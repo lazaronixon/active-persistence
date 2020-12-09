@@ -15,9 +15,9 @@ import static java.util.regex.Pattern.compile;
 import static java.util.stream.Collectors.joining;
 import java.util.stream.Stream;
 
-public class Sanitization {
+public interface Sanitization<T> {
 
-    public static String sanitizeJpql(String statement, Object... values) {
+    public default String sanitizeJpql(String statement, Object... values) {
         if (statement.isEmpty()) return null;
 
         if (values != null && values.length > 0) {
@@ -35,7 +35,7 @@ public class Sanitization {
         }
     }
 
-    private static String replaceNamedBindVariables(String statement, Map<String, Object> bindVars) {
+    private String replaceNamedBindVariables(String statement, Map<String, Object> bindVars) {
         return compile("(:?):([a-zA-Z]\\w*)").matcher(statement).replaceAll(match -> {
             if (match.group(1).equals(":")) {
                 return match.group();
@@ -47,7 +47,7 @@ public class Sanitization {
         });
     };
 
-    private static String replaceBindVariables(String statement, Object[] values) {
+    private String replaceBindVariables(String statement, Object[] values) {
         var bindCount    = (int) statement.chars().filter(ch -> ch == '?').count();
         var valuesCount  = (int) values.length;
 
@@ -58,7 +58,7 @@ public class Sanitization {
         }
     };
 
-    private static String replaceBindVariable(Object value) {
+    private String replaceBindVariable(Object value) {
         if (value instanceof Relation) {
             return ((Relation) value).except(CONSTRUCTOR).toJpql();
         } else {
@@ -66,7 +66,7 @@ public class Sanitization {
         }
     }
 
-    private static String quoteBoundValue(Object value) {
+    private String quoteBoundValue(Object value) {
         if (value instanceof List) {
             Supplier<Stream<String>> values = () -> ((List) value).stream().map(v -> quote(v));
 

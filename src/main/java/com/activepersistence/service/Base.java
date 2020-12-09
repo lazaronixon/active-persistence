@@ -6,7 +6,7 @@ import java.lang.reflect.ParameterizedType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-public abstract class Base<T> implements Core<T>, Callbacks<T>, Querying<T>, Scoping<T> {
+public abstract class Base<T> implements Core<T>, Callbacks<T>, Querying<T>, Scoping<T>, Sanitization<T> {
 
     private final Class entityClass;
 

@@ -2,7 +2,6 @@ package com.activepersistence.service.relation;
 
 import com.activepersistence.service.NullRelation;
 import com.activepersistence.service.Relation;
-import static com.activepersistence.service.Sanitization.sanitizeJpql;
 import com.activepersistence.service.arel.nodes.Grouping;
 import static com.activepersistence.service.relation.ValueMethods.*;
 import static java.util.Arrays.asList;
@@ -14,6 +13,8 @@ public interface QueryMethods<T> {
     public Values getValues();
 
     public Relation<T> spawn();
+    
+    public String sanitizeJpql(String statement, Object... values);
 
     public default Relation<T> select(String... fields) {
         return spawn().select$(fields);
