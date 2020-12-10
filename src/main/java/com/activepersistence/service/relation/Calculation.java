@@ -23,13 +23,13 @@ public interface Calculation<T> {
 
     public String getAlias();
 
-    public boolean hasLimitOrOffset();
-
     public String getPrimaryKeyAttr();
 
     public JpaAdapter<T> getConnection();
 
     public Relation<T> spawn();
+
+    public Boolean hasLimitOrOffset();
 
     public default Object count() {
         return count(getAlias());

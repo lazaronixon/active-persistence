@@ -12,11 +12,11 @@ import javax.persistence.Query;
 
 public interface DatabaseStatements<T> {
 
+    public Visitor getVisitor();
+
     public Class getEntityClass();
 
     public EntityManager getEntityManager();
-    
-    public Visitor getVisitor();    
 
     public default Query selectAll(String queryString, QueryType queryType) {
         if (queryType == JPQL) {

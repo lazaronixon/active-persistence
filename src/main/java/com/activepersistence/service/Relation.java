@@ -187,14 +187,14 @@ public class Relation<T> implements List<T>, FinderMethods<T>, QueryMethods<T>, 
     public JpaAdapter<T> getConnection() {
         return service.getConnection();
     }
-    
+
     @Override
     public String sanitizeJpql(String statement, Object... values) {
         return service.sanitizeJpql(statement, values);
     }
 
     @Override
-    public boolean hasLimitOrOffset() {
+    public Boolean hasLimitOrOffset() {
         return values.getLimit() != 0 || values.getOffset() != 0;
     }
 
