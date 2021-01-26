@@ -26,8 +26,9 @@ public class User extends BaseIdentity {
 }
 ```
 
-users/UserRepository.java
+repositories/UserRepository.java
 ```java
+@RequestScoped
 public class UserRepository extends Base<User> {
 
 }
